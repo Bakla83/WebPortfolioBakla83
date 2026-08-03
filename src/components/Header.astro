@@ -1,0 +1,421 @@
+---
+import Icon from './Icon.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import LangSwitcher from './LangSwitcher.astro';
+import { SECTIONS_BY_ORDER } from '../data/sections';
+import { localePath, pick, type EnabledLocale } from '../i18n/config';
+import { t } from '../i18n/ui';
+
+interface Props {
+  lang: EnabledLocale;
+  path: string;
+}
+
+const { lang, path } = Astro.props;
+const strings = t(lang);
+
+const sectionLinks = SECTIONS_BY_ORDER.map((section) => ({
+  href: localePath(lang, `work/${section.slug}`),
+  label: pick(section.title, lang),
+  accent: section.accent,
+  active: path.startsWith(`work/${section.slug}`),
+}));
+
+const workActive = path.startsWith('work');
+---
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href={localePath(lang)}>
+      <span class="brand__mark" aria-hidden="true">VB</span>
+      <span class="brand__text">
+        <span class="brand__name">{strings.home.name}</span>
+        <span class="brand__role">{strings.home.tagline}</span>
+      </span>
+    </a>
+
+    <nav class="nav-desktop" aria-label={strings.nav.menu}>
+      <!-- <details> вместо своего дропдауна: нативная клавиатура и Esc бесплатно -->
+      <details class="dropdown" data-dropdown>
+        <summary class="nav-link" aria-current={workActive ? 'true' : undefined}>
+          {strings.nav.work}
+          <Icon name="arrow-right" size={14} class="dropdown__chevron" />
+        </summary>
+        <div class="dropdown__panel">
+          {
+            sectionLinks.map((link) => (
+              <a
+                href={link.href}
+                class:list={['dropdown__item', `dropdown__item--${link.accent}`]}
+                aria-current={link.active ? 'page' : undefined}
+              >
+                {link.label}
+              </a>
+            ))
+          }
+        </div>
+      </details>
+
+      <a
+        class="nav-link"
+        href={localePath(lang, 'about')}
+        aria-current={path === 'about' ? 'page' : undefined}>{strings.nav.about}</a
+      >
+      <a
+        class="nav-link"
+        href={localePath(lang, 'contacts')}
+        aria-current={path === 'contacts' ? 'page' : undefined}>{strings.nav.contacts}</a
+      >
+    </nav>
+
+    <div class="site-header__tools">
+      <LangSwitcher lang={lang} path={path} />
+      <ThemeToggle lang={lang} />
+      <button
+        type="button"
+        class="burger"
+        data-menu-open
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label={strings.nav.openMenu}
+      >
+        <Icon name="menu" size={22} />
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Мобильное меню: обычный блок в потоке, скрыт через hidden.
+     Никаких порталов — так его не теряет скринридер. -->
+<div class="mobile-menu" id="mobile-menu" data-menu-panel hidden>
+  <div class="wrap mobile-menu__inner">
+    <div class="mobile-menu__top">
+      <span class="eyebrow">{strings.nav.menu}</span>
+      <button type="button" class="burger" data-menu-close aria-label={strings.nav.closeMenu}>
+        <Icon name="close" size={22} />
+      </button>
+    </div>
+
+    <nav aria-label={strings.nav.menu}>
+      <span class="mobile-menu__group">{strings.nav.work}</span>
+      <ul class="mobile-menu__list">
+        {
+          sectionLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class:list={['mobile-menu__link', `mobile-menu__link--${link.accent}`]}
+                aria-current={link.active ? 'page' : undefined}
+              >
+                {link.label}
+                <Icon name="arrow-right" size={16} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <span class="mobile-menu__group">{strings.nav.menu}</span>
+      <ul class="mobile-menu__list">
+        <li>
+          <a class="mobile-menu__link" href={localePath(lang, 'about')}>
+            {strings.nav.about}
+            <Icon name="arrow-right" size={16} />
+          </a>
+        </li>
+        <li>
+          <a class="mobile-menu__link" href={localePath(lang, 'contacts')}>
+            {strings.nav.contacts}
+            <Icon name="arrow-right" size={16} />
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 68px;
+  }
+
+  /* --- Логотип --- */
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    text-decoration: none;
+    color: var(--ink);
+    margin-right: auto;
+    min-width: 0;
+  }
+
+  .brand__mark {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    flex: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--gold), var(--purple));
+    color: var(--on-gold);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+  }
+
+  .brand__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .brand__name {
+    font-family: var(--font-display);
+    font-weight: 640;
+    font-size: 0.98rem;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .brand__role {
+    font-size: 0.74rem;
+    color: var(--ink-faint);
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Подпись под именем съедает ширину на узких экранах — там она лишняя */
+  @media (max-width: 560px) {
+    .brand__role {
+      display: none;
+    }
+  }
+
+  /* --- Десктопное меню --- */
+  .nav-desktop {
+    display: none;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  @media (min-width: 900px) {
+    .nav-desktop {
+      display: flex;
+    }
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.5rem 0.85rem;
+    border-radius: 999px;
+    color: var(--ink-dim);
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 550;
+    white-space: nowrap;
+    transition: color 0.18s var(--ease), background-color 0.18s var(--ease);
+  }
+
+  .nav-link:hover {
+    color: var(--ink);
+    background: var(--bg-elev-2);
+  }
+
+  .nav-link[aria-current] {
+    color: var(--gold);
+    background: var(--gold-soft);
+  }
+
+  /* --- Выпадающий список разделов --- */
+  .dropdown {
+    position: relative;
+  }
+
+  .dropdown > summary {
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .dropdown > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .dropdown__chevron {
+    transform: rotate(90deg);
+    transition: transform 0.2s var(--ease);
+    opacity: 0.65;
+  }
+
+  .dropdown[open] .dropdown__chevron {
+    transform: rotate(-90deg);
+  }
+
+  .dropdown__panel {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    min-width: 260px;
+    padding: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .dropdown__item {
+    padding: 0.55rem 0.8rem;
+    border-radius: var(--radius-sm);
+    color: var(--ink-dim);
+    text-decoration: none;
+    font-size: 0.92rem;
+    border-left: 2px solid transparent;
+    transition: background-color 0.16s var(--ease), color 0.16s var(--ease),
+      border-color 0.16s var(--ease);
+  }
+
+  .dropdown__item:hover,
+  .dropdown__item[aria-current] {
+    background: var(--bg-elev-2);
+    color: var(--ink);
+  }
+
+  .dropdown__item--gold:hover,
+  .dropdown__item--gold[aria-current] {
+    border-left-color: var(--gold);
+  }
+  .dropdown__item--purple:hover,
+  .dropdown__item--purple[aria-current] {
+    border-left-color: var(--purple);
+  }
+  .dropdown__item--green:hover,
+  .dropdown__item--green[aria-current] {
+    border-left-color: var(--green);
+  }
+
+  /* --- Правый блок --- */
+  .site-header__tools {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex: none;
+  }
+
+  .burger {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color 0.18s var(--ease), color 0.18s var(--ease);
+  }
+
+  .burger:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  @media (min-width: 900px) {
+    .burger[data-menu-open] {
+      display: none;
+    }
+  }
+
+  /* --- Мобильное меню --- */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    background: var(--bg);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .mobile-menu[hidden] {
+    display: none;
+  }
+
+  .mobile-menu__inner {
+    padding-block: var(--space-3) var(--space-5);
+  }
+
+  .mobile-menu__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 44px;
+    margin-bottom: var(--space-3);
+  }
+
+  .mobile-menu__group {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: var(--space-3) 0 var(--space-1);
+  }
+
+  .mobile-menu__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .mobile-menu__link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: 0.95rem 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .mobile-menu__link :global(svg) {
+    color: var(--ink-faint);
+    flex: none;
+  }
+
+  .mobile-menu__link--gold:hover,
+  .mobile-menu__link--gold[aria-current] {
+    color: var(--gold);
+  }
+  .mobile-menu__link--purple:hover,
+  .mobile-menu__link--purple[aria-current] {
+    color: var(--purple);
+  }
+  .mobile-menu__link--green:hover,
+  .mobile-menu__link--green[aria-current] {
+    color: var(--green);
+  }
+</style>

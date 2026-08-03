@@ -1,0 +1,68 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { ENABLED_LOCALES, DEFAULT_LOCALE, LOCALE_META, localePath } from '../i18n/config';
+import { t } from '../i18n/ui';
+
+/**
+ * Cloudflare Pages отдаёт этот файл на любой ненайденный адрес, включая
+ * /fr/... и /en/... — язык страницы заранее неизвестен. Поэтому текст
+ * показывается сразу на всех включённых языках, а не только на одном.
+ */
+const strings = t(DEFAULT_LOCALE);
+---
+
+<Base lang={DEFAULT_LOCALE} path="" title={strings.notFound.title} noindex>
+  <section class="section notfound">
+    <div class="wrap wrap--narrow">
+      <p class="notfound__code">404</p>
+
+      {
+        ENABLED_LOCALES.map((code) => (
+          <div class="notfound__block" lang={LOCALE_META[code].htmlLang}>
+            <h1 class="notfound__title">{t(code).notFound.title}</h1>
+            <p class="muted">{t(code).notFound.text}</p>
+            <a class="btn btn--primary" href={localePath(code)}>
+              {t(code).notFound.home}
+              <Icon name="arrow-right" size={16} />
+            </a>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .notfound {
+    text-align: center;
+    padding-block: clamp(3rem, 2rem + 6vw, 6rem);
+  }
+
+  .notfound__code {
+    font-family: var(--font-display);
+    font-size: clamp(4.5rem, 3rem + 12vw, 10rem);
+    font-weight: 800;
+    line-height: 1;
+    margin: 0 0 var(--space-3);
+    background: linear-gradient(120deg, var(--gold), var(--purple) 60%, var(--green));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .notfound__block + .notfound__block {
+    margin-top: var(--space-4);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--line);
+  }
+
+  .notfound__title {
+    font-size: clamp(1.4rem, 1.2rem + 1vw, 2rem);
+  }
+
+  .notfound__block .btn {
+    margin-top: var(--space-1);
+  }
+</style>

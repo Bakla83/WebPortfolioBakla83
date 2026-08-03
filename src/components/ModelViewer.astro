@@ -1,0 +1,66 @@
+---
+import { pick, type EnabledLocale } from '../i18n/config';
+import { t } from '../i18n/ui';
+import type { ProjectModel } from '../data/types';
+
+interface Props {
+  model: ProjectModel;
+  lang: EnabledLocale;
+}
+
+const { model, lang } = Astro.props;
+const strings = t(lang);
+---
+
+<!--
+  Браузер не открывает .blend — на сайт кладётся экспорт в .glb или .gltf.
+  В Blender: File → Export → glTF 2.0 (.glb), «Format: glTF Binary».
+
+  Библиотека model-viewer весит около полутора мегабайт вместе с three.js,
+  поэтому подключается динамическим импортом и только на тех страницах,
+  где модель действительно есть. На остальных не грузится вовсе.
+-->
+<figure class="model">
+  <model-viewer
+    src={model.src}
+    poster={model.poster}
+    alt={pick(model.alt, lang)}
+    camera-controls
+    touch-action="pan-y"
+    auto-rotate
+    auto-rotate-delay="1200"
+    shadow-intensity="1"
+    exposure="1"
+    loading="lazy"
+    class="model__viewer"></model-viewer>
+  <figcaption class="model__hint">{strings.project.modelHint}</figcaption>
+</figure>
+
+<script>
+  // Импорт запускается один раз на страницу и только при наличии элемента
+  if (document.querySelector('model-viewer')) {
+    import('@google/model-viewer');
+  }
+</script>
+
+<style>
+  .model {
+    margin: 0;
+  }
+
+  .model__viewer {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-elev-2);
+    --poster-color: transparent;
+  }
+
+  .model__hint {
+    margin-top: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+  }
+</style>

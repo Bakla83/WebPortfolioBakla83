@@ -1,0 +1,37 @@
+# Заголовки безопасности для Cloudflare Pages.
+# Файл читается платформой при деплое; в дев-режиме Astro он не применяется —
+# проверять нужно на задеплоенном сайте (например, securityheaders.com).
+
+/*
+  # Кликджекинг: страницу нельзя открыть во фрейме на чужом сайте.
+  # Дублируется через frame-ancestors в CSP ради старых браузеров.
+  X-Frame-Options: DENY
+
+  # Запрещает браузеру угадывать тип файла вопреки Content-Type.
+  X-Content-Type-Options: nosniff
+
+  # Реферер уходит на чужие домены только как origin, без пути.
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # Сайту не нужны камера, микрофон, геолокация и платежи — отключаем полностью.
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=(), interest-cohort=()
+
+  # Только HTTPS в течение двух лет. Осторожно: включать preload имеет смысл,
+  # когда домен окончательно выбран, — откатить это решение быстро не выйдет.
+  Strict-Transport-Security: max-age=63072000; includeSubDomains
+
+  # Строгая CSP. Своих скриптов извне нет, поэтому script-src ровно 'self'.
+  # 'unsafe-inline' оставлен только для стилей: Astro инлайнит мелкие CSS
+  # в HTML, а на стили этот вектор не распространяется так, как на скрипты.
+  # img-src: cdn.sanity.io — картинки из CMS, i.ytimg.com — превью роликов.
+  # frame-src: плееры подключаются лишь после клика пользователя.
+  # blob: в worker-src нужен model-viewer для распаковки 3D-моделей.
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cdn.sanity.io https://i.ytimg.com; font-src 'self'; connect-src 'self' https://cdn.sanity.io; media-src 'self' https://cdn.sanity.io; worker-src 'self' blob:; frame-src https://www.youtube-nocookie.com https://player.vimeo.com; frame-ancestors 'none'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
+
+# Хешированные ассеты Astro можно кэшировать навсегда: при изменении
+# файла меняется имя, поэтому устаревшая версия из кэша не всплывёт.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/media/*
+  Cache-Control: public, max-age=2592000

@@ -1,0 +1,139 @@
+---
+import { pick, type EnabledLocale } from '../i18n/config';
+import type { ProjectVideo } from '../data/types';
+
+interface Props {
+  video: ProjectVideo;
+  lang: EnabledLocale;
+}
+
+const { video, lang } = Astro.props;
+const title = pick(video.title, lang);
+
+// Плеер грузится только по клику: до этого страница не обращается
+// ни к YouTube, ни к Vimeo — ни скриптов, ни куки, ни лишнего веса.
+const src =
+  video.provider === 'youtube'
+    ? `https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0`
+    : `https://player.vimeo.com/video/${video.id}?autoplay=1`;
+
+const poster =
+  video.provider === 'youtube'
+    ? `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`
+    : undefined;
+---
+
+<div class="video" data-video data-src={src} data-title={title}>
+  <button type="button" class="video__button" data-video-play>
+    {
+      poster ? (
+        <img class="video__poster" src={poster} alt="" loading="lazy" decoding="async" />
+      ) : (
+        <span class="video__poster video__poster--blank" aria-hidden="true" />
+      )
+    }
+    <span class="video__play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+        <path d="M8 5.5v13l11-6.5z"></path>
+      </svg>
+    </span>
+    <span class="visually-hidden">{title}</span>
+  </button>
+  <p class="video__caption">{title}</p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-video]').forEach((wrapper) => {
+    const button = wrapper.querySelector<HTMLButtonElement>('[data-video-play]');
+    button?.addEventListener('click', () => {
+      const src = wrapper.dataset.src;
+      if (!src) return;
+
+      const frame = document.createElement('iframe');
+      frame.src = src;
+      frame.title = wrapper.dataset.title ?? '';
+      frame.loading = 'lazy';
+      frame.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+      frame.allowFullscreen = true;
+      frame.className = 'video__frame';
+
+      button.replaceWith(frame);
+    });
+  });
+</script>
+
+<style>
+  .video {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .video__button {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg-elev-2);
+    cursor: pointer;
+  }
+
+  .video__poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s var(--ease), opacity 0.25s var(--ease);
+  }
+
+  .video__poster--blank {
+    display: block;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--gold) 22%, var(--bg-elev-2)),
+      color-mix(in srgb, var(--purple) 22%, var(--bg-elev-2))
+    );
+  }
+
+  .video__button:hover .video__poster {
+    transform: scale(1.03);
+    opacity: 0.85;
+  }
+
+  .video__play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    padding-left: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--on-gold);
+    box-shadow: var(--shadow-md);
+    transition: transform 0.22s var(--ease);
+  }
+
+  .video__button:hover .video__play {
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+
+  .video :global(.video__frame) {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .video__caption {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--ink-dim);
+  }
+</style>

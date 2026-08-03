@@ -1,0 +1,107 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import ProjectCard from '../../../../components/ProjectCard.astro';
+import { SECTIONS_BY_ORDER, getSection } from '../../../../data/sections';
+import { getProjectsInSection } from '../../../../lib/content';
+import { ENABLED_LOCALES, pick, type EnabledLocale } from '../../../../i18n/config';
+import { t, plural } from '../../../../i18n/ui';
+
+export function getStaticPaths() {
+  return ENABLED_LOCALES.flatMap((lang) =>
+    SECTIONS_BY_ORDER.map((section) => ({
+      params: { lang, section: section.slug },
+    })),
+  );
+}
+
+const lang = Astro.params.lang as EnabledLocale;
+const sectionSlug = Astro.params.section!;
+const section = getSection(sectionSlug)!;
+const strings = t(lang);
+
+const projects = await getProjectsInSection(sectionSlug);
+const title = pick(section.title, lang);
+const description = pick(section.description, lang);
+---
+
+<Base
+  lang={lang}
+  path={`work/${sectionSlug}`}
+  title={title}
+  description={description}
+>
+  <section class:list={['section-hero', `section-hero--${section.accent}`]}>
+    <div class="wrap">
+      <p class="eyebrow">
+        {projects.length} {plural(lang, projects.length, strings)}
+      </p>
+      <h1>{title}</h1>
+      <p class="lead">{description}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      {
+        projects.length > 0 ? (
+          <ul class="card-grid">
+            {projects.map((project) => (
+              <ProjectCard project={project} lang={lang} />
+            ))}
+          </ul>
+        ) : (
+          <p class="empty">{strings.sections.empty}</p>
+        )
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .section-hero {
+    position: relative;
+    padding-block: clamp(2.5rem, 1.5rem + 5vw, 5rem) clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+
+  .section-hero::before {
+    content: '';
+    position: absolute;
+    inset: -60% 40% auto -10%;
+    aspect-ratio: 1;
+    background: radial-gradient(
+      closest-side,
+      color-mix(in srgb, var(--accent-color) 20%, transparent),
+      transparent
+    );
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .section-hero--gold {
+    --accent-color: var(--gold);
+  }
+  .section-hero--purple {
+    --accent-color: var(--purple);
+  }
+  .section-hero--green {
+    --accent-color: var(--green);
+  }
+
+  .section-hero .eyebrow {
+    color: var(--accent-color);
+  }
+
+  .section {
+    padding-top: var(--space-4);
+  }
+
+  .empty {
+    padding: var(--space-4);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius);
+    text-align: center;
+    color: var(--ink-dim);
+  }
+</style>

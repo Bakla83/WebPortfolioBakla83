@@ -1,0 +1,390 @@
+/* ============================================================
+   Дизайн-система портфолио
+   Тёмная тема — база (она же фолбэк без JS), светлая — переопределение
+   через :root[data-theme="light"]. Атрибут ставит инлайн-скрипт в <head>
+   до первой отрисовки, поэтому вспышки не той темы нет.
+   ============================================================ */
+
+:root {
+  /* --- Поверхности --- */
+  --bg: #08080b;
+  --bg-elev: #101016;
+  --bg-elev-2: #17171f;
+  --bg-sunken: #050507;
+
+  /* --- Текст --- */
+  --ink: #f2f0ea;
+  --ink-dim: #a5a29a;
+  --ink-faint: #6d6a63;
+
+  /* --- Линии --- */
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.16);
+
+  /* --- Акценты --- */
+  --gold: #e9b949;
+  --gold-bright: #f6cd66;
+  --gold-soft: rgba(233, 185, 73, 0.13);
+  --purple: #a177f5;
+  --purple-soft: rgba(161, 119, 245, 0.14);
+  --green: #3dd68c;
+  --green-soft: rgba(61, 214, 140, 0.14);
+
+  /* Текст поверх золотой заливки */
+  --on-gold: #17140a;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 24px 60px -20px rgba(0, 0, 0, 0.75);
+
+  /* --- Типографика --- */
+  --font-display: "Segoe UI Variable Display", "SF Pro Display", system-ui,
+    -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Segoe UI Variable Text", "SF Pro Text", system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, Menlo, monospace;
+
+  /* --- Ритм --- */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+  --space-6: 6rem;
+
+  --wrap: 1180px;
+  --wrap-narrow: 760px;
+  --radius: 14px;
+  --radius-sm: 8px;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --bg: #fbfaf7;
+  --bg-elev: #ffffff;
+  --bg-elev-2: #f3f1ea;
+  --bg-sunken: #eeebe2;
+
+  --ink: #14131a;
+  --ink-dim: #55535e;
+  --ink-faint: #85828e;
+
+  --line: rgba(20, 19, 26, 0.12);
+  --line-strong: rgba(20, 19, 26, 0.22);
+
+  /* Золото на белом требует затемнения, иначе контраст ниже нормы AA */
+  --gold: #8a5d0a;
+  --gold-bright: #6f4a06;
+  --gold-soft: rgba(138, 93, 10, 0.1);
+  --purple: #6634c9;
+  --purple-soft: rgba(102, 52, 201, 0.1);
+  --green: #0b7d4a;
+  --green-soft: rgba(11, 125, 74, 0.1);
+
+  --on-gold: #fffaf0;
+
+  --shadow-sm: 0 1px 2px rgba(20, 19, 26, 0.08);
+  --shadow-md: 0 8px 24px -10px rgba(20, 19, 26, 0.22);
+  --shadow-lg: 0 24px 60px -24px rgba(20, 19, 26, 0.3);
+
+  color-scheme: light;
+}
+
+/* ============================================================
+   База
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  display: flex;
+  flex-direction: column;
+  /* Ни одна секция не должна давать горизонтальную прокрутку на телефоне */
+  overflow-x: hidden;
+}
+
+img,
+picture,
+video,
+canvas,
+svg,
+model-viewer,
+iframe {
+  display: block;
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 650;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-2);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2.1rem, 1.35rem + 3.4vw, 4rem);
+}
+h2 {
+  font-size: clamp(1.6rem, 1.2rem + 1.8vw, 2.5rem);
+}
+h3 {
+  font-size: clamp(1.15rem, 1rem + 0.7vw, 1.45rem);
+}
+
+p {
+  margin: 0 0 var(--space-2);
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--gold);
+  text-decoration-color: color-mix(in srgb, var(--gold) 40%, transparent);
+  text-underline-offset: 0.2em;
+  transition: color 0.18s var(--ease);
+}
+
+a:hover {
+  color: var(--gold-bright);
+}
+
+ul,
+ol {
+  margin: 0 0 var(--space-2);
+  padding-left: 1.25rem;
+}
+
+/* Видимый фокус обязателен: по сайту должно быть можно ходить с клавиатуры */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--on-gold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   Служебное
+   ============================================================ */
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+}
+
+.wrap--narrow {
+  max-width: var(--wrap-narrow);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-2);
+  z-index: 200;
+  padding: 0.6rem 1rem;
+  background: var(--gold);
+  color: var(--on-gold);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: var(--space-2);
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+.section {
+  padding-block: clamp(3rem, 2rem + 5vw, 6rem);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 var(--space-1);
+}
+
+.lead {
+  font-size: clamp(1.05rem, 1rem + 0.4vw, 1.25rem);
+  color: var(--ink-dim);
+  max-width: 62ch;
+}
+
+.muted {
+  color: var(--ink-dim);
+}
+
+/* ============================================================
+   Кнопки
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.3rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.18s var(--ease), background-color 0.18s var(--ease),
+    border-color 0.18s var(--ease), color 0.18s var(--ease);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn--primary {
+  background: var(--gold);
+  color: var(--on-gold);
+}
+
+.btn--primary:hover {
+  background: var(--gold-bright);
+  color: var(--on-gold);
+}
+
+.btn--ghost {
+  border-color: var(--line-strong);
+  color: var(--ink);
+  background: transparent;
+}
+
+.btn--ghost:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ============================================================
+   Теги / чипы
+   ============================================================ */
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--bg-elev-2);
+  color: var(--ink-dim);
+  white-space: nowrap;
+}
+
+.tag--gold {
+  border-color: color-mix(in srgb, var(--gold) 45%, transparent);
+  background: var(--gold-soft);
+  color: var(--gold);
+}
+
+.tag--purple {
+  border-color: color-mix(in srgb, var(--purple) 45%, transparent);
+  background: var(--purple-soft);
+  color: var(--purple);
+}
+
+.tag--green {
+  border-color: color-mix(in srgb, var(--green) 45%, transparent);
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+/* ============================================================
+   Сетка карточек
+   ============================================================ */
+
+.card-grid {
+  display: grid;
+  gap: clamp(1rem, 0.6rem + 1.4vw, 1.75rem);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}

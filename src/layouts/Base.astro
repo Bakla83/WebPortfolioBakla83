@@ -1,0 +1,86 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { ENABLED_LOCALES, LOCALE_META, localePath, type EnabledLocale } from '../i18n/config';
+import { t } from '../i18n/ui';
+
+interface Props {
+  lang: EnabledLocale;
+  /** Путь без языкового префикса: '' для главной, 'about', 'work/landings'. */
+  path?: string;
+  title: string;
+  description?: string;
+  /** Абсолютный или корневой путь к картинке для соцсетей. */
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const { lang, path = '', title, description, ogImage, noindex = false } = Astro.props;
+
+const strings = t(lang);
+const desc = description ?? strings.meta.defaultDescription;
+const site = Astro.site ?? new URL('https://webportfoliobakla83.pages.dev');
+
+const canonical = new URL(localePath(lang, path), site).href;
+const ogImageUrl = new URL(ogImage ?? '/og-default.png', site).href;
+
+// Полный заголовок: на главной не дублируем имя дважды.
+const fullTitle = title === strings.meta.siteName ? title : `${title} — ${strings.meta.siteName}`;
+---
+
+<!doctype html>
+<html lang={LOCALE_META[lang].htmlLang} data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Ставит тему до отрисовки. Блокирующий и первым — иначе будет вспышка. -->
+    <script is:inline src="/theme-init.js"></script>
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={desc} />
+    <link rel="canonical" href={canonical} />
+
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    {
+      ENABLED_LOCALES.map((code) => (
+        <link
+          rel="alternate"
+          hreflang={LOCALE_META[code].htmlLang}
+          href={new URL(localePath(code, path), site).href}
+        />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={new URL('/', site).href} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={strings.meta.siteName} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:locale" content={lang === 'ru' ? 'ru_RU' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="theme-color" content="#08080b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <slot name="head" />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">{strings.nav.skipToContent}</a>
+    <Header lang={lang} path={path} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <script src="../scripts/site.ts"></script>
+  </body>
+</html>

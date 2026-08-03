@@ -1,0 +1,68 @@
+---
+import { ENABLED_LOCALES, LOCALE_META, DEFAULT_LOCALE, localePath } from '../i18n/config';
+import { t } from '../i18n/ui';
+
+// Корень сайта — только развилка по языку. Содержимого здесь нет,
+// поэтому страница закрыта от индексации: поисковик должен видеть
+// /ru и /en, а не пустой редирект.
+const strings = t(DEFAULT_LOCALE);
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{strings.meta.siteName}</title>
+    <meta name="robots" content="noindex, follow" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    {
+      ENABLED_LOCALES.map((code) => (
+        <link rel="alternate" hreflang={LOCALE_META[code].htmlLang} href={localePath(code)} />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={localePath(DEFAULT_LOCALE)} />
+
+    <!-- Без JS редиректа не будет — на этот случай ниже настоящие ссылки -->
+    <noscript>
+      <meta http-equiv="refresh" content={`0; url=${localePath(DEFAULT_LOCALE)}`} />
+    </noscript>
+
+    <script is:inline src="/lang-detect.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        gap: 1rem;
+        background: #08080b;
+        color: #f2f0ea;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        text-align: center;
+      }
+      a {
+        color: #e9b949;
+        font-size: 1.1rem;
+        padding: 0.6rem 1.2rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div>
+      <p>{strings.meta.siteName}</p>
+      <p>
+        {
+          ENABLED_LOCALES.map((code) => (
+            <a href={localePath(code)} lang={LOCALE_META[code].htmlLang}>
+              {LOCALE_META[code].native}
+            </a>
+          ))
+        }
+      </p>
+    </div>
+  </body>
+</html>

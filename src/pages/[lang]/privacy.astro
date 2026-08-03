@@ -1,0 +1,121 @@
+---
+import Base from '../../layouts/Base.astro';
+import { ENABLED_LOCALES, type EnabledLocale } from '../../i18n/config';
+import { t } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return ENABLED_LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as EnabledLocale;
+const strings = t(lang);
+
+/**
+ * Сайт статический: ни форм, ни аналитики, ни серверной части. Поэтому
+ * страница короткая и говорит ровно то, что есть на самом деле.
+ * Если позже появится форма обратной связи или аналитика — текст
+ * придётся дополнить, иначе он станет неправдой.
+ */
+const content = {
+  ru: {
+    title: 'Политика конфиденциальности',
+    updated: 'Обновлено: август 2026',
+    blocks: [
+      {
+        h: 'Какие данные собираются',
+        p: 'Никакие. Сайт статический: на нём нет форм, регистрации, комментариев и серверной части, которая могла бы что-то принять и сохранить.',
+      },
+      {
+        h: 'Аналитика и трекеры',
+        p: 'Не используются. На сайте нет счётчиков посещаемости, пикселей соцсетей и рекламных скриптов.',
+      },
+      {
+        h: 'Хранилище браузера',
+        p: 'В localStorage вашего браузера сохраняются только две вещи: выбранная тема оформления и выбранный язык. Это нужно, чтобы при следующем визите сайт открылся так, как вы его оставили. Данные не покидают устройство и никому не передаются. Их можно удалить, очистив данные сайта в настройках браузера.',
+      },
+      {
+        h: 'Внешние сервисы',
+        p: 'Страницы проектов могут содержать встроенные ролики с YouTube или Vimeo. Плеер загружается только после того, как вы сами нажмёте кнопку воспроизведения, — до этого момента обращений к этим сервисам не происходит. После запуска действуют их собственные политики конфиденциальности.',
+      },
+      {
+        h: 'Хостинг',
+        p: 'Сайт размещён на Cloudflare Pages. Как любой хостинг, Cloudflare ведёт технические журналы запросов (IP-адрес, время, адрес страницы) для защиты от атак и диагностики. Доступа к этим журналам у меня нет.',
+      },
+      {
+        h: 'Связь',
+        p: 'Если вы напишете мне через один из указанных на сайте каналов, наша переписка ведётся уже в этом сервисе и по его правилам.',
+      },
+    ],
+  },
+  en: {
+    title: 'Privacy policy',
+    updated: 'Last updated: August 2026',
+    blocks: [
+      {
+        h: 'What data is collected',
+        p: 'None. This is a static site: there are no forms, no sign-up, no comments and no backend that could receive or store anything.',
+      },
+      {
+        h: 'Analytics and trackers',
+        p: 'Not used. The site carries no visitor counters, social pixels or advertising scripts.',
+      },
+      {
+        h: 'Browser storage',
+        p: 'Only two things are saved in your browser’s localStorage: the colour theme and the language you chose. That is what makes the site open the way you left it next time. The data never leaves your device and is shared with no one. You can remove it by clearing site data in your browser settings.',
+      },
+      {
+        h: 'Third-party services',
+        p: 'Project pages may contain embedded videos from YouTube or Vimeo. The player loads only after you press play yourself — until that moment no request is made to those services. Once started, their own privacy policies apply.',
+      },
+      {
+        h: 'Hosting',
+        p: 'The site is hosted on Cloudflare Pages. Like any host, Cloudflare keeps technical request logs (IP address, time, page address) to protect against attacks and to diagnose problems. I have no access to those logs.',
+      },
+      {
+        h: 'Contact',
+        p: 'If you message me through one of the channels listed on the site, that conversation then takes place within that service and under its rules.',
+      },
+    ],
+  },
+}[lang];
+---
+
+<Base
+  lang={lang}
+  path="privacy"
+  title={content.title}
+  description={content.blocks[0]!.p}
+>
+  <section class="section">
+    <div class="wrap wrap--narrow">
+      <p class="eyebrow">{strings.footer.privacy}</p>
+      <h1>{content.title}</h1>
+      <p class="muted">{content.updated}</p>
+
+      {
+        content.blocks.map((block) => (
+          <div class="policy-block">
+            <h2>{block.h}</h2>
+            <p>{block.p}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .policy-block {
+    margin-top: var(--space-3);
+  }
+
+  .policy-block h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .policy-block p {
+    color: var(--ink-dim);
+    margin: 0;
+  }
+</style>

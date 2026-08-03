@@ -1,0 +1,69 @@
+---
+import { ENABLED_LOCALES, LOCALE_META, localePath, type EnabledLocale } from '../i18n/config';
+import { t } from '../i18n/ui';
+
+interface Props {
+  lang: EnabledLocale;
+  path: string;
+}
+
+const { lang, path } = Astro.props;
+const strings = t(lang);
+---
+
+<!--
+  Обычные ссылки, а не кнопки с JS: каждая языковая версия страницы —
+  отдельный адрес, её должно быть видно поисковику и можно открыть
+  в новой вкладке. Скрипт лишь запоминает выбор для корневого /.
+-->
+<div class="lang" role="group" aria-label={strings.lang.label} data-lang-switcher>
+  {
+    ENABLED_LOCALES.map((code) => (
+      <a
+        href={localePath(code, path)}
+        class="lang__item"
+        hreflang={LOCALE_META[code].htmlLang}
+        lang={LOCALE_META[code].htmlLang}
+        data-lang={code}
+        aria-current={code === lang ? 'true' : undefined}
+        title={LOCALE_META[code].native}
+      >
+        {LOCALE_META[code].label}
+      </a>
+    ))
+  }
+</div>
+
+<style>
+  .lang {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 3px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    flex: none;
+  }
+
+  .lang__item {
+    padding: 0.25rem 0.5rem;
+    border-radius: 7px;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+    text-decoration: none;
+    line-height: 1.5;
+    transition: color 0.16s var(--ease), background-color 0.16s var(--ease);
+  }
+
+  .lang__item:hover {
+    color: var(--ink);
+  }
+
+  .lang__item[aria-current] {
+    background: var(--gold-soft);
+    color: var(--gold);
+  }
+</style>

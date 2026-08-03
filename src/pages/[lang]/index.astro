@@ -1,0 +1,249 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import SectionCard from '../../components/SectionCard.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { SECTIONS_BY_ORDER } from '../../data/sections';
+import { getProjects, getFeaturedProjects } from '../../lib/content';
+import { SKILL_GROUPS } from '../../data/site';
+import { ENABLED_LOCALES, localePath, pick, type EnabledLocale } from '../../i18n/config';
+import { t } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return ENABLED_LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as EnabledLocale;
+const strings = t(lang);
+
+const featured = await getFeaturedProjects();
+
+// Счётчики считаем заранее: внутри .map() дождаться промиса уже нельзя
+const projects = await getProjects();
+const countBySection = new Map(
+  SECTIONS_BY_ORDER.map((section) => [
+    section.slug,
+    projects.filter((project) => project.section === section.slug).length,
+  ]),
+);
+---
+
+<Base lang={lang} path="" title={strings.meta.siteName}>
+  <!-- ============================== Обложка ============================== -->
+  <section class="hero">
+    <div class="wrap hero__inner">
+      <p class="eyebrow">{strings.about.lead}</p>
+      <h1 class="hero__name">{strings.home.name}</h1>
+      <p class="hero__tagline">{strings.home.tagline}</p>
+      <p class="lead hero__intro">{strings.home.intro}</p>
+
+      <div class="hero__actions">
+        <a class="btn btn--primary" href={`#work`}>
+          {strings.home.ctaWork}
+          <Icon name="arrow-right" size={16} />
+        </a>
+        <a class="btn btn--ghost" href={localePath(lang, 'contacts')}>
+          {strings.home.ctaContact}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== Разделы ============================== -->
+  <section class="section" id="work">
+    <div class="wrap">
+      <p class="eyebrow">{strings.home.sectionsTitle}</p>
+      <h2>{strings.home.sectionsLead}</h2>
+      <ul class="card-grid section-grid">
+        {
+          SECTIONS_BY_ORDER.map((section) => (
+            <SectionCard
+              section={section}
+              lang={lang}
+              count={countBySection.get(section.slug) ?? 0}
+            />
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================= Избранное ============================= -->
+  {
+    featured.length > 0 && (
+      <section class="section section--sunken">
+        <div class="wrap">
+          <p class="eyebrow">{strings.home.featuredTitle}</p>
+          <h2>{strings.home.featuredLead}</h2>
+          <ul class="card-grid">
+            {featured.map((project) => (
+              <ProjectCard project={project} lang={lang} showSection />
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ============================== Навыки =============================== -->
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">{strings.home.skillsTitle}</p>
+      <div class="skills">
+        {
+          SKILL_GROUPS.map((group) => (
+            <div class:list={['skills__group', `skills__group--${group.accent}`]} data-reveal>
+              <h3 class="skills__title">{pick(group.title, lang)}</h3>
+              <ul class="tags">
+                {group.items.map((item) => (
+                  <li class="tag">{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+      <p class="skills__more">
+        <a href={localePath(lang, 'about')}>
+          {strings.nav.about}
+          <Icon name="arrow-right" size={15} />
+        </a>
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* --- Обложка --- */
+  .hero {
+    position: relative;
+    padding-block: clamp(3.5rem, 2rem + 8vw, 8rem);
+    overflow: hidden;
+  }
+
+  /* Мягкое золото-фиолетовое свечение за текстом. Декор, поэтому
+     не влияет на раскладку и не перехватывает клики. */
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    left: 50%;
+    width: min(1000px, 130vw);
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    background: radial-gradient(
+        42% 42% at 32% 38%,
+        color-mix(in srgb, var(--gold) 20%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        40% 40% at 68% 52%,
+        color-mix(in srgb, var(--purple) 18%, transparent),
+        transparent 70%
+      );
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .hero__inner {
+    max-width: 62rem;
+  }
+
+  .hero__name {
+    margin-bottom: 0.2rem;
+  }
+
+  .hero__tagline {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 1rem + 1.2vw, 1.9rem);
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 0 0 var(--space-2);
+    background: linear-gradient(100deg, var(--gold), var(--purple) 55%, var(--green));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* Фолбэк, если background-clip не поддержан — текст всё равно виден */
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero__intro {
+    margin-bottom: var(--space-3);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+
+  /* --- Секции --- */
+  .section--sunken {
+    background: var(--bg-sunken);
+    border-block: 1px solid var(--line);
+  }
+
+  .section h2 {
+    max-width: 34ch;
+    margin-bottom: var(--space-3);
+  }
+
+  .section-grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  }
+
+  /* --- Навыки --- */
+  .skills {
+    display: grid;
+    gap: var(--space-2);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    margin-top: var(--space-3);
+  }
+
+  .skills__group {
+    padding: var(--space-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    border-top: 2px solid var(--accent-color);
+    background: var(--bg-elev);
+    transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+  }
+
+  .skills__group[data-reveal] {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  .skills__group[data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .skills__group--gold {
+    --accent-color: var(--gold);
+  }
+  .skills__group--purple {
+    --accent-color: var(--purple);
+  }
+  .skills__group--green {
+    --accent-color: var(--green);
+  }
+
+  .skills__title {
+    font-size: 1rem;
+    margin-bottom: var(--space-1);
+    color: var(--accent-color);
+  }
+
+  .skills__more {
+    margin-top: var(--space-3);
+  }
+
+  .skills__more a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+</style>

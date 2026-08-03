@@ -1,0 +1,393 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import Icon from '../../../../components/Icon.astro';
+import type { IconName } from '../../../../components/icons';
+import Gallery from '../../../../components/Gallery.astro';
+import VideoEmbed from '../../../../components/VideoEmbed.astro';
+import ModelViewer from '../../../../components/ModelViewer.astro';
+import { getSection } from '../../../../data/sections';
+import { getProjects } from '../../../../lib/content';
+import { ENABLED_LOCALES, localePath, pick, type EnabledLocale } from '../../../../i18n/config';
+import { t } from '../../../../i18n/ui';
+import type { LinkKind } from '../../../../data/types';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+
+  return ENABLED_LOCALES.flatMap((lang) =>
+    projects.map((project) => ({
+      params: { lang, section: project.section, slug: project.slug },
+      // Соседей передаём пропсом: в теле страницы список уже не запросить
+      props: {
+        project,
+        siblings: projects
+          .filter((candidate) => candidate.section === project.section)
+          .sort((a, b) => (a.order ?? 999) - (b.order ?? 999)),
+      },
+    })),
+  );
+}
+
+const { project, siblings } = Astro.props;
+const lang = Astro.params.lang as EnabledLocale;
+const strings = t(lang);
+const section = getSection(project.section)!;
+
+const title = pick(project.title, lang);
+const teaser = pick(project.teaser, lang);
+const summary = pick(project.summary, lang);
+const highlights = project.highlights ? pick(project.highlights, lang) : [];
+
+// Соседи внутри раздела — для переходов «предыдущая / следующая»
+const index = siblings.findIndex((p) => p.slug === project.slug);
+const prev = index > 0 ? siblings[index - 1] : undefined;
+const next = index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : undefined;
+
+const linkLabels: Record<LinkKind, string> = {
+  live: strings.project.linkLive,
+  source: strings.project.linkSource,
+  steam: strings.project.linkSteam,
+  download: strings.project.linkDownload,
+  other: strings.project.linkLive,
+};
+
+const linkIcons: Record<LinkKind, IconName> = {
+  live: 'external',
+  source: 'code',
+  steam: 'steam',
+  download: 'download',
+  other: 'external',
+};
+
+const meta: { label: string; value: string }[] = [
+  { label: strings.project.year, value: String(project.year) },
+  ...(project.role ? [{ label: strings.project.role, value: pick(project.role, lang) }] : []),
+  ...(project.status ? [{ label: strings.project.status, value: pick(project.status, lang) }] : []),
+];
+---
+
+<Base
+  lang={lang}
+  path={`work/${project.section}/${project.slug}`}
+  title={title}
+  description={teaser}
+  ogImage={project.cover?.src}
+>
+  <article>
+    <!-- ============================ Заголовок ============================ -->
+    <header class:list={['proj-hero', `proj-hero--${section.accent}`]}>
+      <div class="wrap">
+        <a class="proj-hero__back" href={localePath(lang, `work/${project.section}`)}>
+          {pick(section.title, lang)}
+        </a>
+
+        <h1>{title}</h1>
+        <p class="lead">{teaser}</p>
+
+        {
+          meta.length > 0 && (
+            <dl class="proj-meta">
+              {meta.map((entry) => (
+                <div class="proj-meta__item">
+                  <dt>{entry.label}</dt>
+                  <dd>{entry.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )
+        }
+
+        <ul class="tags proj-hero__tags">
+          {project.tech.map((tech) => <li class="tag tag--gold">{tech}</li>)}
+        </ul>
+
+        {
+          project.links && project.links.length > 0 && (
+            <div class="proj-hero__links">
+              {project.links.map((link) => (
+                <a
+                  class="btn btn--primary"
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon name={linkIcons[link.kind]} size={16} />
+                  {link.label ? pick(link.label, lang) : linkLabels[link.kind]}
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </header>
+
+    <!-- ============================= Описание ============================ -->
+    <section class="section proj-section">
+      <div class="wrap wrap--narrow">
+        <h2>{strings.project.overview}</h2>
+        <p class="proj-summary">{summary}</p>
+
+        {
+          highlights.length > 0 && (
+            <>
+              <h2 class="proj-section__sub">{strings.project.highlights}</h2>
+              <ul class="proj-highlights">
+                {highlights.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </>
+          )
+        }
+      </div>
+    </section>
+
+    <!-- ============================== Галерея ============================ -->
+    {
+      project.gallery && project.gallery.length > 0 && (
+        <section class="section proj-section proj-section--sunken">
+          <div class="wrap">
+            <h2>{strings.project.gallery}</h2>
+            <Gallery images={project.gallery} lang={lang} />
+          </div>
+        </section>
+      )
+    }
+
+    <!-- =============================== Видео ============================= -->
+    {
+      project.videos && project.videos.length > 0 && (
+        <section class="section proj-section">
+          <div class="wrap wrap--narrow">
+            <h2>{strings.project.video}</h2>
+            <div class="proj-videos">
+              {project.videos.map((video) => (
+                <VideoEmbed video={video} lang={lang} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- ============================== Модели ============================= -->
+    {
+      project.models && project.models.length > 0 && (
+        <section class="section proj-section proj-section--sunken">
+          <div class="wrap">
+            <h2>{strings.project.model}</h2>
+            <div class="proj-models">
+              {project.models.map((model) => (
+                <ModelViewer model={model} lang={lang} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- ============================= Соседи ============================== -->
+    <nav class="proj-nav" aria-label={strings.nav.work}>
+      <div class="wrap proj-nav__inner">
+        {
+          prev ? (
+            <a class="proj-nav__link proj-nav__link--prev" href={localePath(lang, `work/${prev.section}/${prev.slug}`)}>
+              <span class="proj-nav__label">{strings.project.prev}</span>
+              <span class="proj-nav__title">{pick(prev.title, lang)}</span>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+        {
+          next && (
+            <a class="proj-nav__link proj-nav__link--next" href={localePath(lang, `work/${next.section}/${next.slug}`)}>
+              <span class="proj-nav__label">{strings.project.next}</span>
+              <span class="proj-nav__title">{pick(next.title, lang)}</span>
+            </a>
+          )
+        }
+      </div>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  /* --- Заголовок --- */
+  .proj-hero {
+    position: relative;
+    padding-block: clamp(2rem, 1.2rem + 4vw, 4rem) clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+
+  .proj-hero::before {
+    content: '';
+    position: absolute;
+    inset: -70% 30% auto -20%;
+    aspect-ratio: 1;
+    background: radial-gradient(
+      closest-side,
+      color-mix(in srgb, var(--accent-color) 18%, transparent),
+      transparent
+    );
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .proj-hero--gold {
+    --accent-color: var(--gold);
+  }
+  .proj-hero--purple {
+    --accent-color: var(--purple);
+  }
+  .proj-hero--green {
+    --accent-color: var(--green);
+  }
+
+  .proj-hero__back {
+    display: inline-block;
+    margin-bottom: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-color);
+    text-decoration: none;
+  }
+
+  .proj-hero__back:hover {
+    text-decoration: underline;
+  }
+
+  .proj-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin: var(--space-3) 0 var(--space-2);
+  }
+
+  .proj-meta__item dt {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .proj-meta__item dd {
+    margin: 0.2rem 0 0;
+    font-weight: 600;
+  }
+
+  .proj-hero__tags {
+    margin-bottom: var(--space-3);
+  }
+
+  .proj-hero__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+
+  /* --- Содержимое --- */
+  .proj-section h2 {
+    font-size: clamp(1.25rem, 1.1rem + 0.8vw, 1.6rem);
+    margin-bottom: var(--space-2);
+  }
+
+  .proj-section__sub {
+    margin-top: var(--space-4);
+  }
+
+  .proj-section--sunken {
+    background: var(--bg-sunken);
+    border-block: 1px solid var(--line);
+  }
+
+  .proj-summary {
+    font-size: 1.05rem;
+    color: var(--ink-dim);
+  }
+
+  .proj-highlights {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .proj-highlights li {
+    position: relative;
+    padding-left: 1.6rem;
+    color: var(--ink-dim);
+  }
+
+  /* Ромб-маркер вместо точки — та же геометрия, что у акцентов раздела */
+  .proj-highlights li::before {
+    content: '';
+    position: absolute;
+    left: 0.15rem;
+    top: 0.62em;
+    width: 7px;
+    height: 7px;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  .proj-videos,
+  .proj-models {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .proj-models {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  }
+
+  /* --- Соседние работы --- */
+  .proj-nav {
+    border-top: 1px solid var(--line);
+    padding-block: var(--space-3);
+  }
+
+  .proj-nav__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    justify-content: space-between;
+  }
+
+  .proj-nav__link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    max-width: 22rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .proj-nav__link--next {
+    text-align: right;
+    margin-left: auto;
+  }
+
+  .proj-nav__label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .proj-nav__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  .proj-nav__link:hover .proj-nav__title {
+    color: var(--gold);
+  }
+</style>

@@ -1,0 +1,76 @@
+---
+import Icon from './Icon.astro';
+import type { EnabledLocale } from '../i18n/config';
+import { t } from '../i18n/ui';
+
+interface Props {
+  lang: EnabledLocale;
+}
+
+const { lang } = Astro.props;
+const strings = t(lang);
+---
+
+<!--
+  Какая иконка видна, решает CSS по атрибуту data-theme на <html>.
+  На сервере тема неизвестна (она зависит от устройства), поэтому
+  переключать иконку разметкой нельзя — только стилями.
+  aria-label по той же причине выставляет клиентский скрипт.
+-->
+<button
+  type="button"
+  class="theme-toggle"
+  data-theme-toggle
+  aria-label={strings.theme.label}
+  data-label-light={strings.theme.toLight}
+  data-label-dark={strings.theme.toDark}
+  title={strings.theme.label}
+>
+  <span class="theme-toggle__icon theme-toggle__icon--sun"><Icon name="sun" size={19} /></span>
+  <span class="theme-toggle__icon theme-toggle__icon--moon"><Icon name="moon" size={19} /></span>
+</button>
+
+<style>
+  .theme-toggle {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex: none;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink-dim);
+    cursor: pointer;
+    transition: border-color 0.18s var(--ease), color 0.18s var(--ease);
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* Обе иконки лежат в одной ячейке грида — кнопка не дёргается при смене */
+  .theme-toggle__icon {
+    grid-area: 1 / 1;
+    display: grid;
+    place-items: center;
+    transition: opacity 0.18s var(--ease), transform 0.28s var(--ease);
+  }
+
+  /* В тёмной теме предлагаем светлую: солнце */
+  .theme-toggle__icon--moon {
+    opacity: 0;
+    transform: rotate(-45deg) scale(0.7);
+  }
+
+  :global(:root[data-theme='light']) .theme-toggle__icon--sun {
+    opacity: 0;
+    transform: rotate(45deg) scale(0.7);
+  }
+
+  :global(:root[data-theme='light']) .theme-toggle__icon--moon {
+    opacity: 1;
+    transform: none;
+  }
+</style>

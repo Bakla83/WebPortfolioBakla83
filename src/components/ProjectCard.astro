@@ -1,0 +1,293 @@
+---
+import Icon from './Icon.astro';
+import { getSection } from '../data/sections';
+import { localePath, pick, type EnabledLocale } from '../i18n/config';
+import { t } from '../i18n/ui';
+import type { Project } from '../data/types';
+
+interface Props {
+  project: Project;
+  lang: EnabledLocale;
+  /** Показывать подпись раздела — нужно на главной, где карточки перемешаны. */
+  showSection?: boolean;
+}
+
+const { project, lang, showSection = false } = Astro.props;
+const strings = t(lang);
+const section = getSection(project.section);
+
+const title = pick(project.title, lang);
+const teaser = pick(project.teaser, lang);
+const href = localePath(lang, `work/${project.section}/${project.slug}`);
+const accent = section?.accent ?? 'gold';
+
+// Пока обложки нет, рисуем плашку из инициалов и акцента раздела —
+// сетка не разъезжается, и карточка не выглядит сломанной.
+const initials = title
+  .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+  .trim()
+  .split(/\s+/)
+  .slice(0, 2)
+  .map((word) => word[0]?.toUpperCase() ?? '')
+  .join('');
+
+const techShown = project.tech.slice(0, 3);
+---
+
+<li class:list={['card', `card--${accent}`]} data-reveal>
+  <a class="card__link" href={href}>
+    <div class="card__media">
+      {
+        project.cover ? (
+          <img
+            class="card__img"
+            src={project.cover.src}
+            alt={pick(project.cover.alt, lang)}
+            width={project.cover.width ?? 800}
+            height={project.cover.height ?? 500}
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <div class="card__placeholder" aria-hidden="true">
+            <span>{initials}</span>
+          </div>
+        )
+      }
+
+      <!-- Всплывающее описание. На узких экранах оно не всплывает,
+           а просто стоит в потоке — на тач-устройствах наведения нет. -->
+      <div class="card__overlay">
+        <p class="card__teaser">{teaser}</p>
+        <span class="card__more">
+          {strings.project.more}
+          <Icon name="arrow-right" size={15} />
+        </span>
+      </div>
+    </div>
+
+    <div class="card__body">
+      {showSection && section && <span class="card__section">{pick(section.title, lang)}</span>}
+      <h3 class="card__title">{title}</h3>
+      <p class="card__teaser card__teaser--inline">{teaser}</p>
+      <ul class="tags card__tags">
+        {techShown.map((tech) => <li class="tag">{tech}</li>)}
+        {project.tech.length > techShown.length && (
+          <li class="tag">+{project.tech.length - techShown.length}</li>
+        )}
+      </ul>
+    </div>
+  </a>
+</li>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.28s var(--ease), border-color 0.28s var(--ease),
+      box-shadow 0.28s var(--ease), opacity 0.5s var(--ease);
+  }
+
+  /* Появление при прокрутке; при reduce-motion класс ставится сразу */
+  .card[data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  .card[data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .card:hover,
+  .card:focus-within {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .card--gold:hover,
+  .card--gold:focus-within {
+    border-color: color-mix(in srgb, var(--gold) 55%, transparent);
+  }
+  .card--purple:hover,
+  .card--purple:focus-within {
+    border-color: color-mix(in srgb, var(--purple) 55%, transparent);
+  }
+  .card--green:hover,
+  .card--green:focus-within {
+    border-color: color-mix(in srgb, var(--green) 55%, transparent);
+  }
+
+  .card__link {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* --- Обложка --- */
+  .card__media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--bg-elev-2);
+  }
+
+  .card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s var(--ease);
+  }
+
+  .card:hover .card__img {
+    transform: scale(1.04);
+  }
+
+  .card__placeholder {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 1.4rem + 3vw, 3.4rem);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: color-mix(in srgb, var(--ink) 22%, transparent);
+  }
+
+  .card--gold .card__placeholder {
+    background: radial-gradient(
+      120% 120% at 25% 15%,
+      color-mix(in srgb, var(--gold) 26%, transparent),
+      transparent 62%
+    );
+  }
+  .card--purple .card__placeholder {
+    background: radial-gradient(
+      120% 120% at 25% 15%,
+      color-mix(in srgb, var(--purple) 26%, transparent),
+      transparent 62%
+    );
+  }
+  .card--green .card__placeholder {
+    background: radial-gradient(
+      120% 120% at 25% 15%,
+      color-mix(in srgb, var(--green) 26%, transparent),
+      transparent 62%
+    );
+  }
+
+  /* --- Всплывающее описание --- */
+  .card__overlay {
+    display: none;
+  }
+
+  .card__teaser {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--ink-dim);
+  }
+
+  /* --- Тело карточки --- */
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: var(--space-2);
+    flex: 1;
+  }
+
+  .card__section {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .card--gold .card__section {
+    color: var(--gold);
+  }
+  .card--purple .card__section {
+    color: var(--purple);
+  }
+  .card--green .card__section {
+    color: var(--green);
+  }
+
+  .card__title {
+    margin: 0;
+    font-size: 1.12rem;
+    line-height: 1.25;
+  }
+
+  .card__tags {
+    margin-top: auto;
+    padding-top: 0.35rem;
+  }
+
+  /*
+    С 900px карточка получает наведение: описание уезжает в оверлей,
+    а из тела убирается, чтобы текст не дублировался.
+    Ниже — тач, наведения нет, поэтому описание остаётся в потоке.
+  */
+  @media (min-width: 900px) {
+    .card__overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 0.6rem;
+      padding: var(--space-2);
+      background: linear-gradient(
+        to top,
+        color-mix(in srgb, var(--bg) 96%, transparent) 30%,
+        color-mix(in srgb, var(--bg) 72%, transparent) 65%,
+        transparent
+      );
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.26s var(--ease), transform 0.26s var(--ease);
+    }
+
+    .card:hover .card__overlay,
+    .card:focus-within .card__overlay {
+      opacity: 1;
+      transform: none;
+    }
+
+    .card__overlay .card__teaser {
+      color: var(--ink);
+    }
+
+    .card__teaser--inline {
+      display: none;
+    }
+
+    .card__more {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .card--gold .card__more {
+      color: var(--gold);
+    }
+    .card--purple .card__more {
+      color: var(--purple);
+    }
+    .card--green .card__more {
+      color: var(--green);
+    }
+  }
+</style>

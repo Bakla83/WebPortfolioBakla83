@@ -1,0 +1,259 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { SKILL_GROUPS, ABOUT_TEXT, PROFILE } from '../../data/site';
+import { SECTIONS_BY_ORDER } from '../../data/sections';
+import { getProjects } from '../../lib/content';
+import { ENABLED_LOCALES, localePath, pick, type EnabledLocale } from '../../i18n/config';
+import { t } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return ENABLED_LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as EnabledLocale;
+const strings = t(lang);
+
+const paragraphs = pick(ABOUT_TEXT, lang);
+
+// Считаем по данным, а не руками: цифры не разъедутся при добавлении работ
+const projects = await getProjects();
+const filledSections = SECTIONS_BY_ORDER.filter((section) =>
+  projects.some((project) => project.section === section.slug),
+).length;
+
+const stats = [
+  { value: String(projects.length), label: lang === 'ru' ? 'проектов в портфолио' : 'projects in the portfolio' },
+  { value: String(filledSections), label: lang === 'ru' ? 'направления работы' : 'areas of work' },
+  { value: String(new Date().getFullYear() - PROFILE.since), label: lang === 'ru' ? 'года в разработке' : 'years developing' },
+];
+---
+
+<Base lang={lang} path="about" title={strings.about.title} description={pick(ABOUT_TEXT, lang)[0]}>
+  <section class="about-hero">
+    <div class="wrap">
+      <p class="eyebrow">{strings.about.title}</p>
+      <h1>{strings.home.name}</h1>
+      <p class="lead">{strings.about.lead}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap about-layout">
+      <div class="about-text">
+        {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+
+        <div class="about-actions">
+          <a class="btn btn--primary" href={localePath(lang, 'contacts')}>
+            {strings.home.ctaContact}
+            <Icon name="arrow-right" size={16} />
+          </a>
+        </div>
+      </div>
+
+      <aside class="about-stats" aria-label={strings.about.title}>
+        {
+          stats.map((stat) => (
+            <div class="about-stat">
+              <span class="about-stat__value">{stat.value}</span>
+              <span class="about-stat__label">{stat.label}</span>
+            </div>
+          ))
+        }
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--sunken">
+    <div class="wrap">
+      <p class="eyebrow">{strings.about.skillsTitle}</p>
+      <h2>{strings.home.skillsTitle}</h2>
+      <div class="skill-grid">
+        {
+          SKILL_GROUPS.map((group) => (
+            <div class:list={['skill-card', `skill-card--${group.accent}`]} data-reveal>
+              <h3>{pick(group.title, lang)}</h3>
+              <ul class="tags">
+                {group.items.map((item) => (
+                  <li class="tag">{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">{strings.nav.work}</p>
+      <h2>{strings.home.sectionsLead}</h2>
+      <ul class="about-sections">
+        {
+          SECTIONS_BY_ORDER.map((section) => (
+            <li>
+              <a
+                class:list={['about-section-link', `about-section-link--${section.accent}`]}
+                href={localePath(lang, `work/${section.slug}`)}
+              >
+                <span>{pick(section.title, lang)}</span>
+                <Icon name="arrow-right" size={16} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about-hero {
+    padding-block: clamp(2.5rem, 1.5rem + 5vw, 5rem) clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .about-layout {
+    display: grid;
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  @media (min-width: 880px) {
+    .about-layout {
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    }
+  }
+
+  .about-text p {
+    font-size: 1.02rem;
+    color: var(--ink-dim);
+    margin-bottom: var(--space-2);
+  }
+
+  .about-actions {
+    margin-top: var(--space-3);
+  }
+
+  .about-stats {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .about-stat {
+    padding: var(--space-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-elev);
+  }
+
+  .about-stat__value {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 1.5rem + 1.6vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(120deg, var(--gold), var(--purple));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .about-stat__label {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+  }
+
+  .section--sunken {
+    background: var(--bg-sunken);
+    border-block: 1px solid var(--line);
+  }
+
+  .skill-grid {
+    display: grid;
+    gap: var(--space-2);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr));
+    margin-top: var(--space-3);
+  }
+
+  .skill-card {
+    padding: var(--space-2);
+    border: 1px solid var(--line);
+    border-top: 2px solid var(--accent-color);
+    border-radius: var(--radius);
+    background: var(--bg-elev);
+    transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+  }
+
+  .skill-card[data-reveal] {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  .skill-card[data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .skill-card--gold {
+    --accent-color: var(--gold);
+  }
+  .skill-card--purple {
+    --accent-color: var(--purple);
+  }
+  .skill-card--green {
+    --accent-color: var(--green);
+  }
+
+  .skill-card h3 {
+    font-size: 1rem;
+    color: var(--accent-color);
+    margin-bottom: var(--space-1);
+  }
+
+  .about-sections {
+    display: grid;
+    gap: 0;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    list-style: none;
+    margin: var(--space-2) 0 0;
+    padding: 0;
+  }
+
+  .about-section-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  .about-section-link :global(svg) {
+    color: var(--ink-faint);
+    transition: transform 0.22s var(--ease), color 0.22s var(--ease);
+  }
+
+  .about-section-link--gold:hover {
+    color: var(--gold);
+  }
+  .about-section-link--purple:hover {
+    color: var(--purple);
+  }
+  .about-section-link--green:hover {
+    color: var(--green);
+  }
+
+  .about-section-link:hover :global(svg) {
+    transform: translateX(4px);
+    color: currentColor;
+  }
+</style>

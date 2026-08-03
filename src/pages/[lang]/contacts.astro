@@ -1,0 +1,248 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import type { IconName } from '../../components/icons';
+import { CONTACTS, PROFILE } from '../../data/site';
+import { ENABLED_LOCALES, pick, type EnabledLocale } from '../../i18n/config';
+import { t } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return ENABLED_LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as EnabledLocale;
+const strings = t(lang);
+
+const iconFor: Record<string, IconName> = {
+  telegram: 'telegram',
+  github: 'github',
+  instagram: 'instagram',
+  linkedin: 'linkedin',
+  fiverr: 'fiverr',
+};
+
+const groups = [
+  { id: 'direct' as const, title: strings.contacts.directTitle },
+  { id: 'freelance' as const, title: strings.contacts.freelanceTitle },
+  { id: 'social' as const, title: strings.contacts.socialTitle },
+].map((group) => ({
+  ...group,
+  items: CONTACTS.filter((contact) => contact.group === group.id),
+}))
+  // Пустая группа не рисуется: убрали площадку из данных — заголовок ушёл сам
+  .filter((group) => group.items.length > 0);
+---
+
+<Base lang={lang} path="contacts" title={strings.contacts.title} description={strings.contacts.lead}>
+  <section class="contacts-hero">
+    <div class="wrap">
+      <p class="eyebrow">{strings.contacts.title}</p>
+      <h1>{strings.contacts.lead}</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      {
+        PROFILE.email && (
+          <div class="email-card">
+            <div>
+              <span class="email-card__label">E-mail</span>
+              <a class="email-card__value" href={`mailto:${PROFILE.email}`}>
+                {PROFILE.email}
+              </a>
+            </div>
+            <button
+              type="button"
+              class="btn btn--ghost"
+              data-copy={PROFILE.email}
+              data-copied-label={strings.contacts.copied}
+            >
+              {strings.contacts.copy}
+            </button>
+          </div>
+        )
+      }
+
+      {
+        groups.map((group) => (
+          <div class="contact-group">
+            <h2 class="contact-group__title">{group.title}</h2>
+            <ul class="contact-list">
+              {group.items.map((contact) => (
+                <li class:list={['contact', `contact--${contact.accent}`]} data-reveal>
+                  <a
+                    class="contact__link"
+                    href={contact.url}
+                    target="_blank"
+                    rel="noopener noreferrer me"
+                  >
+                    <span class="contact__icon">
+                      <Icon name={iconFor[contact.id] ?? 'external'} size={20} />
+                    </span>
+                    <span class="contact__text">
+                      <span class="contact__label">{contact.label}</span>
+                      <span class="contact__handle">{contact.handle}</span>
+                    </span>
+                    <Icon name="external" size={16} class="contact__arrow" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+
+      <p class="contacts-note muted">{pick(PROFILE.location, lang)}</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contacts-hero {
+    padding-block: clamp(2.5rem, 1.5rem + 5vw, 5rem) clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .contacts-hero h1 {
+    max-width: 24ch;
+    font-size: clamp(1.7rem, 1.3rem + 2vw, 2.9rem);
+  }
+
+  .email-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    margin-bottom: var(--space-4);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    background: var(--bg-elev);
+  }
+
+  .email-card__label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .email-card__value {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 600;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+
+  .contact-group + .contact-group {
+    margin-top: var(--space-4);
+  }
+
+  .contact-group__title {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: var(--space-2);
+  }
+
+  .contact-list {
+    display: grid;
+    gap: var(--space-1);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .contact {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-elev);
+    transition: transform 0.24s var(--ease), border-color 0.24s var(--ease),
+      opacity 0.5s var(--ease);
+  }
+
+  .contact[data-reveal] {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  .contact[data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .contact--gold {
+    --accent-color: var(--gold);
+  }
+  .contact--purple {
+    --accent-color: var(--purple);
+  }
+  .contact--green {
+    --accent-color: var(--green);
+  }
+
+  .contact:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--accent-color) 55%, transparent);
+  }
+
+  .contact__link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .contact__icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    flex: none;
+    border-radius: 11px;
+    background: color-mix(in srgb, var(--accent-color) 14%, transparent);
+    color: var(--accent-color);
+  }
+
+  .contact__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .contact__label {
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  .contact__handle {
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .contact__arrow {
+    margin-left: auto;
+    flex: none;
+    color: var(--ink-faint);
+  }
+
+  .contacts-note {
+    margin-top: var(--space-4);
+    font-size: 0.9rem;
+  }
+</style>

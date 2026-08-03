@@ -1,0 +1,140 @@
+---
+import Icon from './Icon.astro';
+import { localePath, pick, type EnabledLocale } from '../i18n/config';
+import { t, plural } from '../i18n/ui';
+import type { Section } from '../data/types';
+
+interface Props {
+  section: Section;
+  lang: EnabledLocale;
+  count: number;
+}
+
+const { section, lang, count } = Astro.props;
+const strings = t(lang);
+---
+
+<li class:list={['sec-card', `sec-card--${section.accent}`]} data-reveal>
+  <a class="sec-card__link" href={localePath(lang, `work/${section.slug}`)}>
+    <div class="sec-card__head">
+      <h3 class="sec-card__title">{pick(section.title, lang)}</h3>
+      <span class="sec-card__count">{count} {plural(lang, count, strings)}</span>
+    </div>
+    <p class="sec-card__text">{pick(section.description, lang)}</p>
+    <span class="sec-card__cta">
+      {strings.home.allInSection}
+      <Icon name="arrow-right" size={16} />
+    </span>
+  </a>
+</li>
+
+<style>
+  .sec-card {
+    position: relative;
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.28s var(--ease), border-color 0.28s var(--ease),
+      box-shadow 0.28s var(--ease), opacity 0.5s var(--ease);
+  }
+
+  .sec-card[data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  .sec-card[data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Цветная полоса сверху — единственный носитель акцента раздела */
+  .sec-card::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: var(--accent-color);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.32s var(--ease);
+  }
+
+  .sec-card:hover::before,
+  .sec-card:focus-within::before {
+    transform: scaleX(1);
+  }
+
+  .sec-card--gold {
+    --accent-color: var(--gold);
+  }
+  .sec-card--purple {
+    --accent-color: var(--purple);
+  }
+  .sec-card--green {
+    --accent-color: var(--green);
+  }
+
+  .sec-card:hover,
+  .sec-card:focus-within {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: color-mix(in srgb, var(--accent-color) 50%, transparent);
+  }
+
+  .sec-card__link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    height: 100%;
+    padding: var(--space-3) var(--space-2) var(--space-2);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .sec-card__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-1);
+  }
+
+  .sec-card__title {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+
+  .sec-card__count {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  .sec-card__text {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--ink-dim);
+  }
+
+  .sec-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: auto;
+    padding-top: var(--space-2);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent-color);
+  }
+
+  .sec-card__cta :global(svg) {
+    transition: transform 0.25s var(--ease);
+  }
+
+  .sec-card:hover .sec-card__cta :global(svg) {
+    transform: translateX(3px);
+  }
+</style>
