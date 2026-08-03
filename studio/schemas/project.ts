@@ -8,7 +8,7 @@ const SECTIONS = [
   { title: 'Лендинги', value: 'landings' },
   { title: 'Веб-сайты', value: 'websites' },
   { title: 'Веб-игры', value: 'web-games' },
-  { title: 'ПК-игры и обзоры', value: 'pc-games' },
+  { title: 'ПК-игры', value: 'pc-games' },
   { title: 'Мобильные приложения', value: 'mobile-apps' },
   { title: '3D-модели', value: 'models-3d' },
 ];

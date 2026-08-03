@@ -35,10 +35,10 @@ export const SECTIONS: Section[] = [
     slug: 'pc-games',
     order: 4,
     accent: 'gold',
-    title: { ru: 'ПК-игры и обзоры', en: 'PC games & reviews' },
+    title: { ru: 'ПК-игры', en: 'PC games' },
     description: {
-      ru: 'Проекты для настольных платформ — от прототипа до страницы в Steam, а также разборы и обзоры игр.',
-      en: 'Desktop projects — from prototype to a Steam page — plus write-ups and reviews of games.',
+      ru: 'Игры для настольных платформ — от механик и прототипа до страницы в Steam.',
+      en: 'Games for desktop platforms — from mechanics and prototype to a Steam page.',
     },
   },
   {
