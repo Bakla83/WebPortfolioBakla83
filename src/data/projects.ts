@@ -416,16 +416,237 @@ export const PROJECTS: Project[] = [
       ],
     },
   },
+  /* ----------------------------------------------------------- 3D-модели */
+  {
+    slug: 'beetle',
+    section: 'models-3d',
+    featured: true,
+    order: 1,
+    year: 2025,
+    tech: ['Blender', 'Cycles', 'Моделирование', 'Материалы'],
+    title: { ru: 'Жук-олень', en: 'Stag Beetle' },
+    teaser: {
+      ru: 'Стилизованный жук с ветвистыми рогами и золотыми крыльями на низкополигональном ледяном фоне.',
+      en: 'A stylised beetle with branching antlers and gold wings against a low-poly icy backdrop.',
+    },
+    summary: {
+      ru: 'Модель существа в фиолетово-золотой гамме: ветвистые рога, надкрылья с текучими разводами и раскрытые нижние крылья с золотой сеткой жилок. Фон набран крупными гранями намеренно — резкая огранка льда контрастирует с плавностью самого жука и удерживает на нём внимание, хотя занимает почти весь кадр.',
+      en: 'A creature model in purple and gold: branching antlers, elytra with flowing marbled patterns and spread lower wings veined in gold. The faceted background is deliberate — the sharp cut of the ice contrasts with the smoothness of the beetle and keeps attention on it, even though it fills most of the frame.',
+    },
+    cover: {
+      src: '/media/renders/beetle/cover.webp',
+      width: 900,
+      height: 900,
+      alt: {
+        ru: 'Фиолетово-золотой жук с ветвистыми рогами на фоне гранёного льда',
+        en: 'A purple and gold beetle with branching antlers against faceted ice',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/renders/beetle/full.webp',
+        width: 1080,
+        height: 1080,
+        alt: { ru: 'Жук-олень, рендер целиком', en: 'Stag beetle, full render' },
+      },
+    ],
+  },
+  {
+    slug: 'eclipse',
+    section: 'models-3d',
+    order: 2,
+    year: 2025,
+    tech: ['Blender', 'Ландшафт', 'Освещение', 'Атмосфера'],
+    title: { ru: 'Затмение', en: 'Eclipse' },
+    teaser: {
+      ru: 'Солнечное затмение над горным хребтом и водой — этюд на свет и силуэт.',
+      en: 'A solar eclipse over a mountain ridge and water — a study in light and silhouette.',
+    },
+    summary: {
+      ru: 'Пейзаж, построенный почти целиком на освещении. Корона затмения — единственный жёсткий источник света, всё остальное уходит в силуэт. Дымка над хребтом разводит планы по глубине, а дорожка бликов на воде связывает передний план с источником света и не даёт нижней половине кадра распасться.',
+      en: 'A landscape built almost entirely on lighting. The eclipse corona is the only hard light source; everything else falls into silhouette. Haze over the ridge separates the planes by depth, and the trail of highlights on the water ties the foreground back to the light source so the lower half of the frame holds together.',
+    },
+    cover: {
+      src: '/media/renders/eclipse/cover.webp',
+      width: 900,
+      height: 506,
+      alt: {
+        ru: 'Солнечное затмение над тёмным горным хребтом, блики на воде',
+        en: 'A solar eclipse over a dark mountain ridge, highlights on the water',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/renders/eclipse/full.webp',
+        width: 1920,
+        height: 1080,
+        alt: { ru: 'Затмение, рендер целиком', en: 'Eclipse, full render' },
+      },
+    ],
+  },
+  {
+    slug: 'sci-fi-pistol',
+    section: 'models-3d',
+    order: 3,
+    year: 2025,
+    tech: ['Blender', 'Hard surface', 'Игровой ассет', 'Текстуры'],
+    title: { ru: 'Фантастический пистолет', en: 'Sci-Fi Pistol' },
+    teaser: {
+      ru: 'Игровой ассет: гранёный корпус, баллон вместо магазина и бирюзовый прицел.',
+      en: 'A game asset: faceted body, a canister instead of a magazine and a turquoise sight.',
+    },
+    summary: {
+      ru: 'Оружейный ассет в жанре hard surface: гранёный корпус с рёбрами охлаждения, откидной рычаг и красный баллон на месте привычного магазина. Модель собиралась с расчётом на игровой движок — плотность сетки держится низкой, а детализация вынесена в материалы, а не в геометрию.',
+      en: 'A hard-surface weapon asset: a faceted body with cooling ribs, a hinged lever and a red canister where the magazine would normally sit. The model was built with a game engine in mind — the mesh stays light, and detail lives in the materials rather than the geometry.',
+    },
+    cover: {
+      src: '/media/renders/sci-fi-pistol/cover.webp',
+      width: 900,
+      height: 506,
+      alt: {
+        ru: 'Тёмный фантастический пистолет с красным баллоном и бирюзовым прицелом',
+        en: 'A dark sci-fi pistol with a red canister and a turquoise sight',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/renders/sci-fi-pistol/full.webp',
+        width: 1920,
+        height: 1080,
+        alt: { ru: 'Пистолет, рендер целиком', en: 'Pistol, full render' },
+      },
+    ],
+  },
+  {
+    slug: 'sea-boat',
+    section: 'models-3d',
+    order: 4,
+    year: 2024,
+    tech: ['Blender', 'Toon shading', 'Моделирование', 'Освещение'],
+    title: { ru: 'Лодка в море', en: 'Sea Boat' },
+    teaser: {
+      ru: 'Деревянная лодка с полосатым парусом в открытом море, рисованная подача с обводкой.',
+      en: 'A wooden boat with a striped sail on the open sea, drawn with a toon outline.',
+    },
+    summary: {
+      ru: 'Сцена в мультипликационной подаче: вместо фотореализма — toon-шейдинг с контурной обводкой и плоскими заливками. Вся геометрия предельно простая, объём держится на другом: кучевых облаках, градиенте неба от бирюзы к дымке у горизонта и полосе ряби, отделяющей дальнюю воду от ближней.',
+      en: 'A scene in a cartoon register: instead of photorealism, toon shading with outlines and flat fills. The geometry is deliberately simple — depth comes from elsewhere: cumulus clouds, a sky gradient from turquoise to haze at the horizon, and a band of ripples separating far water from near.',
+    },
+    cover: {
+      src: '/media/renders/sea-boat/cover.webp',
+      width: 900,
+      height: 506,
+      alt: {
+        ru: 'Деревянная лодка с красно-белым парусом на синей воде под облаками',
+        en: 'A wooden boat with a red and white sail on blue water under clouds',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/renders/sea-boat/full.webp',
+        width: 1920,
+        height: 1080,
+        alt: { ru: 'Лодка в море, рендер целиком', en: 'Sea boat, full render' },
+      },
+    ],
+  },
+  {
+    slug: 'vending-machine',
+    section: 'models-3d',
+    order: 5,
+    year: 2024,
+    tech: ['Blender', 'Cel shading', 'Моделирование', 'Материалы'],
+    title: { ru: 'Автомат с напитками', en: 'Drinks Vending Machine' },
+    teaser: {
+      ru: 'Красный торговый автомат с бутылками за стеклом, в рисованном стиле с обводкой.',
+      en: 'A red vending machine with bottles behind glass, drawn with a cel-shaded outline.',
+    },
+    summary: {
+      ru: 'Предметная модель в cel-подаче с чёрной обводкой: витрина с рядами разноцветных бутылок, панель с монетоприёмником и кнопками выдачи, брусчатое основание под корпусом. Мятный фон взят дополнительным к красному корпусу — за счёт этого объект читается силуэтом даже в миниатюре, что и нужно от предметного ассета.',
+      en: 'A prop model in cel-shading with black outlines: a display of multicoloured bottles, a panel with a coin slot and dispensing buttons, and a cobbled base under the body. The mint background is the complement of the red body — which is what lets the object read as a silhouette even at thumbnail size, exactly what a prop asset needs.',
+    },
+    cover: {
+      src: '/media/renders/vending-machine/cover.webp',
+      width: 900,
+      height: 900,
+      alt: {
+        ru: 'Красный торговый автомат с бутылками за стеклом на мятном фоне',
+        en: 'A red vending machine with bottles behind glass on a mint background',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/renders/vending-machine/full.webp',
+        width: 1080,
+        height: 1080,
+        alt: { ru: 'Автомат с напитками, рендер целиком', en: 'Vending machine, full render' },
+      },
+    ],
+  },
+  {
+    slug: 'mine',
+    section: 'models-3d',
+    order: 6,
+    year: 2024,
+    tech: ['Blender', 'Эмиссия', 'Моделирование', 'Материалы'],
+    title: { ru: 'Мина', en: 'Mine' },
+    teaser: {
+      ru: 'Шар с рожками, светящимися изнутри красным, на полностью чёрном фоне.',
+      en: 'A sphere of horns glowing red from within, on a fully black background.',
+    },
+    summary: {
+      ru: 'Этюд на эмиссивные материалы: тёмный шероховатый корпус, опоясанный рёбрами, и рожки, светящиеся изнутри. Внешнего освещения в сцене нет — свет идёт только от самой модели, поэтому фон уходит в абсолютно чёрный, и всё держится на контрасте матового металла с раскалённым контуром.',
+      en: 'A study in emissive materials: a dark, rough body girded with ribs, and horns lit from within. There is no external light in the scene — all of it comes from the model itself, so the background falls to pure black and the whole image rests on the contrast between matte metal and a red-hot outline.',
+    },
+    cover: {
+      src: '/media/renders/mine/cover.webp',
+      width: 900,
+      height: 900,
+      alt: {
+        ru: 'Тёмный шар с рожками, светящимися красным, на чёрном фоне',
+        en: 'A dark sphere with red-glowing horns on a black background',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/renders/mine/full.webp',
+        width: 1080,
+        height: 1080,
+        alt: { ru: 'Мина, рендер целиком', en: 'Mine, full render' },
+      },
+    ],
+  },
+  {
+    slug: 'dream-place',
+    section: 'models-3d',
+    order: 7,
+    year: 2023,
+    tech: ['Blender', 'Архитектура', 'Освещение', 'Туман'],
+    title: { ru: 'Место из сна', en: 'Place From Dream' },
+    teaser: {
+      ru: 'Пятиярусная пагода в тумане, со светящимся кольцом-порталом на верхнем ярусе.',
+      en: 'A five-tier pagoda in fog, with a glowing ring-portal on the upper tier.',
+    },
+    summary: {
+      ru: 'Архитектурная сцена: пятиярусная пагода с изогнутыми крышами, золотым шпилем и красными опорами. Туман скрывает и основание, и горы вокруг, оставляя постройку висеть в белёсой пустоте. Холодное свечение кольца на верхнем ярусе — единственное цветное пятно в приглушённом кадре, и взгляд идёт к нему сразу.',
+      en: 'An architectural scene: a five-tier pagoda with curved roofs, a gold spire and red posts. Fog hides both the base and the mountains around it, leaving the structure suspended in whiteness. The cold glow of the ring on the upper tier is the only patch of colour in an otherwise muted frame, and the eye goes straight to it.',
+    },
+    cover: {
+      src: '/media/renders/dream-place/cover.webp',
+      width: 900,
+      height: 900,
+      alt: {
+        ru: 'Пятиярусная пагода в тумане со светящимся кольцом на верхнем ярусе',
+        en: 'A five-tier pagoda in fog with a glowing ring on the upper tier',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/renders/dream-place/full.webp',
+        width: 1080,
+        height: 1080,
+        alt: { ru: 'Место из сна, рендер целиком', en: 'Place From Dream, full render' },
+      },
+    ],
+  },
 ];
-
-export function projectsInSection(section: string): Project[] {
-  return PROJECTS.filter((p) => p.section === section).sort(
-    (a, b) => (a.order ?? 999) - (b.order ?? 999),
-  );
-}
-
-export function getProject(slug: string): Project | undefined {
-  return PROJECTS.find((p) => p.slug === slug);
-}
-
-export const FEATURED = PROJECTS.filter((p) => p.featured);

@@ -121,6 +121,20 @@ const meta: { label: string; value: string }[] = [
       </div>
     </header>
 
+    <!-- ============================== Галерея ============================ -->
+    <!-- Идёт до описания намеренно: работу сначала показывают, а потом
+         рассказывают о ней. Для 3D-рендеров картинка и есть весь проект. -->
+    {
+      project.gallery && project.gallery.length > 0 && (
+        <section class="section proj-section proj-section--sunken">
+          <div class="wrap">
+            <h2 class="visually-hidden">{strings.project.gallery}</h2>
+            <Gallery images={project.gallery} lang={lang} />
+          </div>
+        </section>
+      )
+    }
+
     <!-- ============================= Описание ============================ -->
     <section class="section proj-section">
       <div class="wrap wrap--narrow">
@@ -142,22 +156,10 @@ const meta: { label: string; value: string }[] = [
       </div>
     </section>
 
-    <!-- ============================== Галерея ============================ -->
-    {
-      project.gallery && project.gallery.length > 0 && (
-        <section class="section proj-section proj-section--sunken">
-          <div class="wrap">
-            <h2>{strings.project.gallery}</h2>
-            <Gallery images={project.gallery} lang={lang} />
-          </div>
-        </section>
-      )
-    }
-
     <!-- =============================== Видео ============================= -->
     {
       project.videos && project.videos.length > 0 && (
-        <section class="section proj-section">
+        <section class="section proj-section proj-section--sunken">
           <div class="wrap wrap--narrow">
             <h2>{strings.project.video}</h2>
             <div class="proj-videos">
@@ -173,7 +175,7 @@ const meta: { label: string; value: string }[] = [
     <!-- ============================== Модели ============================= -->
     {
       project.models && project.models.length > 0 && (
-        <section class="section proj-section proj-section--sunken">
+        <section class="section proj-section">
           <div class="wrap">
             <h2>{strings.project.model}</h2>
             <div class="proj-models">
