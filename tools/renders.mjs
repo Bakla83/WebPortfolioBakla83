@@ -16,7 +16,10 @@ import sharp from 'sharp';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const SRC = 'D:\\ClaudeProjects\\folder for render pic';
+// Пути относительные, а не абсолютные: папку с проектами можно переименовать
+// или перенести, и скрипт не сломается. Ожидается, что «folder for render pic»
+// лежит рядом с папкой сайта.
+const SRC = join(import.meta.dirname, '..', '..', 'folder for render pic');
 const OUT = join(import.meta.dirname, '..', 'public', 'media', 'renders');
 
 /** [имя файла в папке рендеров, slug работы на сайте] */
