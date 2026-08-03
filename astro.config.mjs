@@ -10,6 +10,12 @@ export default defineConfig({
     // Мелкие стили инлайнятся в HTML: меньше запросов на мобильном.
     // Для стилей это безопасно — CSP разрешает style-src 'unsafe-inline'.
     inlineStylesheets: 'auto',
+
+    // 'file' кладёт страницу как /ru/about.html, а не /ru/about/index.html.
+    // Иначе Cloudflare на каждый адрес отвечает 308-редиректом, добавляя
+    // слеш (/ru/about → /ru/about/), и все canonical, hreflang и ссылки
+    // из карты сайта ведут на редирект вместо самой страницы.
+    format: 'file',
   },
 
   vite: {
