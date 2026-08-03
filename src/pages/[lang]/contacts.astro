@@ -235,7 +235,8 @@ const groups = [
     white-space: nowrap;
   }
 
-  .contact__arrow {
+  /* :global — класс стоит на <svg> внутри компонента Icon */
+  .contact__link :global(.contact__arrow) {
     margin-left: auto;
     flex: none;
     color: var(--ink-faint);

@@ -258,13 +258,15 @@ const workActive = path.startsWith('work');
     display: none;
   }
 
-  .dropdown__chevron {
+  /* :global обязателен: класс висит на <svg> внутри компонента Icon,
+     а scoped-стили Astro на чужую разметку не распространяются. */
+  .dropdown :global(.dropdown__chevron) {
     transform: rotate(90deg);
     transition: transform 0.2s var(--ease);
     opacity: 0.65;
   }
 
-  .dropdown[open] .dropdown__chevron {
+  .dropdown[open] :global(.dropdown__chevron) {
     transform: rotate(-90deg);
   }
 
