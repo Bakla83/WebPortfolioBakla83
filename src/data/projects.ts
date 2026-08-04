@@ -424,7 +424,7 @@ export const PROJECTS: Project[] = [
       ],
     },
     cover: {
-      src: '/media/kluchi-ot-goroda/cover.png',
+      src: '/media/kluchi-ot-goroda/cover-2.png',
       width: 2160,
       height: 1188,
       alt: {
