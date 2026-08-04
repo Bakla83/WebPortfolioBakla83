@@ -1,12 +1,19 @@
 # Заголовки безопасности для Cloudflare Pages.
 # Файл читается платформой при деплое; в дев-режиме Astro он не применяется —
-# проверять нужно на задеплоенном сайте (например, securityheaders.com).
+# проверять нужно на собранном сайте через `npm run audit` (он поднимает
+# локальный сервер ровно с этими заголовками) или на securityheaders.com.
+#
+# Важно про структуру. У страниц портфолио и у запускаемых копий работ
+# (/play/*) разные требования: копии — это отдельные сайты со своими
+# шрифтами, и одна политика на всех им не подходит.
+#
+# Поэтому CSP и X-Frame-Options НЕ задаются в общем блоке /*, а расписаны по
+# путям. Так сделано намеренно: если один и тот же заголовок придёт из двух
+# подходящих правил, браузер применит обе политики сразу и возьмёт самое
+# строгое — послабление для /play/* тихо перестало бы действовать.
+# Пересечений между правилами ниже нет, поэтому такого не произойдёт.
 
 /*
-  # Кликджекинг: страницу нельзя открыть во фрейме на чужом сайте.
-  # Дублируется через frame-ancestors в CSP ради старых браузеров.
-  X-Frame-Options: DENY
-
   # Запрещает браузеру угадывать тип файла вопреки Content-Type.
   X-Content-Type-Options: nosniff
 
@@ -20,16 +27,60 @@
   # когда домен окончательно выбран, — откатить это решение быстро не выйдет.
   Strict-Transport-Security: max-age=63072000; includeSubDomains
 
-  # Строгая CSP. Своих скриптов извне нет, поэтому script-src ровно 'self'.
-  # 'unsafe-inline' оставлен только для стилей: Astro инлайнит мелкие CSS
-  # в HTML, а на стили этот вектор не распространяется так, как на скрипты.
-  # img-src: cdn.sanity.io — картинки из CMS, i.ytimg.com — превью роликов.
-  # frame-src: плееры подключаются лишь после клика пользователя.
-  # blob: в worker-src нужен model-viewer для распаковки 3D-моделей.
-  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cdn.sanity.io https://i.ytimg.com; font-src 'self'; connect-src 'self' https://cdn.sanity.io; media-src 'self' https://cdn.sanity.io; worker-src 'self' blob:; frame-src https://www.youtube-nocookie.com https://player.vimeo.com; frame-ancestors 'none'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
+# ------------------------------------------------------- страницы портфолио
+# Строгая CSP. Своих скриптов извне нет, поэтому script-src ровно 'self'.
+# 'unsafe-inline' оставлен только для стилей: Astro инлайнит мелкие CSS
+# в HTML, а на стили этот вектор не распространяется так, как на скрипты.
+# img-src: cdn.sanity.io — картинки из CMS, i.ytimg.com — превью роликов.
+# frame-src: 'self' — рамка с запускаемой копией работы на странице проекта;
+# плееры роликов подключаются лишь после клика пользователя.
+# blob: в worker-src нужен model-viewer для распаковки 3D-моделей.
+#
+# Кликджекинг: страницу портфолио нельзя открыть во фрейме на чужом сайте.
+# X-Frame-Options дублирует frame-ancestors ради старых браузеров.
 
+/
+  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cdn.sanity.io https://i.ytimg.com; font-src 'self'; connect-src 'self' https://cdn.sanity.io; media-src 'self' https://cdn.sanity.io; worker-src 'self' blob:; frame-src 'self' https://www.youtube-nocookie.com https://player.vimeo.com; frame-ancestors 'none'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
+
+/index.html
+  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cdn.sanity.io https://i.ytimg.com; font-src 'self'; connect-src 'self' https://cdn.sanity.io; media-src 'self' https://cdn.sanity.io; worker-src 'self' blob:; frame-src 'self' https://www.youtube-nocookie.com https://player.vimeo.com; frame-ancestors 'none'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
+
+/404.html
+  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cdn.sanity.io https://i.ytimg.com; font-src 'self'; connect-src 'self' https://cdn.sanity.io; media-src 'self' https://cdn.sanity.io; worker-src 'self' blob:; frame-src 'self' https://www.youtube-nocookie.com https://player.vimeo.com; frame-ancestors 'none'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
+
+# Звёздочка без слеша не случайна: главная локали собирается в /ru.html
+# (build.format = 'file'), и шаблон /ru/* её бы не поймал — страница осталась
+# бы вообще без CSP. /ru* закрывает и /ru, и /ru.html, и /ru/work/....
+
+/ru*
+  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cdn.sanity.io https://i.ytimg.com; font-src 'self'; connect-src 'self' https://cdn.sanity.io; media-src 'self' https://cdn.sanity.io; worker-src 'self' blob:; frame-src 'self' https://www.youtube-nocookie.com https://player.vimeo.com; frame-ancestors 'none'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
+
+/en*
+  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cdn.sanity.io https://i.ytimg.com; font-src 'self'; connect-src 'self' https://cdn.sanity.io; media-src 'self' https://cdn.sanity.io; worker-src 'self' blob:; frame-src 'self' https://www.youtube-nocookie.com https://player.vimeo.com; frame-ancestors 'none'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
+
+# -------------------------------------------------- запускаемые копии работ
+# script-src здесь тоже без 'unsafe-inline': tools/sync-demos.mjs выносит все
+# инлайновые <script> в отдельные файлы при копировании. Послабления ровно
+# два, и оба про оформление, а не про исполнение кода:
+#   · fonts.googleapis.com в style-src — таблица стилей Google Fonts;
+#   · fonts.gstatic.com в font-src — сами файлы шрифтов.
+# frame-ancestors 'self' вместо 'none': копию показывает страница проекта на
+# том же домене. Вставить её к себе чужому сайту по-прежнему нельзя.
+
+/play/*
+  X-Frame-Options: SAMEORIGIN
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self'; media-src 'self'; worker-src 'self' blob:; frame-src 'self'; frame-ancestors 'self'; form-action 'self'; upgrade-insecure-requests
+  Cache-Control: public, max-age=3600
+
+# --------------------------------------------------------------- кэширование
 # Хешированные ассеты Astro можно кэшировать навсегда: при изменении
 # файла меняется имя, поэтому устаревшая версия из кэша не всплывёт.
+
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 

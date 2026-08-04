@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title data-i18n="meta.title">ХРЕБЕТ — горные экспедиции для тех, кто идёт до вершины</title>
+<meta name="description" content="ХРЕБЕТ — горные экспедиции на Эльбрус, Казбек, Белуху, Хан-Тенгри и другие вершины. Малые группы, опытные гиды, полное сопровождение от заявки до вершины." data-i18n-content="meta.description" />
+<meta name="theme-color" content="#12151a" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2312151a'/%3E%3Cpath d='M8 46 L24 20 L32 32 L40 16 L58 46 Z' fill='%23e8813a'/%3E%3Ccircle cx='46' cy='16' r='5' fill='%23f6f3ec'/%3E%3C/svg%3E" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,340..380,400;0,340..380,500;0,340..380,600;0,340..380,700;1,340..380,400;1,340..380,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="css/style.css" />
+
+<!-- Тема и язык применяются ДО отрисовки страницы, чтобы не было вспышки
+     дефолтной тёмной/русской версии перед тем, как JS переключит на
+     сохранённые настройки пользователя. -->
+<script src="inline-1.js"></script>
+</head>
+<body>
+
+<a class="skip-link" href="#main" data-i18n="a11y.skip">Перейти к содержанию</a>
+
+<!-- ══════════════════════════ SVG-СПРАЙТ ══════════════════════════ -->
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="icon-close" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="icon-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M12 7.5V12l3.2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="icon-peak" viewBox="0 0 24 24"><path d="M3 19L9.5 8l3 4.5L16 6l5 13H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" fill="none"/><path d="M12.6 12.5l1.4 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="icon-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><circle cx="12" cy="9.5" r="2.4" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="icon-mail" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M4.5 6.5l7.5 6 7.5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="icon-phone" viewBox="0 0 24 24"><path d="M5 4.5h3.5l1.5 4-2 1.5c.9 2.2 2.8 4.1 5 5l1.5-2 4 1.5V18a1.5 1.5 0 01-1.6 1.5C10.8 19 5 13.2 4.5 6.6 4.4 5.5 5 4.5 5 4.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="icon-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M15 9l-2 5-4 1 2-5 4-1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M12 2.5v2.4M12 19v2.5M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M2.5 12h2.4M19 12h2.5M4.9 19l1.7-1.7M17.4 6.6l1.7-1.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M20 14.2A8.5 8.5 0 1110 3.3 6.8 6.8 0 0020 14.2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/></symbol>
+  </defs>
+</svg>
+
+<!-- ══════════════════════════ ШАПКА ══════════════════════════ -->
+<header class="site-header" id="site-header">
+  <div class="container header-inner">
+    <a href="#top" class="logo" id="top" aria-label="ХРЕБЕТ" data-i18n-aria-label="a11y.logo">
+      <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <path d="M4 30L15 12l5 8 5-10 11 20H4z" fill="currentColor"/>
+      </svg>
+      <span class="logo-text" data-i18n="brand.name">ХРЕБЕТ</span>
+    </a>
+
+    <nav class="main-nav" aria-label="Основная навигация">
+      <ul class="nav-list">
+        <li><a class="nav-link" href="#philosophy" data-i18n="nav.philosophy">Философия</a></li>
+        <li><a class="nav-link" href="#routes" data-i18n="nav.routes">Маршруты</a></li>
+        <li><a class="nav-link" href="#process" data-i18n="nav.process">Как это устроено</a></li>
+        <li><a class="nav-link" href="#reviews" data-i18n="nav.reviews">Отзывы</a></li>
+        <li><a class="nav-link" href="#faq" data-i18n="nav.faq">Вопросы</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <button class="pref-btn" id="lang-toggle" type="button" aria-label="Switch language">
+        <span id="lang-toggle-label">EN</span>
+      </button>
+      <button class="pref-btn pref-btn--icon" id="theme-toggle" type="button" aria-label="Переключить тему" data-i18n-aria-label="a11y.themeToggle">
+        <svg class="icon icon-sun"><use href="#icon-sun"/></svg>
+        <svg class="icon icon-moon"><use href="#icon-moon"/></svg>
+      </button>
+      <a href="#contact" class="btn btn-primary btn-sm header-cta" data-i18n="nav.cta">Оставить заявку</a>
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Открыть меню" data-i18n-aria-label="a11y.navOpen">
+        <svg class="icon"><use href="#icon-menu"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════ МОБИЛЬНОЕ МЕНЮ ══════════════════════════ -->
+<div class="mobile-nav" id="mobile-nav" hidden>
+  <div class="mobile-nav-top">
+    <span class="logo-text" data-i18n="brand.name">ХРЕБЕТ</span>
+    <button class="nav-toggle" id="mobile-nav-close" aria-label="Закрыть меню" data-i18n-aria-label="a11y.navClose">
+      <svg class="icon"><use href="#icon-close"/></svg>
+    </button>
+  </div>
+  <ul class="mobile-nav-list">
+    <li><a href="#philosophy" data-i18n="nav.philosophy">Философия</a></li>
+    <li><a href="#routes" data-i18n="nav.routes">Маршруты</a></li>
+    <li><a href="#process" data-i18n="nav.process">Как это устроено</a></li>
+    <li><a href="#reviews" data-i18n="nav.reviews">Отзывы</a></li>
+    <li><a href="#faq" data-i18n="nav.faq">Вопросы</a></li>
+    <li><a href="#contact" data-i18n="nav.contact">Контакты</a></li>
+  </ul>
+  <div class="mobile-nav-bottom">
+    <a href="#contact" class="btn btn-primary" data-i18n="nav.cta">Оставить заявку</a>
+    <a href="tel:+74950000000" class="mobile-nav-phone">+7 495 000-00-00</a>
+    <div class="mobile-nav-prefs">
+      <button class="pref-btn" id="lang-toggle-mobile" type="button" aria-label="Switch language">
+        <span id="lang-toggle-mobile-label">EN</span>
+      </button>
+      <button class="pref-btn pref-btn--icon" id="theme-toggle-mobile" type="button" aria-label="Переключить тему" data-i18n-aria-label="a11y.themeToggle">
+        <svg class="icon icon-sun"><use href="#icon-sun"/></svg>
+        <svg class="icon icon-moon"><use href="#icon-moon"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<main id="main">
+
+  <!-- ══════════════════════════ HERO ══════════════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero-sky" aria-hidden="true"></div>
+    <svg class="hero-mountains" id="hero-mountains" viewBox="0 0 1600 620" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <defs>
+        <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ffd9a8" stop-opacity="0.95"/>
+          <stop offset="45%" stop-color="#e8813a" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#e8813a" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#dce7f4" stop-opacity="0.9"/>
+          <stop offset="45%" stop-color="#7c93b8" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#7c93b8" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Солнце — видно в светлой теме, луна — в тёмной. Обе group лежат в
+           одном месте композиции и переключаются перекрёстным затуханием
+           (см. css: .hero-sun-group / .hero-moon-group), а не подменой
+           одного и того же кружка другим цветом — так у луны может быть
+           собственная текстура (кратеры), а не просто «холодный солнце». -->
+      <g class="hero-sun-group" aria-hidden="true">
+        <circle class="hero-sun" cx="1230" cy="190" r="130" fill="url(#sunGlow)"/>
+        <circle cx="1230" cy="190" r="34" fill="#fff3e0"/>
+      </g>
+      <g class="hero-moon-group" aria-hidden="true">
+        <circle cx="1230" cy="190" r="130" fill="url(#moonGlow)"/>
+        <circle cx="1230" cy="190" r="32" fill="#eef2f6"/>
+        <!-- Кратеры: несколько приглушённых кругов внутри диска -->
+        <circle cx="1219" cy="180" r="6.5" fill="#c7d0dc" opacity="0.55"/>
+        <circle cx="1241" cy="196" r="4.5" fill="#c7d0dc" opacity="0.5"/>
+        <circle cx="1224" cy="202" r="3.2" fill="#c7d0dc" opacity="0.45"/>
+        <circle cx="1245" cy="178" r="3" fill="#c7d0dc" opacity="0.4"/>
+      </g>
+
+      <path class="mtn mtn-back" d="M0,340 L110,270 L230,320 L350,230 L470,300 L590,250 L710,315 L830,255 L950,320 L1080,260 L1210,315 L1340,245 L1460,315 L1600,270 L1600,620 L0,620 Z"/>
+      <path class="mtn mtn-mid" d="M0,430 L160,320 L300,390 L440,270 L580,380 L700,300 L830,395 L970,300 L1110,385 L1250,310 L1400,395 L1600,340 L1600,620 L0,620 Z"/>
+      <path class="mtn mtn-front" d="M0,500 L190,360 L340,450 L510,320 L660,440 L830,350 L1000,460 L1170,360 L1340,450 L1500,375 L1600,450 L1600,620 L0,620 Z"/>
+    </svg>
+
+    <div class="container hero-inner">
+      <p class="eyebrow reveal" data-i18n="hero.eyebrow">Горные экспедиции с 2013 года</p>
+      <h1 class="hero-title">
+        <span class="reveal" data-i18n="hero.title1">Горы не прощают</span>
+        <span class="reveal hero-title-em" data-i18n="hero.title2">спешки.</span>
+      </h1>
+      <p class="hero-lede reveal" data-i18n="hero.lede">Мы водим небольшие группы на Эльбрус, Казбек,
+        Белуху и другие вершины от Кавказа до Камчатки — медленно, аккуратно и с гидами,
+        которые поднимались туда десятки раз.</p>
+
+      <div class="hero-actions reveal">
+        <a href="#contact" class="btn btn-primary"><span data-i18n="hero.ctaPrimary">Оставить заявку</span></a>
+        <a href="#routes" class="btn btn-ghost">
+          <span data-i18n="hero.ctaSecondary">Смотреть маршруты</span>
+          <svg class="icon icon-sm"><use href="#icon-arrow"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-chip reveal" aria-hidden="true">
+      <div class="hero-chip-stack">
+        <span class="hero-chip-num">1 400+</span>
+        <span class="hero-chip-label" data-i18n="hero.chipLabel">участников поднялись с нами</span>
+      </div>
+    </div>
+
+    <a href="#stats" class="scroll-cue" aria-label="Пролистать вниз" data-i18n-aria-label="a11y.scrollDown">
+      <span class="scroll-cue-line"></span>
+      <span data-i18n="hero.scrollCue">Листайте</span>
+    </a>
+  </section>
+
+  <!-- ══════════════════════════ БЕГУЩАЯ СТРОКА ══════════════════════════ -->
+  <!-- Содержимое строится в main.js: список вершин задан один раз в словаре
+       переводов и дублируется программно, чтобы обе половины ленты были
+       побайтово одинаковыми — это единственный надёжный способ добиться
+       бесшовной прокрутки (на глаз подобранное дублирование в разметке
+       ломается при любом изменении текста, в том числе при смене языка). -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track" id="marquee-track"></div>
+  </div>
+
+  <!-- ══════════════════════════ СТАТИСТИКА ══════════════════════════ -->
+  <section class="stats" id="stats">
+    <div class="container stats-grid">
+      <div class="stat-item reveal">
+        <span class="stat-number" data-count="11">0</span><span class="stat-suffix" data-i18n="stats.years.suffix">лет</span>
+        <p class="stat-label" data-i18n="stats.years.label">водим людей в горы</p>
+      </div>
+      <div class="stat-item reveal">
+        <span class="stat-number" data-count="23">0</span>
+        <p class="stat-label" data-i18n="stats.routes.label">маршрута в шести горных районах</p>
+      </div>
+      <div class="stat-item reveal">
+        <span class="stat-number" data-count="1400">0</span><span class="stat-suffix">+</span>
+        <p class="stat-label" data-i18n="stats.climbers.label">участников поднялись с нами</p>
+      </div>
+      <div class="stat-item reveal">
+        <span class="stat-number" data-count="96">0</span><span class="stat-suffix">%</span>
+        <p class="stat-label" data-i18n="stats.success.label">успешных восхождений на вершину</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ ФИЛОСОФИЯ ══════════════════════════ -->
+  <section class="philosophy section-light" id="philosophy">
+    <svg class="philosophy-topo" viewBox="0 0 800 800" aria-hidden="true">
+      <g fill="none" stroke="currentColor" stroke-width="1">
+        <circle cx="400" cy="400" r="120"/>
+        <circle cx="400" cy="400" r="200"/>
+        <circle cx="400" cy="400" r="280"/>
+        <circle cx="400" cy="400" r="360"/>
+      </g>
+    </svg>
+    <div class="container philosophy-grid">
+      <div class="philosophy-head">
+        <p class="kicker reveal" data-i18n="philosophy.kicker">01 — Философия</p>
+        <p class="philosophy-quote reveal" data-i18n-html="philosophy.quote">«Вершина — это&nbsp;не&nbsp;точка на&nbsp;карте.
+          Это состояние, в&nbsp;которое вы&nbsp;приходите шаг за&nbsp;шагом,
+          день за&nbsp;днём акклиматизации».</p>
+      </div>
+      <div class="philosophy-body">
+        <p class="reveal" data-i18n="philosophy.p1">Мы не гонимся за скоростью восхождения и не набираем группы по 20 человек.
+          За 11 лет мы поняли: чем медленнее и внимательнее маршрут — тем выше шанс
+          дойти до вершины и вернуться целым.</p>
+        <p class="reveal" data-i18n="philosophy.p2">Каждая экспедиция — это продуманный график акклиматизации,
+          гид с профильной квалификацией и постоянная связь с базовым лагерем.
+          Горы дают немного права на ошибку — мы делаем всё, чтобы вам оно не понадобилось.</p>
+        <a href="#process" class="text-link reveal">
+          <span data-i18n="philosophy.link">Как устроена подготовка</span>
+          <svg class="icon icon-sm"><use href="#icon-arrow"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ МАРШРУТЫ ══════════════════════════ -->
+  <section class="routes section-light" id="routes">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="kicker reveal" data-i18n="routes.kicker">02 — Маршруты</p>
+          <h2 class="section-title reveal" data-i18n="routes.title">Шесть вершин, до которых мы доводим каждый год</h2>
+        </div>
+        <p class="section-intro reveal" data-i18n="routes.intro">От первого несложного восхождения до технически
+          сложных экспедиций для тех, кто уже стоял на вершине не один раз.</p>
+      </div>
+
+      <div class="route-filters reveal" role="tablist" aria-label="Фильтр маршрутов по сложности">
+        <button class="filter-btn is-active" data-filter="all" role="tab" aria-selected="true" data-i18n="filters.all">Все маршруты</button>
+        <button class="filter-btn" data-filter="beginner" role="tab" aria-selected="false" data-i18n="filters.beginner">Начальный</button>
+        <button class="filter-btn" data-filter="medium" role="tab" aria-selected="false" data-i18n="filters.medium">Средний</button>
+        <button class="filter-btn" data-filter="hard" role="tab" aria-selected="false" data-i18n="filters.hard">Высокий</button>
+        <button class="filter-btn" data-filter="expert" role="tab" aria-selected="false" data-i18n="filters.expert">Экспертный</button>
+      </div>
+
+      <div class="routes-grid" id="routes-grid">
+
+        <article class="route-card reveal" data-level="beginner">
+          <div class="route-card-top">
+            <span class="route-region" data-i18n="route.aktru.region">Алтай</span>
+            <span class="route-badge route-badge--beginner" data-i18n="filters.beginner">Начальный</span>
+          </div>
+          <h3 class="route-name" data-i18n="route.aktru.name">Актру</h3>
+          <p class="route-desc" data-i18n="route.aktru.desc">Ледники и перевалы для первого высотного опыта.</p>
+          <ul class="route-meta">
+            <li><svg class="icon icon-sm"><use href="#icon-clock"/></svg><span data-i18n="route.aktru.duration">8 дней</span></li>
+            <li><svg class="icon icon-sm"><use href="#icon-peak"/></svg><span data-i18n="route.aktru.elevation">3 247 м</span></li>
+          </ul>
+          <div class="route-footer">
+            <span class="route-price"><small data-i18n="route.priceFrom">от</small> <span data-i18n="route.aktru.price">58 000 ₽</span></span>
+            <button class="route-cta" data-route="Актру" data-route-en="Aktru"><span data-i18n="route.cta">Записаться</span> <svg class="icon icon-sm"><use href="#icon-arrow"/></svg></button>
+          </div>
+        </article>
+
+        <article class="route-card reveal" data-level="medium">
+          <div class="route-card-top">
+            <span class="route-region" data-i18n="route.kazbek.region">Кавказ</span>
+            <span class="route-badge route-badge--medium" data-i18n="filters.medium">Средний</span>
+          </div>
+          <h3 class="route-name" data-i18n="route.kazbek.name">Казбек</h3>
+          <p class="route-desc" data-i18n="route.kazbek.desc">Ледовая вершина с видом на Военно-Грузинскую дорогу.</p>
+          <ul class="route-meta">
+            <li><svg class="icon icon-sm"><use href="#icon-clock"/></svg><span data-i18n="route.kazbek.duration">6 дней</span></li>
+            <li><svg class="icon icon-sm"><use href="#icon-peak"/></svg><span data-i18n="route.kazbek.elevation">5 054 м</span></li>
+          </ul>
+          <div class="route-footer">
+            <span class="route-price"><small data-i18n="route.priceFrom">от</small> <span data-i18n="route.kazbek.price">76 000 ₽</span></span>
+            <button class="route-cta" data-route="Казбек" data-route-en="Kazbek"><span data-i18n="route.cta">Записаться</span> <svg class="icon icon-sm"><use href="#icon-arrow"/></svg></button>
+          </div>
+        </article>
+
+        <article class="route-card route-card--feature reveal" data-level="medium">
+          <div class="route-card-top">
+            <span class="route-region" data-i18n="route.elbrus.region">Кавказ</span>
+            <span class="route-badge route-badge--medium" data-i18n="filters.medium">Средний</span>
+          </div>
+          <h3 class="route-name" data-i18n="route.elbrus.name">Эльбрус</h3>
+          <p class="route-desc" data-i18n="route.elbrus.desc">Классический маршрут на высшую точку Европы —
+            наша самая популярная экспедиция.</p>
+          <ul class="route-meta">
+            <li><svg class="icon icon-sm"><use href="#icon-clock"/></svg><span data-i18n="route.elbrus.duration">7 дней</span></li>
+            <li><svg class="icon icon-sm"><use href="#icon-peak"/></svg><span data-i18n="route.elbrus.elevation">5 642 м</span></li>
+          </ul>
+          <div class="route-footer">
+            <span class="route-price"><small data-i18n="route.priceFrom">от</small> <span data-i18n="route.elbrus.price">89 000 ₽</span></span>
+            <button class="route-cta" data-route="Эльбрус" data-route-en="Elbrus"><span data-i18n="route.cta">Записаться</span> <svg class="icon icon-sm"><use href="#icon-arrow"/></svg></button>
+          </div>
+        </article>
+
+        <article class="route-card reveal" data-level="hard">
+          <div class="route-card-top">
+            <span class="route-region" data-i18n="route.belukha.region">Алтай</span>
+            <span class="route-badge route-badge--hard" data-i18n="filters.hard">Высокий</span>
+          </div>
+          <h3 class="route-name" data-i18n="route.belukha.name">Белуха</h3>
+          <p class="route-desc" data-i18n="route.belukha.desc">Сердце Алтая и самая почитаемая вершина региона.</p>
+          <ul class="route-meta">
+            <li><svg class="icon icon-sm"><use href="#icon-clock"/></svg><span data-i18n="route.belukha.duration">12 дней</span></li>
+            <li><svg class="icon icon-sm"><use href="#icon-peak"/></svg><span data-i18n="route.belukha.elevation">4 506 м</span></li>
+          </ul>
+          <div class="route-footer">
+            <span class="route-price"><small data-i18n="route.priceFrom">от</small> <span data-i18n="route.belukha.price">145 000 ₽</span></span>
+            <button class="route-cta" data-route="Белуха" data-route-en="Belukha"><span data-i18n="route.cta">Записаться</span> <svg class="icon icon-sm"><use href="#icon-arrow"/></svg></button>
+          </div>
+        </article>
+
+        <article class="route-card reveal" data-level="hard">
+          <div class="route-card-top">
+            <span class="route-region" data-i18n="route.klyuchevskaya.region">Камчатка</span>
+            <span class="route-badge route-badge--hard" data-i18n="filters.hard">Высокий</span>
+          </div>
+          <h3 class="route-name" data-i18n="route.klyuchevskaya.name">Ключевская Сопка</h3>
+          <p class="route-desc" data-i18n="route.klyuchevskaya.desc">Действующий вулкан и одна из самых зрелищных экспедиций.</p>
+          <ul class="route-meta">
+            <li><svg class="icon icon-sm"><use href="#icon-clock"/></svg><span data-i18n="route.klyuchevskaya.duration">9 дней</span></li>
+            <li><svg class="icon icon-sm"><use href="#icon-peak"/></svg><span data-i18n="route.klyuchevskaya.elevation">4 754 м</span></li>
+          </ul>
+          <div class="route-footer">
+            <span class="route-price"><small data-i18n="route.priceFrom">от</small> <span data-i18n="route.klyuchevskaya.price">168 000 ₽</span></span>
+            <button class="route-cta" data-route="Ключевская Сопка" data-route-en="Klyuchevskaya Sopka"><span data-i18n="route.cta">Записаться</span> <svg class="icon icon-sm"><use href="#icon-arrow"/></svg></button>
+          </div>
+        </article>
+
+        <article class="route-card reveal" data-level="expert">
+          <div class="route-card-top">
+            <span class="route-region" data-i18n="route.khantengri.region">Тянь-Шань</span>
+            <span class="route-badge route-badge--expert" data-i18n="filters.expert">Экспертный</span>
+          </div>
+          <h3 class="route-name" data-i18n="route.khantengri.name">Хан-Тенгри</h3>
+          <p class="route-desc" data-i18n="route.khantengri.desc">Мраморная пирамида — вершина для тех, кто уже поднимался выше 6000.</p>
+          <ul class="route-meta">
+            <li><svg class="icon icon-sm"><use href="#icon-clock"/></svg><span data-i18n="route.khantengri.duration">14 дней</span></li>
+            <li><svg class="icon icon-sm"><use href="#icon-peak"/></svg><span data-i18n="route.khantengri.elevation">6 995 м</span></li>
+          </ul>
+          <div class="route-footer">
+            <span class="route-price"><small data-i18n="route.priceFrom">от</small> <span data-i18n="route.khantengri.price">265 000 ₽</span></span>
+            <button class="route-cta" data-route="Хан-Тенгри" data-route-en="Khan Tengri"><span data-i18n="route.cta">Записаться</span> <svg class="icon icon-sm"><use href="#icon-arrow"/></svg></button>
+          </div>
+        </article>
+
+      </div>
+      <p class="route-empty" id="route-empty" hidden data-i18n="route.empty">В этой категории пока нет маршрутов — но мы что-нибудь придумаем под вас.</p>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ ПРОЦЕСС ══════════════════════════ -->
+  <section class="process" id="process">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="kicker reveal" data-i18n="process.kicker">03 — Подготовка</p>
+          <h2 class="section-title reveal" data-i18n="process.title">Как проходит путь от заявки до вершины</h2>
+        </div>
+        <p class="section-intro reveal" data-i18n="process.intro">Ни один этап не пропускаем — именно поэтому
+          у нас 96% успешных восхождений.</p>
+      </div>
+
+      <ol class="process-list">
+        <li class="process-step reveal">
+          <span class="process-index">01</span>
+          <div class="process-body">
+            <h3 data-i18n="process.step1.title">Заявка</h3>
+            <p data-i18n="process.step1.body">Расскажите об опыте и целях — мы подберём маршрут, который вам по силам,
+              а не самый дорогой в прайсе.</p>
+          </div>
+        </li>
+        <li class="process-step reveal">
+          <span class="process-index">02</span>
+          <div class="process-body">
+            <h3 data-i18n="process.step2.title">Подбор маршрута</h3>
+            <p data-i18n="process.step2.body">Гид свяжется лично, обсудит даты, снаряжение и физическую готовность,
+              ответит на все вопросы.</p>
+          </div>
+        </li>
+        <li class="process-step reveal">
+          <span class="process-index">03</span>
+          <div class="process-body">
+            <h3 data-i18n="process.step3.title">Подготовка</h3>
+            <p data-i18n="process.step3.body">Чек-лист снаряжения, рекомендации по физической форме
+              и подробный план акклиматизации на маршруте.</p>
+          </div>
+        </li>
+        <li class="process-step reveal">
+          <span class="process-index">04</span>
+          <div class="process-body">
+            <h3 data-i18n="process.step4.title">Экспедиция</h3>
+            <p data-i18n="process.step4.body">Идём вместе, шаг за шагом. Гид рядом на каждом участке —
+              от базового лагеря до вершины и обратно.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ ПОЧЕМУ МЫ ══════════════════════════ -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="kicker reveal" data-i18n="features.kicker">04 — Почему мы</p>
+          <h2 class="section-title reveal" data-i18n="features.title">То, что мы не готовы отдать на аутсорс</h2>
+        </div>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <span class="feature-num">01</span>
+          <h3 data-i18n="features.f1.title">Малые группы</h3>
+          <p data-i18n="features.f1.body">До 8 человек на маршруте — гид видит каждого и успевает среагировать
+            на любое изменение состояния.</p>
+        </div>
+        <div class="feature-card reveal">
+          <span class="feature-num">02</span>
+          <h3 data-i18n="features.f2.title">Опытные гиды</h3>
+          <p data-i18n="features.f2.body">Инструкторы с международной квалификацией UIAA и минимум десятью
+            восхождениями на «свою» вершину.</p>
+        </div>
+        <div class="feature-card reveal">
+          <span class="feature-num">03</span>
+          <h3 data-i18n="features.f3.title">Снаряжение включено</h3>
+          <p data-i18n="features.f3.body">Всё техническое снаряжение — кошки, ледорубы, верёвки, палатки —
+            предоставляем на месте.</p>
+        </div>
+        <div class="feature-card reveal">
+          <span class="feature-num">04</span>
+          <h3 data-i18n="features.f4.title">Безопасность</h3>
+          <p data-i18n="features.f4.body">Медицинская страховка, спутниковая связь на маршруте
+            и заранее согласованный план эвакуации.</p>
+        </div>
+        <div class="feature-card reveal">
+          <span class="feature-num">05</span>
+          <h3 data-i18n="features.f5.title">Акклиматизация</h3>
+          <p data-i18n="features.f5.body">Графики адаптации к высоте строим с запасом по дням —
+            никогда не жертвуем ими ради скорости.</p>
+        </div>
+        <div class="feature-card reveal">
+          <span class="feature-num">06</span>
+          <h3 data-i18n="features.f6.title">Гибкие даты</h3>
+          <p data-i18n="features.f6.body">Групповые заезды и индивидуальные экспедиции —
+            круглый год, под разные окна погоды.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ ГАЛЕРЕЯ ══════════════════════════ -->
+  <section class="gallery section-light" id="gallery">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="kicker reveal" data-i18n="gallery.kicker">05 — География</p>
+          <h2 class="section-title reveal" data-i18n="gallery.title">Вершины на нашей карте</h2>
+        </div>
+        <p class="section-intro reveal" data-i18n="gallery.intro">Минималистичные силуэты вместо тысячи фотографий —
+          каждая вершина узнаётся по абрису.</p>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="gallery-tile reveal gallery-tile--lg" style="--tile-a:#e8813a;--tile-b:#a3521f;">
+          <svg viewBox="0 0 200 140" class="gallery-peak" aria-hidden="true"><path d="M0,120 L45,40 L70,75 L95,25 L140,90 L200,60 L200,140 L0,140 Z"/></svg>
+          <span class="gallery-label"><span data-i18n="route.elbrus.name">Эльбрус</span> · <span data-i18n="route.elbrus.elevation">5 642 м</span></span>
+        </div>
+        <div class="gallery-tile reveal" style="--tile-a:#7c9885;--tile-b:#3c5147;">
+          <svg viewBox="0 0 200 140" class="gallery-peak" aria-hidden="true"><path d="M0,110 L60,30 L100,80 L150,45 L200,95 L200,140 L0,140 Z"/></svg>
+          <span class="gallery-label"><span data-i18n="route.kazbek.name">Казбек</span> · <span data-i18n="route.kazbek.elevation">5 054 м</span></span>
+        </div>
+        <div class="gallery-tile reveal" style="--tile-a:#c2515c;--tile-b:#5e262c;">
+          <svg viewBox="0 0 200 140" class="gallery-peak" aria-hidden="true"><path d="M0,130 L35,60 L80,100 L120,20 L160,70 L200,50 L200,140 L0,140 Z"/></svg>
+          <span class="gallery-label"><span data-i18n="route.belukha.name">Белуха</span> · <span data-i18n="route.belukha.elevation">4 506 м</span></span>
+        </div>
+        <div class="gallery-tile reveal" style="--tile-a:#5b7fa6;--tile-b:#293c50;">
+          <svg viewBox="0 0 200 140" class="gallery-peak" aria-hidden="true"><path d="M0,100 L50,55 L90,95 L130,35 L170,80 L200,65 L200,140 L0,140 Z"/></svg>
+          <span class="gallery-label"><span data-i18n="route.aktru.name">Актру</span> · <span data-i18n="route.aktru.elevation">3 247 м</span></span>
+        </div>
+        <div class="gallery-tile reveal" style="--tile-a:#caa24a;--tile-b:#6b5220;">
+          <svg viewBox="0 0 200 140" class="gallery-peak" aria-hidden="true"><path d="M0,120 L40,35 L75,85 L110,15 L145,75 L200,45 L200,140 L0,140 Z"/></svg>
+          <span class="gallery-label"><span data-i18n="route.klyuchevskaya.name">Ключевская Сопка</span> · <span data-i18n="route.klyuchevskaya.elevation">4 754 м</span></span>
+        </div>
+        <div class="gallery-tile reveal gallery-tile--lg" style="--tile-a:#8a6bb0;--tile-b:#3f2f5c;">
+          <svg viewBox="0 0 200 140" class="gallery-peak" aria-hidden="true"><path d="M0,115 L30,80 L55,100 L90,20 L120,70 L155,45 L200,90 L200,140 L0,140 Z"/></svg>
+          <span class="gallery-label"><span data-i18n="route.khantengri.name">Хан-Тенгри</span> · <span data-i18n="route.khantengri.elevation">6 995 м</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ ОТЗЫВЫ ══════════════════════════ -->
+  <section class="reviews" id="reviews">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="kicker reveal" data-i18n="reviews.kicker">06 — Отзывы</p>
+          <h2 class="section-title reveal" data-i18n="reviews.title">Что говорят те, кто уже спустился</h2>
+        </div>
+        <div class="reviews-controls reveal">
+          <button class="reviews-btn" id="reviews-prev" aria-label="Предыдущий отзыв" data-i18n-aria-label="a11y.reviewsPrev"><svg class="icon"><use href="#icon-arrow"/></svg></button>
+          <button class="reviews-btn" id="reviews-next" aria-label="Следующий отзыв" data-i18n-aria-label="a11y.reviewsNext"><svg class="icon"><use href="#icon-arrow"/></svg></button>
+        </div>
+      </div>
+
+      <div class="reviews-viewport reveal">
+        <div class="reviews-track" id="reviews-track">
+          <figure class="review-card">
+            <blockquote data-i18n="reviews.r1.quote">После Эльбруса я понял — дело не в вершине, а в том,
+              кем ты становишься по пути к ней. Спокойная методичность гидов
+              снимает половину тревоги ещё до старта.</blockquote>
+            <figcaption><strong data-i18n="reviews.r1.name">Дмитрий Волков</strong><span data-i18n="reviews.r1.meta">инженер · Эльбрус, 2023</span></figcaption>
+          </figure>
+          <figure class="review-card">
+            <blockquote data-i18n="reviews.r2.quote">Гид знал каждый камень на маршруте. Ни разу не почувствовала
+              себя в опасности, даже когда было по-настоящему страшно —
+              на леднике перед перевалом.</blockquote>
+            <figcaption><strong data-i18n="reviews.r2.name">Анна Соколова</strong><span data-i18n="reviews.r2.meta">дизайнер · Белуха, 2022</span></figcaption>
+          </figure>
+          <figure class="review-card">
+            <blockquote data-i18n="reviews.r3.quote">Четырнадцать дней почти без связи с миром —
+              и это было лучшее решение года. Хан-Тенгри не прощает спешки,
+              и это оказалось ровно то, что мне было нужно.</blockquote>
+            <figcaption><strong data-i18n="reviews.r3.name">Игорь Панин</strong><span data-i18n="reviews.r3.meta">предприниматель · Хан-Тенгри, 2023</span></figcaption>
+          </figure>
+          <figure class="review-card">
+            <blockquote data-i18n="reviews.r4.quote">Первое восхождение в жизни, взяла Актру. Боялась, что
+              не потяну физически — но график акклиматизации оказался настолько
+              разумным, что дошли всей группой.</blockquote>
+            <figcaption><strong data-i18n="reviews.r4.name">Мария Ким</strong><span data-i18n="reviews.r4.meta">врач · Актру, 2024</span></figcaption>
+          </figure>
+        </div>
+        <div class="reviews-dots" id="reviews-dots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ ВОПРОСЫ ══════════════════════════ -->
+  <section class="faq section-light" id="faq">
+    <div class="container faq-grid">
+      <div class="faq-head">
+        <p class="kicker reveal" data-i18n="faq.kicker">07 — Вопросы</p>
+        <h2 class="section-title reveal" data-i18n="faq.title">Если сомневаетесь — это нормально</h2>
+        <p class="section-intro reveal" data-i18n="faq.intro">Не нашли ответ? Напишите нам —
+          отвечаем в течение дня.</p>
+        <a href="#contact" class="text-link reveal">
+          <span data-i18n="faq.link">Задать свой вопрос</span>
+          <svg class="icon icon-sm"><use href="#icon-arrow"/></svg>
+        </a>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item reveal">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-1">
+            <span data-i18n="faq.q1.q">Нужен ли опыт восхождений?</span>
+            <svg class="icon faq-icon"><use href="#icon-chevron"/></svg>
+          </button>
+          <div class="faq-answer" id="faq-1">
+            <p data-i18n="faq.q1.a">Для маршрутов уровня «Начальный» и «Средний» опыт не обязателен —
+              достаточно хорошей физической формы. Для «Высокого» и «Экспертного»
+              уровня нужен опыт как минимум одного восхождения выше 4 500 м.</p>
+          </div>
+        </div>
+        <div class="faq-item reveal">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-2">
+            <span data-i18n="faq.q2.q">Что входит в стоимость?</span>
+            <svg class="icon faq-icon"><use href="#icon-chevron"/></svg>
+          </button>
+          <div class="faq-answer" id="faq-2">
+            <p data-i18n="faq.q2.a">Работа гидов, техническое снаряжение, проживание на маршруте,
+              питание в экспедиции, страховка и трансфер от точки сбора группы.
+              Перелёт до точки сбора и личное снаряжение — отдельно.</p>
+          </div>
+        </div>
+        <div class="faq-item reveal">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-3">
+            <span data-i18n="faq.q3.q">Как проходит акклиматизация?</span>
+            <svg class="icon faq-icon"><use href="#icon-chevron"/></svg>
+          </button>
+          <div class="faq-answer" id="faq-3">
+            <p data-i18n="faq.q3.a">По принципу «поднимайся высоко — спи низко»: каждый выход выше
+              сопровождается спуском на ночёвку. График закладывается с запасом
+              в 1–2 дня на случай непогоды или плохой адаптации.</p>
+          </div>
+        </div>
+        <div class="faq-item reveal">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-4">
+            <span data-i18n="faq.q4.q">Можно ли поехать одному?</span>
+            <svg class="icon faq-icon"><use href="#icon-chevron"/></svg>
+          </button>
+          <div class="faq-answer" id="faq-4">
+            <p data-i18n="faq.q4.a">Да, большинство участников присоединяются к сборным группам в одиночку
+              и знакомятся уже на маршруте. Индивидуальные экспедиции тоже доступны —
+              обсудим при подборе маршрута.</p>
+          </div>
+        </div>
+        <div class="faq-item reveal">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-5">
+            <span data-i18n="faq.q5.q">Что если я не дойду до вершины?</span>
+            <svg class="icon faq-icon"><use href="#icon-chevron"/></svg>
+          </button>
+          <div class="faq-answer" id="faq-5">
+            <p data-i18n="faq.q5.a">Решение о подъёме на финальный участок гид принимает по вашему
+              состоянию и погоде — это забота о вас, а не наказание. Все,
+              кто повернул назад, спускаются вместе с группой в безопасности.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ КОНТАКТЫ / ЗАЯВКА ══════════════════════════ -->
+  <section class="cta" id="contact">
+    <div class="container cta-grid">
+      <div class="cta-info">
+        <p class="kicker reveal" data-i18n="cta.kicker">08 — Контакты</p>
+        <h2 class="cta-title reveal" data-i18n="cta.title">Готовы к своей вершине?</h2>
+        <p class="cta-lede reveal" data-i18n="cta.lede">Оставьте заявку — гид свяжется в течение дня,
+          обсудит маршрут и ответит на вопросы, которые не поместились в FAQ.</p>
+
+        <ul class="cta-contacts reveal">
+          <li><svg class="icon"><use href="#icon-phone"/></svg><a href="tel:+74950000000">+7 495 000-00-00</a></li>
+          <li><svg class="icon"><use href="#icon-mail"/></svg><a href="mailto:go@hrebet.ru">go@hrebet.ru</a></li>
+          <li><svg class="icon"><use href="#icon-pin"/></svg><span data-i18n="cta.address">Москва, ул. Никольская, 12</span></li>
+        </ul>
+      </div>
+
+      <form class="cta-form reveal" id="contact-form" novalidate>
+        <div class="form-row">
+          <label for="f-name" data-i18n="form.name">Имя</label>
+          <input type="text" id="f-name" name="name" required autocomplete="name" placeholder="Как к вам обращаться" data-i18n-placeholder="form.namePh" />
+        </div>
+        <div class="form-row">
+          <label for="f-contact" data-i18n="form.contact">Телефон или e-mail</label>
+          <input type="text" id="f-contact" name="contact" required autocomplete="tel" placeholder="+7 999 000-00-00" data-i18n-placeholder="form.contactPh" />
+        </div>
+        <div class="form-row">
+          <label for="f-route" data-i18n="form.route">Маршрут</label>
+          <div class="select-wrap">
+            <select id="f-route" name="route">
+              <option value="" data-i18n="form.routeDefault">Ещё не решил(а)</option>
+              <option data-i18n="route.aktru.name">Актру</option>
+              <option data-i18n="route.kazbek.name">Казбек</option>
+              <option data-i18n="route.elbrus.name">Эльбрус</option>
+              <option data-i18n="route.belukha.name">Белуха</option>
+              <option data-i18n="route.klyuchevskaya.name">Ключевская Сопка</option>
+              <option data-i18n="route.khantengri.name">Хан-Тенгри</option>
+            </select>
+            <svg class="icon select-chevron"><use href="#icon-chevron"/></svg>
+          </div>
+        </div>
+        <div class="form-row">
+          <label for="f-message"><span data-i18n="form.message">Комментарий</span> <span class="optional" data-i18n="form.messageOptional">(необязательно)</span></label>
+          <textarea id="f-message" name="message" rows="3" placeholder="Опыт восхождений, пожелания по датам…" data-i18n-placeholder="form.messagePh"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="form-submit">
+          <span class="btn-label" data-i18n="form.submit">Отправить заявку</span>
+        </button>
+        <p class="form-note" data-i18n="form.note">Нажимая «Отправить», вы соглашаетесь на обработку персональных данных.</p>
+
+        <div class="form-success" id="form-success" hidden>
+          <svg class="icon"><use href="#icon-check"/></svg>
+          <div>
+            <strong data-i18n="form.successTitle">Заявка отправлена</strong>
+            <p data-i18n="form.successBody">Мы свяжемся с вами в течение дня. А пока — можно листать маршруты дальше.</p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══════════════════════════ ПОДВАЛ ══════════════════════════ -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="#top" class="logo">
+        <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <path d="M4 30L15 12l5 8 5-10 11 20H4z" fill="currentColor"/>
+        </svg>
+        <span class="logo-text" data-i18n="brand.name">ХРЕБЕТ</span>
+      </a>
+      <p data-i18n="footer.tagline">Горные экспедиции для тех, кто идёт до вершины медленно и осознанно.</p>
+      <ul class="footer-social">
+        <li><a href="#" target="_blank" rel="noopener">Telegram</a></li>
+        <li><a href="#" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="#" target="_blank" rel="noopener">VK</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 data-i18n="footer.routesHeading">Маршруты</h4>
+      <ul>
+        <li><a href="#routes" data-i18n="route.elbrus.name">Эльбрус</a></li>
+        <li><a href="#routes" data-i18n="route.kazbek.name">Казбек</a></li>
+        <li><a href="#routes" data-i18n="route.belukha.name">Белуха</a></li>
+        <li><a href="#routes" data-i18n="route.khantengri.name">Хан-Тенгри</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 data-i18n="footer.companyHeading">Компания</h4>
+      <ul>
+        <li><a href="#philosophy" data-i18n="nav.philosophy">Философия</a></li>
+        <li><a href="#process" data-i18n="nav.process">Как это устроено</a></li>
+        <li><a href="#reviews" data-i18n="nav.reviews">Отзывы</a></li>
+        <li><a href="#faq" data-i18n="nav.faq">Вопросы</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 data-i18n="footer.contactsHeading">Контакты</h4>
+      <ul>
+        <li><a href="tel:+74950000000">+7 495 000-00-00</a></li>
+        <li><a href="mailto:go@hrebet.ru">go@hrebet.ru</a></li>
+        <li><span data-i18n="cta.address">Москва, ул. Никольская, 12</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p>© <span id="year">2025</span> <span data-i18n="brand.name">ХРЕБЕТ</span>. <span data-i18n="footer.copyright">Все восхождения на свой риск и с гидом.</span></p>
+    <button class="back-to-top" id="back-to-top" aria-label="Наверх" data-i18n-aria-label="a11y.backToTop">
+      <svg class="icon"><use href="#icon-arrow-up"/></svg>
+    </button>
+  </div>
+</footer>
+
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
+<script src="js/main.js"></script>
+</body>
+</html>

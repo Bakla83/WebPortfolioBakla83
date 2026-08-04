@@ -55,6 +55,20 @@ const techShown = project.tech.slice(0, 3);
         )
       }
 
+      <!-- Метка запускаемой работы. Стоит поверх обложки, потому что это
+           главное её отличие от остальных: карточку можно не просто
+           посмотреть, а открыть и потыкать. -->
+      {
+        project.demo && (
+          <span class="card__playable">
+            <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor" aria-hidden="true">
+              <path d="M8 5.5v13l11-6.5z" />
+            </svg>
+            {strings.project.playable}
+          </span>
+        )
+      }
+
       <!-- Всплывающее описание. На узких экранах оно не всплывает,
            а просто стоит в потоке — на тач-устройствах наведения нет. -->
       <div class="card__overlay">
@@ -107,6 +121,25 @@ const techShown = project.tech.slice(0, 3);
   .card:focus-within {
     transform: translateY(-4px);
     box-shadow: var(--shadow-md);
+  }
+
+  .card__playable {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.22rem 0.55rem;
+    border-radius: var(--radius-sm);
+    background: var(--gold);
+    color: var(--on-gold);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    box-shadow: var(--shadow-sm);
   }
 
   .card--gold:hover,

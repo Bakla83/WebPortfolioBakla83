@@ -43,6 +43,32 @@ export interface ProjectModel {
   alt: Localized<string>;
 }
 
+/**
+ * Запускаемая копия работы: лендинг, сайт или веб-игра открываются прямо на
+ * странице проекта, а не показываются скриншотами.
+ *
+ * Файлы кладёт `npm run demos` (tools/sync-demos.mjs) — он копирует проект из
+ * соседней папки в public/play/<slug>/ и выносит инлайновые скрипты, чтобы
+ * копия не нарушала CSP сайта.
+ */
+export interface ProjectDemo {
+  /** Путь к копии, например /play/hrebet/index.html. */
+  src: string;
+  /**
+   * Пропорции рамки. Игре нужен формат экрана, длинному лендингу — повыше.
+   * Записывается как в CSS: '16 / 10'.
+   */
+  ratio?: string;
+  /**
+   * Ограничение ширины рамки, например '420px'. Нужно портретным работам:
+   * телефонная игра во всю ширину колонки превращается в узкую полоску
+   * посреди пустого поля.
+   */
+  maxWidth?: string;
+  /** Подсказка под рамкой: что попробовать, чем управлять. */
+  note?: Localized<string>;
+}
+
 export type LinkKind = 'live' | 'source' | 'steam' | 'download' | 'other';
 
 export interface ProjectLink {
@@ -70,6 +96,8 @@ export interface Project {
   gallery?: ProjectImage[];
   videos?: ProjectVideo[];
   models?: ProjectModel[];
+  /** Есть у веб-работ: лендингов, сайтов и веб-игр. */
+  demo?: ProjectDemo;
   links?: ProjectLink[];
   /** Попадает в блок «Избранное» на главной. */
   featured?: boolean;

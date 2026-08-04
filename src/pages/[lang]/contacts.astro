@@ -93,7 +93,13 @@ const groups = [
         ))
       }
 
-      <p class="contacts-note muted">{pick(PROFILE.location, lang)}</p>
+      {
+        /* Место указано не всегда — пустое значение не должно оставлять
+           за собой пустой абзац с отступами. */
+        pick(PROFILE.location, lang) && (
+          <p class="contacts-note muted">{pick(PROFILE.location, lang)}</p>
+        )
+      }
     </div>
   </section>
 </Base>

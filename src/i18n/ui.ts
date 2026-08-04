@@ -45,7 +45,7 @@ const ru = {
     ctaWork: 'Смотреть работы',
     ctaContact: 'Связаться',
     sectionsTitle: 'Разделы',
-    sectionsLead: 'Работы разложены по типам — выберите, что ближе.',
+    sectionsLead: 'Работы разложены по направлениям — выберите, что ближе.',
     featuredTitle: 'Избранное',
     featuredLead: 'Проекты, которыми я доволен больше всего.',
     skillsTitle: 'Чем работаю',
@@ -77,6 +77,12 @@ const ru = {
     video: 'Видео',
     model: '3D-модель',
     modelHint: 'Модель можно вращать: зажмите и ведите мышью или пальцем.',
+    demo: 'Открыть проект',
+    demoPlay: 'Запустить здесь',
+    demoHint: 'Настоящая страница, а не скриншот',
+    demoOpen: 'В новой вкладке',
+    demoReload: 'Сначала',
+    playable: 'Запускается',
     links: 'Ссылки',
     linkLive: 'Открыть проект',
     linkSource: 'Исходный код',
@@ -188,6 +194,12 @@ const en: UiStrings = {
     video: 'Video',
     model: '3D model',
     modelHint: 'You can rotate the model: drag with the mouse or your finger.',
+    demo: 'Open the project',
+    demoPlay: 'Run it here',
+    demoHint: 'The real page, not a screenshot',
+    demoOpen: 'New tab',
+    demoReload: 'Restart',
+    playable: 'Runnable',
     links: 'Links',
     linkLive: 'Open project',
     linkSource: 'Source code',
@@ -229,20 +241,13 @@ const en: UiStrings = {
   },
 };
 
-/**
- * Заготовки под fr/es намеренно отсутствуют: пустой перевод хуже,
- * чем его отсутствие — язык просто не показывается, пока не переведён.
- */
 const dictionaries: Partial<Record<Locale, UiStrings>> = { ru, en };
 
 export function t(locale: Locale): UiStrings {
   return dictionaries[locale] ?? ru;
 }
 
-/**
- * Русские числительные требуют трёх форм («1 работа», «2 работы», «5 работ»),
- * английскому хватает двух. Общая функция закрывает оба случая.
- */
+
 export function plural(locale: Locale, n: number, strings: UiStrings): string {
   if (locale === 'ru') {
     const mod10 = n % 10;

@@ -20,7 +20,7 @@
  *   npx playwright install chromium
  */
 import { createServer } from 'node:http';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
 import { chromium } from 'playwright';
 
@@ -41,32 +41,64 @@ const MIME = {
   '.txt': 'text/plain; charset=utf-8',
 };
 
-/** Разбирает блок `/*` из public/_headers и навешивает его на все ответы. */
+/*
+  Разбирает public/_headers целиком, а не только блок `/*`.
+
+  Правила расписаны по путям: у страниц портфолио строгая CSP, у запускаемых
+  копий работ (/play/*) — своя. Если читать один общий блок, проверка шла бы
+  вообще без CSP и перестала бы ловить то, ради чего написана.
+*/
 const rawHeaders = await readFile(join(DIST, '_headers'), 'utf8');
-const globalHeaders = {};
+const headerRules = [];
 {
-  let inGlobal = false;
+  let current = null;
   for (const line of rawHeaders.split(/\r?\n/)) {
+    if (!line.trim() || line.trim().startsWith('#')) continue;
+
     if (/^\S/.test(line)) {
-      inGlobal = line.trim() === '/*';
+      current = { pattern: line.trim(), headers: {} };
+      headerRules.push(current);
       continue;
     }
-    if (!inGlobal) continue;
+    if (!current) continue;
+
     const match = line.match(/^\s+([A-Za-z-]+):\s*(.+)$/);
-    if (match) globalHeaders[match[1]] = match[2];
+    if (match) current.headers[match[1]] = match[2];
   }
 }
-console.log('Заголовки Cloudflare применены:', Object.keys(globalHeaders).join(', '));
+
+/** Шаблон Cloudflare: `*` — любой хвост, остальное сравнивается буквально. */
+function matches(pattern, path) {
+  const rx = new RegExp(
+    '^' + pattern.split('*').map((part) => part.replace(/[.+?^${}()|[\]\\]/g, '\\$&')).join('.*') + '$',
+  );
+  return rx.test(path);
+}
+
+/** Заголовки для конкретного пути: подходящие правила накладываются по порядку. */
+function headersFor(path) {
+  const out = {};
+  for (const rule of headerRules) {
+    if (matches(rule.pattern, path)) Object.assign(out, rule.headers);
+  }
+  return out;
+}
+
+console.log('Правил в _headers:', headerRules.map((r) => r.pattern).join(', '));
 
 const server = createServer(async (req, res) => {
   const path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
+  // Заголовки выбираются по адресу запроса, а не по найденному файлу:
+  // Cloudflare делает так же — /ru отдаёт ru.html, но правило ищет по /ru
+  const headers = headersFor(path);
+
   for (const candidate of [path, `${path}.html`, join(path, 'index.html')]) {
     const file = normalize(join(DIST, candidate));
     if (!file.startsWith(DIST)) continue;
     try {
       const body = await readFile(file);
       res.writeHead(200, {
-        ...globalHeaders,
+        ...headers,
         'Content-Type': MIME[extname(file).toLowerCase()] ?? 'application/octet-stream',
       });
       return res.end(body);
@@ -74,7 +106,7 @@ const server = createServer(async (req, res) => {
       /* пробуем следующий вариант пути */
     }
   }
-  res.writeHead(404, { ...globalHeaders, 'Content-Type': 'text/html' }).end('404');
+  res.writeHead(404, { ...headers, 'Content-Type': 'text/html' }).end('404');
 });
 
 await new Promise((resolve) => server.listen(PORT, resolve));
@@ -296,6 +328,132 @@ for (const [locale, expected] of [
 
   ok('карта сайта на месте', (await page.goto(base + '/sitemap-index.xml')).status() === 200);
   ok('robots.txt на месте', (await page.goto(base + '/robots.txt')).status() === 200);
+  await ctx.close();
+}
+
+/* --------------------------------------- 9. запускаемые копии работ (/play) */
+/*
+  Ради этого блока и переписан разбор _headers. Копии работ живут под своей,
+  более мягкой политикой, и сломать её проще всего незаметно: достаточно
+  добавить в исходный проект инлайновый скрипт, который sync-demos не вынес,
+  или подключить шрифты с нового домена. На собранном сайте это выглядит как
+  пустая белая рамка, и заметить можно только открыв каждую работу руками.
+*/
+{
+  /*
+    Список берём из собранного сайта, а не из projects.ts: Node не умеет
+    импортировать TypeScript напрямую, а главное — проверять надо ровно то,
+    что уехало в dist. Появится новая работа — подхватится сама.
+  */
+  const demos = [];
+  for (const dir of await readdir(join(DIST, 'play'), { withFileTypes: true }).catch(() => [])) {
+    if (!dir.isDirectory()) continue;
+
+    // Раздел работы неизвестен, поэтому ищем её страницу среди собранных
+    let section = null;
+    for (const candidate of await readdir(join(DIST, 'ru', 'work'), { withFileTypes: true }).catch(() => [])) {
+      if (!candidate.isDirectory()) continue;
+      const page = join(DIST, 'ru', 'work', candidate.name, `${dir.name}.html`);
+      try {
+        await readFile(page);
+        section = candidate.name;
+        break;
+      } catch {
+        /* работа не из этого раздела */
+      }
+    }
+
+    demos.push({ slug: dir.name, src: `/play/${dir.name}/index.html`, section });
+  }
+
+  ok('в сборке есть запускаемые работы', demos.length > 0, `нашли ${demos.length}`);
+  ok(
+    'у каждой копии есть своя страница проекта',
+    demos.every((d) => d.section),
+    demos.filter((d) => !d.section).map((d) => d.slug).join(', ') || 'все на месте',
+  );
+
+  for (const demo of demos) {
+    const ctx = await browser.newContext();
+    const page = await ctx.newPage();
+    const problems = [];
+    page.on('console', (m) => {
+      const text = m.text();
+      // Ошибки CSP браузер пишет именно в консоль — это главный сигнал
+      if (m.type() === 'error') problems.push(text);
+    });
+    page.on('pageerror', (e) => problems.push(e.message));
+
+    const response = await page.goto(base + demo.src, { waitUntil: 'networkidle' });
+    ok(`копия ${demo.slug} отдаётся`, response?.status() === 200, `статус ${response?.status()}`);
+
+    const headers = response?.headers() ?? {};
+    ok(
+      `копия ${demo.slug}: CSP разрешает свои скрипты`,
+      (headers['content-security-policy'] ?? '').includes("script-src 'self'"),
+    );
+    ok(
+      `копия ${demo.slug}: рамка со своего домена разрешена`,
+      (headers['x-frame-options'] ?? '').toUpperCase() === 'SAMEORIGIN',
+      headers['x-frame-options'] ?? '(нет)',
+    );
+
+    // Шрифты Google блокируются CSP «тихо» — только записью в консоль,
+    // поэтому отдельной проверки на них нет, ловится тем же списком
+    ok(`копия ${demo.slug} без ошибок`, problems.length === 0, problems.slice(0, 2).join('; '));
+
+    const alive = await page.evaluate(() => {
+      if (document.body && document.body.innerHTML.length > 200) return true;
+      // У игры разметки почти нет — весь экран это <canvas>. Признак работы:
+      // холст растянут под окно, а не остался дефолтным 300×150.
+      return [...document.querySelectorAll('canvas')].some((c) => c.width > 300 || c.height > 150);
+    });
+    ok(`копия ${demo.slug} что-то отрисовала`, Boolean(alive));
+
+    await ctx.close();
+  }
+
+  // Рамка на самой странице проекта: кнопка должна её создавать,
+  // а вложенная страница — грузиться (frame-src 'self' в строгой политике)
+  const framed = demos.filter((d) => d.section);
+  if (framed.length) {
+    const demo = framed[0];
+    const ctx = await browser.newContext();
+    const page = await ctx.newPage();
+    const url = `${base}/ru/work/${demo.section}/${demo.slug}`;
+    await page.goto(url, { waitUntil: 'networkidle' });
+
+    const start = page.locator('[data-demo-start]');
+    ok(`на странице ${demo.slug} есть кнопка запуска`, (await start.count()) === 1);
+
+    if (await start.count()) {
+      await start.click();
+      await page.waitForTimeout(1200);
+      const frames = page.frames().filter((f) => f.url().includes('/play/'));
+      ok('рамка с копией открывается', frames.length === 1, `кадров: ${frames.length}`);
+
+      const inner = frames[0] ? await frames[0].evaluate(() => document.title || document.body?.innerHTML.length) : null;
+      ok('внутри рамки загрузилась страница', Boolean(inner), String(inner).slice(0, 40));
+    }
+
+    await ctx.close();
+  }
+}
+
+/* ------------------------------- 10. строгая политика на страницах портфолио */
+{
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  for (const path of ['/ru', '/ru/about', '/en', '/']) {
+    const response = await page.goto(base + path, { waitUntil: 'domcontentloaded' });
+    const csp = response?.headers()['content-security-policy'] ?? '';
+    ok(`${path}: строгая CSP на месте`, csp.includes("script-src 'self';"), csp ? 'есть' : '(нет)');
+    ok(
+      `${path}: рамка со своего домена разрешена`,
+      csp.includes("frame-src 'self'"),
+      csp.includes('frame-src') ? 'frame-src есть' : '(нет frame-src)',
+    );
+  }
   await ctx.close();
 }
 

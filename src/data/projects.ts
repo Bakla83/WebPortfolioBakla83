@@ -6,8 +6,6 @@ import type { Project } from './types';
  * Это же содержимое дублируется схемой Sanity (см. studio/): когда CMS
  * подключена, данные берутся оттуда, а этот файл остаётся страховкой —
  * сайт соберётся, даже если CMS недоступна. См. src/lib/content.ts.
- *
- * Год и роль проставлены по датам файлов и README — поправьте, если не так.
  */
 export const PROJECTS: Project[] = [
   /* ---------------------------------------------------------------- ПК-игры */
@@ -37,13 +35,13 @@ export const PROJECTS: Project[] = [
         'Рисованные от руки локации и кинематографичный саундтрек',
         'Головоломки и мини-игры, встроенные в исследование',
         'Сюжет, построенный на реальной истории цензуры',
-        'Шесть языков: русский, английский, испанский, немецкий, португальский, китайский',
+        'Четырк языка: русский, английский, испанский, французский',
       ],
       en: [
         'Hand-drawn locations and a cinematic soundtrack',
         'Puzzles and mini-games woven into the exploration',
         'A story grounded in the real history of censorship',
-        'Six languages: Russian, English, Spanish, German, Portuguese, Chinese',
+        'Four languages: Russian, English, Spanish, French',
       ],
     },
     cover: {
@@ -57,7 +55,7 @@ export const PROJECTS: Project[] = [
     },
     gallery: [
       {
-        src: '/media/the-hidden-library/shot-2.jpg',
+        src: '/media/the-hidden-library/shot-2.png',
         width: 1920,
         height: 1080,
         alt: { ru: 'Кадр из игры', en: 'In-game scene' },
@@ -70,6 +68,24 @@ export const PROJECTS: Project[] = [
       },
       {
         src: '/media/the-hidden-library/shot-4.jpg',
+        width: 1920,
+        height: 1080,
+        alt: { ru: 'Кадр из игры', en: 'In-game scene' },
+      },
+      {
+        src: '/media/the-hidden-library/shot-5.png',
+        width: 1920,
+        height: 1080,
+        alt: { ru: 'Кадр из игры', en: 'In-game scene' },
+      },
+      {
+        src: '/media/the-hidden-library/shot-6.png',
+        width: 1920,
+        height: 1080,
+        alt: { ru: 'Кадр из игры', en: 'In-game scene' },
+      },
+      {
+        src: '/media/the-hidden-library/shot-7.jpg',
         width: 1920,
         height: 1080,
         alt: { ru: 'Кадр из игры', en: 'In-game scene' },
@@ -94,8 +110,8 @@ export const PROJECTS: Project[] = [
     title: { ru: 'Salt Run', en: 'Salt Run' },
     role: { ru: 'Автор проекта', en: 'Sole author' },
     teaser: {
-      ru: 'Горный козёл спускается за солью и должен вернуться к стаду живым. Чем ниже — тем больше добычи и тем выше шанс встретить хищника.',
-      en: 'A mountain goat descends for salt and has to make it back to the herd alive. The deeper you go, the richer the haul — and the likelier the predator.',
+      ru: 'Горный козёл спускается за солью и должен вернуться к стаду живым. Чем ниже — тем более ценные минералы можно найти, но и тем выше шанс встретить хищника.',
+      en: 'A mountain goat descends for salt and has to make it back to the herd alive. The deeper you go, the more valuable minerals you can find, but the higher the chance of encountering a predator.',
     },
     summary: {
       ru: 'Аркада на TypeScript и Canvas без игрового движка: портретный экран, управление тапами и свайпами. Спуск быстрый и почти свободный, а обратная дорога тяжёлая — вверх ведут только прыжки и стены, за которые козёл цепляется копытами. Асимметрия возникает сама из физики, без отдельной «механики подъёма».',
@@ -104,17 +120,15 @@ export const PROJECTS: Project[] = [
     highlights: {
       ru: [
         'Мир собирается не шумом, а вертикальной лентой из выверенных вручную фрагментов — случайность отвечает только за порядок',
-        'Проходимость доказывается графом, а не на глаз: после каждого фрагмента сборщик проверяет участок и чинит тупики',
+        'Проходимость доказывается графом: после каждого фрагмента сборщик проверяет участок и чинит тупики',
         'Хищник ищет путь по рельефу алгоритмом Дейкстры — подъём стоит дороже спуска, поэтому зверь не лезет вверх без причины',
         'Обучение встроено в первый спуск: подсказка появляется там, где рельеф уже требует навыка',
-        'Один seed всегда даёт одну и ту же гору — иначе процедурную генерацию невозможно отлаживать',
       ],
       en: [
         'The world is assembled not from noise but as a vertical ribbon of hand-tuned fragments — randomness only decides the order',
         'Traversability is proven by a graph, not by eye: after every fragment the builder checks the stretch and repairs dead ends',
         'The predator routes over the terrain with Dijkstra — climbing costs more than descending, so it never goes up without reason',
         'The tutorial is built into the first descent: each hint appears where the terrain already demands the skill',
-        'One seed always yields the same mountain — otherwise procedural generation is impossible to debug',
       ],
     },
     cover: {
@@ -134,7 +148,39 @@ export const PROJECTS: Project[] = [
           en: 'Portrait screen: the game is built for a phone and played one-handed',
         },
       },
+       {
+        src: '/media/salt-run/mobile2.png',
+        width: 1170,
+        height: 2532,
+        alt: { ru: 'Игра на экране телефона', en: 'The game on a phone screen' },
+        caption: {
+          ru: 'Портретный экран: игра рассчитана на телефон и управляется одной рукой',
+          en: 'Portrait screen: the game is built for a phone and played one-handed',
+        },
+      },
+       {
+        src: '/media/salt-run/mobile3.png',
+        width: 1170,
+        height: 2532,
+        alt: { ru: 'Игра на экране телефона', en: 'The game on a phone screen' },
+        caption: {
+          ru: 'Портретный экран: игра рассчитана на телефон и управляется одной рукой',
+          en: 'Portrait screen: the game is built for a phone and played one-handed',
+        },
+      },
     ],
+    demo: {
+      src: '/play/salt-run/index.html',
+      // Игра портретная — в широкой рамке она смотрелась бы полоской
+      // по центру серого поля.
+      ratio: '10 / 16',
+      maxWidth: '420px',
+      note: {
+        ru: 'Тап — прыжок, свайп вниз — быстрый спуск. Игра рассчитана на телефон, поэтому рамка вертикальная.',
+        en: 'Tap to jump, swipe down to drop faster. The game is built for a phone, hence the portrait frame.',
+      },
+    },
+    links: [{ kind: 'live', url: '/play/salt-run/index.html' }],
   },
 
   /* -------------------------------------------------------------- Лендинги */
@@ -152,8 +198,8 @@ export const PROJECTS: Project[] = [
       en: 'A one-page site for a mountain-expedition company: alternating dark and light sections, two themes, two languages.',
     },
     summary: {
-      ru: 'Лендинг на чистых HTML, CSS и JavaScript — без сборки и зависимостей, разворачивается на любом статическом хостинге. Дизайн-система построена на CSS-переменных: чтобы добавить секцию с обратной темой, достаточно навесить класс, компоненты сами возьмут нужные цвета.',
-      en: 'A landing page in plain HTML, CSS and JavaScript — no build step, no dependencies, deployable to any static host. The design system runs on CSS custom properties: to add a section with an inverted theme you just add a class and the components pick up the right colours themselves.',
+      ru: 'Лендинг на чистых HTML, CSS и JavaScript — без сборки и зависимостей, разворачивается на любом статическом хостинге.',
+      en: 'A landing page in plain HTML, CSS and JavaScript — no build step, no dependencies, deployable to any static host.',
     },
     highlights: {
       ru: [
@@ -198,64 +244,92 @@ export const PROJECTS: Project[] = [
         alt: { ru: 'Сайт на экране телефона', en: 'The site on a phone screen' },
       },
     ],
+    demo: {
+      src: '/play/hrebet/index.html',
+      note: {
+        ru: 'Внутри рабочие переключатели темы и языка — сайт двуязычный и умеет светлую тему.',
+        en: 'The theme and language switches inside are live — the site is bilingual and has a light theme.',
+      },
+    },
+    links: [{ kind: 'live', url: '/play/hrebet/index.html' }],
   },
   {
-    slug: 'relokant',
+    slug: 'pervotsvet',
     section: 'landings',
     order: 2,
     year: 2026,
-    tech: ['HTML', 'CSS', 'JavaScript', 'SVG'],
-    title: { ru: 'Релокант — чек-лист переезда', en: 'Relokant — a relocation checklist' },
+    tech: ['HTML', 'CSS', 'JavaScript', 'Canvas', 'SVG'],
+    title: { ru: 'Первоцвет — цветочная мастерская', en: 'Primrose — a flower workshop' },
     role: { ru: 'Дизайн и вёрстка', en: 'Design and front-end' },
     teaser: {
-      ru: 'Пошаговый чек-лист переезда, оформленный как стопка посадочных талонов. Небо, маршрут и самолётики вместо скучного списка.',
-      en: 'A step-by-step relocation checklist laid out as a stack of boarding passes. Sky, flight path and little planes instead of a dull list.',
+      ru: 'Лендинг цветочной мастерской с живым фоном: лепестки разлетаются от курсора, трава внизу раздвигается, а по клику распускается цветок.',
+      en: 'A flower workshop landing with a living background: petals scatter away from the cursor, the grass parts under your hand, and a click makes a flower open.',
     },
     summary: {
-      ru: 'Лендинг с личным чек-листом релокации: пятнадцать шагов, сгруппированных в восемь блоков — документы, деньги, жильё, вещи и перелёт, связь и страховка, виза, язык, перед отъездом. Карточки стилизованы под посадочный талон: цветной корешок с номером, пунктирная линия отрыва с «заклёпками», отрывной текст справа.',
-      en: 'A landing page holding a personal relocation checklist: fifteen steps grouped into eight blocks — documents, money, housing, belongings and the flight, connectivity and insurance, visa, language, and the day before leaving. The cards are styled as boarding passes: a coloured stub with the number, a perforated tear line with rivets, and the tear-off text on the right.',
+      ru: 'Одностраничный сайт вымышленной мастерской, где фон — не картинка, а четыре системы на одном canvas: падающие лепестки, светящаяся пыльца, трава у нижнего края и цветение по клику. Лепестки расталкиваются курсором, пыльца наоборот к нему тянется, прокрутка добавляет порыв ветра. Три палитры настроения перекрашивают и вёрстку, и фон разом — цвета лежат в CSS-переменных, и canvas читает их оттуда же.',
+      en: 'A single-page site for an imaginary workshop where the background is not a picture but four systems on one canvas: falling petals, glowing pollen, grass along the bottom edge and a bloom on click. Petals are pushed away by the cursor, pollen is drawn towards it, and scrolling adds a gust of wind. Three mood palettes repaint the layout and the background at once — the colours live in CSS variables, and the canvas reads them from there.',
     },
     highlights: {
       ru: [
-        'Сквозная «линия маршрута» через фон всех восьми блоков — SVG-паттерн, который не зависит от высоты контента и не требует измерений в JS',
-        'Прогресс-рейл под шапкой заполняется по мере прокрутки, от мятного к коралловому',
-        'Только светлая тема — по смыслу: утреннее небо и лёгкость темы перелёта',
-        'На мобильных линия маршрута скрывается, чтобы не мешать чтению',
+        'Фон реагирует на человека: курсор расталкивает лепестки и раздвигает траву, пыльца собирается вокруг ладони, резкая прокрутка поднимает ветер',
+        'Конструктор букета: цветы добавляются по одному, веер в вазе перестраивается плавно, цена считается на лету, готовый состав переносится в форму заявки',
+        'Восемь сортов цветов нарисованы кодом — ни одной растровой картинки, поэтому смена палитры ничего не стоит',
+        'Кнопка «приглушить движение» рядом с языком: фон замирает на одном кадре, выбор запоминается и включается сам при системной настройке',
+        'Две языковые версии целиком, включая цены отдельными суммами для рублей и долларов',
       ],
       en: [
-        'A continuous "route line" running through the background of all eight blocks — an SVG pattern that does not depend on content height and needs no JS measurement',
-        'The progress rail under the header fills as you scroll, from mint to coral',
-        'Light theme only, and deliberately so: morning sky and the lightness of the flight theme',
-        'On mobile the route line is hidden so it does not interfere with reading',
+        'The background responds to the person: the cursor pushes petals aside and parts the grass, pollen gathers around your hand, a sharp scroll raises the wind',
+        'A bouquet builder: flowers are added one at a time, the fan in the vase rearranges smoothly, the price updates live, and the finished mix is carried into the order form',
+        'Eight flower varieties are drawn in code — not a single raster image, which is what makes repainting the palette free',
+        'A "calm the motion" button next to the language switch: the background freezes on one frame, the choice is remembered and turns itself on for the system setting',
+        'Both language versions in full, prices included as separate amounts for roubles and dollars',
       ],
     },
     cover: {
-      src: '/media/relokant/cover.png',
+      src: '/media/pervotsvet/cover.png',
       width: 2160,
       height: 1350,
       alt: {
-        ru: 'Первый экран «Релоканта»: рассветное небо, облака и пунктирный маршрут перелёта',
-        en: 'The first screen of Relokant: dawn sky, clouds and a dotted flight path',
+        ru: 'Первый экран «Первоцвета»: крупный заголовок, летящие лепестки и трава внизу',
+        en: 'The first screen of Primrose: a large headline, drifting petals and grass along the bottom',
       },
     },
     gallery: [
       {
-        src: '/media/relokant/desktop-2.png',
+        src: '/media/pervotsvet/desktop-2.png',
         width: 2160,
         height: 1350,
-        alt: { ru: 'Карточки-билеты с шагами чек-листа', en: 'Boarding-pass cards with the checklist steps' },
+        alt: { ru: 'Каталог готовых букетов', en: 'The catalogue of ready-made bouquets' },
         caption: {
-          ru: 'Каждый шаг — посадочный талон с корешком, линией отрыва и номером',
-          en: 'Each step is a boarding pass with a stub, a tear line and a number',
+          ru: 'Букеты в каталоге собраны из тех же нарисованных кодом цветов, что и остальной сайт',
+          en: 'The catalogue bouquets are assembled from the same code-drawn flowers as the rest of the site',
         },
       },
       {
-        src: '/media/relokant/mobile.png',
+        src: '/media/pervotsvet/desktop-3.png',
+        width: 2160,
+        height: 1350,
+        alt: { ru: 'Конструктор букета и подсчёт цены', en: 'The bouquet builder and the running total' },
+        caption: {
+          ru: 'Конструктор: цветы добавляются по одному, ваза перестраивает веер, цена пересчитывается сразу',
+          en: 'The builder: flowers go in one at a time, the vase rearranges the fan, the price recalculates at once',
+        },
+      },
+      {
+        src: '/media/pervotsvet/mobile.png',
         width: 1170,
         height: 2532,
-        alt: { ru: 'Чек-лист на экране телефона', en: 'The checklist on a phone screen' },
+        alt: { ru: 'Лендинг на экране телефона', en: 'The landing on a phone screen' },
       },
     ],
+    demo: {
+      src: '/play/pervotsvet/index.html',
+      note: {
+        ru: 'Поводите курсором по фону и кликните по пустому месту. Палитру можно сменить в разделе «Палитра», язык и движение фона — в шапке.',
+        en: 'Move the cursor across the background and click an empty spot. The palette can be changed in the "Palette" section; language and background motion live in the header.',
+      },
+    },
+    links: [{ kind: 'live', url: '/play/pervotsvet/index.html' }],
   },
   {
     slug: 'stroy-opora',
@@ -312,6 +386,10 @@ export const PROJECTS: Project[] = [
         alt: { ru: 'Сайт на экране телефона', en: 'The site on a phone screen' },
       },
     ],
+    demo: {
+      src: '/play/stroy-opora/index.html',
+    },
+    links: [{ kind: 'live', url: '/play/stroy-opora/index.html' }],
   },
 
   /* ------------------------------------------------------------ Веб-сайты */
@@ -377,6 +455,14 @@ export const PROJECTS: Project[] = [
         alt: { ru: 'Приложение на экране телефона', en: 'The app on a phone screen' },
       },
     ],
+    demo: {
+      src: '/play/chto-prigotovit/index.html',
+      note: {
+        ru: 'Отметьте продукты, которые есть дома, — подбор рецептов работает прямо в рамке.',
+        en: 'Tick the ingredients you have at home — the recipe matching works right inside the frame.',
+      },
+    },
+    links: [{ kind: 'live', url: '/play/chto-prigotovit/index.html' }],
   },
 
   /* -------------------------------------------------- Мобильные приложения */

@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ОПОРА — строительная компания</title>
+<meta name="description" id="metaDescription" content="ОПОРА — строим то, на что можно опереться. Частные дома, реконструкция, коммерческие объекты. Надёжность, зафиксированная в договоре, и уважение к клиенту на каждом этапе.">
+<style>
+  /* ============ Tokens ============ */
+  :root{
+    --paper: #EAE4D8;
+    --paper-2: #DED6C6;
+    --paper-3: #F3EFE6;
+    --ink: #211C16;
+    --ink-soft: #4B4438;
+    --ink-faint: #7A7161;
+    --steel: #46566B;
+    --line: #B7AC98;
+    --line-soft: #CFC6B4;
+    --accent: #BD5A22;
+    --accent-ink: #8C3F15;
+    --accent-soft: rgba(189,90,34,0.12);
+    --blueprint: #1C2C42;
+    --blueprint-2: #16233664;
+    --blueprint-line: #5E7EA3;
+    --blueprint-text: #E7EEF6;
+    --blueprint-text-soft: #AFC1D8;
+    --icon-sun-display: block;
+    --icon-moon-display: none;
+
+    --font-display: "Bahnschrift", "SF Compact Display", "Segoe UI Semibold", "Arial Narrow", sans-serif;
+    --font-body: "Constantia", "Iowan Old Style", "Palatino Linotype", Georgia, "Cambria", serif;
+    --font-mono: "Cascadia Mono", Consolas, "SF Mono", Menlo, monospace;
+
+    --space-1: 0.5rem;
+    --space-2: 1rem;
+    --space-3: 1.75rem;
+    --space-4: 2.75rem;
+    --space-5: 4.5rem;
+    --space-6: 6.5rem;
+
+    --max: 1180px;
+    --radius: 2px;
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper: #17140F;
+      --paper-2: #211D16;
+      --paper-3: #0F0D09;
+      --ink: #ECE5D6;
+      --ink-soft: #C9BFA9;
+      --ink-faint: #8B8271;
+      --steel: #8AA0BC;
+      --line: #423B2C;
+      --line-soft: #332D22;
+      --accent: #E07A3D;
+      --accent-ink: #F0A874;
+      --accent-soft: rgba(224,122,61,0.16);
+      --blueprint: #0F1826;
+      --blueprint-line: #4C6E97;
+      --blueprint-text: #E7EEF6;
+      --blueprint-text-soft: #93A9C4;
+      --icon-sun-display: none;
+      --icon-moon-display: block;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper: #17140F; --paper-2: #211D16; --paper-3: #0F0D09;
+    --ink: #ECE5D6; --ink-soft: #C9BFA9; --ink-faint: #8B8271;
+    --steel: #8AA0BC; --line: #423B2C; --line-soft: #332D22;
+    --accent: #E07A3D; --accent-ink: #F0A874; --accent-soft: rgba(224,122,61,0.16);
+    --blueprint: #0F1826; --blueprint-line: #4C6E97; --blueprint-text: #E7EEF6; --blueprint-text-soft: #93A9C4;
+    --icon-sun-display: none; --icon-moon-display: block;
+  }
+  :root[data-theme="light"]{
+    --paper: #EAE4D8; --paper-2: #DED6C6; --paper-3: #F3EFE6;
+    --ink: #211C16; --ink-soft: #4B4438; --ink-faint: #7A7161;
+    --steel: #46566B; --line: #B7AC98; --line-soft: #CFC6B4;
+    --accent: #BD5A22; --accent-ink: #8C3F15; --accent-soft: rgba(189,90,34,0.12);
+    --blueprint: #1C2C42; --blueprint-line: #5E7EA3; --blueprint-text: #E7EEF6; --blueprint-text-soft: #AFC1D8;
+    --icon-sun-display: block; --icon-moon-display: none;
+  }
+
+  /* ============ Reset ============ */
+  *,*::before,*::after{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *,*::before,*::after{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+  body{
+    margin:0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  img,svg{ display:block; max-width:100%; }
+  a{ color: inherit; }
+  h1,h2,h3,h4{ margin:0; text-wrap: balance; font-family: var(--font-display); font-weight: 700; }
+  p{ margin:0; }
+  ul{ margin:0; padding:0; list-style:none; }
+  button,input,textarea,select{ font: inherit; color: inherit; }
+  :focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .wrap{ max-width: var(--max); margin-inline:auto; padding-inline: var(--space-3); }
+  @media (max-width: 640px){ .wrap{ padding-inline: 1.25rem; } }
+
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+
+  .dim-line{ display:flex; align-items:center; gap: 0.85rem; color: var(--ink-faint); }
+  .dim-line::before,.dim-line::after{ content:""; flex:1; height:1px; background: var(--line); }
+  .dim-line span{ font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+
+  /* ============ Topbar ============ */
+  .topbar{
+    position: sticky; top:0; z-index: 40;
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar .wrap{ display:flex; align-items:center; justify-content: space-between; height: 68px; gap: var(--space-2); }
+  .logo{ display:flex; align-items:baseline; gap:0.5rem; text-decoration:none; flex-shrink:0; white-space:nowrap; }
+  .logo-mark{ font-family: var(--font-display); font-weight:700; font-size:1.35rem; letter-spacing: 0.04em; white-space:nowrap; }
+  .logo-sub{ font-family: var(--font-mono); font-size:0.65rem; letter-spacing:0.1em; color: var(--ink-faint); text-transform: uppercase; white-space:nowrap; }
+  @media (max-width: 480px){ .logo-sub{ display:none; } }
+  .nav-links{ display:flex; align-items:center; gap: var(--space-4); }
+  .nav-links a{
+    text-decoration:none; font-family: var(--font-mono); font-size:0.78rem;
+    letter-spacing:0.04em; text-transform: uppercase; color: var(--ink-soft);
+    position:relative; padding-block: 4px;
+  }
+  .nav-links a::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:1px; background: var(--accent);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.25s ease;
+  }
+  .nav-links a:hover::after,.nav-links a:focus-visible::after{ transform: scaleX(1); }
+  .nav-cta{ display:flex; align-items:center; gap: var(--space-2); flex-shrink:0; }
+  .btn{
+    font-family: var(--font-mono); font-size:0.78rem; letter-spacing:0.04em; text-transform: uppercase;
+    padding: 0.7em 1.3em; border-radius: var(--radius); text-decoration:none; cursor:pointer;
+    display:inline-flex; align-items:center; gap:0.5em; border: 1px solid transparent; transition: all 0.2s ease;
+  }
+  .btn-primary{ background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover{ background: var(--accent-ink); border-color: var(--accent-ink); }
+  .btn-outline{ background: transparent; color: var(--ink); border-color: var(--line); }
+  .btn-outline:hover{ border-color: var(--accent); color: var(--accent-ink); }
+  .menu-toggle{ display:none; background:none; border:1px solid var(--line); padding:0.5em 0.8em; border-radius: var(--radius); flex-shrink:0; }
+  .menu-toggle span{ display:block; width:18px; height:2px; background: var(--ink); margin:3px 0; }
+
+  .lang-switch{ display:flex; border:1px solid var(--line); border-radius: var(--radius); overflow:hidden; flex-shrink:0; }
+  .lang-switch button{
+    background:transparent; border:none; padding:0.5em 0.65em; line-height:1; cursor:pointer;
+    font-family: var(--font-mono); font-size:0.7rem; letter-spacing:0.05em; color: var(--ink-faint);
+  }
+  .lang-switch button + button{ border-left: 1px solid var(--line); }
+  .lang-switch button.active{ background: var(--accent); color:#fff; }
+  .lang-switch button:not(.active):hover{ color: var(--ink); }
+
+  .theme-toggle{
+    width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center;
+    border:1px solid var(--line); border-radius: var(--radius); background:transparent; color: var(--ink);
+    cursor:pointer; flex-shrink:0;
+  }
+  .theme-toggle:hover{ border-color: var(--accent); color: var(--accent-ink); }
+  .theme-toggle svg{ width:16px; height:16px; }
+  .theme-toggle .icon-sun{ display: var(--icon-sun-display); }
+  .theme-toggle .icon-moon{ display: var(--icon-moon-display); }
+
+  @media (max-width: 860px){
+    .nav-links{ display:none; }
+    .nav-cta .btn-primary{ display:none; }
+    .menu-toggle{ display:block; }
+    .topbar.open .nav-links{
+      display:flex; flex-direction:column; position:absolute; top:68px; left:0; right:0;
+      background: var(--paper-3); border-bottom:1px solid var(--line); padding: var(--space-3);
+      gap: var(--space-2);
+    }
+  }
+
+  /* ============ Sheet rail (desktop only) ============ */
+  .sheet-rail{
+    position: fixed; left: 1.1rem; top:50%; transform: translateY(-50%); z-index: 30;
+    display:flex; flex-direction:column; gap: 1.1rem;
+  }
+  .sheet-rail a{
+    display:flex; align-items:center; gap:0.6rem; text-decoration:none;
+    font-family: var(--font-mono); font-size:0.68rem; color: var(--ink-faint);
+    letter-spacing: 0.08em;
+  }
+  .sheet-rail .dot{ width:6px; height:6px; border-radius:50%; border:1px solid var(--line); background: transparent; transition: all 0.2s ease; }
+  .sheet-rail a.active .dot{ background: var(--accent); border-color: var(--accent); }
+  .sheet-rail a.active{ color: var(--accent-ink); }
+  .sheet-rail a .label{ opacity:0; transform: translateX(-4px); transition: all 0.2s ease; white-space:nowrap; }
+  .sheet-rail a:hover .label,.sheet-rail a.active .label{ opacity:1; transform:none; }
+  @media (max-width: 1180px){ .sheet-rail{ display:none; } }
+
+  /* ============ Sheet sections ============ */
+  .sheet{
+    border-bottom: 1px solid var(--line);
+    padding-block: var(--space-6) var(--space-5);
+    opacity:0; transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .sheet.visible{ opacity:1; transform:none; }
+  .sheet-header{
+    display:flex; justify-content:space-between; align-items:flex-end; gap: var(--space-3);
+    margin-bottom: var(--space-4); flex-wrap:wrap;
+  }
+  .sheet-header .num{ font-family: var(--font-mono); font-size:0.78rem; color: var(--accent-ink); letter-spacing:0.1em; }
+  .sheet-header h2{ font-size: clamp(1.7rem, 3.4vw, 2.5rem); margin-top:0.3rem; }
+  .sheet-header .meta{ font-family: var(--font-mono); font-size:0.7rem; color: var(--ink-faint); letter-spacing:0.06em; text-align:right; }
+
+  /* ============ Hero ============ */
+  .hero{ padding-top: var(--space-5); border-bottom: 1px solid var(--line); opacity:1; transform:none; }
+  .hero-grid{ display:grid; grid-template-columns: 1.35fr 0.85fr; gap: var(--space-5); align-items:center; }
+  @media (max-width: 900px){ .hero-grid{ grid-template-columns: 1fr; gap: var(--space-4); } }
+  .hero h1{
+    font-size: clamp(2.4rem, 5.4vw, 4.4rem); line-height: 1.04; margin-top: 0.9rem;
+    letter-spacing: -0.01em;
+  }
+  .hero .lede{ font-family: var(--font-body); font-size:1.08rem; color: var(--ink-soft); max-width: 46ch; margin-top: var(--space-3); }
+  .hero-actions{ display:flex; gap: var(--space-2); margin-top: var(--space-4); flex-wrap:wrap; }
+
+  .stats{ display:grid; grid-template-columns: repeat(4,1fr); gap: var(--space-3); margin-top: var(--space-5); }
+  @media (max-width: 700px){ .stats{ grid-template-columns: repeat(2,1fr); } }
+  .stat{ display:flex; flex-direction:column; gap:0.3rem; padding-top: var(--space-2); border-top: 1px solid var(--line); }
+  .stat b{ font-family: var(--font-mono); font-size: clamp(1.5rem,2.6vw,2.1rem); font-weight:600; font-variant-numeric: tabular-nums; }
+  .stat span{ font-size:0.78rem; color: var(--ink-faint); }
+
+  .seal-wrap{ display:flex; justify-content:center; }
+  .seal{ width: min(280px, 80vw); animation: seal-in 0.9s cubic-bezier(.2,.8,.2,1) both; animation-delay:0.2s; }
+  @keyframes seal-in{ from{ opacity:0; transform: scale(0.85) rotate(-6deg);} to{ opacity:1; transform:none; } }
+  .seal .ring{ animation: spin 40s linear infinite; transform-origin: 100px 100px; }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce){ .seal, .seal .ring{ animation: none; } }
+
+  /* ============ About / clauses ============ */
+  .clauses{ display:grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+  @media (max-width: 800px){ .clauses{ grid-template-columns: 1fr; } }
+  .clause{ padding: var(--space-3); background: var(--paper-3); border: 1px solid var(--line); border-radius: var(--radius); }
+  .clause .tag{ font-family: var(--font-mono); font-size:0.72rem; color: var(--accent-ink); letter-spacing:0.08em; }
+  .clause h3{ font-size:1.5rem; margin-top:0.4rem; margin-bottom:0.9rem; }
+  .clause p{ color: var(--ink-soft); }
+
+  .founder-note{
+    margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--line);
+    display:flex; gap: var(--space-3); align-items:flex-start; flex-wrap:wrap;
+  }
+  .founder-note blockquote{ font-family: var(--font-body); font-style: italic; font-size:1.2rem; color: var(--ink); margin:0; flex:1; min-width:260px; }
+  .founder-note cite{ display:block; margin-top:0.6rem; font-style:normal; font-family: var(--font-mono); font-size:0.75rem; color: var(--ink-faint); }
+
+  /* ============ Services table ============ */
+  .service-table{ display:flex; flex-direction:column; }
+  .service-row{
+    display:grid; grid-template-columns: 3rem 1.4fr 2fr auto; gap: var(--space-3); align-items:center;
+    padding-block: var(--space-2); border-top: 1px solid var(--line);
+  }
+  .service-row:last-child{ border-bottom: 1px solid var(--line); }
+  .service-row .no{ font-family: var(--font-mono); color: var(--accent-ink); font-size:0.85rem; }
+  .service-row h3{ font-size:1.15rem; font-family: var(--font-display); }
+  .service-row p{ color: var(--ink-soft); font-size:0.95rem; }
+  .service-row .dur{ font-family: var(--font-mono); font-size:0.75rem; color: var(--ink-faint); text-transform:uppercase; letter-spacing:0.06em; white-space:nowrap; }
+  @media (max-width: 720px){
+    .service-row{ grid-template-columns: 2.2rem 1fr; grid-template-areas: "no title" ". desc" ". dur"; row-gap:0.35rem; }
+    .service-row .no{ grid-area:no; } .service-row h3{ grid-area:title; }
+    .service-row p{ grid-area:desc; } .service-row .dur{ grid-area:dur; }
+  }
+
+  /* ============ Process timeline ============ */
+  .timeline{ display:grid; grid-template-columns: repeat(5,1fr); gap: var(--space-2); }
+  @media (max-width: 900px){ .timeline{ grid-template-columns: 1fr; } }
+  .tl-step{ position:relative; padding-top: var(--space-2); }
+  .tl-step::before{ content:""; position:absolute; top:0; left:0; right:0; height:2px; background: var(--line); }
+  .tl-step::after{ content:""; position:absolute; top:-3px; left:0; width:8px; height:8px; border-radius:50%; background: var(--accent); }
+  .tl-step .no{ font-family: var(--font-mono); font-size:0.75rem; color: var(--accent-ink); }
+  .tl-step h3{ font-size:1.05rem; margin-top:0.4rem; }
+  .tl-step p{ font-size:0.88rem; color: var(--ink-soft); margin-top:0.4rem; }
+  .tl-step .dur{ display:block; margin-top:0.6rem; font-family: var(--font-mono); font-size:0.7rem; color: var(--ink-faint); text-transform:uppercase; }
+
+  /* ============ Projects ============ */
+  .projects{ display:grid; grid-template-columns: repeat(2,1fr); gap: var(--space-3); }
+  @media (max-width: 760px){ .projects{ grid-template-columns: 1fr; } }
+  .project-card{ border: 1px solid var(--line); background: var(--paper-3); border-radius: var(--radius); overflow:hidden; }
+  .project-art{ padding: var(--space-3); border-bottom: 1px solid var(--line); color: var(--steel); }
+  .project-art svg{ width:100%; height:140px; }
+  .project-body{ padding: var(--space-3); }
+  .project-body h3{ font-size:1.1rem; }
+  .project-body .loc{ font-size:0.85rem; color: var(--ink-faint); margin-top:0.25rem; }
+  .project-spec{ margin-top:0.8rem; font-family: var(--font-mono); font-size:0.72rem; color: var(--ink-soft); letter-spacing:0.03em; }
+
+  /* ============ Reviews ============ */
+  .reviews{ display:grid; grid-template-columns: repeat(3,1fr); gap: var(--space-3); }
+  @media (max-width: 900px){ .reviews{ grid-template-columns: 1fr; } }
+  .review-card{ border: 1px solid var(--line); padding: var(--space-3); background: var(--paper-3); border-radius: var(--radius); display:flex; flex-direction:column; gap: var(--space-2); }
+  .review-card p.quote{ font-family: var(--font-body); font-style: italic; color: var(--ink); flex:1; }
+  .review-foot{ display:flex; justify-content:space-between; align-items:center; border-top:1px dashed var(--line); padding-top:0.8rem; }
+  .review-foot .who{ font-size:0.82rem; color: var(--ink-soft); }
+  .review-foot .stamp{ font-family: var(--font-mono); font-size:0.65rem; color: var(--accent-ink); text-transform:uppercase; letter-spacing:0.06em; border:1px solid var(--accent); padding:2px 6px; border-radius: var(--radius); }
+
+  /* ============ Contact (blueprint) ============ */
+  .sheet--blueprint{ background: var(--blueprint); color: var(--blueprint-text); border-bottom:none; }
+  .sheet--blueprint .eyebrow{ color: var(--blueprint-line); }
+  .sheet--blueprint .sheet-header .num{ color: var(--blueprint-line); }
+  .sheet--blueprint .sheet-header .meta{ color: var(--blueprint-text-soft); }
+  .sheet--blueprint .dim-line{ color: var(--blueprint-text-soft); }
+  .sheet--blueprint .dim-line::before,.sheet--blueprint .dim-line::after{ background: var(--blueprint-line); }
+
+  .contact-grid{ display:grid; grid-template-columns: 0.9fr 1.1fr; gap: var(--space-5); }
+  @media (max-width: 860px){ .contact-grid{ grid-template-columns: 1fr; gap: var(--space-4); } }
+
+  .titleblock{ border: 1px solid var(--blueprint-line); }
+  .tb-row{ display:grid; grid-template-columns: 1fr 1.4fr; border-top: 1px solid var(--blueprint-line); }
+  .tb-row:first-child{ border-top:none; }
+  .tb-row div{ padding: 0.85rem 1rem; }
+  .tb-row .k{ font-family: var(--font-mono); font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color: var(--blueprint-text-soft); border-right: 1px solid var(--blueprint-line); }
+  .tb-row .v{ font-family: var(--font-body); font-size:0.95rem; }
+  .tb-row .v a{ text-decoration:none; }
+  .tb-row .v a:hover{ text-decoration:underline; }
+
+  .form{ display:flex; flex-direction:column; gap: var(--space-2); }
+  .form-row{ display:grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+  @media (max-width: 560px){ .form-row{ grid-template-columns: 1fr; } }
+  .field{ display:flex; flex-direction:column; gap:0.4rem; }
+  .field label{ font-family: var(--font-mono); font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color: var(--blueprint-text-soft); }
+  .field input,.field textarea,.field select{
+    background: transparent; border:1px solid var(--blueprint-line); color: var(--blueprint-text);
+    padding: 0.75em 0.9em; border-radius: var(--radius);
+  }
+  .field input::placeholder,.field textarea::placeholder{ color: var(--blueprint-text-soft); opacity:0.7; }
+  .field textarea{ resize: vertical; min-height: 96px; }
+  .field select option{ color: #111; }
+  .form .btn-primary{ align-self:flex-start; margin-top:0.4rem; }
+  .form-note{ font-family: var(--font-mono); font-size:0.72rem; color: var(--blueprint-text-soft); margin-top:0.3rem; }
+  .form-success{ display:none; font-family: var(--font-mono); font-size:0.82rem; color: #B9E0B0; margin-top:0.6rem; }
+  .form-success.show{ display:block; }
+
+  /* ============ Footer ============ */
+  footer{ background: var(--blueprint); color: var(--blueprint-text-soft); }
+  .foot-wrap{ display:flex; justify-content:space-between; align-items:center; padding-block: var(--space-3); flex-wrap:wrap; gap:1rem; border-top:1px solid var(--blueprint-line); font-family: var(--font-mono); font-size:0.72rem; letter-spacing:0.03em; }
+</style>
+<script src="inline-1.js"></script>
+</head>
+<body>
+
+<header class="topbar" id="topbar">
+  <div class="wrap">
+    <a href="#hero" class="logo">
+      <span class="logo-mark">ОПОРА</span>
+      <span class="logo-sub" data-i18n="logo.sub">строительная компания</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#about" data-i18n="nav.about">О компании</a>
+      <a href="#services" data-i18n="nav.services">Услуги</a>
+      <a href="#process" data-i18n="nav.process">Процесс</a>
+      <a href="#projects" data-i18n="nav.projects">Объекты</a>
+      <a href="#reviews" data-i18n="nav.reviews">Отзывы</a>
+      <a href="#contact" data-i18n="nav.contact">Контакты</a>
+    </nav>
+    <div class="nav-cta">
+      <div class="lang-switch" role="group" aria-label="Language / Язык">
+        <button type="button" data-lang="ru" class="active">RU</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Переключить тему" data-i18n-aria="theme.toggle">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4.3"/>
+          <path d="M12 2.5v3M12 18.5v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2.5 12h3M18.5 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 14.3A8.4 8.4 0 1 1 9.7 4a6.9 6.9 0 0 0 10.3 10.3Z"/>
+        </svg>
+      </button>
+      <a href="#contact" class="btn btn-primary" data-i18n="nav.cta">Обсудить проект</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Открыть меню" aria-expanded="false" data-i18n-aria="menu.aria">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="sheet-rail" id="sheetRail" aria-label="Навигация по разделам">
+  <a href="#hero" data-target="hero" class="active"><span class="dot"></span><span class="label" data-i18n="rail.00">00 обложка</span></a>
+  <a href="#about" data-target="about"><span class="dot"></span><span class="label" data-i18n="rail.01">01 о компании</span></a>
+  <a href="#services" data-target="services"><span class="dot"></span><span class="label" data-i18n="rail.02">02 услуги</span></a>
+  <a href="#process" data-target="process"><span class="dot"></span><span class="label" data-i18n="rail.03">03 процесс</span></a>
+  <a href="#projects" data-target="projects"><span class="dot"></span><span class="label" data-i18n="rail.04">04 объекты</span></a>
+  <a href="#reviews" data-target="reviews"><span class="dot"></span><span class="label" data-i18n="rail.05">05 отзывы</span></a>
+  <a href="#contact" data-target="contact"><span class="dot"></span><span class="label" data-i18n="rail.06">06 контакты</span></a>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <section class="sheet hero" id="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow" data-i18n="hero.eyebrow">строительная компания · с 2015 года</p>
+        <h1 data-i18n-html="hero.h1">Строим то,<br>на что можно опереться.</h1>
+        <p class="lede" data-i18n="hero.lede">Одиннадцать лет мы возводим частные дома, реконструируем здания и ведём инженерные сети так, будто строим для собственной семьи. Смета фиксируется в договоре, прораб — на связи каждый день стройки.</p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn btn-primary" data-i18n="hero.cta1">Обсудить проект</a>
+          <a href="#projects" class="btn btn-outline" data-i18n="hero.cta2">Смотреть объекты</a>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><b>11</b><span data-i18n="stat.1">лет на рынке</span></div>
+          <div class="stat"><b>96</b><span data-i18n="stat.2">сданных объектов</span></div>
+          <div class="stat"><b>100%</b><span data-i18n="stat.3">сдано в срок</span></div>
+          <div class="stat"><b data-i18n="stat.4.num">5 лет</b><span data-i18n="stat.4">гарантии на конструктив</span></div>
+        </div>
+      </div>
+
+      <div class="seal-wrap" aria-hidden="true">
+        <svg class="seal" viewBox="0 0 200 200">
+          <defs>
+            <path id="ringPath" d="M100,100 m-84,0 a84,84 0 1,1 168,0 a84,84 0 1,1 -168,0" />
+          </defs>
+          <g class="ring">
+            <circle cx="100" cy="100" r="96" fill="none" stroke="currentColor" stroke-width="1" opacity="0.35" style="color:var(--steel)"/>
+            <text font-family="Cascadia Mono, Consolas, monospace" font-size="8.4" letter-spacing="2" fill="var(--accent)">
+              <textPath id="ringText" data-i18n="seal.ring" href="#ringPath" startOffset="0%">НАДЁЖНОСТЬ • УВАЖЕНИЕ • КАЧЕСТВО • В СРОК • НАДЁЖНОСТЬ • УВАЖЕНИЕ • КАЧЕСТВО • В СРОК •</textPath>
+            </text>
+          </g>
+          <circle cx="100" cy="100" r="62" fill="none" stroke="currentColor" stroke-width="1" style="color:var(--line)"/>
+          <g stroke="var(--ink)" stroke-width="2.4" fill="none" stroke-linecap="square">
+            <line x1="70" y1="122" x2="70" y2="76"/>
+            <line x1="130" y1="122" x2="130" y2="76"/>
+            <line x1="58" y1="122" x2="82" y2="122"/>
+            <line x1="118" y1="122" x2="142" y2="122"/>
+            <line x1="60" y1="74" x2="140" y2="74"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="sheet" id="about">
+    <div class="wrap">
+      <div class="sheet-header">
+        <div>
+          <p class="num" data-i18n="about.num">Лист 01 / О компании</p>
+          <h2 data-i18n="about.h2">Два принципа, на которых всё держится</h2>
+        </div>
+        <p class="meta" data-i18n-html="about.meta">ред. 04<br>актуально на 2026&nbsp;г.</p>
+      </div>
+
+      <div class="clauses">
+        <div class="clause">
+          <p class="tag">§ 1</p>
+          <h3 data-i18n="about.c1.h3">Надёжность</h3>
+          <p data-i18n="about.c1.p">Каждый объект проходит инженерный контроль на трёх этапах: до заливки фундамента, после монтажа несущих конструкций и перед сдачей. Работаем только с сертифицированными материалами и фиксируем все допуски в акте — если что-то не соответствует норме, переделываем за свой счёт.</p>
+        </div>
+        <div class="clause">
+          <p class="tag">§ 2</p>
+          <h3 data-i18n="about.c2.h3">Уважение к клиенту</h3>
+          <p data-i18n="about.c2.p">Вы получаете личного прораба, который на связи с 8:00 до 20:00 каждый день стройки, и еженедельный фотоотчёт с площадки. Смета фиксируется в договоре — никаких доплат за то, что не было согласовано письменно.</p>
+        </div>
+      </div>
+
+      <div class="founder-note">
+        <blockquote>
+          <span data-i18n="about.quote">«Мы строим так, будто сами будем жить в этом доме — и отвечаем за это гарантией, а не обещаниями.»</span>
+          <cite data-i18n="about.cite">— Владислав Олегович, руководитель компании ОПОРА</cite>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="sheet" id="services">
+    <div class="wrap">
+      <div class="sheet-header">
+        <div>
+          <p class="num" data-i18n="services.num">Лист 02 / Услуги</p>
+          <h2 data-i18n="services.h2">Ведомость работ</h2>
+        </div>
+        <p class="meta" data-i18n="services.meta">раздел · описание · срок</p>
+      </div>
+
+      <div class="service-table">
+        <div class="service-row">
+          <span class="no">01</span>
+          <h3 data-i18n="s1.h3">Проектирование и смета</h3>
+          <p data-i18n="s1.p">Планировка, конструктив, инженерные разделы, согласование с заказчиком.</p>
+          <span class="dur" data-i18n="s1.dur">от 10 дней</span>
+        </div>
+        <div class="service-row">
+          <span class="no">02</span>
+          <h3 data-i18n="s2.h3">Общестроительные работы</h3>
+          <p data-i18n="s2.p">Фундамент, монтаж несущих конструкций, кровля, фасад.</p>
+          <span class="dur" data-i18n="s2.dur">от 3 месяцев</span>
+        </div>
+        <div class="service-row">
+          <span class="no">03</span>
+          <h3 data-i18n="s3.h3">Инженерные сети</h3>
+          <p data-i18n="s3.p">Электрика, водоснабжение, отопление, вентиляция.</p>
+          <span class="dur" data-i18n="s3.dur">от 3 недель</span>
+        </div>
+        <div class="service-row">
+          <span class="no">04</span>
+          <h3 data-i18n="s4.h3">Реконструкция и усиление</h3>
+          <p data-i18n="s4.p">Работа с существующими зданиями, замена несущих узлов.</p>
+          <span class="dur" data-i18n="s4.dur">индивидуально</span>
+        </div>
+        <div class="service-row">
+          <span class="no">05</span>
+          <h3 data-i18n="s5.h3">Отделка под ключ</h3>
+          <p data-i18n="s5.p">Черновая и чистовая отделка, сдача с меблировкой по желанию.</p>
+          <span class="dur" data-i18n="s5.dur">от 6 недель</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="sheet" id="process">
+    <div class="wrap">
+      <div class="sheet-header">
+        <div>
+          <p class="num" data-i18n="process.num">Лист 03 / Процесс</p>
+          <h2 data-i18n="process.h2">Как проходит стройка</h2>
+        </div>
+        <p class="meta" data-i18n="process.meta">от замера до акта приёмки</p>
+      </div>
+
+      <div class="timeline">
+        <div class="tl-step">
+          <p class="no">01</p>
+          <h3 data-i18n="t1.h3">Замер и консультация</h3>
+          <p data-i18n="t1.p">Приезжаем на участок, обсуждаем задачи и бюджет на месте.</p>
+          <span class="dur" data-i18n="t1.dur">1–2 дня</span>
+        </div>
+        <div class="tl-step">
+          <p class="no">02</p>
+          <h3 data-i18n="t2.h3">Проект и смета</h3>
+          <p data-i18n="t2.p">Согласовываем планировку, фиксируем бюджет в договоре.</p>
+          <span class="dur" data-i18n="t2.dur">10–20 дней</span>
+        </div>
+        <div class="tl-step">
+          <p class="no">03</p>
+          <h3 data-i18n="t3.h3">Согласования</h3>
+          <p data-i18n="t3.p">Получаем разрешительную документацию.</p>
+          <span class="dur" data-i18n="t3.dur">2–6 недель</span>
+        </div>
+        <div class="tl-step">
+          <p class="no">04</p>
+          <h3 data-i18n="t4.h3">Строительство</h3>
+          <p data-i18n="t4.p">Еженедельные фотоотчёты и контроль на каждом этапе.</p>
+          <span class="dur" data-i18n="t4.dur">от 3 месяцев</span>
+        </div>
+        <div class="tl-step">
+          <p class="no">05</p>
+          <h3 data-i18n="t5.h3">Сдача объекта</h3>
+          <p data-i18n="t5.p">Акт приёмки, гарантийный талон, исполнительная документация.</p>
+          <span class="dur" data-i18n="t5.dur">1 день</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="sheet" id="projects">
+    <div class="wrap">
+      <div class="sheet-header">
+        <div>
+          <p class="num" data-i18n="projects.num">Лист 04 / Объекты</p>
+          <h2 data-i18n="projects.h2">Сданные объекты</h2>
+        </div>
+        <p class="meta" data-i18n="projects.meta">выборка из портфеля</p>
+      </div>
+
+      <div class="projects">
+        <div class="project-card">
+          <div class="project-art">
+            <svg viewBox="0 0 200 120" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M40 90 L40 55 L100 20 L160 55 L160 90 Z"/>
+              <line x1="30" y1="90" x2="170" y2="90"/>
+              <rect x="90" y="65" width="20" height="25"/>
+              <rect x="55" y="65" width="16" height="16"/>
+              <line x1="20" y1="98" x2="180" y2="98" stroke-dasharray="2 3" opacity="0.5"/>
+              <text x="100" y="112" font-family="Cascadia Mono, Consolas, monospace" font-size="7" text-anchor="middle" opacity="0.6" stroke="none" fill="currentColor" data-i18n="p1.svg">186 м²</text>
+            </svg>
+          </div>
+          <div class="project-body">
+            <h3 data-i18n="p1.h3">Частный дом «Сосновая, 14»</h3>
+            <p class="loc" data-i18n="p1.loc">Ленинградская область</p>
+            <p class="project-spec" data-i18n="p1.spec">186 м² · возведён за 8 месяцев</p>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-art">
+            <svg viewBox="0 0 200 120" fill="none" stroke="currentColor" stroke-width="1.4">
+              <rect x="65" y="16" width="70" height="80"/>
+              <line x1="50" y1="96" x2="150" y2="96"/>
+              <g opacity="0.7">
+                <line x1="65" y1="32" x2="135" y2="32"/><line x1="65" y1="48" x2="135" y2="48"/>
+                <line x1="65" y1="64" x2="135" y2="64"/><line x1="65" y1="80" x2="135" y2="80"/>
+                <line x1="83" y1="16" x2="83" y2="96"/><line x1="100" y1="16" x2="100" y2="96"/><line x1="117" y1="16" x2="117" y2="96"/>
+              </g>
+              <text x="100" y="112" font-family="Cascadia Mono, Consolas, monospace" font-size="7" text-anchor="middle" opacity="0.6" stroke="none" fill="currentColor" data-i18n="p2.svg">4200 м²</text>
+            </svg>
+          </div>
+          <div class="project-body">
+            <h3 data-i18n="p2.h3">ЖК «Северный квартал», корпус 2</h3>
+            <p class="loc" data-i18n="p2.loc">Многоквартирный жилой дом</p>
+            <p class="project-spec" data-i18n="p2.spec">4 200 м² · возведён за 14 месяцев</p>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-art">
+            <svg viewBox="0 0 200 120" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M45 92 L45 40 L100 18 L155 40 L155 92 Z"/>
+              <line x1="35" y1="92" x2="165" y2="92"/>
+              <rect x="88" y="60" width="18" height="32"/>
+              <g stroke-dasharray="3 3" opacity="0.6">
+                <line x1="55" y1="30" x2="55" y2="92"/><line x1="145" y1="30" x2="145" y2="92"/>
+              </g>
+              <text x="100" y="108" font-family="Cascadia Mono, Consolas, monospace" font-size="7" text-anchor="middle" opacity="0.6" stroke="none" fill="currentColor" data-i18n="p3.svg">1907 г.</text>
+            </svg>
+          </div>
+          <div class="project-body">
+            <h3 data-i18n="p3.h3">Реконструкция особняка на ул. Мира</h3>
+            <p class="loc" data-i18n="p3.loc">Историческое здание, 1907 г.</p>
+            <p class="project-spec" data-i18n="p3.spec">340 м² · работы заняли 11 месяцев</p>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-art">
+            <svg viewBox="0 0 200 120" fill="none" stroke="currentColor" stroke-width="1.4">
+              <rect x="72" y="10" width="56" height="86"/>
+              <line x1="55" y1="96" x2="145" y2="96"/>
+              <g opacity="0.7">
+                <line x1="72" y1="26" x2="128" y2="26"/><line x1="72" y1="42" x2="128" y2="42"/>
+                <line x1="72" y1="58" x2="128" y2="58"/><line x1="72" y1="74" x2="128" y2="74"/>
+              </g>
+              <rect x="92" y="80" width="16" height="16"/>
+              <text x="100" y="112" font-family="Cascadia Mono, Consolas, monospace" font-size="7" text-anchor="middle" opacity="0.6" stroke="none" fill="currentColor" data-i18n="p4.svg">1600 м²</text>
+            </svg>
+          </div>
+          <div class="project-body">
+            <h3 data-i18n="p4.h3">Офисный центр «Полюс»</h3>
+            <p class="loc" data-i18n="p4.loc">Коммерческое здание</p>
+            <p class="project-spec" data-i18n="p4.spec">1 600 м² · возведён за 9 месяцев</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="sheet" id="reviews">
+    <div class="wrap">
+      <div class="sheet-header">
+        <div>
+          <p class="num" data-i18n="reviews.num">Лист 05 / Отзывы</p>
+          <h2 data-i18n="reviews.h2">Со слов заказчиков</h2>
+        </div>
+        <p class="meta" data-i18n="reviews.meta">акты приёмки объектов</p>
+      </div>
+
+      <div class="reviews">
+        <div class="review-card">
+          <p class="quote" data-i18n="r1.quote">«Прораб был на связи каждый день, а фотоотчёты приходили по пятницам без напоминаний. Дом сдали на две недели раньше срока.»</p>
+          <div class="review-foot">
+            <span class="who" data-i18n="r1.who">Владислав Олегович, частный дом</span>
+            <span class="stamp" data-i18n="r1.stamp">сдан · март 2025</span>
+          </div>
+        </div>
+        <div class="review-card">
+          <p class="quote" data-i18n="r2.quote">«Боялись реконструкции старого здания — бригада работала аккуратнее, чем мы сами планировали ремонт. Все несущие узлы заменили без единой трещины на фасаде.»</p>
+          <div class="review-foot">
+            <span class="who" data-i18n="r2.who">Владислав Олегович, коммерческий объект</span>
+            <span class="stamp" data-i18n="r2.stamp">сдан · окт 2024</span>
+          </div>
+        </div>
+        <div class="review-card">
+          <p class="quote" data-i18n="r3.quote">«Смета не менялась ни разу за 14 месяцев стройки — это удивило первым. Последним стало качество кровли, которую ни разу не пришлось латать.»</p>
+          <div class="review-foot">
+            <span class="who" data-i18n="r3.who">Владислав Олегович, ЖК «Северный квартал»</span>
+            <span class="stamp" data-i18n="r3.stamp">сдан · июл 2025</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="sheet sheet--blueprint" id="contact">
+    <div class="wrap">
+      <div class="sheet-header">
+        <div>
+          <p class="num" data-i18n="contact.num">Лист 06 / Контакты</p>
+          <h2 data-i18n="contact.h2">Обсудим ваш объект</h2>
+        </div>
+        <p class="meta" data-i18n="contact.meta">ответим в течение рабочего дня</p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="titleblock">
+          <div class="tb-row"><div class="k" data-i18n="tb.org.k">Организация</div><div class="v" data-i18n="tb.org.v">ООО «ОПОРА-СТРОЙ»</div></div>
+          <div class="tb-row"><div class="k" data-i18n="tb.phone.k">Телефон</div><div class="v"><a href="tel:+79990000000">+7 (999) 000-00-00</a></div></div>
+          <div class="tb-row"><div class="k">Email</div><div class="v"><a href="mailto:info@opora-build.ru">info@opora-build.ru</a></div></div>
+          <div class="tb-row"><div class="k" data-i18n="tb.addr.k">Адрес офиса</div><div class="v" data-i18n-html="tb.addr.v">г. Санкт-Петербург,<br>Индустриальный пр., 14, офис 210</div></div>
+          <div class="tb-row"><div class="k" data-i18n="tb.hours.k">Режим работы</div><div class="v" data-i18n="tb.hours.v">Пн–Сб, 8:00–20:00</div></div>
+        </div>
+
+        <form class="form" id="contactForm">
+          <div class="form-row">
+            <div class="field">
+              <label for="f-name" data-i18n="form.name.label">Имя</label>
+              <input id="f-name" name="name" type="text" placeholder="Как к вам обращаться" data-i18n-placeholder="form.name.ph" required>
+            </div>
+            <div class="field">
+              <label for="f-phone" data-i18n="form.phone.label">Телефон</label>
+              <input id="f-phone" name="phone" type="tel" placeholder="+7 (___) ___-__-__" data-i18n-placeholder="form.phone.ph" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-type" data-i18n="form.type.label">Тип объекта</label>
+            <select id="f-type" name="type">
+              <option data-i18n="form.type.o1">Частный дом</option>
+              <option data-i18n="form.type.o2">Многоквартирный дом</option>
+              <option data-i18n="form.type.o3">Реконструкция</option>
+              <option data-i18n="form.type.o4">Коммерческое здание</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-message" data-i18n="form.message.label">Сообщение</label>
+            <textarea id="f-message" name="message" placeholder="Кратко опишите задачу и сроки" data-i18n-placeholder="form.message.ph"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" data-i18n="form.submit">Отправить заявку</button>
+          <p class="form-note" data-i18n="form.note">Отправляя заявку, вы соглашаетесь на обработку персональных данных.</p>
+          <p class="form-success" id="formSuccess" data-i18n="form.success">Заявка получена. Прораб свяжется с вами в течение рабочего дня.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-wrap">
+    <span data-i18n="footer.rights">© 2026 ООО «ОПОРА-СТРОЙ». Все права защищены.</span>
+    <span data-i18n="footer.sheet">Лист 06 из 06 · последняя правка: 2026</span>
+  </div>
+</footer>
+
+<script src="inline-2.js"></script>
+
+</body>
+</html>

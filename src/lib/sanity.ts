@@ -50,6 +50,7 @@ const PROJECTS_QUERY = `
     alt,
     caption
   },
+  "demo": demo{ src, ratio, maxWidth, note },
   "videos": videos[]{ provider, "id": videoId, title },
   "models": models[]{ "src": file.asset->url, "poster": poster.asset->url, alt },
   "links": links[]{ kind, url, label }

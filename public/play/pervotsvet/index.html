@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="ru" data-mood="dawn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title data-i18n="meta.title">Первоцвет — цветочная мастерская</title>
+<meta name="description" content="Первоцвет — цветочная мастерская: авторские букеты из сезонных цветов, конструктор букета и подписка с доставкой к утру." data-i18n-content="meta.description" />
+<meta name="theme-color" content="#fff6ec" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23fff4e8'/%3E%3Cg fill='%23ef7c9d'%3E%3Cellipse cx='32' cy='19' rx='7' ry='11'/%3E%3Cellipse cx='32' cy='45' rx='7' ry='11'/%3E%3Cellipse cx='19' cy='32' rx='11' ry='7'/%3E%3Cellipse cx='45' cy='32' rx='11' ry='7'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='8' fill='%23f5b942'/%3E%3C/svg%3E" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="css/style.css" />
+
+<!-- Язык, настроение и режим движения применяются ДО отрисовки страницы:
+     иначе посетитель на долю секунды видит русскую версию в палитре по
+     умолчанию, и только потом JS переключает её на сохранённую. -->
+<script src="inline-1.js"></script>
+</head>
+<body>
+
+<a class="skip-link" href="#main" data-i18n="a11y.skip">Перейти к содержимому</a>
+
+<!-- ================================================================ ФОН -->
+<!-- Три независимых слоя. CSS-слой даёт мягкий свет и не нагружает
+     процессор, canvas — всё, что реагирует на курсор, скролл и клики.
+     Оба помечены aria-hidden: для скринридера это чистая декорация. -->
+<div class="bg" aria-hidden="true">
+  <div class="bg__sun"></div>
+  <div class="bg__orb bg__orb--1"></div>
+  <div class="bg__orb bg__orb--2"></div>
+  <div class="bg__orb bg__orb--3"></div>
+  <div class="bg__haze"></div>
+</div>
+<canvas id="bg-canvas" class="bg-canvas" aria-hidden="true"></canvas>
+<div class="cursor-glow" aria-hidden="true"></div>
+
+<!-- ============================================================= ШАПКА -->
+<header class="site-header" id="top">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="#top">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__text">
+        <span class="brand__name" data-i18n="brand.name">Первоцвет</span>
+        <span class="brand__sub" data-i18n="brand.sub">цветочная мастерская</span>
+      </span>
+    </a>
+
+    <nav class="site-nav" id="site-nav" data-i18n-aria-label="a11y.nav" aria-label="Основная навигация">
+      <a href="#bouquets" data-i18n="nav.bouquets">Букеты</a>
+      <a href="#builder" data-i18n="nav.builder">Собрать свой</a>
+      <a href="#how" data-i18n="nav.how">Как это работает</a>
+      <a href="#plans" data-i18n="nav.plans">Подписка</a>
+      <a href="#contacts" data-i18n="nav.contacts">Контакты</a>
+    </nav>
+
+    <div class="site-header__tools">
+      <button class="icon-btn" id="calm-toggle" type="button" aria-pressed="false" data-i18n-aria-label="a11y.calm" aria-label="Приглушить движение фона">
+        <span class="icon-btn__petal" aria-hidden="true"></span>
+      </button>
+
+      <div class="lang" role="group" data-i18n-aria-label="a11y.lang" aria-label="Язык сайта">
+        <button type="button" class="lang__btn" data-lang="ru" aria-pressed="true">RU</button>
+        <button type="button" class="lang__btn" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+
+      <a class="btn btn--primary btn--sm header-cta" href="#builder" data-i18n="header.cta">Собрать букет</a>
+
+      <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="site-nav" data-i18n-aria-label="a11y.menu" aria-label="Меню">
+        <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============================================================ ГЕРОЙ -->
+  <section class="hero">
+    <!-- Цветы вокруг заголовка. data-depth задаёт, насколько сильно
+         элемент смещается за курсором: чем больше, тем «ближе» к зрителю. -->
+    <div class="hero__garden" aria-hidden="true">
+      <div class="hero__flower" data-flower="peony"      data-depth="26" style="--x:6%;  --y:16%; --s:1.15; --r:-14deg; --d:0s"></div>
+      <div class="hero__flower" data-flower="tulip"      data-depth="18" style="--x:15%; --y:66%; --s:0.85; --r:12deg;  --d:.28s"></div>
+      <div class="hero__flower" data-flower="daisy"      data-depth="34" style="--x:26%; --y:34%; --s:0.6;  --r:22deg;  --d:.5s"></div>
+      <div class="hero__flower" data-flower="lavender"   data-depth="12" style="--x:34%; --y:83%; --s:0.7;  --r:-8deg;  --d:.14s"></div>
+      <div class="hero__flower" data-flower="ranunculus" data-depth="30" style="--x:88%; --y:20%; --s:1;    --r:16deg;  --d:.42s"></div>
+      <div class="hero__flower" data-flower="anemone"    data-depth="20" style="--x:79%; --y:60%; --s:0.9;  --r:-18deg; --d:.08s"></div>
+      <div class="hero__flower" data-flower="craspedia"  data-depth="38" style="--x:70%; --y:88%; --s:0.55; --r:0deg;   --d:.62s"></div>
+      <div class="hero__flower" data-flower="rose"       data-depth="16" style="--x:93%; --y:82%; --s:0.8;  --r:8deg;   --d:.35s"></div>
+    </div>
+
+    <div class="wrap hero__inner">
+      <p class="eyebrow" data-i18n="hero.eyebrow">Срезано сегодня на рассвете</p>
+
+      <h1 class="hero__title">
+        <span class="hero__line" data-kinetic data-i18n="hero.title1">Весна собирается</span>
+        <!-- Вторая строка намеренно НЕ разбивается на буквы: у неё градиентная
+             заливка через background-clip, а transform на дочерних элементах
+             её ломает — буквы становятся прозрачными. Строка выезжает целиком. -->
+        <span class="hero__line hero__line--accent" data-i18n="hero.title2">в букеты</span>
+      </h1>
+
+      <p class="hero__lead" data-i18n="hero.lead">
+        Небольшая мастерская, где букет собирают руками и под настроение, а не по каталогу. Сезонные цветы, честная цена и доставка к нужному часу.
+      </p>
+
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#builder" data-magnetic data-i18n="hero.ctaPrimary">Собрать свой букет</a>
+        <a class="btn btn--ghost" href="#bouquets" data-magnetic data-i18n="hero.ctaSecondary">Посмотреть готовые</a>
+      </div>
+
+      <ul class="hero__stats">
+        <li><b data-count="9">9</b><span data-i18n="hero.stat1">лет в цветах</span></li>
+        <li><b data-count="40">40</b><span data-i18n="hero.stat2">сортов в сезон</span></li>
+        <li><b data-count="3">3</b><span data-i18n="hero.stat3">часа до двери</span></li>
+      </ul>
+
+      <p class="hero__hint" data-i18n="hero.hint">Кликните по фону — расцветёт ещё один цветок</p>
+    </div>
+
+    <a class="scroll-cue" href="#moods">
+      <span data-i18n="hero.scroll">Листайте</span>
+      <span class="scroll-cue__line" aria-hidden="true"></span>
+    </a>
+  </section>
+
+  <!-- ======================================================= НАСТРОЕНИЕ -->
+  <section class="section moods" id="moods">
+    <div class="wrap">
+      <p class="eyebrow" data-i18n="moods.eyebrow">Палитра</p>
+      <h2 class="section__title" data-i18n="moods.title">С какого настроения начнём?</h2>
+      <p class="section__lead" data-i18n="moods.lead">
+        Выберите — и сайт вместе с лепестками на фоне перекрасится. Мы собираем букеты так же: от настроения, а не от списка.
+      </p>
+
+      <div class="moods__grid" role="group" data-i18n-aria-label="a11y.mood" aria-label="Выбор палитры">
+        <button class="mood mood--dawn" type="button" data-mood-btn="dawn" aria-pressed="true">
+          <span class="mood__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="mood__name" data-i18n="moods.dawn">Рассвет</span>
+          <span class="mood__note" data-i18n="moods.dawnNote">Пудровая роза, персик, золото</span>
+        </button>
+        <button class="mood mood--meadow" type="button" data-mood-btn="meadow" aria-pressed="false">
+          <span class="mood__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="mood__name" data-i18n="moods.meadow">Луг</span>
+          <span class="mood__note" data-i18n="moods.meadowNote">Зелень, лимон, полевая белизна</span>
+        </button>
+        <button class="mood mood--orchard" type="button" data-mood-btn="orchard" aria-pressed="false">
+          <span class="mood__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="mood__name" data-i18n="moods.orchard">Сад</span>
+          <span class="mood__note" data-i18n="moods.orchardNote">Сирень, абрикос, тёплые сливки</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================== КАТАЛОГ -->
+  <section class="section catalog" id="bouquets">
+    <div class="wrap">
+      <p class="eyebrow" data-i18n="catalog.eyebrow">Готовые букеты</p>
+      <h2 class="section__title" data-i18n="catalog.title">Шесть историй этой недели</h2>
+      <p class="section__lead" data-i18n="catalog.lead">
+        Состав меняется вместе с сезоном: если сорт отцвёл, флорист подберёт равноценную замену и обязательно вам её покажет.
+      </p>
+
+      <div class="catalog__grid" id="catalog-grid"><!-- карточки строит js/main.js --></div>
+    </div>
+  </section>
+
+  <!-- ====================================================== КОНСТРУКТОР -->
+  <section class="section builder" id="builder">
+    <div class="wrap">
+      <p class="eyebrow" data-i18n="builder.eyebrow">Конструктор</p>
+      <h2 class="section__title" data-i18n="builder.title">Соберите букет сами</h2>
+      <p class="section__lead" data-i18n="builder.lead">
+        Добавляйте цветы по одному — цена считается сразу. Флорист повторит состав вручную и напишет, если что-то стоит поменять.
+      </p>
+
+      <div class="builder__layout">
+        <div class="builder__picker">
+          <h3 class="builder__subtitle" data-i18n="builder.pick">Что положим</h3>
+          <div class="picker__grid" id="picker-grid"><!-- кнопки строит js/main.js --></div>
+          <p class="picker__note" data-i18n="builder.note">Нечётное число стеблей — старая флористическая примета. Мы её любим, но не настаиваем.</p>
+        </div>
+
+        <div class="builder__stage">
+          <div class="vase" id="vase">
+            <div class="vase__stage" id="vase-stage"></div>
+            <svg class="vase__glass" viewBox="0 0 200 150" aria-hidden="true">
+              <defs>
+                <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="currentColor" stop-opacity=".30" />
+                  <stop offset=".55" stop-color="currentColor" stop-opacity=".14" />
+                  <stop offset="1" stop-color="currentColor" stop-opacity=".26" />
+                </linearGradient>
+              </defs>
+              <path d="M42 4 C46 52 34 74 46 112 C54 138 146 138 154 112 C166 74 154 52 158 4 Z" fill="url(#glass)" stroke="currentColor" stroke-opacity=".45" stroke-width="2" />
+              <path d="M46 74 C60 84 140 84 154 74 L152 112 C146 138 54 138 46 112 Z" fill="currentColor" fill-opacity=".12" />
+            </svg>
+            <p class="vase__empty" id="vase-empty" data-i18n="builder.empty">Ваза пока пустая</p>
+          </div>
+
+          <div class="tally" id="tally">
+            <div class="tally__row">
+              <span data-i18n="builder.stems">Стеблей</span>
+              <b id="tally-stems">0</b>
+            </div>
+            <div class="tally__row">
+              <span data-i18n="builder.wrap">Упаковка и лента</span>
+              <b id="tally-wrap">—</b>
+            </div>
+            <div class="tally__row tally__row--total">
+              <span data-i18n="builder.total">Итого</span>
+              <b id="tally-total">—</b>
+            </div>
+            <p class="tally__limit" id="tally-limit" hidden data-i18n="builder.limit">Больше в эту вазу не поместится — но флорист соберёт любой размер, напишите нам.</p>
+            <p class="tally__status" id="builder-status" role="status" hidden></p>
+            <div class="tally__actions">
+              <button class="btn btn--primary" type="button" id="builder-order" data-magnetic data-i18n="builder.order">Отправить флористу</button>
+              <button class="btn btn--quiet" type="button" id="builder-clear" data-i18n="builder.clear">Очистить</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ ШАГИ -->
+  <section class="section steps" id="how">
+    <div class="wrap">
+      <p class="eyebrow" data-i18n="steps.eyebrow">Как это работает</p>
+      <h2 class="section__title" data-i18n="steps.title">От заявки до двери — четыре шага</h2>
+
+      <div class="steps__track">
+        <!-- Стебель прорисовывается по мере прокрутки: линия «растёт»
+             сверху вниз ровно настолько, насколько секция видна. -->
+        <svg class="steps__vine" viewBox="0 0 40 900" preserveAspectRatio="none" aria-hidden="true">
+          <path id="vine-path" d="M20 0 C36 110 4 200 20 300 C36 400 4 490 20 590 C36 690 4 790 20 900" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+
+        <ol class="steps__list">
+          <li class="step" data-reveal>
+            <span class="step__dot" aria-hidden="true"></span>
+            <h3 class="step__title" data-i18n="steps.s1t">Расскажите повод</h3>
+            <p class="step__text" data-i18n="steps.s1d">Пары слов достаточно: день рождения, извинение, «просто так». Повод важнее списка сортов.</p>
+          </li>
+          <li class="step" data-reveal>
+            <span class="step__dot" aria-hidden="true"></span>
+            <h3 class="step__title" data-i18n="steps.s2t">Флорист присылает эскиз</h3>
+            <p class="step__text" data-i18n="steps.s2d">В течение часа — фото похожего букета и состав. Меняем, пока не понравится.</p>
+          </li>
+          <li class="step" data-reveal>
+            <span class="step__dot" aria-hidden="true"></span>
+            <h3 class="step__title" data-i18n="steps.s3t">Собираем и снимаем</h3>
+            <p class="step__text" data-i18n="steps.s3d">Готовый букет фотографируем и отправляем вам до выезда курьера — сюрприз не испортим.</p>
+          </li>
+          <li class="step" data-reveal>
+            <span class="step__dot" aria-hidden="true"></span>
+            <h3 class="step__title" data-i18n="steps.s4t">Привозим к нужному часу</h3>
+            <p class="step__text" data-i18n="steps.s4d">В городе — за три часа, к точному времени — по договорённости. Курьер везёт в воде.</p>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================= ПОДПИСКА -->
+  <section class="section plans" id="plans">
+    <div class="wrap">
+      <p class="eyebrow" data-i18n="plans.eyebrow">Подписка</p>
+      <h2 class="section__title" data-i18n="plans.title">Цветы, которые приезжают сами</h2>
+      <p class="section__lead" data-i18n="plans.lead">
+        Каждый раз новый состав из того, что лучше всего в эту неделю. Пауза и отмена — в один клик, без звонков.
+      </p>
+
+      <div class="plans__grid" id="plans-grid"><!-- карточки строит js/main.js --></div>
+    </div>
+  </section>
+
+  <!-- =========================================================== ОТЗЫВЫ -->
+  <section class="section voices">
+    <div class="wrap">
+      <p class="eyebrow" data-i18n="voices.eyebrow">Отзывы</p>
+      <h2 class="section__title" data-i18n="voices.title">Что говорят</h2>
+    </div>
+
+    <div class="voices__marquee" id="voices-marquee" aria-hidden="true"><!-- строит js/main.js --></div>
+
+    <!-- Бегущая строка недоступна для чтения с клавиатуры и скринридера,
+         поэтому те же отзывы дублируются обычным списком для них. -->
+    <ul class="voices__sr" id="voices-list"></ul>
+  </section>
+
+  <!-- ========================================================= КОНТАКТЫ -->
+  <section class="section contact" id="contacts">
+    <div class="wrap contact__layout">
+      <div class="contact__intro">
+        <p class="eyebrow" data-i18n="contact.eyebrow">Связаться</p>
+        <h2 class="section__title" data-i18n="contact.title">Напишите — соберём</h2>
+        <p class="section__lead" data-i18n="contact.lead">
+          Отвечаем с девяти утра до девяти вечера, обычно в течение получаса. Срочный заказ — лучше в мессенджер.
+        </p>
+
+        <ul class="contact__list">
+          <li>
+            <span class="contact__label" data-i18n="contact.addrLabel">Мастерская</span>
+            <span class="contact__value" data-i18n="contact.addrValue">Краснодар, ул. Северная, 12 — двор, зелёная дверь</span>
+          </li>
+          <li>
+            <span class="contact__label" data-i18n="contact.hoursLabel">Часы</span>
+            <span class="contact__value" data-i18n="contact.hoursValue">Ежедневно, 9:00 — 21:00</span>
+          </li>
+          <li>
+            <span class="contact__label" data-i18n="contact.tgLabel">Телеграм</span>
+            <a class="contact__value contact__value--link" href="#" data-i18n="contact.tgValue">@pervotsvet</a>
+          </li>
+        </ul>
+      </div>
+
+      <form class="form" id="order-form" novalidate>
+        <div class="field">
+          <label class="field__label" for="f-name" data-i18n="contact.fName">Как вас зовут</label>
+          <input class="field__input" id="f-name" name="name" type="text" required autocomplete="name" data-i18n-placeholder="contact.fNamePh" placeholder="Елена" />
+          <p class="field__error" data-error-for="f-name" data-i18n="contact.errName" hidden>Впишите имя — нам нужно как-то к вам обращаться</p>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="f-contact" data-i18n="contact.fContact">Телефон или ник в телеграме</label>
+          <input class="field__input" id="f-contact" name="contact" type="text" required data-i18n-placeholder="contact.fContactPh" placeholder="+7 900 000-00-00" />
+          <p class="field__error" data-error-for="f-contact" data-i18n="contact.errContact" hidden>Оставьте контакт, иначе мы не сможем ответить</p>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="f-occasion" data-i18n="contact.fOccasion">Повод</label>
+          <select class="field__input" id="f-occasion" name="occasion">
+            <option value="birthday" data-i18n="contact.occBirthday">День рождения</option>
+            <option value="justso" data-i18n="contact.occJustSo">Просто так</option>
+            <option value="sorry" data-i18n="contact.occSorry">Извинение</option>
+            <option value="wedding" data-i18n="contact.occWedding">Свадьба</option>
+            <option value="other" data-i18n="contact.occOther">Другое</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="f-note" data-i18n="contact.fNote">Пожелания</label>
+          <textarea class="field__input field__input--area" id="f-note" name="note" rows="3" data-i18n-placeholder="contact.fNotePh" placeholder="Любит пионы, не любит лилии"></textarea>
+        </div>
+
+        <button class="btn btn--primary btn--wide" type="submit" data-magnetic data-i18n="contact.submit">Отправить заявку</button>
+
+        <p class="form__note" data-i18n="contact.privacy">Отправляя форму, вы соглашаетесь на обработку контактов ради ответа на заявку — и только.</p>
+
+        <p class="form__status" id="form-status" role="status" hidden></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<!-- ============================================================== ПОДВАЛ -->
+<footer class="site-footer">
+  <div class="wrap site-footer__inner">
+    <div class="site-footer__brand">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span>
+        <b data-i18n="brand.name">Первоцвет</b>
+        <span data-i18n="footer.tagline">Цветочная мастерская с 2017 года</span>
+      </span>
+    </div>
+
+    <nav class="site-footer__nav" data-i18n-aria-label="a11y.footerNav" aria-label="Разделы сайта">
+      <a href="#bouquets" data-i18n="nav.bouquets">Букеты</a>
+      <a href="#builder" data-i18n="nav.builder">Собрать свой</a>
+      <a href="#plans" data-i18n="nav.plans">Подписка</a>
+      <a href="#contacts" data-i18n="nav.contacts">Контакты</a>
+    </nav>
+
+    <p class="site-footer__legal">
+      <span id="footer-year">© 2026</span>
+      <span data-i18n="footer.rights">Все права на букеты — у тех, кому их подарили</span>
+    </p>
+  </div>
+</footer>
+
+<script defer src="js/i18n.js"></script>
+<script defer src="js/flowers.js"></script>
+<script defer src="js/background.js"></script>
+<script defer src="js/main.js"></script>
+</body>
+</html>

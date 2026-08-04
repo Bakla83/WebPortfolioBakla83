@@ -3,6 +3,7 @@ import Base from '../../../../layouts/Base.astro';
 import Icon from '../../../../components/Icon.astro';
 import type { IconName } from '../../../../components/icons';
 import Gallery from '../../../../components/Gallery.astro';
+import LiveDemo from '../../../../components/LiveDemo.astro';
 import VideoEmbed from '../../../../components/VideoEmbed.astro';
 import ModelViewer from '../../../../components/ModelViewer.astro';
 import { getSection } from '../../../../data/sections';
@@ -120,6 +121,22 @@ const meta: { label: string; value: string }[] = [
         }
       </div>
     </header>
+
+    <!-- =========================== Живая версия ========================== -->
+    <!-- Выше галереи: если работу можно открыть, скриншоты — уже вторично.
+         Рамка грузится по клику, поэтому лишнего веса странице не добавляет. -->
+    {
+      project.demo && (
+        /* Без --sunken: следом идёт утопленная галерея, и две подложки
+           подряд слиплись бы в одно серое поле с полоской посередине. */
+        <section class="section proj-section">
+          <div class="wrap">
+            <h2>{strings.project.demo}</h2>
+            <LiveDemo demo={project.demo} lang={lang} title={title} poster={project.cover} />
+          </div>
+        </section>
+      )
+    }
 
     <!-- ============================== Галерея ============================ -->
     <!-- Идёт до описания намеренно: работу сначала показывают, а потом

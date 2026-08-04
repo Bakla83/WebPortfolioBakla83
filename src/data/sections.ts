@@ -7,8 +7,8 @@ export const SECTIONS: Section[] = [
     accent: 'gold',
     title: { ru: 'Лендинги', en: 'Landing pages' },
     description: {
-      ru: 'Одностраничные сайты под конкретную задачу: рассказать, убедить и довести до заявки. Собственная вёрстка без конструкторов и тяжёлых зависимостей.',
-      en: 'Single-page sites built for one job: explain, convince and bring the visitor to an enquiry. Hand-written markup, no page builders or heavy dependencies.',
+      ru: 'Одностраничные сайты под конкретную задачу. Собственная вёрстка без конструкторов и тяжёлых зависимостей.',
+      en: 'Single-page sites built for one job. Hand-written markup, no page builders or heavy dependencies.',
     },
   },
   {
@@ -47,8 +47,8 @@ export const SECTIONS: Section[] = [
     accent: 'purple',
     title: { ru: 'Мобильные приложения', en: 'Mobile apps' },
     description: {
-      ru: 'Android-приложения на Kotlin: офлайн-первыми, без лишних разрешений и с вниманием к весу и скорости запуска.',
-      en: 'Android apps in Kotlin: offline-first, no needless permissions, and careful about size and start-up speed.',
+      ru: 'Android-приложения на Kotlin: без лишних разрешений и с вниманием к весу и скорости запуска.',
+      en: 'Android apps in Kotlin: no needless permissions, and careful about size and start-up speed.',
     },
   },
   {
@@ -57,8 +57,8 @@ export const SECTIONS: Section[] = [
     accent: 'green',
     title: { ru: '3D-модели', en: '3D models' },
     description: {
-      ru: 'Моделирование, текстуры и рендер в Blender — ассеты для игр и отдельные визуализации.',
-      en: 'Modelling, texturing and rendering in Blender — game-ready assets and standalone visualisations.',
+      ru: 'Моделирование, текстуры и рендер в Blender — ассеты для игр и визуализации.',
+      en: 'Modelling, texturing and rendering in Blender — game-ready assets and visualisations.',
     },
   },
 ];

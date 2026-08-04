@@ -132,6 +132,51 @@ export const project = defineType({
       group: 'media',
       of: [defineArrayMember({ ...imageWithAlt('galleryImage', 'Картинка'), name: 'galleryImage' })],
     }),
+    /*
+      Запускаемая копия работы. Сюда попадает не загруженный файл, а путь
+      внутри самого сайта: копии кладёт `npm run demos` в public/play/<slug>/,
+      Sanity их не хранит и хранить не должна — это чужой статический сайт,
+      а не единица контента.
+    */
+    defineField({
+      name: 'demo',
+      title: 'Запускаемая копия',
+      type: 'object',
+      group: 'media',
+      description: 'Только для веб-работ: лендингов, сайтов и веб-игр.',
+      fields: [
+        defineField({
+          name: 'src',
+          title: 'Путь к копии',
+          type: 'string',
+          description: 'Например /play/hrebet/index.html',
+          validation: (rule) =>
+            rule.required().custom((value) =>
+              typeof value === 'string' && value.startsWith('/play/')
+                ? true
+                : 'Путь должен начинаться с /play/',
+            ),
+        }),
+        defineField({
+          name: 'ratio',
+          title: 'Пропорции рамки',
+          type: 'string',
+          description: "Как в CSS: '16 / 10' по умолчанию, '10 / 16' для портретной игры.",
+        }),
+        defineField({
+          name: 'maxWidth',
+          title: 'Предельная ширина рамки',
+          type: 'string',
+          description: "Например '420px' — нужно портретным работам, чтобы рамка не растягивалась.",
+        }),
+        defineField({
+          name: 'note',
+          title: 'Подсказка под рамкой',
+          type: 'localeString',
+          description: 'Что попробовать, чем управлять.',
+        }),
+      ],
+    }),
     defineField({
       name: 'videos',
       title: 'Видео',
@@ -245,8 +290,11 @@ export const project = defineType({
               name: 'url',
               title: 'Адрес',
               type: 'url',
-              // Только http(s): mailto и javascript: на кнопке проекта не нужны
-              validation: (rule) => rule.required().uri({ scheme: ['http', 'https'] }),
+              // Только http(s) и внутренние пути. Кнопка «Открыть проект» у
+              // веб-работ ведёт на запускаемую копию (/play/...), поэтому
+              // относительный адрес тоже допустим. mailto и javascript: — нет.
+              validation: (rule) =>
+                rule.required().uri({ scheme: ['http', 'https'], allowRelative: true }),
             }),
             defineField({
               name: 'label',
