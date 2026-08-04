@@ -247,7 +247,7 @@ export const PROJECTS: Project[] = [
     demo: {
       src: '/play/hrebet/index.html',
       note: {
-        ru: 'Внутри рабочие переключатели темы и языка — сайт двуязычный и умеет светлую тему.',
+        ru: 'Внутри рабочие переключатели темы и языка — сайт двуязычный и имеет светлую тему.',
         en: 'The theme and language switches inside are live — the site is bilingual and has a light theme.',
       },
     },
@@ -426,7 +426,7 @@ export const PROJECTS: Project[] = [
     cover: {
       src: '/media/kluchi-ot-goroda/cover.png',
       width: 2160,
-      height: 1350,
+      height: 1188,
       alt: {
         ru: 'Первый экран: заголовок с табло прилёта и дуга перелёта справа',
         en: 'The first screen: the headline with the arrivals board and the flight arc on the right',
