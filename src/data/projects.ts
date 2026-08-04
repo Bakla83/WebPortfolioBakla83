@@ -391,6 +391,94 @@ export const PROJECTS: Project[] = [
     },
     links: [{ kind: 'live', url: '/play/stroy-opora/index.html' }],
   },
+  {
+    slug: 'kluchi-ot-goroda',
+    section: 'landings',
+    order: 4,
+    year: 2026,
+    tech: ['HTML', 'CSS', 'JavaScript', 'SVG'],
+    title: { ru: 'Ключи от города — трансферы и экскурсии', en: 'City Keys — transfers and tours' },
+    role: { ru: 'Дизайн и вёрстка', en: 'Design and front-end' },
+    teaser: {
+      ru: 'Лендинг сочинской трансферной компании: табло прилёта в заголовке, живой расчёт цены поездки и маршруты, по которым едет машина.',
+      en: 'A landing for a Sochi transfer company: an arrivals board in the headline, a live price calculator and routes the car actually drives along.',
+    },
+    summary: {
+      ru: 'Компания встречает людей в аэропорту, возит по городу и проводит экскурсии — и вся стилистика взята у аэропортовой навигации: крупная типографика указателей, моноширинные коды и времена, пунктирные маршруты, сигнальный жёлтый на тёмно-синем. Итог расчёта оформлен как посадочный купон, потому что именно его человек будет сверять с подтверждением заказа. Ночная тема здесь не украшение: половина рейсов приходит затемно, и сайт открывают уже в такси.',
+      en: 'The company meets people at the airport, drives them around the city and runs tours — and the whole visual language is borrowed from airport wayfinding: large signage type, monospaced codes and times, dotted routes, signal yellow on deep navy. The price summary is laid out as a boarding stub, because that is what the customer will check against the confirmation. The night theme is not decoration: half the flights land after dark, and the site gets opened in the taxi.',
+    },
+    highlights: {
+      ru: [
+        'Табло прилёта в заголовке: строка перещёлкивает три обещания, буквы перебираются волной слева направо',
+        'Расчёт трансфера считается на лету — класс машины подбирается по числу людей и чемоданов, ночной тариф включается с 23:00, готовый расчёт переносится в форму заявки',
+        'Самолёт и машина идут по кривым через getPointAtLength: точно по линии и с поворотом по касательной, а не по приблизительной траектории',
+        'Дневная и ночная темы на одном наборе токенов; табло и фирменный знак остаются тёмными в обеих — иначе получился бы жёлтый по белому',
+        'Две языковые версии целиком, включая подписи времени на шагах и формат суммы',
+      ],
+      en: [
+        'An arrivals board in the headline: the line flips between three promises, the letters turning in a wave from left to right',
+        'The transfer price is calculated live — the car class follows the number of people and suitcases, the night rate kicks in at 23:00, and the finished quote is carried into the booking form',
+        'The plane and the car follow their curves via getPointAtLength: exactly along the line and turned along the tangent, not on an approximated path',
+        'Day and night themes on one set of tokens; the board and the logo mark stay dark in both — otherwise it would be yellow on white',
+        'Both language versions in full, down to the step timings and the currency format',
+      ],
+    },
+    cover: {
+      src: '/media/kluchi-ot-goroda/cover.png',
+      width: 2160,
+      height: 1350,
+      alt: {
+        ru: 'Первый экран: заголовок с табло прилёта и дуга перелёта справа',
+        en: 'The first screen: the headline with the arrivals board and the flight arc on the right',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/kluchi-ot-goroda/desktop-2.png',
+        width: 2160,
+        height: 1350,
+        alt: { ru: 'Калькулятор трансфера и купон с итогом', en: 'The transfer calculator and the price stub' },
+        caption: {
+          ru: 'Цена собирается построчно: поездка, ночной тариф, кресло — и сразу видно, какую машину подобрали',
+          en: 'The price adds up line by line: the ride, the night rate, the child seat — and which car was selected',
+        },
+      },
+      {
+        src: '/media/kluchi-ot-goroda/desktop-3.png',
+        width: 2160,
+        height: 1350,
+        alt: { ru: 'Экскурсии с фильтром по направлению', en: 'Tours with a filter by direction' },
+        caption: {
+          ru: 'Маршрут каждой экскурсии показан точками на линии — так же, как схема на остановке',
+          en: 'Each tour route is shown as dots on a line, the way a diagram at a stop would',
+        },
+      },
+      {
+        src: '/media/kluchi-ot-goroda/desktop-4.png',
+        width: 2160,
+        height: 1350,
+        alt: { ru: 'Ночная тема', en: 'The night theme' },
+        caption: {
+          ru: 'Ночная тема для тех, кто открывает сайт после посадки в темноте',
+          en: 'The night theme, for whoever opens the site after landing in the dark',
+        },
+      },
+      {
+        src: '/media/kluchi-ot-goroda/mobile.png',
+        width: 1170,
+        height: 2532,
+        alt: { ru: 'Лендинг на экране телефона', en: 'The landing on a phone screen' },
+      },
+    ],
+    demo: {
+      src: '/play/kluchi-ot-goroda/index.html',
+      note: {
+        ru: 'Попробуйте сменить район и время прилёта в расчёте — цена и класс машины меняются сразу. Тема и язык переключаются в шапке.',
+        en: 'Try changing the district and the landing time in the calculator — the price and the car class react at once. Theme and language switch in the header.',
+      },
+    },
+    links: [{ kind: 'live', url: '/play/kluchi-ot-goroda/index.html' }],
+  },
 
   /* ------------------------------------------------------------ Веб-сайты */
   {

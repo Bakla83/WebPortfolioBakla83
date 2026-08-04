@@ -1,0 +1,1662 @@
+/* =========================================================================
+   Ключи от города — встреча, трансферы и экскурсии
+
+   Стилистика взята у аэропортовой навигации: крупная плотная типографика
+   указателей, моноширинные коды и времена, пунктирные маршруты, сигнальный
+   жёлтый на тёмно-синем. Всё, что можно принять за приборную панель или
+   табло, оформлено именно так — это не украшение, а способ показать, что
+   компания занимается дорогой.
+
+   Две темы: день (бумага) и ночь (синева). Ночная здесь по делу — половина
+   рейсов приходит затемно, и сайт открывают в такси.
+
+   Порядок: токены → база → шапка → герой → секции → адаптив.
+   ========================================================================= */
+
+/* --------------------------------------------------------------- токены */
+
+:root {
+  --font-ui: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --wrap: 1220px;
+  --gutter: clamp(1.1rem, 0.6rem + 2.2vw, 2.4rem);
+
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+
+  --shadow-sm: 0 1px 3px rgba(12, 26, 45, 0.08);
+  --shadow-md: 0 16px 40px -22px rgba(12, 26, 45, 0.4);
+  --shadow-lg: 0 34px 70px -34px rgba(12, 26, 45, 0.5);
+
+  --ease: cubic-bezier(0.22, 0.8, 0.28, 1);
+
+  /*
+    Табло прилёта и фирменный знак не переворачиваются вместе с темой:
+    у них своя, всегда тёмная подложка. Если завязать их на --ink, ночью
+    получится жёлтый по белому — то есть ровно наоборот тому, как выглядит
+    настоящее табло, и почти нечитаемо.
+  */
+  --plate: #0e1b2e;
+  --plate-ink: #ffc53d;
+  --plate-fold: rgba(255, 255, 255, 0.16);
+}
+
+/* День — бумага указателя */
+:root,
+:root[data-theme='day'] {
+  --bg: #f4f1ea;
+  --surface: #ffffff;
+  --surface-2: #eae5da;
+
+  --ink: #10233a;
+  --ink-dim: rgba(16, 35, 58, 0.68);
+  --ink-faint: rgba(16, 35, 58, 0.42);
+  --line: rgba(16, 35, 58, 0.14);
+  --line-soft: rgba(16, 35, 58, 0.07);
+
+  --accent: #ffc53d;
+  --accent-ink: #10233a;
+  --accent-2: #0e8f8c;
+
+  /* Токены перевёрнутых секций: тёмная полоса среди светлой страницы */
+  --inv-bg: #10233a;
+  --inv-surface: #1a3252;
+  --inv-ink: #f3f6fa;
+  --inv-ink-dim: rgba(243, 246, 250, 0.7);
+  --inv-ink-faint: rgba(243, 246, 250, 0.45);
+  --inv-line: rgba(243, 246, 250, 0.16);
+}
+
+/* Ночь — синева за окном такси */
+:root[data-theme='night'] {
+  --bg: #0b1524;
+  --surface: #131f33;
+  --surface-2: #182741;
+
+  --ink: #eef3f9;
+  --ink-dim: rgba(238, 243, 249, 0.68);
+  --ink-faint: rgba(238, 243, 249, 0.42);
+  --line: rgba(238, 243, 249, 0.14);
+  --line-soft: rgba(238, 243, 249, 0.07);
+
+  --accent: #ffc53d;
+  --accent-ink: #10233a;
+  --accent-2: #35c4bd;
+
+  /* Ночью «тёмная» секция не может быть темнее фона — она светлее */
+  --inv-bg: #142338;
+  --inv-surface: #1d2f4a;
+  --inv-ink: #eef3f9;
+  --inv-ink-dim: rgba(238, 243, 249, 0.68);
+  --inv-ink-faint: rgba(238, 243, 249, 0.42);
+  --inv-line: rgba(238, 243, 249, 0.16);
+
+  --shadow-md: 0 16px 40px -22px rgba(0, 0, 0, 0.7);
+  --shadow-lg: 0 34px 70px -34px rgba(0, 0, 0, 0.8);
+}
+
+/* ------------------------------------------------------------------ база */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: clamp(1rem, 0.96rem + 0.16vw, 1.06rem);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s var(--ease), color 0.3s var(--ease);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+svg {
+  display: block;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.container {
+  width: min(100% - var(--gutter) * 2, var(--wrap));
+  margin-inline: auto;
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.6rem;
+  left: 0.6rem;
+  z-index: 200;
+  padding: 0.6rem 1rem;
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-160%);
+  transition: transform 0.25s var(--ease);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+/* --------------------------------------------------------------- секции */
+
+.section {
+  position: relative;
+  padding-block: clamp(3.2rem, 2rem + 5vw, 6.5rem);
+}
+
+.section--dark {
+  background: var(--inv-bg);
+  color: var(--inv-ink);
+  /* Переопределяем токены целиком: всё внутри — карточки, линии, приглушённый
+     текст — подхватывает инверсию само, без отдельных правил на каждый блок */
+  --ink: var(--inv-ink);
+  --ink-dim: var(--inv-ink-dim);
+  --ink-faint: var(--inv-ink-faint);
+  --line: var(--inv-line);
+  --line-soft: rgba(243, 246, 250, 0.08);
+  --surface: var(--inv-surface);
+  --surface-2: var(--inv-bg);
+  /* --bg тоже: на нём построены «вывернутые» элементы вроде выбранного
+     сегмента (светлая подложка, текст цветом фона). Без переопределения
+     внутри тёмной секции получался светлый текст на светлом. */
+  --bg: var(--inv-bg);
+}
+
+.section--paper {
+  background: var(--surface-2);
+}
+
+.section__head {
+  max-width: 62ch;
+  margin-bottom: clamp(2rem, 1rem + 3vw, 3.4rem);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.eyebrow::before {
+  content: '';
+  width: 26px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.section__title {
+  font-size: clamp(1.85rem, 1.2rem + 2.6vw, 3.1rem);
+  max-width: 18ch;
+}
+
+.section__lead {
+  margin-top: 0.9rem;
+  max-width: 56ch;
+  color: var(--ink-dim);
+}
+
+/* --------------------------------------------------------------- кнопки */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.6rem;
+  border: 1.5px solid transparent;
+  border-radius: var(--r-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease), background 0.2s var(--ease),
+    border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--accent {
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--accent:hover {
+  background: #ffd267;
+}
+
+.btn--ghost {
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.btn--ghost:hover {
+  border-color: var(--ink);
+}
+
+.btn--sm {
+  padding: 0.55rem 1.05rem;
+  font-size: 0.86rem;
+}
+
+.btn--wide {
+  width: 100%;
+}
+
+/* ---------------------------------------------------------------- шапка */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding-block: 0.8rem;
+  transition: padding 0.25s var(--ease), background 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+
+.site-header.is-stuck {
+  padding-block: 0.5rem;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 1px 0 var(--line);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.7rem, 2vw, 2rem);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
+.brand__mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: var(--r-sm);
+  background: var(--plate);
+  color: var(--plate-ink);
+}
+
+.brand__mark svg {
+  width: 22px;
+  height: 22px;
+}
+
+.brand__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.brand__name {
+  font-size: 1.06rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.brand__sub {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.nav {
+  display: flex;
+  gap: clamp(0.6rem, 1.5vw, 1.6rem);
+  margin-left: auto;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.nav a {
+  position: relative;
+  padding-block: 0.3rem;
+  color: var(--ink-dim);
+  transition: color 0.2s var(--ease);
+}
+
+.nav a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.28s var(--ease);
+}
+
+.nav a:hover,
+.nav a.is-active {
+  color: var(--ink);
+}
+
+.nav a:hover::after,
+.nav a.is-active::after {
+  transform: scaleX(1);
+}
+
+.header__tools {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-sm);
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.icon-btn:hover {
+  border-color: var(--ink);
+}
+
+/* Показываем значок того, что получится по клику */
+.icon-btn .icon--day {
+  display: none;
+}
+
+[data-theme='night'] .icon-btn .icon--day {
+  display: block;
+}
+
+[data-theme='night'] .icon-btn .icon--night {
+  display: none;
+}
+
+.lang {
+  display: flex;
+  padding: 2px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-sm);
+}
+
+.lang__btn {
+  padding: 0.24rem 0.6rem;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink-faint);
+  cursor: pointer;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.lang__btn[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.burger {
+  display: none;
+  padding: 0.4rem;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-sm);
+  background: transparent;
+  cursor: pointer;
+}
+
+/* ---------------------------------------------------------------- герой */
+
+.hero {
+  position: relative;
+  padding-block: clamp(2.5rem, 1rem + 7vw, 6rem) clamp(3rem, 2rem + 5vw, 6rem);
+  overflow: hidden;
+}
+
+/* Сетка как на схеме маршрутов — держит первый экран, но не спорит с текстом */
+.hero__grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(var(--line-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, #000 30%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, #000 30%, transparent 78%);
+  pointer-events: none;
+}
+
+/* Дуга живёт в правой половине: заголовок прижат влево, и пересекать его
+   пунктиром — тем более сажать на букву самолёт — было бы похоже на сбой. */
+.hero__arc {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: auto;
+  width: min(52%, 780px);
+  height: clamp(200px, 34vw, 400px);
+  color: var(--ink-faint);
+  pointer-events: none;
+}
+
+.hero__plane {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  transform: translate(-50%, -50%) rotate(var(--angle, 0deg));
+  pointer-events: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.hero__plane svg {
+  width: 18px;
+  height: 18px;
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+}
+
+.tagline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.tagline__code {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.hero__title {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  font-size: clamp(2.1rem, 1rem + 5.4vw, 4.6rem);
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  max-width: 16ch;
+}
+
+.hero__title-static {
+  font-weight: 700;
+}
+
+/* --- табло --- */
+
+.board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.22em;
+}
+
+.flap {
+  display: grid;
+  place-items: center;
+  min-width: 0.78em;
+  padding: 0.1em 0.08em;
+  border-radius: 0.1em;
+  background: var(--plate);
+  color: var(--plate-ink);
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  font-weight: 700;
+  line-height: 1.1;
+  /* Полоса посередине — стык двух половинок механической створки */
+  background-image: linear-gradient(
+    to bottom,
+    transparent calc(50% - 1px),
+    var(--plate-fold) calc(50% - 1px),
+    var(--plate-fold) calc(50% + 1px),
+    transparent calc(50% + 1px)
+  );
+  /* Ночью подложка створки почти сливается с фоном — тонкая грань
+     возвращает ей объём, не делая рамку заметной днём. */
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+
+.flap--blank {
+  background: transparent;
+  background-image: none;
+}
+
+.flap.is-flipping {
+  animation: flap 90ms linear;
+}
+
+@keyframes flap {
+  0% {
+    transform: rotateX(0);
+  }
+  50% {
+    transform: rotateX(-62deg);
+  }
+  100% {
+    transform: rotateX(0);
+  }
+}
+
+.hero__lead {
+  max-width: 52ch;
+  margin-top: 1.6rem;
+  color: var(--ink-dim);
+  font-size: 1.06em;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 2rem;
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.4rem, 4vw, 3.6rem);
+  margin: clamp(2.4rem, 5vw, 4rem) 0 0;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--line);
+}
+
+.fact dt {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.fact dd {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin: 0.35rem 0 0;
+}
+
+.fact b {
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.fact span {
+  font-size: 0.84rem;
+  color: var(--ink-dim);
+}
+
+/* --------------------------------------------------------------- услуги */
+
+.services__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+
+.service {
+  position: relative;
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  transition: transform 0.3s var(--ease), border-color 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
+}
+
+.service:hover {
+  transform: translateY(-4px);
+  border-color: var(--ink);
+  box-shadow: var(--shadow-md);
+}
+
+.service__num {
+  position: absolute;
+  top: clamp(1.2rem, 2.4vw, 1.8rem);
+  right: clamp(1.2rem, 2.4vw, 1.8rem);
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--ink-faint);
+}
+
+.service__icon {
+  width: 34px;
+  height: 34px;
+  margin-bottom: 1.1rem;
+  color: var(--accent-2);
+}
+
+.service h3 {
+  font-size: 1.32rem;
+  margin-bottom: 0.5rem;
+}
+
+.service p {
+  color: var(--ink-dim);
+  font-size: 0.95rem;
+}
+
+.service__list {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 1.2rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.88rem;
+}
+
+.service__list li {
+  position: relative;
+  padding-left: 1.2rem;
+  color: var(--ink-dim);
+}
+
+.service__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 7px;
+  height: 7px;
+  background: var(--accent);
+}
+
+/* ----------------------------------------------------------- калькулятор */
+
+.calc__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: start;
+}
+
+.calc__form {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.9rem;
+}
+
+.field__label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding: 0;
+}
+
+.field__hint {
+  font-size: 0.76rem;
+  color: var(--ink-faint);
+}
+
+.field__error {
+  font-size: 0.78rem;
+  color: var(--accent-2);
+  font-weight: 600;
+}
+
+.input {
+  width: 100%;
+  padding: 0.78rem 0.9rem;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent-2);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-2) 22%, transparent);
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--accent-2);
+}
+
+.input--mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+}
+
+.input--area {
+  resize: vertical;
+  min-height: 92px;
+}
+
+.segmented {
+  display: inline-flex;
+  padding: 3px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-sm);
+}
+
+.segmented__opt input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmented__opt span {
+  display: block;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink-dim);
+  cursor: pointer;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.segmented__opt input:checked + span {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.segmented__opt input:focus-visible + span {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 2px;
+}
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--ink-dim);
+  cursor: pointer;
+}
+
+.check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent-2);
+  cursor: pointer;
+}
+
+/* --- купон с итогом --- */
+
+.ticket {
+  position: sticky;
+  top: 88px;
+  padding: clamp(1.3rem, 2.4vw, 1.8rem);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+
+.ticket__head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding-bottom: 1rem;
+  border-bottom: 1.5px dashed var(--line);
+}
+
+.ticket__from,
+.ticket__to {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 0.94rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ticket__to {
+  text-align: right;
+}
+
+.ticket__line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  color: var(--accent-2);
+}
+
+.ticket__line i {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  background: currentColor;
+  opacity: 0.4;
+}
+
+.ticket__line .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.ticket__rows {
+  display: grid;
+  gap: 0.1rem;
+  margin: 1rem 0;
+}
+
+.ticket__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.32rem;
+  font-size: 0.92rem;
+}
+
+.ticket__row dt {
+  color: var(--ink-dim);
+}
+
+.ticket__row dd {
+  margin: 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ticket__row--muted dd {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--ink-faint);
+}
+
+.ticket__total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1.5px dashed var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.ticket__total b {
+  font-family: var(--font-ui);
+  font-size: 1.85rem;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.ticket__note {
+  margin: 0.9rem 0 1.2rem;
+  font-size: 0.82rem;
+  color: var(--ink-dim);
+}
+
+.ticket__note b {
+  color: var(--ink);
+}
+
+.ticket__fine {
+  margin-top: 0.8rem;
+  font-size: 0.76rem;
+  color: var(--ink-faint);
+}
+
+/* ------------------------------------------------------------------ шаги */
+
+.how__track {
+  position: relative;
+  padding-top: clamp(70px, 10vw, 120px);
+}
+
+.how__line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: clamp(70px, 10vw, 120px);
+  color: var(--accent-2);
+}
+
+.how__car {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  transform: translate(-50%, -50%) rotate(var(--angle, 0deg));
+  box-shadow: var(--shadow-sm);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+  pointer-events: none;
+}
+
+.how__car svg {
+  width: 20px;
+  height: 20px;
+}
+
+.how__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: clamp(1.2rem, 2.5vw, 2rem);
+}
+
+.step {
+  position: relative;
+  padding-top: 1.1rem;
+  border-top: 2px solid var(--line);
+}
+
+.step__time {
+  display: inline-block;
+  margin-bottom: 0.6rem;
+  padding: 0.16rem 0.5rem;
+  border-radius: 4px;
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+}
+
+.step h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.35rem;
+}
+
+.step p {
+  font-size: 0.9rem;
+  color: var(--ink-dim);
+}
+
+/* ------------------------------------------------------------- экскурсии */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: clamp(1.4rem, 3vw, 2.2rem);
+}
+
+.chip {
+  padding: 0.46rem 1rem;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-sm);
+  background: transparent;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--ink-dim);
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+
+.chip:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.chip.is-active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+.tours__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.tour {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.4rem, 2.6vw, 1.9rem);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  transition: transform 0.3s var(--ease), border-color 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
+}
+
+.tour:hover {
+  transform: translateY(-4px);
+  border-color: var(--ink);
+  box-shadow: var(--shadow-md);
+}
+
+.tour__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.tour__name {
+  font-size: 1.24rem;
+}
+
+.tour__hours {
+  flex-shrink: 0;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.tour__note {
+  font-size: 0.92rem;
+  color: var(--ink-dim);
+}
+
+.tour__route-label {
+  margin-top: 1.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Маршрут рисуется точками на линии — та же логика, что у схемы метро */
+.tour__route {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.9rem;
+  margin-top: 0.6rem;
+}
+
+.tour__route li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--ink-dim);
+}
+
+.tour__route li span {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border: 2px solid var(--accent-2);
+  border-radius: 50%;
+}
+
+.tour__route li:not(:last-child)::after {
+  content: '';
+  width: 12px;
+  height: 1.5px;
+  margin-left: 0.2rem;
+  background: var(--line);
+}
+
+.tour__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 1.3rem;
+}
+
+.tour__price {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.tour__price i {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.tours__empty {
+  padding: 2rem 0;
+  color: var(--ink-dim);
+}
+
+/* --------------------------------------------------------------- машины */
+
+.fleet__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.car {
+  padding: clamp(1.4rem, 2.6vw, 1.9rem);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+
+.car__art {
+  margin-bottom: 1.2rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--accent-2);
+}
+
+.car__art svg {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+}
+
+.car__name {
+  font-size: 1.24rem;
+  margin-bottom: 0.5rem;
+}
+
+.car__caps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin-bottom: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--ink-faint);
+}
+
+.car__caps span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.car__caps .icon {
+  width: 15px;
+  height: 15px;
+}
+
+.car__note {
+  font-size: 0.9rem;
+  color: var(--ink-dim);
+}
+
+.car__features {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.86rem;
+}
+
+.car__features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  color: var(--ink-dim);
+}
+
+.car__features .icon {
+  width: 15px;
+  height: 15px;
+  margin-top: 0.22rem;
+  color: var(--accent-2);
+}
+
+/* --------------------------------------------------------------- отзывы */
+
+.voices__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.voice {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin: 0;
+  padding: clamp(1.4rem, 2.6vw, 1.9rem);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+
+.voice blockquote {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.5;
+}
+
+.voice blockquote::before {
+  content: '«';
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.voice blockquote::after {
+  content: '»';
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.voice figcaption {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.82rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.voice figcaption span {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+}
+
+/* --------------------------------------------------------------- заявка */
+
+.contacts__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.contacts__list {
+  display: grid;
+  gap: 1.1rem;
+  margin-top: 2rem;
+}
+
+.contacts__list li {
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--line);
+}
+
+.contacts__label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 0.25rem;
+}
+
+.contacts__value {
+  font-size: 1rem;
+}
+
+.contacts__value--link {
+  color: var(--accent-2);
+  font-weight: 600;
+}
+
+.contacts__value--link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.form {
+  display: grid;
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+}
+
+.form__fine {
+  font-size: 0.76rem;
+  color: var(--ink-faint);
+}
+
+.form__status {
+  padding: 0.75rem 1rem;
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--accent-2) 16%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--accent-2) 40%, transparent);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------- подвал */
+
+.site-footer {
+  padding-block: clamp(2rem, 4vw, 3.2rem);
+  border-top: 1px solid var(--line);
+}
+
+.footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.footer__brand span {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.82rem;
+  color: var(--ink-dim);
+}
+
+.footer__brand b {
+  font-size: 1.02rem;
+  color: var(--ink);
+}
+
+.footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  font-size: 0.9rem;
+  color: var(--ink-dim);
+}
+
+.footer__nav a:hover {
+  color: var(--ink);
+}
+
+.footer__legal {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  text-align: right;
+}
+
+/* ------------------------------------------------------------ появление */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* --------------------------------------------------------------- адаптив */
+
+@media (max-width: 1000px) {
+  .calc__layout,
+  .contacts__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ticket {
+    position: static;
+  }
+}
+
+/* Промежуточная ширина: пять пунктов, переключатели и кнопка ещё помещаются
+   в строку, но «Как проходит встреча» переносится на вторую. Ужимаем меню и
+   убираем кнопку — до неё всё равно есть та же ссылка в подвале и в первом
+   экране. */
+@media (min-width: 901px) and (max-width: 1180px) {
+  .nav {
+    gap: 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .nav a {
+    white-space: nowrap;
+  }
+
+  .header__cta {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    top: calc(100% + 0.4rem);
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.7rem;
+    border: 1.5px solid var(--line);
+    border-radius: var(--r-md);
+    background: color-mix(in srgb, var(--bg) 96%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease), visibility 0.25s;
+  }
+
+  .site-header.is-open .nav {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  .nav a {
+    padding: 0.6rem;
+    font-size: 1rem;
+  }
+
+  .nav a::after {
+    display: none;
+  }
+
+  .burger {
+    display: block;
+  }
+
+  .header__cta {
+    display: none;
+  }
+
+  .header__inner {
+    position: relative;
+    justify-content: space-between;
+  }
+
+  .header__tools {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 760px) {
+  /* На узком экране дуге негде пройти, не задев текст */
+  .hero__arc,
+  .hero__plane {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .brand__sub {
+    display: none;
+  }
+
+  .hero__title {
+    max-width: none;
+  }
+
+  .facts {
+    gap: 1.2rem 2rem;
+  }
+
+  .footer__legal {
+    text-align: left;
+  }
+
+  .tour__foot {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tour__foot .btn {
+    width: 100%;
+  }
+}
+
+/* ------------------------------------------------------- меньше движения */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .flap.is-flipping,
+  .hero__plane,
+  .how__car {
+    animation: none !important;
+  }
+
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .btn,
+  .service,
+  .tour {
+    transition: none;
+  }
+}

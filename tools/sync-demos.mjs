@@ -40,6 +40,7 @@ const DEMOS = [
   // поэтому одинаково работает из любой подпапки.
   { slug: 'salt-run', from: 'salt-run/dist', include: ['index.html', 'assets'] },
   { slug: 'pervotsvet', from: 'pervotsvet', include: ['index.html', 'css', 'js'] },
+  { slug: 'kluchi-ot-goroda', from: 'kluchi-ot-goroda', include: ['index.html', 'css', 'js'] },
 ];
 
 const checkOnly = process.argv.includes('--check');
