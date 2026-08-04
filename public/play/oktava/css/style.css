@@ -1,0 +1,898 @@
+/* =========================================================================
+   Октава — студия в браузере
+
+   Тёмная схема выбрана не для настроения: в сетке главное — какие клетки
+   горят, а на светлом фоне светящаяся клетка читается хуже погашенной.
+   У каждого инструмента свой цвет, и он тянется через всё: вкладку,
+   клетки сетки и клавиши. По цвету видно, где находишься, даже боковым
+   зрением.
+
+   Порядок: токены → база → шапка → транспорт → сетка → клавиши →
+   экспорт → подсказка → адаптив.
+   ========================================================================= */
+
+:root {
+  --font-ui: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --bg: #0c0e14;
+  --surface: #151824;
+  --surface-2: #1c2032;
+  --surface-3: #252a3f;
+
+  --ink: #e7ecf7;
+  --ink-dim: rgba(231, 236, 247, 0.66);
+  --ink-faint: rgba(231, 236, 247, 0.4);
+  --line: rgba(231, 236, 247, 0.12);
+  --line-soft: rgba(231, 236, 247, 0.06);
+
+  --accent: #7cc4ff;
+  --accent-ink: #08111c;
+  --danger: #ff7a9c;
+
+  --wrap: 1180px;
+  --gutter: clamp(0.9rem, 0.5rem + 1.8vw, 2rem);
+
+  --r-sm: 7px;
+  --r-md: 12px;
+  --r-lg: 20px;
+
+  --ease: cubic-bezier(0.22, 0.8, 0.28, 1);
+}
+
+/* Цвет инструмента. Задаётся на контейнере, дальше всё берёт из --tone. */
+[data-instrument='piano'] { --tone: #7cc4ff; }
+[data-instrument='guitar'] { --tone: #ffb45c; }
+[data-instrument='bell'] { --tone: #7ef0cf; }
+[data-instrument='bass'] { --tone: #b492ff; }
+[data-instrument='drums'] { --tone: #ff7a9c; }
+
+/* ------------------------------------------------------------------ база */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: clamp(0.95rem, 0.92rem + 0.15vw, 1.02rem);
+  line-height: 1.55;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  /* Мягкое свечение сверху — сцена, на которой стоят приборы */
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124, 196, 255, 0.13), transparent 70%),
+    var(--bg);
+  min-height: 100svh;
+}
+
+body.is-locked {
+  overflow: hidden;
+}
+
+h1, h2, h3 {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+p { margin: 0; }
+a { color: inherit; }
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+svg { display: block; }
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.6rem;
+  left: 0.6rem;
+  z-index: 200;
+  padding: 0.6rem 1rem;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  transform: translateY(-160%);
+  transition: transform 0.25s var(--ease);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+main {
+  width: min(100% - var(--gutter) * 2, var(--wrap));
+  margin-inline: auto;
+  padding-bottom: 3rem;
+  display: grid;
+  gap: clamp(1rem, 0.6rem + 1.4vw, 1.8rem);
+}
+
+/* Элемент grid по умолчанию не ужимается меньше своего содержимого
+   (min-width: auto). Сетка секвенсора шире телефона, и без этой строки
+   она распирала бы страницу вбок вместо того, чтобы прокручиваться внутри
+   своего контейнера. */
+main > * {
+  min-width: 0;
+}
+
+/* --------------------------------------------------------------- кнопки */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.62rem 1.05rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.18s var(--ease), background 0.18s var(--ease),
+    color 0.18s var(--ease);
+}
+
+.btn:hover {
+  border-color: var(--ink-faint);
+}
+
+.btn--quiet {
+  background: transparent;
+}
+
+.btn--accent {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.btn--accent:hover {
+  background: #9bd2ff;
+}
+
+.btn--ghost {
+  background: transparent;
+}
+
+.btn--danger:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* Включённое состояние тумблеров: метроном и запись */
+.btn.is-on {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn--rec.is-on {
+  border-color: var(--danger);
+  color: var(--danger);
+  animation: rec-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes rec-pulse {
+  50% { background: rgba(255, 122, 156, 0.14); }
+}
+
+/* ---------------------------------------------------------------- шапка */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: min(100% - var(--gutter) * 2, var(--wrap));
+  margin-inline: auto;
+  padding-block: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+/* Эквалайзер вместо логотипа: полоски живут, пока страница открыта */
+.brand__mark {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  width: 38px;
+  height: 38px;
+  padding: 8px 7px;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+}
+
+.brand__mark span {
+  flex: 1;
+  border-radius: 2px;
+  background: var(--accent);
+  animation: eq 1.4s ease-in-out infinite;
+}
+
+.brand__mark span:nth-child(1) { height: 40%; animation-delay: 0s; }
+.brand__mark span:nth-child(2) { height: 90%; animation-delay: 0.18s; }
+.brand__mark span:nth-child(3) { height: 60%; animation-delay: 0.36s; }
+.brand__mark span:nth-child(4) { height: 100%; animation-delay: 0.1s; }
+
+@keyframes eq {
+  0%, 100% { transform: scaleY(0.45); }
+  50% { transform: scaleY(1); }
+}
+
+.brand__mark span {
+  transform-origin: bottom;
+}
+
+.brand__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.brand__text b {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.brand__text span {
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.topbar__tools {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lang {
+  display: flex;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+}
+
+.lang__btn {
+  padding: 0.28rem 0.6rem;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--ink-faint);
+  cursor: pointer;
+  transition: background 0.18s var(--ease), color 0.18s var(--ease);
+}
+
+.lang__btn[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* ------------------------------------------------------------ транспорт */
+
+.transport {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(0.7rem, 2vw, 1.5rem);
+  padding: clamp(0.8rem, 2vw, 1.1rem) clamp(0.9rem, 2vw, 1.3rem);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+
+.play {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1.4rem;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s var(--ease);
+}
+
+.play:hover {
+  background: #9bd2ff;
+}
+
+.play.is-playing {
+  background: var(--danger);
+}
+
+.play .icon--stop { display: none; }
+.play.is-playing .icon--play { display: none; }
+.play.is-playing .icon--stop { display: block; }
+
+.knob {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 148px;
+}
+
+.knob__label {
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.knob__row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.knob__value {
+  min-width: 2.4ch;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.range {
+  flex: 1;
+  min-width: 0;
+  height: 4px;
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 2px;
+  background: var(--surface-3);
+  cursor: pointer;
+}
+
+.range::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+}
+
+.range::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------- дорожки */
+
+.tracks__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tab-wrap {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  background: var(--surface);
+  transition: border-color 0.2s var(--ease);
+}
+
+.tab-wrap.is-active {
+  border-color: var(--tone, var(--accent));
+  box-shadow: 0 0 0 1px var(--tone, var(--accent));
+}
+
+.tab-wrap:nth-child(1) { --tone: #7cc4ff; }
+.tab-wrap:nth-child(2) { --tone: #ffb45c; }
+.tab-wrap:nth-child(3) { --tone: #7ef0cf; }
+.tab-wrap:nth-child(4) { --tone: #b492ff; }
+.tab-wrap:nth-child(5) { --tone: #ff7a9c; }
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.9rem;
+  border: 0;
+  background: transparent;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--ink-dim);
+}
+
+.tab-wrap.is-active .tab {
+  color: var(--ink);
+}
+
+.tab__name::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  background: var(--tone);
+  vertical-align: middle;
+}
+
+.tab__count {
+  padding: 0.05rem 0.4rem;
+  border-radius: 20px;
+  background: var(--surface-3);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink-dim);
+}
+
+.tab__mute {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  border: 0;
+  border-left: 1px solid var(--line);
+  background: transparent;
+  cursor: pointer;
+}
+
+.tab__mute span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--ink-faint);
+  transition: background 0.18s var(--ease), border-color 0.18s var(--ease);
+}
+
+.tab__mute[aria-pressed='true'] span {
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+.tab__mute:hover span {
+  border-color: var(--ink);
+}
+
+/* -------------------------------------------------------------- секвенсор */
+
+.seq {
+  padding: clamp(0.9rem, 2vw, 1.3rem);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+
+.seq__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.seq__title {
+  font-size: 1.15rem;
+}
+
+.seq__hint {
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+}
+
+.seq__scroll {
+  overflow-x: auto;
+  padding-bottom: 0.3rem;
+}
+
+/* Колонка названий шире, чем нужно нотам: в барабанной дорожке там стоят
+   слова, и «малый барабан» не должен обрезаться на полуслове. */
+.seq__grid,
+.seq__ruler {
+  display: grid;
+  grid-template-columns: 96px repeat(16, minmax(28px, 1fr));
+  gap: 5px;
+  min-width: 660px;
+}
+
+.seq__row {
+  display: contents;
+}
+
+.seq__label {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cell {
+  aspect-ratio: 1;
+  min-height: 26px;
+  padding: 0;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  cursor: pointer;
+  transition: background 0.12s var(--ease), border-color 0.12s var(--ease),
+    box-shadow 0.18s var(--ease), transform 0.12s var(--ease);
+}
+
+/* Сильные доли чуть светлее — по ним глаз считает такт */
+.cell--beat {
+  background: var(--surface-3);
+}
+
+.cell:hover {
+  border-color: var(--tone);
+}
+
+.cell.is-on {
+  background: var(--tone);
+  border-color: var(--tone);
+  box-shadow: 0 0 14px -2px var(--tone);
+}
+
+/* Бегунок воспроизведения: подсвечивается вся колонка */
+.cell.is-now {
+  border-color: rgba(231, 236, 247, 0.45);
+}
+
+.cell.is-on.is-now {
+  transform: scale(1.12);
+  box-shadow: 0 0 20px 0 var(--tone);
+}
+
+.seq__ruler {
+  margin-top: 0.4rem;
+}
+
+.ruler__mark {
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--ink-faint);
+  border-top: 1px solid transparent;
+  transition: color 0.12s var(--ease), border-color 0.12s var(--ease);
+}
+
+.ruler__mark--beat {
+  color: var(--ink-dim);
+}
+
+.ruler__mark.is-now {
+  color: var(--tone);
+  border-top-color: var(--tone);
+}
+
+/* -------------------------------------------------------------- клавиши */
+
+.live {
+  padding: clamp(0.9rem, 2vw, 1.3rem);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+
+.live__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.live__title {
+  font-size: 1.15rem;
+}
+
+.live__hint {
+  margin-bottom: 1rem;
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+  max-width: 70ch;
+}
+
+.keys {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 0.3rem;
+}
+
+.key {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  min-width: 56px;
+  padding: 0.7rem 0.4rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: linear-gradient(180deg, var(--surface-3), var(--surface-2));
+  cursor: pointer;
+  transition: transform 0.08s var(--ease), border-color 0.15s var(--ease),
+    box-shadow 0.15s var(--ease);
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.key:hover {
+  border-color: var(--tone);
+}
+
+.key.is-hit {
+  animation: key-hit 0.22s var(--ease);
+}
+
+@keyframes key-hit {
+  0% {
+    transform: translateY(3px) scale(0.97);
+    box-shadow: 0 0 22px -2px var(--tone);
+    border-color: var(--tone);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+.key__note {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.key__hint {
+  margin-top: 0.6rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--ink-faint);
+}
+
+/* --------------------------------------------------------------- экспорт */
+
+.export {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: clamp(1rem, 3vw, 2.4rem);
+  padding: clamp(1rem, 2.4vw, 1.6rem);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+
+.export__title {
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+}
+
+.export__lead {
+  font-size: 0.88rem;
+  color: var(--ink-dim);
+  max-width: 52ch;
+}
+
+.export__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.6rem;
+}
+
+.export__row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1 1 190px;
+}
+
+.export__status {
+  flex-basis: 100%;
+  margin-top: 0.4rem;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid rgba(124, 196, 255, 0.35);
+  border-radius: var(--r-sm);
+  background: rgba(124, 196, 255, 0.1);
+  font-size: 0.84rem;
+}
+
+/* -------------------------------------------------------------- подсказка */
+
+/* Любое собственное display перебивает атрибут hidden — без этой строки
+   подсказка висела бы поверх студии постоянно и перехватывала все клики. */
+.sheet[hidden] {
+  display: none;
+}
+
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  background: rgba(6, 8, 14, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.sheet__panel {
+  position: relative;
+  width: min(100%, 560px);
+  max-height: 85svh;
+  overflow-y: auto;
+  padding: clamp(1.3rem, 3vw, 2rem);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+
+.sheet__panel h2 {
+  font-size: 1.35rem;
+  margin-bottom: 1rem;
+  padding-right: 2rem;
+}
+
+.sheet__close {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: transparent;
+  cursor: pointer;
+}
+
+.sheet__list {
+  display: grid;
+  gap: 0.8rem;
+  margin: 0;
+  padding-left: 1.3rem;
+  font-size: 0.92rem;
+  color: var(--ink-dim);
+}
+
+.sheet__list li::marker {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------- подвал */
+
+.footer {
+  width: min(100% - var(--gutter) * 2, var(--wrap));
+  margin-inline: auto;
+  padding-block: 1.6rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+}
+
+.footer p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.8rem;
+}
+
+/* --------------------------------------------------------------- адаптив */
+
+@media (max-width: 860px) {
+  .export {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .topbar {
+    flex-wrap: wrap;
+  }
+
+  .transport {
+    gap: 0.7rem 1rem;
+  }
+
+  .knob {
+    min-width: 120px;
+    flex: 1;
+  }
+
+  .play {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+
+  .live__head {
+    flex-wrap: wrap;
+  }
+
+  .key {
+    min-width: 48px;
+  }
+}
+
+/* ------------------------------------------------------- меньше движения */
+
+@media (prefers-reduced-motion: reduce) {
+  .brand__mark span,
+  .btn--rec.is-on {
+    animation: none;
+  }
+
+  .key.is-hit {
+    animation: none;
+    border-color: var(--tone);
+  }
+
+  .cell,
+  .key,
+  .btn {
+    transition: none;
+  }
+}

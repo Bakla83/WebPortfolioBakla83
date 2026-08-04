@@ -35,7 +35,7 @@ export const PROJECTS: Project[] = [
         'Рисованные от руки локации и кинематографичный саундтрек',
         'Головоломки и мини-игры, встроенные в исследование',
         'Сюжет, построенный на реальной истории цензуры',
-        'Четырк языка: русский, английский, испанский, французский',
+        'Четыре языка: русский, английский, испанский, французский',
       ],
       en: [
         'Hand-drawn locations and a cinematic soundtrack',
@@ -551,6 +551,84 @@ export const PROJECTS: Project[] = [
       },
     },
     links: [{ kind: 'live', url: '/play/chto-prigotovit/index.html' }],
+  },
+  {
+    slug: 'oktava',
+    section: 'websites',
+    order: 2,
+    year: 2026,
+    tech: ['HTML', 'CSS', 'JavaScript', 'Web Audio API'],
+    title: { ru: 'Октава — студия в браузере', en: 'Oktava — a studio in the browser' },
+    role: { ru: 'Автор проекта', en: 'Sole author' },
+    teaser: {
+      ru: 'Пять инструментов, шаговый секвенсор и живая игра с клавиатуры. Готовую вещь можно сохранить на устройство файлом .wav — без регистрации и установки.',
+      en: 'Five instruments, a step sequencer and live playing from the keyboard. The finished piece saves to your device as a .wav file — no sign-up, no install.',
+    },
+    summary: {
+      ru: 'Веб-приложение, в котором собирают музыку и уносят её с собой файлом. Ни одной звуковой записи в проекте нет: пианино складывается из трёх частичных тонов, гитара считается по алгоритму Карплуса — Стронга, колокольчики построены на частотной модуляции, барабаны — из шума и синусоид с резким спадом высоты. Поэтому вся вещь весит десятки килобайт вместо десятков мегабайт и звучит сразу, без ожидания загрузки сэмплов.',
+      en: 'A web app where you put music together and take it away as a file. There is not a single audio recording in the project: the piano is built from three partials, the guitar is computed with the Karplus–Strong algorithm, the bells run on frequency modulation, and the drums come from noise and sine waves with a sharp pitch drop. That is why the whole thing weighs tens of kilobytes instead of tens of megabytes and sounds the moment you press a key.',
+    },
+    highlights: {
+      ru: [
+        'Сведение в .wav целиком в браузере: OfflineAudioContext считает вещь быстрее реального времени, кодировщик формата умещается в двадцать строк без единой зависимости',
+        'Расписание нот идёт по часам звуковой карты, а не по таймерам — setTimeout плавает на десятки миллисекунд, и на слух это разъезжающийся ритм',
+        'Живая игра мышью или клавишами компьютера; с включённой записью сыгранное само встаёт в сетку, притянувшись к ближайшему шагу',
+        'Строй — минорная пентатоника: в ней почти нет фальшивых сочетаний, и человек без музыкального образования собирает что-то приятное с первого раза',
+        'Проект сохраняется отдельным файлом и открывается обратно; на сервер не уходит ничего',
+      ],
+      en: [
+        'Mixdown to .wav entirely in the browser: OfflineAudioContext renders faster than real time and the format encoder fits in twenty lines with no dependencies',
+        'Notes are scheduled against the audio clock rather than timers — setTimeout drifts by tens of milliseconds, which the ear hears as a falling-apart beat',
+        'Live playing with the mouse or the computer keys; with recording on, what you play lands in the grid snapped to the nearest step',
+        'The scale is a minor pentatonic: it has almost no sour combinations, so someone with no musical training puts together something pleasant on the first try',
+        'The project saves as its own file and opens back up; nothing is sent to a server',
+      ],
+    },
+    cover: {
+      src: '/media/oktava/cover.png',
+      width: 2160,
+      height: 1350,
+      alt: {
+        ru: 'Студия: транспорт, дорожки инструментов и сетка секвенсора с набранной партией',
+        en: 'The studio: transport, instrument tracks and the sequencer grid with a part written in',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/oktava/desktop-2.png',
+        width: 2160,
+        height: 1350,
+        alt: { ru: 'Барабанная дорожка и живая клавиатура', en: 'The drum track and the live keyboard' },
+        caption: {
+          ru: 'У каждого инструмента свой цвет — он тянется через вкладку, клетки сетки и клавиши',
+          en: 'Each instrument has its own colour, carried through the tab, the grid cells and the keys',
+        },
+      },
+      {
+        src: '/media/oktava/desktop-3.png',
+        width: 2160,
+        height: 1350,
+        alt: { ru: 'Панель сохранения на устройство', en: 'The save-to-device panel' },
+        caption: {
+          ru: 'Готовое сводится в .wav, проект сохраняется отдельно — чтобы вернуться и доделать',
+          en: 'The result mixes down to .wav; the project saves separately so you can come back and finish it',
+        },
+      },
+      {
+        src: '/media/oktava/mobile.png',
+        width: 1170,
+        height: 2532,
+        alt: { ru: 'Студия на экране телефона', en: 'The studio on a phone screen' },
+      },
+    ],
+    demo: {
+      src: '/play/oktava/index.html',
+      note: {
+        ru: 'Нажмите несколько клеток и «Играть». Дорожки переключаются вкладками, клавиши внизу играют вживую — в том числе кнопками A, S, D, F на клавиатуре. Кнопка «Скачать .wav» сохранит получившееся на устройство.',
+        en: 'Click a few cells and press Play. Tabs switch tracks, the keys below play live — including the A, S, D, F keys on your keyboard. The .wav button saves the result to your device.',
+      },
+    },
+    links: [{ kind: 'live', url: '/play/oktava/index.html' }],
   },
 
   /* -------------------------------------------------- Мобильные приложения */
