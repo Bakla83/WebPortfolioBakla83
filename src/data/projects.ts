@@ -708,6 +708,88 @@ export const PROJECTS: Project[] = [
     links: [{ kind: 'live', url: '/play/partitura/index.html' }],
   },
 
+  {
+    slug: 'vetka',
+    section: 'websites',
+    order: 4,
+    year: 2026,
+    tech: ['HTML', 'CSS', 'JavaScript'],
+    title: { ru: 'Ветка — git по шагам', en: 'Vetka — git step by step' },
+    role: { ru: 'Автор проекта', en: 'Sole author' },
+    teaser: {
+      ru: 'Тренажёр Git Bash: команды набираются руками, а рядом видно, как файл едет из папки в индекс, становится коммитом и уходит на GitHub.',
+      en: 'A Git Bash trainer: you type the commands yourself while the diagram shows the file moving from folder to index, turning into a commit and travelling to GitHub.',
+    },
+    summary: {
+      ru: 'Шесть уроков — от «где я вообще нахожусь» до полного пути «пустая папка → репозиторий → .gitignore → коммит → GitHub». Внутри работает настоящая модель репозитория: у файла одновременно три версии — на диске, в индексе и в последнем коммите, — и «изменён», «подготовлен», «не отслеживается» не проставлены заранее, а вычисляются из их разницы. Поэтому от урока можно отойти в сторону: набрать своё, сломать, посмотреть git status и вернуться.',
+      en: 'Six lessons, from “where am I even standing” to the full path “empty folder → repository → .gitignore → commit → GitHub”. A real repository model runs underneath: a file has three versions at once — on disk, in the index and in the last commit — and “modified”, “staged”, “untracked” are not preset flags but the difference between them. That is why you can step off the script: type your own command, break something, run git status and come back.',
+    },
+    highlights: {
+      ru: [
+        'Схема из четырёх зон анимируется приёмом FLIP: разметка каждый раз строится заново от состояния, а переезд карточки в индекс и коммита на GitHub браузер считает сам',
+        'Ключ карточки — file:<имя> или commit:<номер>, поэтому коммит, улетающий на GitHub, стартует из своей же точки в локальной истории: видно, что push копирует, а не создаёт заново',
+        'Урок не запрещает лишние команды: шаг проверяется после того, как команда честно выполнена — тренажёр, отвергающий всё, кроме ожидаемого, учит не git, а послушанию',
+        'Переключение ветки меняет содержимое файла на диске, и cat это показывает — то самое место, где ветки перестают быть абстракцией',
+        'Вывод повторяет настоящий: приглашение в две строки с веткой в скобках, ошибки git и bash слово в слово, история по ↑ и дописывание по Tab',
+        'В конце урока — проверка: команду больше не показывают, её нужно вспомнить самому; пройденное и открытые команды шпаргалки запоминаются',
+      ],
+      en: [
+        'The four-zone diagram animates with FLIP: the markup is rebuilt from state every time, and the browser works out the trip from folder to index and from commit to GitHub itself',
+        'Card keys are file:<name> and commit:<id>, so a commit flying to GitHub starts from its own point in the local history — you can see that push copies rather than creates',
+        'The lesson never blocks a command you were not asked for: the step is checked after the command has actually run — a trainer that refuses everything unexpected teaches obedience, not git',
+        'Switching branches changes the file on disk and cat shows it — the exact moment branches stop being an abstraction',
+        'The output copies the real thing: a two-line prompt with the branch in brackets, git and bash errors word for word, ↑ for history and Tab completion',
+        'Each lesson ends with a check: the command is no longer shown and has to be recalled; progress and the unlocked cheat sheet are remembered',
+      ],
+    },
+    cover: {
+      src: '/media/vetka/cover.png',
+      width: 2160,
+      height: 1350,
+      alt: {
+        ru: 'Урок про GitHub: схема из четырёх зон и окно Git Bash с выполненными командами',
+        en: 'The GitHub lesson: the four-zone diagram and a Git Bash window with commands already run',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/vetka/desktop-2.png',
+        width: 2160,
+        height: 1350,
+        alt: { ru: 'Урок про ветки после слияния', en: 'The branches lesson after a merge' },
+        caption: {
+          ru: 'Урок про ветки: коммит уходит в feature, а в main файл на диске остаётся прежним — пока не сделано слияние',
+          en: 'The branches lesson: the commit lands on feature while the file on disk in main stays as it was — until the merge',
+        },
+      },
+      {
+        src: '/media/vetka/desktop-3.png',
+        width: 2160,
+        height: 1350,
+        alt: { ru: 'Светлая тема, урок про первый коммит', en: 'The light theme, the first-commit lesson' },
+        caption: {
+          ru: 'Светлая тема для проектора и дневного света; терминал остаётся тёмным в обеих — таким его и увидят в жизни',
+          en: 'A light theme for projectors and daylight; the terminal stays dark in both, the way it will look in real life',
+        },
+      },
+      {
+        src: '/media/vetka/mobile.png',
+        width: 1170,
+        height: 2532,
+        alt: { ru: 'Тренажёр на экране телефона', en: 'The trainer on a phone screen' },
+      },
+    ],
+    demo: {
+      src: '/play/vetka/index.html',
+      ratio: '4 / 3',
+      note: {
+        ru: 'Наберите команду из карточки слева и нажмите Enter — схема справа покажет, что произошло. Кнопка «Подставить» напечатает команду за вас. В отдельной вкладке места больше.',
+        en: 'Type the command from the card on the left and press Enter — the diagram will show what happened. The “Fill in” button types it for you. There is more room in a separate tab.',
+      },
+    },
+    links: [{ kind: 'live', url: '/play/vetka/index.html' }],
+  },
+
   /* -------------------------------------------------- Мобильные приложения */
   {
     slug: 'chto-prigotovit-android',

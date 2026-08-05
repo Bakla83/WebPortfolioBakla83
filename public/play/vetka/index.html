@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title data-i18n="meta.title">Ветка — git и Git Bash по шагам</title>
+<meta name="description" content="Наглядные уроки по git: набираете команды в настоящем на вид Git Bash, а рядом видно, как файл переезжает из папки в индекс, становится коммитом и уходит на GitHub." data-i18n-content="meta.description" />
+<meta name="theme-color" content="#12141b" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2312141b'/%3E%3Cg stroke='%235bc8a0' stroke-width='3.4' fill='none'%3E%3Cpath d='M22 16v20a10 10 0 0 0 10 10h6'/%3E%3C/g%3E%3Cg fill='%235bc8a0'%3E%3Ccircle cx='22' cy='13' r='6'/%3E%3Ccircle cx='22' cy='50' r='6'/%3E%3Ccircle cx='44' cy='46' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+<link rel="stylesheet" href="css/style.css" />
+
+<!-- Тема и язык ставятся до первой отрисовки: иначе на секунду видно
+     не ту тему и русский текст поверх того, что человек уже выбрал. -->
+<script src="inline-1.js"></script>
+</head>
+<body>
+
+<a class="skip-link" href="#term-input" data-i18n="a11y.skip">Перейти к терминалу</a>
+
+<!-- ═════════════════════════════ СПРАЙТ ═════════════════════════════ -->
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M4 6.5h16M4 12h16M4 17.5h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2" stroke="currentColor" stroke-width="1.7" fill="none"/><path d="M7 9.5h6M7 13h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="M9 5.5 16 12l-7 6.5" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><path d="M15 5.5 8 12l7 6.5" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></symbol>
+    <symbol id="i-hint" viewBox="0 0 24 24"><path d="M9.5 17h5M10 20h4M12 3.5a5.5 5.5 0 0 1 3.2 10c-.5.4-.7.9-.7 1.5H9.5c0-.6-.2-1.1-.7-1.5A5.5 5.5 0 0 1 12 3.5z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5 10 17.5 19 7" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.7" fill="none"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.3A8.4 8.4 0 0 1 9.7 4a8.4 8.4 0 1 0 10.3 10.3z" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<!-- ══════════════════════════════ ШАПКА ══════════════════════════════ -->
+<header class="topbar">
+  <div class="brand">
+    <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true">
+      <path d="M22 16v20a10 10 0 0 0 10 10h6" fill="none" stroke="currentColor" stroke-width="3.4"/>
+      <circle cx="22" cy="13" r="6" fill="currentColor"/>
+      <circle cx="22" cy="50" r="6" fill="currentColor"/>
+      <circle cx="44" cy="46" r="6" fill="currentColor"/>
+    </svg>
+    <span class="brand__text">
+      <b data-i18n="brand.name">Ветка</b>
+      <span data-i18n="brand.sub">git по шагам</span>
+    </span>
+  </div>
+
+  <div class="topbar__tools">
+    <button class="btn btn--quiet" id="open-lessons" type="button">
+      <svg class="icon" aria-hidden="true"><use href="#i-list"/></svg>
+      <span data-i18n="ui.lessons">Уроки</span>
+    </button>
+    <button class="btn btn--quiet" id="open-cheat" type="button">
+      <svg class="icon" aria-hidden="true"><use href="#i-card"/></svg>
+      <span data-i18n="ui.cheat">Шпаргалка</span>
+    </button>
+    <button class="btn btn--icon" id="theme" type="button" data-i18n-aria-label="a11y.theme" aria-label="Сменить тему">
+      <svg class="icon icon--sun" aria-hidden="true"><use href="#i-sun"/></svg>
+      <svg class="icon icon--moon" aria-hidden="true"><use href="#i-moon"/></svg>
+    </button>
+    <div class="lang" role="group" data-i18n-aria-label="a11y.lang" aria-label="Язык интерфейса">
+      <button type="button" class="lang__btn" data-lang="ru" aria-pressed="true">RU</button>
+      <button type="button" class="lang__btn" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<main class="app">
+  <!-- ═══════════════════════════════ УРОК ═══════════════════════════════ -->
+  <aside class="lesson">
+    <div class="lesson__head">
+      <span class="lesson__no" id="lesson-no">Урок 1</span>
+      <h1 class="lesson__title" id="lesson-title">—</h1>
+      <p class="lesson__lead" id="lesson-lead"></p>
+      <div class="progress" aria-hidden="true"><span class="progress__bar" id="lesson-progress"></span></div>
+    </div>
+
+    <ol class="steps" id="steps"></ol>
+
+    <div class="task" id="task">
+      <p class="task__text" id="task-text"></p>
+
+      <div class="task__cmd" id="task-cmd-wrap">
+        <code class="task__cmd-text" id="task-cmd"></code>
+        <button class="btn btn--tiny" id="task-fill" type="button">
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-play"/></svg>
+          <span data-i18n="ui.fill">Подставить</span>
+        </button>
+      </div>
+
+      <p class="task__hint" id="task-hint" hidden></p>
+      <div class="task__row">
+        <button class="btn btn--tiny btn--quiet" id="task-hint-btn" type="button">
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-hint"/></svg>
+          <span data-i18n="ui.hint">Подсказка</span>
+        </button>
+        <span class="task__done" id="task-done" hidden>
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>
+          <span data-i18n="ui.done">Сделано</span>
+        </span>
+      </div>
+    </div>
+
+    <nav class="lesson__nav">
+      <button class="btn btn--tiny" id="lesson-prev" type="button">
+        <svg class="icon icon--sm" aria-hidden="true"><use href="#i-prev"/></svg>
+        <span data-i18n="ui.prev">Назад</span>
+      </button>
+      <button class="btn btn--tiny" id="lesson-restart" type="button">
+        <svg class="icon icon--sm" aria-hidden="true"><use href="#i-reset"/></svg>
+        <span data-i18n="ui.restart">Сначала</span>
+      </button>
+      <button class="btn btn--tiny btn--accent" id="lesson-next" type="button">
+        <span data-i18n="ui.next">Дальше</span>
+        <svg class="icon icon--sm" aria-hidden="true"><use href="#i-next"/></svg>
+      </button>
+    </nav>
+  </aside>
+
+  <!-- ══════════════════════════════ СХЕМА ══════════════════════════════ -->
+  <section class="stage" id="stage">
+    <div class="zone" data-zone="work">
+      <div class="zone__head">
+        <h2 class="zone__title" data-i18n="zone.work">Рабочая папка</h2>
+        <span class="zone__sub" data-i18n="zone.workSub">то, что лежит на диске</span>
+      </div>
+      <div class="zone__body" id="zone-work"></div>
+    </div>
+
+    <div class="zone" data-zone="index">
+      <div class="zone__head">
+        <h2 class="zone__title" data-i18n="zone.index">Индекс</h2>
+        <span class="zone__sub" data-i18n="zone.indexSub">что войдёт в коммит</span>
+      </div>
+      <div class="zone__body" id="zone-index"></div>
+    </div>
+
+    <div class="zone" data-zone="local">
+      <div class="zone__head">
+        <h2 class="zone__title" data-i18n="zone.local">Репозиторий</h2>
+        <span class="zone__sub" id="zone-local-sub" data-i18n="zone.localSub">история коммитов</span>
+      </div>
+      <div class="zone__body zone__body--graph" id="zone-local"></div>
+    </div>
+
+    <div class="zone" data-zone="remote">
+      <div class="zone__head">
+        <h2 class="zone__title" data-i18n="zone.remote">GitHub</h2>
+        <span class="zone__sub" id="zone-remote-sub" data-i18n="zone.remoteSub">удалённая копия</span>
+      </div>
+      <div class="zone__body zone__body--graph" id="zone-remote"></div>
+    </div>
+
+    <div class="flyer" id="flyer" aria-hidden="true"></div>
+  </section>
+
+  <!-- ════════════════════════════ ТЕРМИНАЛ ════════════════════════════ -->
+  <section class="term" id="term">
+    <div class="term__bar">
+      <span class="term__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="term__name">MINGW64:/d/projects</span>
+      <button class="btn btn--tiny btn--quiet" id="term-clear" type="button" data-i18n="ui.clear">Очистить</button>
+    </div>
+
+    <div class="term__screen" id="term-screen" tabindex="-1">
+      <div class="term__out" id="term-out"></div>
+      <label class="term__line" for="term-input">
+        <span class="term__prompt" id="term-prompt"></span>
+        <input class="term__input" id="term-input" type="text" autocomplete="off" autocapitalize="off"
+               autocorrect="off" spellcheck="false" data-i18n-aria-label="a11y.input" aria-label="Строка ввода команды" />
+      </label>
+    </div>
+
+    <p class="term__tip" data-i18n="ui.termTip">↑ и ↓ — прошлые команды, Tab — дописать команду, Enter — выполнить</p>
+  </section>
+</main>
+
+<!-- ═════════════════════════════ УРОКИ ═════════════════════════════ -->
+<div class="modal" id="lessons" hidden>
+  <div class="modal__panel" role="dialog" aria-modal="true" data-i18n-aria-label="ui.lessons" aria-label="Уроки">
+    <button class="modal__close" id="lessons-close" type="button" data-i18n-aria-label="a11y.close" aria-label="Закрыть">
+      <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+    <h2 data-i18n="ui.lessons">Уроки</h2>
+    <p class="modal__lead" data-i18n="ui.lessonsLead">Каждый урок — короткий сценарий: несколько команд, которые вы набираете сами, и схема, на которой видно, что при этом происходит.</p>
+    <ul class="cards" id="lesson-cards"></ul>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ ШПАРГАЛКА ═══════════════════════════ -->
+<div class="modal" id="cheat" hidden>
+  <div class="modal__panel" role="dialog" aria-modal="true" data-i18n-aria-label="ui.cheat" aria-label="Шпаргалка">
+    <button class="modal__close" id="cheat-close" type="button" data-i18n-aria-label="a11y.close" aria-label="Закрыть">
+      <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+    <h2 data-i18n="ui.cheat">Шпаргалка</h2>
+    <p class="modal__lead" data-i18n="ui.cheatLead">Команды, которые встречаются в уроках. Открытые вами отмечены — остальные появятся по ходу.</p>
+    <div class="cheat" id="cheat-list"></div>
+  </div>
+</div>
+
+<footer class="footer">
+  <p>
+    <span id="footer-year">© 2026</span>
+    <span data-i18n="footer.note">Терминал ненастоящий: команды разбираются здесь же, в браузере, ничего не устанавливается и никуда не отправляется</span>
+  </p>
+</footer>
+
+<script defer src="js/i18n.js"></script>
+<script defer src="js/engine.js"></script>
+<script defer src="js/lessons.js"></script>
+<script defer src="js/stage.js"></script>
+<script defer src="js/term.js"></script>
+<script defer src="js/main.js"></script>
+</body>
+</html>

@@ -43,6 +43,7 @@ const DEMOS = [
   { slug: 'kluchi-ot-goroda', from: 'kluchi-ot-goroda', include: ['index.html', 'css', 'js'] },
   { slug: 'oktava', from: 'oktava', include: ['index.html', 'css', 'js'] },
   { slug: 'partitura', from: 'partitura', include: ['index.html', 'css', 'js'] },
+  { slug: 'vetka', from: 'vetka', include: ['index.html', 'css', 'js'] },
 ];
 
 const checkOnly = process.argv.includes('--check');
