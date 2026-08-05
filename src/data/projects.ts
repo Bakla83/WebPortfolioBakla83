@@ -631,6 +631,83 @@ export const PROJECTS: Project[] = [
     links: [{ kind: 'live', url: '/play/oktava/index.html' }],
   },
 
+  {
+    slug: 'partitura',
+    section: 'websites',
+    order: 3,
+    year: 2026,
+    tech: ['HTML', 'CSS', 'JavaScript', 'SVG', 'Web Audio API'],
+    title: { ru: 'Партитура — ноты и клавиши', en: 'Partitura — notes and keys' },
+    role: { ru: 'Автор проекта', en: 'Sole author' },
+    teaser: {
+      ru: 'Пишете ноты на нотном стане — и сразу видите на пианино, какие клавиши нажимаются. И наоборот: нажали клавишу — нота встала в лист.',
+      en: 'Write notes on the staff and see at once which piano keys are pressed. And the other way round: press a key and the note lands on the sheet.',
+    },
+    summary: {
+      ru: 'Нотный редактор в браузере: скрипичный и басовый ключи, размеры от 2/4 до 6/8, тональности до пяти знаков, длительности от целой до шестнадцатой с точками и паузами. Ни музыкального шрифта, ни картинок — каждый знак строится кодом как путь SVG, поэтому весь лист масштабируется одной величиной, расстоянием между линейками. Готовое сохраняется проектом, уходит стандартным .mid или на печать; на сервер не отправляется ничего.',
+      en: 'A notation editor in the browser: treble and bass clefs, time signatures from 2/4 to 6/8, keys up to five accidentals, note values from whole to sixteenth with dots and rests. No music font and no images — every symbol is built in code as an SVG path, so the whole sheet scales from a single value, the distance between staff lines. The result saves as a project, exports as a standard .mid or goes to the printer; nothing is sent to a server.',
+    },
+    highlights: {
+      ru: [
+        'Пианино связано со станом в обе стороны: клавиша добавляет ноту в лист, а наведение на стан подсвечивает клавишу ещё до клика — видно, что именно получится',
+        'Нота хранится ступенью стана и знаком, а не номером MIDI: ми-бемоль и ре-диез звучат одинаково, но пишутся по-разному, и смена тональности не переписывает набранное',
+        'Ключи, головки, штили, вязки и паузы нарисованы кодом: музыкальный шрифт весил бы сотни килобайт и тянулся с чужого домена, а системные его символы рисуют не в том масштабе',
+        'Тактовые черты, вязки восьмых внутри доли и добавочные линейки считаются раскладкой — доли считать не нужно',
+        'Экспорт в .mid написан побайтно, в двадцать строк: готовая библиотека весила бы больше всего остального проекта',
+        'Расписание нот идёт по часам звуковой карты, а не по таймерам — иначе на слух ритм разъезжается',
+      ],
+      en: [
+        'The piano is wired to the staff both ways: a key adds a note to the sheet, and hovering over the staff lights up the key before you even click — you see what you are about to get',
+        'A note is stored as a staff step plus an accidental, not as a MIDI number: E♭ and D♯ sound alike but are written differently, and changing key never rewrites what you typed',
+        'Clefs, noteheads, stems, beams and rests are drawn in code: a music font would weigh hundreds of kilobytes and come from someone else’s domain, and system fonts draw those symbols at the wrong scale',
+        'Bar lines, beams within a beat and ledger lines all fall out of the layout — you never count beats',
+        'The .mid export is written byte by byte in twenty lines: a ready-made library would outweigh the rest of the project',
+        'Notes are scheduled against the audio clock rather than timers — otherwise the ear hears the beat falling apart',
+      ],
+    },
+    cover: {
+      src: '/media/partitura/cover.png',
+      width: 2160,
+      height: 1350,
+      alt: {
+        ru: 'Нотный лист с мелодией и клавиатура пианино под ним, одна клавиша подсвечена',
+        en: 'A sheet of music with a melody and a piano keyboard below, one key highlighted',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/partitura/desktop-2.png',
+        width: 2160,
+        height: 1350,
+        alt: {
+          ru: 'Тёмная тема во время воспроизведения: звучащая нота и клавиша подсвечены',
+          en: 'The dark theme during playback: the sounding note and its key are highlighted',
+        },
+        caption: {
+          ru: 'Во время игры подсвечивается и нота в листе, и клавиша на пианино — по ним видно, что именно сейчас звучит',
+          en: 'While the sheet plays, both the note and the piano key light up — you can see exactly what is sounding',
+        },
+      },
+      {
+        src: '/media/partitura/mobile.png',
+        width: 1170,
+        height: 2532,
+        alt: { ru: 'Редактор на экране телефона', en: 'The editor on a phone screen' },
+      },
+    ],
+    demo: {
+      src: '/play/partitura/index.html',
+      // Работа высокая: панель, лист и клавиатура друг под другом.
+      // В привычной рамке 16/10 пианино оказалось бы за нижним краем.
+      ratio: '4 / 3',
+      note: {
+        ru: 'Кликните по нотному стану или по клавише пианино — нота встанет в лист. «Играть» проигрывает набранное, подсвечивая ноту и клавишу.',
+        en: 'Click the staff or a piano key — the note lands on the sheet. Play runs it back, highlighting the note and the key.',
+      },
+    },
+    links: [{ kind: 'live', url: '/play/partitura/index.html' }],
+  },
+
   /* -------------------------------------------------- Мобильные приложения */
   {
     slug: 'chto-prigotovit-android',
@@ -667,6 +744,59 @@ export const PROJECTS: Project[] = [
         'A fully vector adaptive icon — no per-density PNGs at all',
       ],
     },
+    /* Обложка собрана из трёх снимков экрана (tools/screens.mjs): карточка
+       в списке работ режет картинку под 16/10, и одиночный вертикальный
+       снимок превратился бы в полосу из середины экрана. */
+    cover: {
+      src: '/media/chto-prigotovit-android/cover.jpg',
+      width: 2160,
+      height: 1350,
+      alt: {
+        ru: 'Три экрана приложения: продукты, подобранные рецепты в тёмной теме и карточка рецепта',
+        en: 'Three app screens: products, matched recipes in the dark theme and a recipe card',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/chto-prigotovit-android/products.webp',
+        width: 1080,
+        height: 2098,
+        alt: {
+          ru: 'Экран продуктов: строка поиска, корзина и каталог по категориям',
+          en: 'The products screen: search field, basket and the catalogue by category',
+        },
+        caption: {
+          ru: 'Что есть дома отмечается в каталоге; у каждой категории видно, сколько продуктов из неё уже в корзине',
+          en: 'You tick what you have at home in the catalogue; each category shows how many of its products are already in the basket',
+        },
+      },
+      {
+        src: '/media/chto-prigotovit-android/recipes-dark.webp',
+        width: 1080,
+        height: 2127,
+        alt: {
+          ru: 'Список подобранных рецептов в тёмной теме с фильтрами по блюду и времени',
+          en: 'The list of matched recipes in the dark theme, with filters by dish and time',
+        },
+        caption: {
+          ru: 'Рецепты пересортировываются на лету: сверху те, что готовятся прямо сейчас. Тёмная тема идёт за системной настройкой, но её можно выбрать и вручную',
+          en: 'Recipes re-sort on the fly, with the ones you can cook right now on top. The dark theme follows the system setting, and can also be chosen by hand',
+        },
+      },
+      {
+        src: '/media/chto-prigotovit-android/recipe.webp',
+        width: 1080,
+        height: 2120,
+        alt: {
+          ru: 'Карточка рецепта: список продуктов с количествами и шаги приготовления',
+          en: 'A recipe card: the ingredient list with amounts and the cooking steps',
+        },
+        caption: {
+          ru: 'В карточке сразу видно, чего не хватает, что можно пропустить и чем заменить — до того, как встать к плите',
+          en: 'The card shows at once what is missing, what can be skipped and what can be swapped — before you get to the stove',
+        },
+      },
+    ],
   },
   /* ----------------------------------------------------------- 3D-модели */
   {

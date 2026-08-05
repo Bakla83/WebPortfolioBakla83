@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "audit": "node tools/audit.mjs",
-    "demos": "node tools/sync-demos.mjs"
+    "demos": "node tools/sync-demos.mjs",
+    "screens": "node tools/screens.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.4.0",
