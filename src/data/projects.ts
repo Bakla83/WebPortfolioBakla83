@@ -103,7 +103,6 @@ export const PROJECTS: Project[] = [
   {
     slug: 'salt-run',
     section: 'web-games',
-    featured: true,
     order: 1,
     year: 2026,
     tech: ['TypeScript', 'Canvas', 'Vite'],
@@ -256,6 +255,7 @@ export const PROJECTS: Project[] = [
   {
     slug: 'pervotsvet',
     section: 'landings',
+    featured: true,
     order: 2,
     year: 2026,
     tech: ['HTML', 'CSS', 'JavaScript', 'Canvas', 'SVG'],
@@ -484,7 +484,6 @@ export const PROJECTS: Project[] = [
   {
     slug: 'chto-prigotovit',
     section: 'websites',
-    featured: true,
     order: 1,
     year: 2026,
     tech: ['JavaScript', 'HTML', 'CSS', 'Node.js'],
@@ -555,6 +554,7 @@ export const PROJECTS: Project[] = [
   {
     slug: 'oktava',
     section: 'websites',
+    featured: true,
     order: 2,
     year: 2026,
     tech: ['HTML', 'CSS', 'JavaScript', 'Web Audio API'],
