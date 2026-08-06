@@ -288,6 +288,33 @@ for (const [locale, expected] of [
       continue;
     }
 
+    /*
+      Картинки с loading="lazy" ниже первого экрана браузер честно не грузит,
+      пока до них не долистают, и naturalWidth у них ноль. Без прокрутки
+      проверка считала бы их битыми — ловила бы не поломку, а работающую
+      ленивую загрузку. Поэтому сначала прокручиваем страницу до низа и ждём,
+      пока сеть успокоится, и только потом смотрим на результат.
+    */
+    await page.evaluate(async () => {
+      const root = document.documentElement;
+      const previous = root.style.scrollBehavior;
+      // Плавная прокрутка из стилей страницы превращает каждый scrollTo в
+      // анимацию; в цикле они перебивают друг друга, и до низа дело не
+      // доходит. На время обхода выключаем её инлайновым стилем.
+      root.style.scrollBehavior = 'auto';
+
+      const step = window.innerHeight;
+      const bottom = Math.max(document.body.scrollHeight, root.scrollHeight);
+      for (let y = 0; y < bottom; y += step) {
+        window.scrollTo(0, y);
+        await new Promise((r) => setTimeout(r, 80));
+      }
+
+      window.scrollTo(0, 0);
+      root.style.scrollBehavior = previous;
+    });
+    await page.waitForLoadState('networkidle');
+
     const images = await page.evaluate(() =>
       Array.from(document.images).map((img) => ({
         src: img.getAttribute('src'),

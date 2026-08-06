@@ -253,10 +253,104 @@ export const PROJECTS: Project[] = [
     links: [{ kind: 'live', url: '/play/hrebet/index.html' }],
   },
   {
-    slug: 'pervotsvet',
+    slug: 'centipede-repaints',
     section: 'landings',
     featured: true,
     order: 2,
+    year: 2026,
+    tech: ['HTML', 'CSS', 'JavaScript', 'SVG', 'Canvas'],
+    title: {
+      ru: 'Centipede Repaints — перекрас конных миниатюр',
+      en: 'Centipede Repaints — custom model horse repaints',
+    },
+    role: { ru: 'Дизайн и вёрстка', en: 'Design and front-end' },
+    teaser: {
+      ru: 'Лендинг художницы, которая перекрашивает модели лошадей. В студии перекраса масть собирается по частям, и модель перекрашивается на глазах.',
+      en: 'A landing for an artist who repaints model horses. In the repaint studio a coat is assembled piece by piece and the model changes colour as you watch.',
+    },
+    summary: {
+      ru: 'Первая работа в портфолио для настоящего заказчика: фотографии, клички моделей и текст о себе — авторские. Смысловой центр страницы — студия перекраса, где масть, отметина на морде, белые ноги и постановка переключаются по отдельности, а лошадь перерисовывается мгновенно. Сама лошадь нарисована кодом: один силуэт, десять мастей и многослойная светотень внутри маски по контуру — ровно так же тень кладут аэрографом на настоящей модели. Отдельный раздел отдан «Зите» — модели, которую художница разработала сама: нарисованное превью и три перекраса одной и той же скульптуры.',
+      en: 'The first piece in this portfolio made for a real client: the photographs, the model names and the artist statement are hers. The centre of the page is the repaint studio, where coat, face marking, white legs and stance are switched independently and the horse is redrawn instantly. The horse itself is drawn in code: one silhouette, ten coats and layered shading inside a mask that follows the outline — the same way an airbrush lays shadow on a real model. A separate section belongs to Zita, a model the artist sculpted herself: a drawn preview and three repaints of the same sculpture.',
+    },
+    highlights: {
+      ru: [
+        'Студия перекраса: четыре независимых переключателя, мгновенная перерисовка и карточка модели, которая копируется в буфер — заказчику остаётся вставить готовый текст в сообщение',
+        'Лошадь нарисована кодом, а не картинкой: один силуэт даёт десять мастей в трёх местах страницы, а пропорции заданы анатомической сеткой — глубина корпуса равна длине ноги от локтя до земли',
+        'Объём даёт не заливка, а светотень: размытые пятна тени в паху, на подпруге и под гривой плюс блики по верхней линии, всё обрезано маской по силуэту',
+        'Грива и хвост собираются из прядей поверх сплошной массы: одни пряди дают решето, одна масса — наклейку',
+        'Фотографии подхватываются из папки по имени файла; если снимка нет, карточка честно показывает пустую рамку вместо выдуманной заглушки',
+        'Три палитры перекрашивают и вёрстку, и пигментную взвесь на canvas — цвета лежат в CSS-переменных, и фон читает их оттуда же',
+      ],
+      en: [
+        'The repaint studio: four independent switches, instant redraw and a model card that copies to the clipboard — the client only has to paste the finished text into a message',
+        'The horse is drawn in code rather than placed as an image: one silhouette yields ten coats in three places on the page, with proportions set on an anatomical grid — body depth equals the leg from elbow to ground',
+        'Volume comes from light, not flat fill: blurred shadow patches at the flank, the girth line and under the mane, plus highlights along the topline, all clipped by a mask that follows the silhouette',
+        'Mane and tail are built from strands over a solid mass: strands alone read as a sieve, a mass alone as a sticker',
+        'Photographs are picked up from a folder by file name; when a shot is missing the card honestly shows an empty frame instead of an invented placeholder',
+        'Three palettes repaint both the layout and the pigment haze on canvas — the colours live in CSS variables and the background reads them from there',
+      ],
+    },
+    cover: {
+      src: '/media/centipede-repaints/cover.jpg',
+      width: 2160,
+      height: 1350,
+      alt: {
+        ru: 'Первый экран Centipede Repaints: крупный заголовок и растворённые силуэты лошадей',
+        en: 'The first screen of Centipede Repaints: a large headline and dissolved horse silhouettes',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/centipede-repaints/desktop-2.jpg',
+        width: 2160,
+        height: 1350,
+        alt: { ru: 'Галерея работ художницы', en: 'The gallery of the artist’s work' },
+        caption: {
+          ru: 'Восемь работ с настоящими фотографиями. Снимки показываются целиком, а не обрезаются под рамку: модель существует в одном экземпляре, и срезать ей голову ради ровной сетки нельзя',
+          en: 'Eight pieces with real photographs. Shots are shown whole rather than cropped to the frame: each model exists in a single copy, and cutting off its head for the sake of a tidy grid is not an option',
+        },
+      },
+      {
+        src: '/media/centipede-repaints/desktop-3.jpg',
+        width: 2160,
+        height: 1350,
+        alt: { ru: 'Студия перекраса', en: 'The repaint studio' },
+        caption: {
+          ru: 'Студия перекраса: масть, отметина, белые ноги и постановка переключаются по отдельности, под моделью собирается её карточка',
+          en: 'The repaint studio: coat, marking, white legs and stance switch independently, and the model card assembles underneath',
+        },
+      },
+      {
+        src: '/media/centipede-repaints/desktop-4.jpg',
+        width: 2160,
+        height: 1350,
+        alt: { ru: 'Раздел о модели «Зита»', en: 'The section about the Zita model' },
+        caption: {
+          ru: 'Зита — скульптура самой художницы: нарисованное превью и три перекраса одной модели',
+          en: 'Zita is the artist’s own sculpture: a drawn preview and three repaints of one model',
+        },
+      },
+      {
+        src: '/media/centipede-repaints/mobile.jpg',
+        width: 1170,
+        height: 2532,
+        alt: { ru: 'Лендинг на экране телефона', en: 'The landing on a phone screen' },
+      },
+    ],
+    demo: {
+      src: '/play/centipede-repaints/index.html',
+      note: {
+        ru: 'Загляните в «Студию перекраса»: переключите масть, отметину и постановку — модель перерисуется сразу. Наведение на карточку в разделе «Масти» переодевает лошадь в студии выше.',
+        en: 'Look into the repaint studio: switch the coat, the marking and the stance — the model is redrawn at once. Hovering a card in the "Coats" section changes the horse in the studio above.',
+      },
+    },
+    links: [{ kind: 'live', url: '/play/centipede-repaints/index.html' }],
+  },
+  {
+    slug: 'pervotsvet',
+    section: 'landings',
+    featured: true,
+    order: 3,
     year: 2026,
     tech: ['HTML', 'CSS', 'JavaScript', 'Canvas', 'SVG'],
     title: { ru: 'Первоцвет — цветочная мастерская', en: 'Primrose — a flower workshop' },
@@ -334,7 +428,7 @@ export const PROJECTS: Project[] = [
   {
     slug: 'stroy-opora',
     section: 'landings',
-    order: 3,
+    order: 4,
     year: 2026,
     tech: ['HTML', 'CSS', 'JavaScript'],
     title: { ru: 'ОПОРА — строительная компания', en: 'OPORA — construction company' },
@@ -394,7 +488,7 @@ export const PROJECTS: Project[] = [
   {
     slug: 'kluchi-ot-goroda',
     section: 'landings',
-    order: 4,
+    order: 5,
     year: 2026,
     tech: ['HTML', 'CSS', 'JavaScript', 'SVG'],
     title: { ru: 'Ключи от города — трансферы и экскурсии', en: 'City Keys — transfers and tours' },

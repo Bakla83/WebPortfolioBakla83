@@ -23,6 +23,7 @@
  */
 import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import { dirname, extname, join, relative, resolve } from 'node:path';
+import sharp from 'sharp';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const NEIGHBOURS = resolve(ROOT, '..');
@@ -44,6 +45,13 @@ const DEMOS = [
   { slug: 'oktava', from: 'oktava', include: ['index.html', 'css', 'js'] },
   { slug: 'partitura', from: 'partitura', include: ['index.html', 'css', 'js'] },
   { slug: 'vetka', from: 'vetka', include: ['index.html', 'css', 'js'] },
+  // Единственная работа с папкой img: в галерее лежат фотографии настоящих
+  // моделей, без них от лендинга остаются пустые рамки.
+  {
+    slug: 'centipede-repaints',
+    from: 'centipede-repaints',
+    include: ['index.html', 'css', 'js', 'img'],
+  },
 ];
 
 const checkOnly = process.argv.includes('--check');
@@ -123,6 +131,69 @@ async function externaliseInlineScripts(htmlPath) {
   return extracted.length;
 }
 
+/**
+ * Ужимает крупные снимки в скопированной работе.
+ *
+ * Фотографии в работах приходят прямо с телефона или из соцсетей: 2500 px по
+ * ширине и несколько мегабайт на файл. На странице они показываются в
+ * карточке шириной в треть колонки, поэтому в опубликованной копии столько
+ * пикселей не нужно ни при каком экране.
+ *
+ * Ужимается именно КОПИЯ, а не источник: оригиналы — архив автора работы,
+ * и портфолио не имеет права их портить. Побочный эффект приятный: правка
+ * порога здесь пересобирает все копии заново, ничего не потеряв.
+ *
+ * Файл переписывается только если стал легче: у уже сжатых картинок
+ * повторное кодирование иногда даёт больший размер.
+ */
+const IMAGE_MAX_WIDTH = 1800;
+const IMAGE_MAX_BYTES = 320 * 1024;
+const RASTER = new Set(['.jpg', '.jpeg', '.png', '.webp']);
+
+async function shrinkImages(dir) {
+  let saved = 0;
+  let touched = 0;
+
+  for (const file of await walk(dir)) {
+    const ext = extname(file).toLowerCase();
+    if (!RASTER.has(ext)) continue;
+
+    // Файл читается в буфер, а не отдаётся sharp путём: иначе sharp держит
+    // его открытым, и запись по тому же пути падает на Windows с UNKNOWN.
+    const input = await readFile(file);
+    const before = input.length;
+
+    let meta;
+    try {
+      meta = await sharp(input).metadata();
+    } catch {
+      continue; // не картинка, несмотря на расширение
+    }
+
+    const wide = (meta.width ?? 0) > IMAGE_MAX_WIDTH;
+    if (!wide && before <= IMAGE_MAX_BYTES) continue;
+
+    // rotate() без аргументов доворачивает кадр по EXIF: без него
+    // вертикальные снимки с телефона легли бы набок, потому что при
+    // перекодировании тег ориентации теряется.
+    let pipe = sharp(input).rotate();
+    if (wide) pipe = pipe.resize({ width: IMAGE_MAX_WIDTH, withoutEnlargement: true });
+
+    if (ext === '.png') pipe = pipe.png({ compressionLevel: 9 });
+    else if (ext === '.webp') pipe = pipe.webp({ quality: 82 });
+    else pipe = pipe.jpeg({ quality: 82, mozjpeg: true });
+
+    const next = await pipe.toBuffer();
+    if (next.length >= before) continue;
+
+    await writeFile(file, next);
+    saved += before - next.length;
+    touched++;
+  }
+
+  return { saved, touched };
+}
+
 let missing = 0;
 let failed = 0;
 
@@ -167,10 +238,13 @@ for (const demo of DEMOS) {
     }
   }
 
+  const { saved, touched } = await shrinkImages(dest);
+
   const kb = Math.round((await dirSize(dest)) / 1024);
   console.log(
-    `  ✓ ${demo.slug.padEnd(16)} ${String(kb).padStart(5)} КБ` +
-      (scripts ? `, вынесено инлайновых скриптов: ${scripts}` : ''),
+    `  ✓ ${demo.slug.padEnd(18)} ${String(kb).padStart(5)} КБ` +
+      (scripts ? `, скриптов вынесено: ${scripts}` : '') +
+      (touched ? `, картинок ужато: ${touched} (−${Math.round(saved / 1024)} КБ)` : ''),
   );
 }
 

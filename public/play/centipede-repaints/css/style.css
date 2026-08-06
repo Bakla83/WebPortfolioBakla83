@@ -1,0 +1,1509 @@
+/* =========================================================================
+   Centipede Repaints — авторский перекрас конных миниатюр
+
+   Палитра живёт в токенах и целиком переопределяется тремя темами
+   (data-palette на <html>). Токены --p-1…--p-4 читает фон на canvas,
+   поэтому один клик по палитре перекрашивает и вёрстку, и взвесь в воздухе.
+
+   Тема по умолчанию тёмная и намеренно: страница — это витрина, а в витрине
+   свет падает на предмет, а не на стены. На светлом фоне вороная и
+   изабелловая масти одновременно смотреться не могут: одна из них всегда
+   проваливается.
+
+   Порядок: токены → база → фон → шапка → кнопки → герой → секции →
+   работы → замысел → автор → студия → этапы → масти → вопросы →
+   контакты → подвал → появление → адаптив → спокойный режим.
+   ========================================================================= */
+
+/* --------------------------------------------------------------- токены */
+
+:root {
+  --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --wrap: 1240px;
+  --wrap-narrow: 780px;
+  --gutter: clamp(1.15rem, 0.6rem + 2.4vw, 2.75rem);
+
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 26px;
+  --r-full: 999px;
+
+  --ease: cubic-bezier(0.22, 0.8, 0.28, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Гнедая — тёплая мастерская при лампе накаливания */
+:root,
+:root[data-palette='bay'] {
+  --bg: #17130f;
+  --bg-2: #1f1913;
+  --bg-3: #241d16;
+  --ink: #f2e9dc;
+  --ink-soft: #b0a08d;
+  --ink-dim: #7d7062;
+  --line: rgba(230, 200, 160, 0.14);
+  --line-strong: rgba(230, 200, 160, 0.26);
+  --card: rgba(46, 37, 29, 0.55);
+  --card-2: rgba(58, 46, 35, 0.6);
+
+  --accent: #d19a5c;
+  --accent-2: #b3703a;
+  --accent-ink: #1a140f;
+  --glow: rgba(209, 154, 92, 0.22);
+
+  --horse-shadow: rgba(0, 0, 0, 0.42);
+
+  --p-1: #c98a4e;
+  --p-2: #8f5a2c;
+  --p-3: #e6cba0;
+  --p-4: #6f4a2a;
+}
+
+/* Пепел — холодный свет, серые и стальные масти */
+:root[data-palette='ash'] {
+  --bg: #13151a;
+  --bg-2: #191d24;
+  --bg-3: #1e232b;
+  --ink: #e8ecf1;
+  --ink-soft: #a4b0bd;
+  --ink-dim: #717d8a;
+  --line: rgba(190, 210, 235, 0.14);
+  --line-strong: rgba(190, 210, 235, 0.26);
+  --card: rgba(36, 42, 51, 0.6);
+  --card-2: rgba(46, 54, 65, 0.62);
+
+  --accent: #9fb8cc;
+  --accent-2: #6f8ea8;
+  --accent-ink: #12161b;
+  --glow: rgba(159, 184, 204, 0.2);
+
+  --horse-shadow: rgba(0, 0, 0, 0.45);
+
+  --p-1: #9fb8cc;
+  --p-2: #5d7488;
+  --p-3: #d6e2ee;
+  --p-4: #46586a;
+}
+
+/* Лён — дневной свет, светлая витрина */
+:root[data-palette='linen'] {
+  --bg: #f5f0e7;
+  --bg-2: #ede6da;
+  --bg-3: #e5dccd;
+  --ink: #2a211a;
+  --ink-soft: #6b5c4d;
+  --ink-dim: #91836f;
+  --line: rgba(70, 52, 34, 0.16);
+  --line-strong: rgba(70, 52, 34, 0.3);
+  --card: rgba(255, 253, 248, 0.72);
+  --card-2: rgba(255, 253, 248, 0.9);
+
+  --accent: #a8632c;
+  --accent-2: #8a4c1c;
+  --accent-ink: #fdf8f0;
+  --glow: rgba(168, 99, 44, 0.16);
+
+  --horse-shadow: rgba(70, 50, 30, 0.2);
+
+  --p-1: #b07338;
+  --p-2: #8a5426;
+  --p-3: #d8b485;
+  --p-4: #6d4a26;
+}
+
+/* ------------------------------------------------------------------ база */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  font-family: var(--font-ui);
+  font-size: clamp(0.97rem, 0.92rem + 0.2vw, 1.06rem);
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--bg);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body.is-locked { overflow: hidden; }
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.012em;
+  margin: 0;
+}
+
+p { margin: 0; }
+img, svg { max-width: 100%; }
+img { display: block; height: auto; }
+
+a { color: inherit; text-decoration: none; }
+
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.wrap--narrow { max-width: var(--wrap-narrow); }
+
+.skip-link {
+  position: fixed;
+  top: 0.6rem;
+  left: 0.6rem;
+  z-index: 200;
+  padding: 0.6rem 1rem;
+  border-radius: var(--r-sm);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+  transform: translateY(-160%);
+  transition: transform 0.24s var(--ease);
+}
+.skip-link:focus-visible { transform: none; }
+
+/* Тень под копытами живёт в CSS, а не в SVG: на светлой теме она должна
+   быть мягкой и тёплой, на тёмной — почти чёрной. */
+.horse__shadow { fill: var(--horse-shadow); }
+
+/* ------------------------------------------------------------------- фон */
+
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.bg__wash {
+  position: absolute;
+  inset: -10%;
+  background:
+    radial-gradient(60% 45% at 22% 8%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+    radial-gradient(50% 40% at 84% 72%, color-mix(in srgb, var(--accent-2) 14%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 48%, var(--bg) 100%);
+}
+
+/* Луч из окна мастерской: узкая наклонная полоса света, в которой и висит
+   вся пыль с canvas. Без неё взвесь выглядит шумом, а не воздухом. */
+.bg__beam {
+  position: absolute;
+  top: -30%;
+  left: 8%;
+  width: 46vw;
+  height: 160%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    color-mix(in srgb, var(--accent) 8%, transparent) 42%,
+    color-mix(in srgb, var(--accent) 12%, transparent) 50%,
+    transparent 78%
+  );
+  transform: rotate(9deg);
+  filter: blur(28px);
+  opacity: 0.75;
+  animation: beam 26s ease-in-out infinite;
+}
+
+@keyframes beam {
+  0%, 100% { opacity: 0.6; transform: rotate(9deg) translateX(0); }
+  50%      { opacity: 0.9; transform: rotate(9deg) translateX(3vw); }
+}
+
+.bg__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+}
+
+.bg__orb--1 {
+  width: 46vw; height: 46vw;
+  top: -12vw; right: -10vw;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 40%, transparent), transparent 65%);
+  animation: drift 34s ease-in-out infinite;
+}
+
+.bg__orb--2 {
+  width: 38vw; height: 38vw;
+  bottom: -14vw; left: -8vw;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent-2) 40%, transparent), transparent 65%);
+  animation: drift 42s ease-in-out infinite reverse;
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(3vw, 4vh, 0) scale(1.1); }
+}
+
+/* Зерно поверх всего: убирает пластиковую гладкость градиентов и делает
+   фон похожим на бумагу, а не на заливку. */
+.bg__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ----------------------------------------------------------------- шапка */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding-block: 0.85rem;
+  transition: padding 0.3s var(--ease), background 0.3s var(--ease),
+              border-color 0.3s var(--ease), backdrop-filter 0.3s var(--ease);
+  border-bottom: 1px solid transparent;
+}
+
+.site-header.is-stuck {
+  padding-block: 0.5rem;
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  backdrop-filter: blur(16px) saturate(140%);
+  border-bottom-color: var(--line);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 2rem);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
+/* Знак — многоножка одним росчерком: сегменты по дуге и две ножки.
+   Буквальная сколопендра в логотипе мастерской пугала бы, силуэт — нет. */
+.brand__mark {
+  width: 30px; height: 30px;
+  border-radius: 9px;
+  background: linear-gradient(140deg, var(--accent), var(--accent-2));
+  position: relative;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px -6px var(--glow);
+}
+.brand__mark::before,
+.brand__mark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 30% 34%, var(--accent-ink) 2.1px, transparent 2.4px),
+    radial-gradient(circle at 46% 44%, var(--accent-ink) 2.1px, transparent 2.4px),
+    radial-gradient(circle at 62% 56%, var(--accent-ink) 2.1px, transparent 2.4px),
+    radial-gradient(circle at 76% 68%, var(--accent-ink) 1.7px, transparent 2px);
+}
+.brand__mark::after {
+  transform: translate(-3px, 6px) rotate(-6deg);
+  opacity: 0.45;
+}
+
+.brand__text { display: flex; flex-direction: column; line-height: 1.02; }
+
+.brand__name {
+  font-family: var(--font-display);
+  font-size: 1.32rem;
+  letter-spacing: 0.005em;
+}
+
+.brand__sub {
+  font-size: 0.62rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  padding-left: 0.1em;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.9rem, 1.6vw, 1.7rem);
+  margin-left: auto;
+  font-size: 0.87rem;
+}
+
+.site-nav a {
+  position: relative;
+  color: var(--ink-soft);
+  padding-block: 0.3rem;
+  transition: color 0.2s var(--ease);
+}
+
+.site-nav a::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s var(--ease);
+}
+
+.site-nav a:hover { color: var(--ink); }
+.site-nav a:hover::after,
+.site-nav a.is-current::after { transform: scaleX(1); }
+.site-nav a.is-current { color: var(--ink); }
+
+.site-header__tools {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.palette {
+  display: flex;
+  gap: 0.28rem;
+  padding: 0.26rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+}
+
+.palette button {
+  width: 20px; height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform 0.2s var(--ease);
+}
+.palette button:hover { transform: scale(1.14); }
+
+.palette button span {
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  transition: box-shadow 0.24s var(--ease);
+}
+
+.palette button[data-palette='bay'] span   { background: linear-gradient(140deg, #d19a5c, #7a4322); }
+.palette button[data-palette='ash'] span   { background: linear-gradient(140deg, #b6c7d6, #4b5b6b); }
+.palette button[data-palette='linen'] span { background: linear-gradient(140deg, #f2e8d8, #b98a4e); }
+
+.palette button[aria-pressed='true'] span {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--accent);
+}
+
+.icon-btn {
+  width: 34px; height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  transition: border-color 0.24s var(--ease), background 0.24s var(--ease);
+}
+.icon-btn:hover { border-color: var(--line-strong); background: var(--card); }
+
+.icon-btn__dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 var(--glow);
+  animation: pulse 2.6s var(--ease) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--glow); }
+  50%      { box-shadow: 0 0 0 6px transparent; }
+}
+
+.icon-btn[aria-pressed='true'] .icon-btn__dot {
+  background: var(--ink-dim);
+  animation: none;
+}
+
+.lang {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  overflow: hidden;
+}
+
+.lang__btn {
+  padding: 0.34rem 0.62rem;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+  transition: color 0.2s var(--ease), background 0.2s var(--ease);
+}
+.lang__btn:hover { color: var(--ink); }
+.lang__btn[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.burger {
+  display: none;
+  width: 38px; height: 34px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: none;
+  cursor: pointer;
+  padding: 9px 9px;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.burger span {
+  display: block;
+  height: 1.5px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform 0.28s var(--ease), opacity 0.2s var(--ease);
+}
+.burger[aria-expanded='true'] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.burger[aria-expanded='true'] span:nth-child(2) { opacity: 0; }
+.burger[aria-expanded='true'] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* --------------------------------------------------------------- кнопки */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.86rem 1.7rem;
+  border: 1px solid transparent;
+  border-radius: var(--r-full);
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.005em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.22s var(--ease), box-shadow 0.28s var(--ease),
+              background 0.24s var(--ease), border-color 0.24s var(--ease),
+              color 0.24s var(--ease);
+}
+
+.btn--sm { padding: 0.56rem 1.1rem; font-size: 0.83rem; }
+
+.btn--primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: var(--accent-ink);
+  font-weight: 600;
+  box-shadow: 0 10px 30px -14px var(--glow);
+}
+.btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px -14px var(--glow);
+}
+
+.btn--ghost {
+  border-color: var(--line-strong);
+  color: var(--ink);
+  background: none;
+}
+.btn--ghost:hover {
+  background: var(--card);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.btn:active { transform: translateY(0); }
+
+/* ---------------------------------------------------------------- герой */
+
+.hero {
+  position: relative;
+  min-height: clamp(600px, 92svh, 940px);
+  display: flex;
+  align-items: center;
+  padding-block: clamp(3rem, 8vh, 6rem) clamp(4rem, 10vh, 7rem);
+  overflow: hidden;
+}
+
+/* Лошади за текстом — не иллюстрация, а фактура: они намеренно почти
+   растворены, читается только линия спины и шеи. */
+.hero__garden {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hero__horse {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: clamp(300px, 34vw, 560px);
+  opacity: 0;
+  transform: translate3d(var(--px, 0), var(--py, 0), 0) scale(var(--s));
+  transition: transform 0.6s var(--ease-out);
+  animation: horseIn 1.6s var(--ease-out) forwards;
+  animation-delay: var(--d);
+  filter: saturate(0.5);
+}
+
+@keyframes horseIn {
+  from { opacity: 0; }
+  to   { opacity: var(--o); }
+}
+
+.hero__inner { position: relative; z-index: 2; }
+
+.eyebrow {
+  font-size: 0.74rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.eyebrow::before {
+  content: '';
+  width: clamp(24px, 5vw, 56px);
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.hero__title {
+  font-size: clamp(3rem, 1.6rem + 8.4vw, 8.4rem);
+  line-height: 0.94;
+  letter-spacing: -0.028em;
+  margin-bottom: clamp(1.4rem, 3vw, 2.2rem);
+}
+
+.hero__line { display: block; }
+
+.hero__line--accent {
+  font-style: italic;
+  background: linear-gradient(100deg, var(--accent) 0%, var(--ink) 62%, var(--accent-2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-bottom: 0.06em;
+}
+
+/* Буквы первой строки въезжают волной. Задержка считается от --k,
+   который проставляет скрипт при разборе строки. */
+.kin {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.42em) rotate(2deg);
+  animation: kinIn 0.8s var(--ease-out) forwards;
+  animation-delay: calc(var(--k) * 34ms + 120ms);
+}
+
+@keyframes kinIn {
+  to { opacity: 1; transform: none; }
+}
+
+.hero__lead {
+  max-width: 46ch;
+  font-size: clamp(1rem, 0.94rem + 0.34vw, 1.2rem);
+  color: var(--ink-soft);
+  margin-bottom: clamp(1.8rem, 3.4vw, 2.6rem);
+}
+
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: clamp(2.6rem, 6vw, 4.4rem);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: clamp(1rem, 2.6vw, 2.4rem);
+  margin: 0;
+  padding-top: clamp(1.4rem, 3vw, 2.2rem);
+  border-top: 1px solid var(--line);
+  max-width: 860px;
+}
+
+.stats__item { display: flex; flex-direction: column; gap: 0.28rem; }
+
+.stats__key {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 1.1rem + 0.7vw, 1.75rem);
+  color: var(--ink);
+}
+
+.stats__val {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
+
+.hero__scroll {
+  position: absolute;
+  bottom: 1.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.66rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+.hero__scroll::after {
+  content: '';
+  width: 1px;
+  height: 34px;
+  background: linear-gradient(var(--accent), transparent);
+  animation: scrollHint 2.4s var(--ease) infinite;
+}
+
+@keyframes scrollHint {
+  0%, 100% { transform: scaleY(0.4); transform-origin: top; opacity: 0.4; }
+  50%      { transform: scaleY(1);   transform-origin: top; opacity: 1; }
+}
+
+/* -------------------------------------------------------------- секции */
+
+.section {
+  position: relative;
+  padding-block: clamp(4.5rem, 11vh, 9rem);
+}
+
+.section--studio,
+.section--coats {
+  background:
+    linear-gradient(180deg, transparent, color-mix(in srgb, var(--bg-2) 70%, transparent) 12%,
+                    color-mix(in srgb, var(--bg-2) 70%, transparent) 88%, transparent);
+}
+
+.section__head {
+  max-width: 62ch;
+  margin-bottom: clamp(2.4rem, 5vw, 4rem);
+}
+
+.section__title {
+  font-size: clamp(2.2rem, 1.5rem + 3.2vw, 4.2rem);
+  margin-bottom: 0.7rem;
+}
+
+.section__lead {
+  color: var(--ink-soft);
+  font-size: clamp(0.98rem, 0.94rem + 0.24vw, 1.1rem);
+  max-width: 56ch;
+}
+
+/* -------------------------------------------------------------- работы */
+
+.works {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(266px, 1fr));
+  gap: clamp(1rem, 2.2vw, 1.8rem);
+}
+
+/* Карточка — витрина: тёмная ниша, направленный свет сверху и мягкая
+   тень под копытами. Модель в ней должна выглядеть стоящей, а не
+   наклеенной на прямоугольник. */
+.work {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--card);
+  overflow: hidden;
+  transition: transform 0.42s var(--ease-out), border-color 0.32s var(--ease),
+              box-shadow 0.42s var(--ease-out);
+}
+
+.work::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(80% 58% at 50% 6%, var(--glow), transparent 68%);
+  opacity: 0;
+  transition: opacity 0.42s var(--ease);
+  pointer-events: none;
+}
+
+.work:hover {
+  transform: translateY(-6px);
+  border-color: var(--line-strong);
+  box-shadow: 0 26px 56px -30px rgba(0, 0, 0, 0.7);
+}
+.work:hover::before { opacity: 1; }
+
+.work__figure {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 0.85rem;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--bg-3) 60%, transparent), transparent);
+}
+
+/* Пустая рамка вместо фотографии. Она намеренно спокойная: это не
+   заглушка-ошибка, а место, которое ждёт снимок. Как только рядом
+   появится img/work-N.jpg, карточка подменит её фотографией. */
+.work__empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--r-md);
+  color: var(--ink-dim);
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent 0 11px,
+      color-mix(in srgb, var(--ink) 3%, transparent) 11px 22px
+    );
+  transition: color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+
+.work:hover .work__empty {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+.work__empty-icon { width: 32px; height: 26px; opacity: 0.8; }
+
+.work__empty-text {
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  padding-inline: 1rem;
+}
+
+/* Если владелец положил в img/ настоящие фотографии, карточка показывает
+   их — рисунок остаётся запасным вариантом. */
+/* Фотография вынута из потока намеренно. Снимки приходят с какими угодно
+   пропорциями, и вертикальный кадр, оставленный в потоке, распирает
+   карточку выше её 4:3 — сетка рассыпается на разновысокие столбцы.
+   Absolute + object-fit: cover заставляет любой кадр лечь в одну рамку. */
+.work__figure--photo { padding: 0; }
+.work__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* contain, а не cover. Кадры приходят какие угодно — вертикальные,
+     квадратные, с запасом воздуха, — и обрезка по центру срезает то голову,
+     то круп. Для портфолио это худшая из ошибок: модель единственная в своём
+     роде, и показывать её надо целиком. Поменяйте на cover, если снимки
+     заранее кадрированы под 4:3. */
+  object-fit: contain;
+  padding: 0.7rem;
+  transition: transform 0.6s var(--ease-out);
+}
+.work:hover .work__photo { transform: scale(1.04); }
+
+.work__body {
+  padding: 0.4rem 1.15rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.16rem;
+}
+
+.work__name {
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+.work__meta {
+  font-size: 0.82rem;
+  color: var(--ink-dim);
+  display: flex;
+  align-items: center;
+  gap: 0.42rem;
+}
+.work__dot { opacity: 0.5; }
+
+.work__status {
+  margin-top: 0.62rem;
+  align-self: flex-start;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.26rem 0.66rem;
+  border-radius: var(--r-full);
+  border: 1px solid var(--line-strong);
+  color: var(--ink-dim);
+}
+
+.work__status--available {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  color: var(--accent);
+}
+
+/* ------------------------------------------------------------- замысел */
+
+/* Эскиз крупнее двух фотографий: раздел про то, что замысел появляется
+   первым, и вес на странице должен это повторять. На узком экране колонки
+   схлопываются, и порядок чтения делает то же самое сам собой. */
+.sketch {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr 1fr;
+  gap: clamp(0.8rem, 1.8vw, 1.4rem);
+  align-items: start;
+}
+
+.sketch__item {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--card);
+  transition: transform 0.4s var(--ease-out), border-color 0.3s var(--ease),
+              box-shadow 0.4s var(--ease-out);
+}
+
+.sketch__item:hover {
+  transform: translateY(-5px);
+  border-color: var(--line-strong);
+  box-shadow: 0 26px 56px -30px rgba(0, 0, 0, 0.7);
+}
+
+.sketch__item img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+/* У эскиза кадр вертикальнее — это лист бумаги, а не снимок модели. */
+.sketch__item--plan img { aspect-ratio: 5 / 6; }
+
+.sketch__item figcaption {
+  padding: 0.85rem 1.1rem 1rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.sketch__item--plan figcaption { color: var(--accent); }
+
+/* --------------------------------------------------------------- автор */
+
+.author {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
+  gap: clamp(1.4rem, 4vw, 3.6rem);
+  align-items: center;
+}
+
+.author__photo {
+  margin: 0;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.author__photo img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  display: block;
+}
+
+.author__body { display: flex; flex-direction: column; gap: 1rem; }
+
+.author__text {
+  color: var(--ink-soft);
+  font-size: clamp(1rem, 0.95rem + 0.35vw, 1.22rem);
+  max-width: 46ch;
+}
+
+/* -------------------------------------------------------------- студия */
+
+.studio {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.85fr);
+  gap: clamp(1.4rem, 3.4vw, 3.4rem);
+  align-items: start;
+}
+
+.studio__stage {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background:
+    radial-gradient(72% 52% at 50% 4%, var(--glow), transparent 62%),
+    linear-gradient(180deg, var(--bg-3), color-mix(in srgb, var(--bg) 85%, transparent));
+  padding: clamp(1rem, 2.6vw, 2.2rem);
+  overflow: hidden;
+}
+
+/* Пол витрины: тонкая линия горизонта, на которой стоит модель. */
+.studio__stage::after {
+  content: '';
+  position: absolute;
+  left: 12%; right: 12%;
+  bottom: 27%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+}
+
+.studio__horse {
+  position: relative;
+  z-index: 1;
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.studio__horse .horse { width: 100%; }
+
+/* Смена масти — это перекрас, а не подмена модели: новая лошадь проявляется,
+   а не встаёт рывком. Класс держится один кадр, дальше работает переход. */
+.studio__horse.is-swapping {
+  opacity: 0;
+  transform: scale(0.985);
+}
+
+/* Табличка под моделью — как в музее: название масти и одна строка о том,
+   чем она трудна в работе. */
+.studio__plate {
+  position: relative;
+  z-index: 1;
+  margin-top: 0.4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.studio__caption {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.1rem);
+  color: var(--ink);
+}
+
+.studio__note {
+  font-size: 0.87rem;
+  color: var(--ink-dim);
+  max-width: 52ch;
+  min-height: 2.8em;
+}
+
+/* Карточка модели под табличкой — как паспорт у настоящей работы.
+   Колонки фиксированной ширины, чтобы значения стояли в столбик и строка
+   не прыгала при смене масти с короткого названия на длинное. */
+.studio__spec {
+  margin: 0.9rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line);
+  display: grid;
+  /* Ровно две колонки: четыре строки ложатся квадратом 2×2. При auto-fit
+     третья колонка забирала три строки, а «Постановка» оставалась одна на
+     втором ряду — карточка выглядела обрезанной. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 1.4rem;
+}
+
+.studio__spec-row { display: flex; flex-direction: column; gap: 0.15rem; }
+
+.studio__spec dt {
+  font-size: 0.64rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.studio__spec dd {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--ink);
+}
+
+.studio__panel {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.1rem, 2.2vw, 1.6rem);
+  padding: clamp(1.2rem, 2.4vw, 1.9rem);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--card);
+}
+
+.studio__group { display: flex; flex-direction: column; gap: 0.62rem; }
+
+.studio__label {
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.studio__swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(38px, 1fr));
+  gap: 0.44rem;
+}
+
+/* Образец масти показывает два цвета сразу — корпус и гриву. Гнедая и
+   рыжая отличаются именно гривой, и на одноцветном кружке их не различить. */
+.swatch {
+  position: relative;
+  aspect-ratio: 1;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: none;
+  padding: 3px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.22s var(--ease), border-color 0.22s var(--ease),
+              box-shadow 0.26s var(--ease);
+}
+.swatch:hover { transform: scale(1.1); border-color: var(--line-strong); }
+
+.swatch__body,
+.swatch__mane {
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+}
+.swatch__body { background: var(--sw-body); }
+.swatch__mane {
+  background: var(--sw-mane);
+  clip-path: polygon(0 0, 42% 0, 42% 100%, 0 100%);
+}
+
+.swatch[aria-pressed='true'] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.studio__choices { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+.chip {
+  padding: 0.42rem 0.86rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  background: none;
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  transition: border-color 0.22s var(--ease), color 0.22s var(--ease),
+              background 0.22s var(--ease);
+}
+.chip:hover { border-color: var(--line-strong); color: var(--ink); }
+
+.chip[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 500;
+}
+
+.studio__actions {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  padding-top: 0.2rem;
+}
+
+.studio__hint {
+  font-size: 0.78rem;
+  color: var(--ink-dim);
+  line-height: 1.5;
+}
+
+/* Подтверждение копирования. role="status" озвучивает его скринридеру, а
+   видимая строка нужна всем остальным: буфер обмена ничем себя не выдаёт,
+   и без ответа кнопка выглядит сломанной. */
+.studio__copied {
+  font-size: 0.82rem;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  animation: faqIn 0.3s var(--ease-out);
+}
+.studio__copied::before {
+  content: '';
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.studio__copied[hidden] { display: none; }
+
+/* --------------------------------------------------------------- этапы */
+
+.process {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: clamp(1.2rem, 2.6vw, 2.4rem) clamp(1.6rem, 3.4vw, 3.4rem);
+  counter-reset: step;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+}
+
+.step__num {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--accent);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.step__title {
+  font-size: 1.34rem;
+  margin-bottom: 0.34rem;
+}
+
+.step__text {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------- масти */
+
+.coats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+  gap: clamp(0.8rem, 1.8vw, 1.4rem);
+}
+
+.coat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.34rem;
+  text-align: left;
+  padding: 1rem 1.1rem 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--card);
+  cursor: pointer;
+  transition: transform 0.34s var(--ease-out), border-color 0.28s var(--ease),
+              background 0.28s var(--ease);
+}
+
+.coat:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  background: var(--card-2);
+}
+
+.coat__figure {
+  margin-bottom: 0.3rem;
+  transition: transform 0.4s var(--ease-out);
+}
+.coat:hover .coat__figure { transform: scale(1.05); }
+.coat__figure .horse { width: 100%; }
+
+.coat__name {
+  font-size: 1.24rem;
+  color: var(--ink);
+}
+
+.coat__note {
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--ink-dim);
+}
+
+/* ------------------------------------------------------------- вопросы */
+
+.faq { border-top: 1px solid var(--line); }
+
+.faq__item { border-bottom: 1px solid var(--line); }
+
+.faq__q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  padding: 1.25rem 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
+  color: var(--ink);
+  transition: color 0.22s var(--ease);
+}
+.faq__q:hover { color: var(--accent); }
+
+/* Плюс, который становится минусом. Два псевдоэлемента вместо иконки:
+   так он всегда одного цвета с текстом и не требует отдельного файла. */
+.faq__mark {
+  position: relative;
+  width: 16px; height: 16px;
+  flex-shrink: 0;
+}
+.faq__mark::before,
+.faq__mark::after {
+  content: '';
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1.5px;
+  background: currentColor;
+  transition: transform 0.32s var(--ease);
+}
+.faq__mark::after { transform: rotate(90deg); }
+.faq__item.is-open .faq__mark::after { transform: rotate(0deg); }
+
+.faq__a {
+  padding-bottom: 1.35rem;
+  max-width: 62ch;
+  color: var(--ink-soft);
+  font-size: 0.94rem;
+  animation: faqIn 0.34s var(--ease-out);
+}
+
+@keyframes faqIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ------------------------------------------------------------ контакты */
+
+.contacts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(0.8rem, 1.8vw, 1.3rem);
+}
+
+.contact {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.3rem 1.4rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--card);
+  transition: transform 0.32s var(--ease-out), border-color 0.26s var(--ease),
+              background 0.26s var(--ease);
+}
+.contact:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  background: var(--card-2);
+}
+
+.contact__icon {
+  width: 42px; height: 42px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(140deg, var(--accent), var(--accent-2));
+  color: var(--accent-ink);
+}
+.contact__icon svg { width: 22px; height: 22px; }
+
+.contact__body { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+
+.contact__name { font-size: 1.02rem; font-weight: 500; }
+
+.contact__note {
+  font-size: 0.79rem;
+  color: var(--ink-dim);
+  line-height: 1.4;
+}
+
+.contact__arrow {
+  margin-left: auto;
+  color: var(--ink-dim);
+  transition: transform 0.3s var(--ease), color 0.3s var(--ease);
+}
+.contact:hover .contact__arrow { transform: translateX(4px); color: var(--accent); }
+
+/* --------------------------------------------------------------- подвал */
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  padding-block: clamp(2.2rem, 5vw, 3.4rem);
+  margin-top: clamp(2rem, 6vw, 4rem);
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem clamp(1.2rem, 4vw, 3rem);
+}
+
+.brand--sm .brand__mark { width: 26px; height: 26px; border-radius: 8px; }
+.brand--sm .brand__name { font-size: 1.14rem; }
+
+.site-footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.3rem;
+  font-size: 0.85rem;
+}
+.site-footer__nav a { color: var(--ink-dim); transition: color 0.2s var(--ease); }
+.site-footer__nav a:hover { color: var(--ink); }
+
+.site-footer__note {
+  width: 100%;
+  font-size: 0.78rem;
+  color: var(--ink-dim);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.8rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--line);
+}
+
+/* ----------------------------------------------------------- появление */
+
+/* Блоки въезжают снизу по мере прокрутки. Задержка внутри группы идёт от
+   --i, который проставляет скрипт при сборке карточек. */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 55ms);
+}
+.reveal.is-in { opacity: 1; transform: none; }
+
+/* ---------------------------------------------------------------- адаптив */
+
+@media (max-width: 1000px) {
+  .studio { grid-template-columns: 1fr; }
+  .studio__panel { order: 2; }
+}
+
+@media (max-width: 880px) {
+  .burger { display: flex; }
+  .palette { display: none; }
+
+  .site-nav {
+    position: fixed;
+    inset: 0 0 auto;
+    top: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 100svh;
+    padding: 5.5rem var(--gutter) 3rem;
+    background: color-mix(in srgb, var(--bg) 96%, transparent);
+    backdrop-filter: blur(20px);
+    font-size: 1.6rem;
+    font-family: var(--font-display);
+    transform: translateX(100%);
+    transition: transform 0.42s var(--ease-out);
+    z-index: 90;
+  }
+  .site-nav.is-open { transform: none; }
+  .site-nav a { color: var(--ink); padding-block: 0.5rem; }
+
+  .header-cta { display: none; }
+}
+
+/* Превью уходит на всю ширину раньше остальных: рядом с тремя фотографиями
+   в одну строку оно сжимается до размера, на котором уже не разобрать, что
+   это рисунок, а не ещё один снимок. */
+@media (max-width: 1150px) {
+  .sketch { grid-template-columns: repeat(3, 1fr); }
+  .sketch__item--plan { grid-column: 1 / -1; }
+  .sketch__item--plan img { aspect-ratio: 16 / 9; }
+}
+
+@media (max-width: 820px) {
+  .sketch { grid-template-columns: repeat(2, 1fr); }
+
+  .author { grid-template-columns: 1fr; }
+  .author__photo { max-width: 340px; }
+}
+
+@media (max-width: 640px) {
+  .hero { min-height: auto; padding-block: 3rem 4.5rem; }
+  .sketch { grid-template-columns: 1fr; }
+  .sketch__item--plan img { aspect-ratio: 5 / 6; }
+  .hero__horse { width: clamp(230px, 62vw, 340px); }
+  .hero__scroll { display: none; }
+
+  .step { grid-template-columns: 1fr; gap: 0.4rem; }
+  .studio__spec { grid-template-columns: 1fr; }
+}
+
+/* --------------------------------------------------- спокойный режим */
+
+/* Одна кнопка выключает всё движение сразу. Важно, что она гасит и
+   анимации появления: иначе блоки, до которых человек не долистал,
+   остались бы навсегда прозрачными. */
+:root[data-calm] *,
+:root[data-calm] *::before,
+:root[data-calm] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+:root[data-calm] .reveal { opacity: 1; transform: none; }
+:root[data-calm] .kin { opacity: 1; transform: none; }
+:root[data-calm] .hero__horse { opacity: var(--o); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
