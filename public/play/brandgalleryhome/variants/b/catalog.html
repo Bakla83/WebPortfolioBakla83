@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Каталог — Brand Gallery, Краснодар</title>
+<meta name="description" content="Каталог итальянской мебели премиум-класса в Краснодаре: диваны, столы, гардеробные, кухни. Фильтр по фабрике, цене и наличию.">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/b.css">
+</head>
+<body>
+
+<main>
+  <div class="wrap cat__top">
+
+    <nav class="crumbs" id="ccrumbs"></nav>
+
+    <div class="cat__head">
+      <h1 class="t-h1" id="ctitle">Каталог</h1>
+      <!-- Переключатель наличия стоит над списком, а не внутри фильтров:
+           по словам заказчицы это самый нажимаемый элемент каталога. -->
+      <div class="stock">
+        <button data-stock="all">Все</button>
+        <button data-stock="in">В наличии</button>
+        <button data-stock="order">Под заказ</button>
+      </div>
+    </div>
+
+    <!-- Главный фильтр этого варианта — лента марок над сеткой.
+         Она же навигация: адрес вида catalog.html?factory=Baccarat
+         работает как отдельная страница под марочный запрос. -->
+    <nav class="marks" id="marks" aria-label="Фабрики"></nav>
+
+    <div class="toolbar">
+      <div class="toolbar__left">
+        <button class="fopen" id="fopen">Фильтры</button>
+        <span class="toolbar__found" id="found"></span>
+      </div>
+      <div>
+        <label class="tiny" for="sort">Сортировка</label>
+        <select id="sort">
+          <option value="default">по умолчанию</option>
+          <option value="stock">сначала в наличии</option>
+          <option value="cheap">сначала дешевле</option>
+          <option value="rich">сначала дороже</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Фильтры раскрываются строкой на всю ширину: боковая колонка
+         съедала бы место у сетки, а здесь ширина важнее. -->
+    <div class="filters" id="filters"></div>
+    <button class="fclose" id="fclose">Показать результаты</button>
+
+    <div class="grid grid--4 cat__grid" id="grid"></div>
+
+  </div>
+</main>
+
+<script src="../../js/data.js"></script>
+<script src="../js/vlib.js"></script>
+<script src="js/b.js"></script>
+</body>
+</html>

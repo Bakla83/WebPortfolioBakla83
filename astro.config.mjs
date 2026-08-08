@@ -5,7 +5,15 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://webportfoliobakla83.pages.dev',
   trailingSlash: 'never',
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      // Страница работы в производстве показывается заказчице по прямой
+      // ссылке и закрыта от индексации (noindex в самой странице). В карте
+      // сайта ей делать нечего: карта — это приглашение обойти всё, а сюда
+      // ведёт только пункт «В процессе создания» в меню.
+      filter: (page) => !page.includes('/in-progress'),
+    }),
+  ],
   build: {
     // Мелкие стили инлайнятся в HTML: меньше запросов на мобильном.
     // Для стилей это безопасно — CSP разрешает style-src 'unsafe-inline'.

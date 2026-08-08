@@ -52,6 +52,32 @@ const DEMOS = [
     from: 'centipede-repaints',
     include: ['index.html', 'css', 'js', 'img'],
   },
+  /*
+    Работа в производстве, а не готовая: макеты сайта для салона мебели.
+    Своего домена у неё ещё нет, поэтому заказчица смотрит варианты дизайна
+    отсюда, со страницы «В процессе создания» (/ru/in-progress).
+
+    Копируется вся папка design/ целиком, а не отдельная страница: страница
+    выбора ссылается на три варианта относительными путями (../index.html,
+    b/, c/), и по одному файлу они не соберутся. Шрифты лежат общей папкой
+    на все варианты — без неё от макета остаётся системный гротеск.
+  */
+  {
+    slug: 'brandgalleryhome',
+    from: 'brandgalleryhome/design',
+    include: [
+      'index.html',
+      'catalog.html',
+      'product.html',
+      'factory.html',
+      'request.html',
+      'css',
+      'js',
+      'fonts',
+      'favicon.svg',
+      'variants',
+    ],
+  },
 ];
 
 const checkOnly = process.argv.includes('--check');

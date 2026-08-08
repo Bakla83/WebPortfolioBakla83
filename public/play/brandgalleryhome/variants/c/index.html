@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Итальянская мебель премиум-класса в Краснодаре — Brand Gallery</title>
+<meta name="description" content="Салон итальянской мебели премиум-класса в Краснодаре. Часть коллекций в наличии, остальное под заказ с фабрик Италии. Фильтр по цене и наличию.">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/c.css">
+</head>
+<body>
+
+<main>
+
+  <!-- Первый экран короткий и рабочий: заголовок с городом, строка поиска
+       и быстрые переходы. Товары должны начинаться почти сразу —
+       в этом варианте главная не витрина, а вход в каталог. -->
+  <section class="hero">
+    <div class="wrap">
+      <h1 class="t-h1">Итальянская мебель премиум-класса в Краснодаре</h1>
+      <p>Часть коллекций стоит в зале и на складе — можно приехать,
+        посмотреть и забрать без ожидания. Остальное везём с фабрик Италии.</p>
+
+      <div class="hero__chips">
+        <a class="is-stock" href="catalog.html?stock=in">Смотреть, что в наличии</a>
+        <a href="catalog.html?type=divany">Диваны</a>
+        <a href="catalog.html?room=garderobnye">Гардеробные</a>
+        <a href="catalog.html?type=stoly">Столы</a>
+        <a href="catalog.html?type=stulya">Стулья</a>
+        <a href="catalog.html?room=kuhni">Кухни</a>
+        <a href="catalog.html">Весь каталог</a>
+      </div>
+
+      <div class="claims">
+        <div><b>С 2011 года</b><span>Работаем с фабриками напрямую</span></div>
+        <div><b>Шоурум в городе</b><span>Мебель можно увидеть до заказа</span></div>
+        <div><b>10–16 недель</b><span>Обычный срок поставки из Италии</span></div>
+        <div><b>Дизайнерам</b><span>Отдельные условия и сопровождение</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Наличие по брифу — самый нажимаемый фильтр сайта. Здесь он вынесен
+       в первую же секцию после шапки, восемь позиций. -->
+  <section class="sect">
+    <div class="wrap">
+      <div class="sect__head">
+        <h2 class="t-h2">В наличии сейчас</h2>
+        <a class="linkline" href="catalog.html?stock=in">Всё, что в наличии</a>
+      </div>
+      <div class="grid grid--4" id="hot"></div>
+    </div>
+  </section>
+
+  <section class="sect reveal">
+    <div class="wrap">
+      <div class="sect__head">
+        <h2 class="t-h2">Разделы каталога</h2>
+        <a class="linkline" href="catalog.html">Весь каталог</a>
+      </div>
+      <div class="tiles" id="rooms"></div>
+    </div>
+  </section>
+
+  <!-- Фабрики здесь — полки каталога, а не отдельные страницы:
+       ссылка ведёт в каталог с выбранной маркой. -->
+  <section class="sect reveal">
+    <div class="wrap">
+      <div class="sect__head">
+        <h2 class="t-h2">Фабрики</h2>
+        <a class="linkline" href="catalog.html#brands">Открыть в каталоге</a>
+      </div>
+      <div class="brandline" id="brands"></div>
+    </div>
+  </section>
+
+  <section class="sect reveal">
+    <div class="wrap">
+      <div class="showroom">
+        <div id="showroomart"></div>
+        <div class="showroom__txt">
+          <h2 class="t-h2">Шоурум в Краснодаре</h2>
+          <p>Ткани, кожу и отделку невозможно выбрать по экрану. В зале стоят
+            образцы коллекций, каталоги фабрик и палитры материалов.</p>
+          <div class="showroom__facts">
+            <div><b>Адрес</b>Краснодар, ул. Бабушкина, 285, 3 этаж, БЦ Full House</div>
+            <div><b>Часы работы</b>пн–сб 11:00–18:00, воскресенье выходной</div>
+            <div><b>Телефон</b><a href="tel:+79186575027">+7 918 657-50-27</a></div>
+            <div><b>Почта</b><a href="mailto:studia_interior_krd@mail.ru">studia_interior_krd@mail.ru</a></div>
+          </div>
+          <div class="btn-row">
+            <a class="btn btn--solid" href="request.html?showroom=1">Записаться на визит</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Вопросы-ответы закрывают то, что чаще всего спрашивают до заявки,
+       и заодно собирают низкочастотные запросы. -->
+  <section class="sect reveal">
+    <div class="wrap">
+      <div class="sect__head"><h2 class="t-h2">Частые вопросы</h2></div>
+      <div class="faq">
+        <details>
+          <summary>Почему у части товаров нет цены</summary>
+          <p>Если цена указана — позиция есть у нас или на складе в Москве.
+            Без цены — вещь везётся под заказ, и стоимость зависит от отделки,
+            ткани и размера. Отправьте заявку, посчитаем по вашей комплектации.</p>
+        </details>
+        <details>
+          <summary>Сколько ждать мебель из Италии</summary>
+          <p>Обычный срок производства и доставки — от 10 до 16 недель.
+            То, что в наличии, отгружается сразу.</p>
+        </details>
+        <details>
+          <summary>Можно ли посмотреть вживую</summary>
+          <p>Да, в шоуруме в Краснодаре стоят образцы коллекций, есть каталоги
+            фабрик и палитры материалов. Запишитесь на визит, чтобы менеджер
+            подготовил нужные образцы.</p>
+        </details>
+        <details>
+          <summary>Есть ли оплата на сайте</summary>
+          <p>Нет. Сайт собирает подборку и заявку, дальше разговор идёт лично:
+            уточняем наличие, комплектацию и срок, потом оформляем договор.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="sect reveal">
+    <div class="wrap">
+      <div class="sect__head">
+        <h2 class="t-h2">Статьи</h2>
+        <a class="linkline" href="#">Все статьи</a>
+      </div>
+      <div class="posts" id="posts"></div>
+    </div>
+  </section>
+
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FurnitureStore",
+  "name": "Brand Gallery",
+  "description": "Салон итальянской мебели премиум-класса в Краснодаре",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Краснодар",
+    "addressRegion": "Краснодарский край",
+    "streetAddress": "ул. Бабушкина, 285, 3 этаж, БЦ Full House",
+    "addressCountry": "RU"
+  },
+  "telephone": "+7 918 657-50-27",
+  "email": "studia_interior_krd@mail.ru",
+  "openingHours": "Mo-Sa 11:00-18:00",
+  "areaServed": "Краснодар и Краснодарский край"
+}
+</script>
+
+<script src="../../js/data.js"></script>
+<script src="../js/vlib.js"></script>
+<script src="js/c.js"></script>
+</body>
+</html>

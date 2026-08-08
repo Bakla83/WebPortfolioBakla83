@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Итальянская мебель премиум-класса в Краснодаре — Brand Gallery</title>
+<meta name="description" content="Салон итальянской мебели премиум-класса в Краснодаре. Официальные поставки с фабрик Италии: Giorgio Collection, CAVIO CASA, Fratelli Barri и другие.">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/b.css">
+</head>
+<body>
+
+<main>
+
+  <!-- Первый экран — манифест, а не витрина. Сначала читается «мы возим
+       эти марки и мы в Краснодаре», и только потом идут товары.
+       Город в заголовке нужен и человеку, и выдаче: цель проекта —
+       верх по запросу «итальянская мебель Краснодар». -->
+  <section class="manifest">
+    <div class="wrap manifest__in">
+      <div>
+        <span class="eyebrow eyebrow--dark">Краснодар · собственный шоурум</span>
+        <h1 class="t-hero">Мебель фабрик,<br>которые делают Италию</h1>
+        <p>Работаем с мануфактурами напрямую. Часть коллекций стоит в зале
+          и на складе — можно приехать, посмотреть и забрать без ожидания.</p>
+        <div class="btn-row">
+          <a class="btn btn--terra" href="factory.html">Все фабрики</a>
+          <a class="btn btn--onDark" href="catalog.html?stock=in">Что есть в наличии</a>
+        </div>
+      </div>
+      <div class="manifest__marks" id="manifestmarks"></div>
+    </div>
+  </section>
+
+  <!-- Ядро варианта: лента фабрик. Каждая марка отдельной полосой —
+       имя, страна, короткий рассказ, наличие и три позиции.
+       Это ровно те страницы, за которыми приходят по марочным запросам
+       вроде «Meridiani Краснодар»: конкуренция низкая, намерение купить
+       высокое. -->
+  <section class="strip">
+    <div class="wrap">
+      <div class="strip__head">
+        <div>
+          <span class="eyebrow">Прямые поставки</span>
+          <h2 class="t-h2">Наши фабрики</h2>
+        </div>
+        <a class="linkline" href="factory.html">Список целиком</a>
+      </div>
+      <div id="fstrips"></div>
+    </div>
+  </section>
+
+  <!-- Наличие по брифу — самый нажимаемый фильтр сайта. В этом варианте
+       витрина стоит после фабрик, но выделена тёмной полосой, чтобы
+       не потеряться. -->
+  <section class="strip strip--dark reveal">
+    <div class="wrap">
+      <div class="strip__head">
+        <div>
+          <span class="eyebrow">Не нужно ждать поставку</span>
+          <h2 class="t-h2">В наличии сейчас</h2>
+        </div>
+        <a class="linkline" href="catalog.html?stock=in">Всё, что в наличии</a>
+      </div>
+      <div class="grid grid--4" id="hot"></div>
+    </div>
+  </section>
+
+  <!-- Вход по помещению здесь вторичный: строкой ссылок, а не сеткой
+       плиток. Половина разделов почти пустая, и сетка из двенадцати
+       квадратов с единицами внутри выглядела бы бедно. -->
+  <section class="strip strip--paper2 reveal">
+    <div class="wrap">
+      <div class="strip__head">
+        <div>
+          <span class="eyebrow">Обставить комнату целиком</span>
+          <h2 class="t-h2">По помещению</h2>
+        </div>
+        <a class="linkline" href="catalog.html">Весь каталог</a>
+      </div>
+      <div class="roomline" id="rooms"></div>
+    </div>
+  </section>
+
+  <!-- Мебель такого уровня выбирают вживую. Задача главной — довести
+       не только до заявки, но и до визита в зал. -->
+  <section class="showroom reveal">
+    <div class="showroom__art" id="showroomart"></div>
+    <div class="showroom__txt">
+      <span class="eyebrow eyebrow--dark">Краснодар</span>
+      <h2 class="t-h2">Приезжайте в шоурум</h2>
+      <p>Ткани, кожу и отделку невозможно выбрать по экрану. В зале стоят
+        образцы коллекций, каталоги фабрик и палитры материалов.</p>
+      <div class="showroom__facts">
+        <div><b>Адрес</b><span>Краснодар, ул. Бабушкина, 285, 3 этаж, БЦ Full House</span></div>
+        <div><b>Часы</b><span>пн–сб 11:00–18:00, воскресенье выходной</span></div>
+        <div><b>Телефон</b><span><a href="tel:+79186575027">+7 918 657-50-27</a></span></div>
+        <div><b>Почта</b><span><a href="mailto:studia_interior_krd@mail.ru">studia_interior_krd@mail.ru</a></span></div>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn--onDark" href="request.html?showroom=1">Записаться на визит</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Микроразметка салона: без неё сайт хуже участвует в локальной выдаче
+     и не показывает адрес с часами прямо в результатах поиска. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FurnitureStore",
+  "name": "Brand Gallery",
+  "description": "Салон итальянской мебели премиум-класса в Краснодаре",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Краснодар",
+    "addressRegion": "Краснодарский край",
+    "streetAddress": "ул. Бабушкина, 285, 3 этаж, БЦ Full House",
+    "addressCountry": "RU"
+  },
+  "telephone": "+7 918 657-50-27",
+  "email": "studia_interior_krd@mail.ru",
+  "openingHours": "Mo-Sa 11:00-18:00",
+  "areaServed": "Краснодар и Краснодарский край"
+}
+</script>
+
+<script src="../../js/data.js"></script>
+<script src="../js/vlib.js"></script>
+<script src="js/b.js"></script>
+</body>
+</html>

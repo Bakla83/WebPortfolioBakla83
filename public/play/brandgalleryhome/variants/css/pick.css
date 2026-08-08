@@ -1,0 +1,165 @@
+/* =========================================================================
+   Страница выбора варианта. Служебная: на рабочем сайте её не будет.
+
+   Оформлена нейтрально и намеренно скучно — она не должна спорить
+   с вариантами и склонять к одному из них цветом или набором.
+   ========================================================================= */
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../../fonts/cormorant-cyrillic.woff2') format('woff2');
+  font-weight: 300 600; font-style: normal; font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../../fonts/cormorant-latin.woff2') format('woff2');
+  font-weight: 300 600; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../../fonts/inter-cyrillic.woff2') format('woff2');
+  font-weight: 300 600; font-style: normal; font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../../fonts/inter-latin.woff2') format('woff2');
+  font-weight: 300 600; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  --paper: #ffffff;
+  --paper-2: #f6f5f2;
+  --ink: #1a1917;
+  --ink-2: #5f5a52;
+  --ink-3: #918a7f;
+  --line: #e3ded5;
+  --plus: #2f6b46;
+  --minus: #9b4a35;
+  --r: 14px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0; background: var(--paper-2); color: var(--ink);
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-size: 16px; line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+h1, h2, h3 { margin: 0; line-height: 1.15; }
+
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+
+.top { background: var(--paper); border-bottom: 1px solid var(--line); padding: 54px 0 46px; }
+.top h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300; font-size: clamp(34px, 5vw, 56px);
+}
+.top p { color: var(--ink-2); max-width: 74ch; margin: 18px 0 0; }
+.top .note { font-size: 14px; color: var(--ink-3); margin-top: 18px; }
+
+.v { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); margin: 26px 0; overflow: hidden; }
+.v__head { display: grid; grid-template-columns: 62px 1fr; gap: 18px; padding: 26px 28px 20px; border-bottom: 1px solid var(--line); align-items: start; }
+.v__key {
+  width: 62px; height: 62px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px;
+  color: #fff;
+}
+.v--a .v__key { background: #8a6d3b; }
+.v--b .v__key { background: #a2503a; }
+.v--c .v__key { background: #1e4a3c; }
+.v__head h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 32px; }
+.v__sub { display: block; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); margin-top: 6px; }
+.v__head p { margin: 12px 0 0; color: var(--ink-2); max-width: 92ch; }
+
+/* Две равные колонки во всю ширину карточки: плюсы и минусы должны
+   читаться как пара, а не как основной текст и приписка сбоку.
+   Вторая колонка чуть подкрашена — так видно, где заканчивается одна
+   и начинается другая, даже когда они разной высоты. */
+.v__body { display: grid; grid-template-columns: 1fr 1fr; gap: 0; align-items: stretch; }
+.v__col { padding: 26px 32px 32px; min-width: 0; }
+.v__col + .v__col { border-left: 1px solid var(--line); background: #fbfaf7; }
+.v__col h3 {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 13px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-3); font-weight: 500; margin-bottom: 18px;
+}
+.v__col h3::before { content: ''; flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; background: var(--plus); }
+.v__col + .v__col h3::before { background: var(--minus); }
+
+/* Пункт списка — обычный блок с отступом слева и знаком в этом отступе.
+
+   Сеткой здесь пользоваться нельзя: в пункте вида «<b>Заголовок.</b> текст»
+   жирное начало и остальной текст становятся двумя разными ячейками,
+   и продолжение уезжает во вторую строку, в узкую колонку под знаком.
+   Именно это и выглядело как текст, прижатый к одному краю. */
+ul.pm { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+ul.pm li {
+  position: relative; padding-left: 28px;
+  font-size: 15.5px; line-height: 1.6;
+}
+ul.pm li::before {
+  position: absolute; left: 0; top: 0;
+  width: 18px; text-align: center;
+  font-size: 17px; font-weight: 600; line-height: 1.5;
+}
+.pm--plus li::before { content: '+'; color: var(--plus); }
+.pm--minus li::before { content: '–'; color: var(--minus); }
+ul.pm b { font-weight: 600; }
+
+.v__foot { padding: 20px 28px 26px; border-top: 1px solid var(--line); background: var(--paper-2); }
+.v__who { font-size: 15px; color: var(--ink-2); margin: 0 0 16px; }
+.v__who b { color: var(--ink); }
+.links { display: flex; flex-wrap: wrap; gap: 8px; }
+.links a {
+  display: inline-flex; align-items: center; height: 40px; padding: 0 16px;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 999px;
+  font-size: 14px; text-decoration: none;
+}
+.links a:hover { border-color: var(--ink-3); }
+.links a.is-main { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+.tablewrap { overflow-x: auto; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); }
+/* Фиксированная раскладка: три колонки вариантов одинаковой ширины,
+   иначе одна из них раздувается по самой длинной строке. */
+table { border-collapse: collapse; width: 100%; min-width: 860px; font-size: 15px; table-layout: fixed; }
+th, td { text-align: left; padding: 14px 18px; border-bottom: 1px solid var(--line); vertical-align: top; }
+thead th { font-size: 13px; letter-spacing: .04em; color: var(--ink); font-weight: 600; }
+tbody th { font-weight: 500; color: var(--ink-2); }
+th:first-child { width: 22%; }
+thead th:not(:first-child) { width: 26%; }
+tr:last-child th, tr:last-child td { border-bottom: 0; }
+
+.sect { padding: 42px 0; }
+.sect > h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300;
+  font-size: clamp(26px, 3.4vw, 38px); margin-bottom: 20px;
+}
+.card {
+  background: var(--paper); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 26px 28px;
+}
+.card p { margin: 0 0 14px; }
+.card p:last-child { margin-bottom: 0; }
+.card ol { margin: 0; padding-left: 22px; }
+.card ol li { margin-bottom: 10px; }
+
+.foot { padding: 30px 0 60px; color: var(--ink-3); font-size: 14px; }
+
+@media (max-width: 860px) {
+  .v__body { grid-template-columns: 1fr; }
+  .v__col + .v__col { border-left: 0; border-top: 1px solid var(--line); }
+  .v__head { grid-template-columns: 48px 1fr; padding: 20px; }
+  .v__key { width: 48px; height: 48px; font-size: 24px; }
+  .v__col, .v__foot { padding: 20px; }
+}

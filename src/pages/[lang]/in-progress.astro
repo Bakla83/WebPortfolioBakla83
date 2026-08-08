@@ -1,0 +1,294 @@
+---
+import Base from '../../layouts/Base.astro';
+import LiveDemo from '../../components/LiveDemo.astro';
+import { ENABLED_LOCALES, type EnabledLocale } from '../../i18n/config';
+import { t } from '../../i18n/ui';
+import type { ProjectDemo } from '../../data/types';
+
+export function getStaticPaths() {
+  return ENABLED_LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as EnabledLocale;
+const strings = t(lang);
+
+/**
+ * Работа, которая ещё делается, — не портфолио.
+ *
+ * Она не лежит в src/data/projects.ts и не попадает ни в раздел, ни в
+ * «Избранное», ни в карту сайта (исключение прописано в astro.config.mjs),
+ * а страница закрыта от индексации. Попасть сюда можно только через пункт
+ * «В процессе создания» в выпадающем меню «Работы» — так заказчица видит
+ * ровно то, что ей показывают, а не соседние незаконченные вещи.
+ *
+ * Когда сайт получит свой домен, отсюда уезжает всё: демо снимается из
+ * tools/sync-demos.mjs, а готовая работа заводится обычным проектом.
+ */
+
+/** Страница выбора вариантов, а не главная макета: с неё начинается показ. */
+const DEMO_SRC = '/play/brandgalleryhome/variants/index.html';
+
+const site = Astro.site ?? new URL('https://webportfoliobakla83.pages.dev');
+const shareUrl = new URL(DEMO_SRC, site).href;
+
+const content = {
+  ru: {
+    title: 'BrandGallery — салон итальянской мебели',
+    lead: 'Сайт мебельного салона в Краснодаре. Сейчас на стадии выбора дизайна: собраны три варианта планировки, заказчица выбирает один — дальше он доводится до пяти экранов и уходит в разработку.',
+    stage: 'Стадия: выбор варианта дизайна',
+    variantsTitle: 'Что показывается',
+    variantsLead:
+      'Варианты различаются не цветом, а устройством: тем, куда человек попадает с главной и как ищет мебель. Каталог, фильтры и поиск у всех трёх общие — иначе сравнение было бы нечестным.',
+    variants: [
+      {
+        key: 'A',
+        name: 'Светлая галерея',
+        text: 'Спокойная витрина: вход по помещению и типу мебели, фабрики отдельной веткой, каталог в три колонки.',
+      },
+      {
+        key: 'B',
+        name: 'Дом фабрик',
+        text: 'Главный вход — марка: лента фабрик на главной, лента марок над каталогом, разворот на каждую фабрику.',
+      },
+      {
+        key: 'C',
+        name: 'Салон-магазин',
+        text: 'Вход через поиск и наличие: короткая главная, плотный каталог в четыре колонки, липкий блок цены.',
+      },
+    ],
+    shareTitle: 'Ссылка для заказчицы',
+    shareText:
+      'Своего домена у сайта пока нет, поэтому макеты живут здесь. Ссылку можно отправить как есть — она открывает сразу страницу выбора, заходить в портфолио для этого не нужно.',
+    shareOpen: 'Открыть',
+    noteTitle: 'Про эту страницу',
+    noteText:
+      'Страница закрыта от поисковиков и не попадает в карту сайта. Открыть её можно только через пункт «В процессе создания» в меню «Работы».',
+    demoNote:
+      'Внутри рамки — настоящие макеты: фильтры, поиск и подборка работают. С телефона лучше открывать по ссылке, в отдельной вкладке.',
+  },
+  en: {
+    title: 'BrandGallery — Italian furniture showroom',
+    lead: 'A website for a furniture showroom in Krasnodar. Currently at the design-choice stage: three layout options are built, the client picks one — then it is finished to five screens and goes into development.',
+    stage: 'Stage: choosing the design',
+    variantsTitle: 'What is on show',
+    variantsLead:
+      'The options differ in structure, not colour: where the home page sends you and how you look for furniture. Catalogue, filters and search are shared by all three — otherwise the comparison would not be fair.',
+    variants: [
+      {
+        key: 'A',
+        name: 'Light gallery',
+        text: 'A calm shop window: entry by room and furniture type, factories on their own branch, a three-column catalogue.',
+      },
+      {
+        key: 'B',
+        name: 'House of factories',
+        text: 'The brand is the main entrance: a ribbon of factories on the home page, brands above the catalogue, a spread per factory.',
+      },
+      {
+        key: 'C',
+        name: 'Showroom shop',
+        text: 'Entry through search and stock: a short home page, a dense four-column catalogue, a sticky price block.',
+      },
+    ],
+    shareTitle: 'Link for the client',
+    shareText:
+      'The site has no domain of its own yet, so the mock-ups live here. The link can be sent as is — it opens the choice page directly, with no detour through the portfolio.',
+    shareOpen: 'Open',
+    noteTitle: 'About this page',
+    noteText:
+      'The page is closed to search engines and stays out of the sitemap. The only way in is the “Work in progress” item in the “Work” menu.',
+    demoNote:
+      'Real mock-ups inside the frame: filters, search and the shortlist all work. On a phone it is better to open the link in its own tab.',
+  },
+}[lang];
+
+const demo: ProjectDemo = {
+  src: DEMO_SRC,
+  ratio: '16 / 10',
+  note: { ru: content.demoNote, en: content.demoNote },
+};
+---
+
+<Base lang={lang} path="in-progress" title={content.title} description={content.lead} noindex>
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">{strings.nav.inProgress}</p>
+      <h1>{content.title}</h1>
+      <p class="lead">{content.lead}</p>
+      <p class="stage"><span class="stage__dot" aria-hidden="true"></span>{content.stage}</p>
+
+      <div class="share">
+        <div class="share__text">
+          <h2 class="share__title">{content.shareTitle}</h2>
+          <p class="muted">{content.shareText}</p>
+          <code class="share__url">{shareUrl}</code>
+        </div>
+
+        <div class="share__actions">
+          <button
+            type="button"
+            class="btn btn--primary"
+            data-copy={shareUrl}
+            data-copied-label={strings.contacts.copied}
+          >
+            {strings.contacts.copy}
+          </button>
+          <a class="btn btn--ghost" href={DEMO_SRC} target="_blank" rel="noopener noreferrer">
+            {content.shareOpen}
+          </a>
+        </div>
+      </div>
+
+      <h2 class="block-title">{content.variantsTitle}</h2>
+      <p class="muted">{content.variantsLead}</p>
+
+      <ul class="variants">
+        {
+          content.variants.map((variant) => (
+            <li class="variant">
+              <span class="variant__key" aria-hidden="true">
+                {variant.key}
+              </span>
+              <div>
+                <b class="variant__name">{variant.name}</b>
+                <p class="muted">{variant.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+
+      <LiveDemo demo={demo} lang={lang} title={content.title} />
+
+      <div class="note">
+        <b>{content.noteTitle}</b>
+        <p class="muted">{content.noteText}</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .stage {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-dim);
+  }
+
+  .stage__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+
+  /* Ссылка — главное, зачем сюда заходят, поэтому она выше макетов
+     и не требует прокрутки. */
+  .share {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-block: var(--space-4);
+    padding: var(--space-3);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-elev);
+  }
+
+  .share__text {
+    flex: 1 1 340px;
+    min-width: 0;
+  }
+
+  .share__title {
+    margin: 0 0 0.4rem;
+    font-size: 1.15rem;
+  }
+
+  .share__text p {
+    margin: 0 0 0.8rem;
+  }
+
+  /* Длинный адрес не должен растягивать карточку на телефоне */
+  .share__url {
+    display: block;
+    padding: 0.5rem 0.7rem;
+    border-radius: var(--radius-sm);
+    background: var(--bg-elev-2);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-dim);
+    overflow-wrap: anywhere;
+  }
+
+  .share__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .block-title {
+    margin-top: var(--space-4);
+    font-size: 1.3rem;
+  }
+
+  .variants {
+    list-style: none;
+    margin: var(--space-2) 0 var(--space-4);
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+
+  .variant {
+    display: flex;
+    gap: 0.9rem;
+    padding: var(--space-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .variant__key {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    flex: none;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    color: var(--gold);
+  }
+
+  .variant__name {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.02rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .variant p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  .note {
+    margin-top: var(--space-4);
+    padding-left: var(--space-2);
+    border-left: 2px solid var(--line-strong);
+  }
+
+  .note p {
+    margin: 0.3rem 0 0;
+    font-size: 0.9rem;
+  }
+</style>

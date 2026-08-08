@@ -53,6 +53,17 @@ const workActive = path.startsWith('work');
               </a>
             ))
           }
+
+          <!-- Единственный вход на страницу работы в производстве: её нет
+               ни на главной, ни в разделах, ни в карте сайта. -->
+          <a
+            href={localePath(lang, 'in-progress')}
+            class="dropdown__item dropdown__item--wip"
+            aria-current={path === 'in-progress' ? 'page' : undefined}
+          >
+            <span class="dropdown__pulse" aria-hidden="true"></span>
+            {strings.nav.inProgress}
+          </a>
         </div>
       </details>
 
@@ -313,6 +324,47 @@ const workActive = path.startsWith('work');
   .dropdown__item--green:hover,
   .dropdown__item--green[aria-current] {
     border-left-color: var(--green);
+  }
+
+  /* Работа в производстве — не раздел портфолио, поэтому отделена чертой
+     и подписана иначе: иначе её читают как седьмое направление. */
+  .dropdown__item--wip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--line);
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    font-size: 0.88rem;
+    color: var(--ink-faint);
+  }
+
+  .dropdown__item--wip:hover,
+  .dropdown__item--wip[aria-current] {
+    border-left-color: transparent;
+    color: var(--ink);
+  }
+
+  .dropdown__pulse {
+    width: 7px;
+    height: 7px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: wip-pulse 2s var(--ease) infinite;
+  }
+
+  @keyframes wip-pulse {
+    50% {
+      opacity: 0.25;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dropdown__pulse {
+      animation: none;
+    }
   }
 
   /* --- Правый блок --- */

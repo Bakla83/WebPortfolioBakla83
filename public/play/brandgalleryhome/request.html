@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Подборка и заявка — Brand Gallery, Краснодар</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<main class="wrap">
+
+  <nav class="crumbs">
+    <a href="index.html">Главная</a><span>·</span>Подборка
+  </nav>
+
+  <div class="section__head">
+    <div>
+      <span class="eyebrow">Оплаты на сайте нет</span>
+      <h1 class="t-h1">Подборка и заявка</h1>
+    </div>
+  </div>
+
+  <p class="lede" style="margin-bottom:52px">Отметьте всё, что хотите обсудить,
+    и отправьте одной заявкой. Мы уточним наличие, срок и отделку по каждой
+    позиции и свяжемся в рабочее время.</p>
+
+  <div class="req">
+
+    <div>
+      <div class="picked" id="picked"></div>
+      <div class="sum" id="sum"></div>
+    </div>
+
+    <div>
+      <form class="form" id="reqform" novalidate>
+
+        <div class="field">
+          <label for="fname">Как к вам обращаться</label>
+          <input type="text" id="fname" name="name" required autocomplete="name">
+        </div>
+
+        <div class="field">
+          <label for="fphone">Телефон</label>
+          <input type="tel" id="fphone" name="phone" required autocomplete="tel"
+                 placeholder="+7 ___ ___-__-__">
+        </div>
+
+        <!-- Четыре варианта закрывают почти все обращения по брифу.
+             Заказчице отдельным вопросом: угаданы ли они. -->
+        <div class="field">
+          <span class="fieldlab">Что вы хотите узнать</span>
+          <div class="checks">
+            <label><input type="checkbox" name="goal" value="Уточнить цену и наличие">
+              <span>Уточнить цену и наличие</span></label>
+            <label><input type="checkbox" name="goal" value="Узнать срок поставки">
+              <span>Узнать срок поставки</span></label>
+            <label><input type="checkbox" name="goal" value="Подобрать отделку">
+              <span>Подобрать отделку и ткань</span></label>
+            <label><input type="checkbox" name="goal" value="Записаться в шоурум">
+              <span>Записаться в шоурум</span></label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="fnote">Комментарий</label>
+          <textarea id="fnote" name="note" rows="3"
+                    placeholder="Размеры комнаты, желаемый цвет, сроки"></textarea>
+        </div>
+
+        <!-- Согласие не предзаполнено, со ссылкой на политику.
+             Факт согласия логируется вместе с датой, временем и версией
+             политики — это доказательство, если возникнет спор. -->
+        <label class="agree">
+          <input type="checkbox" name="agree" required>
+          <span>Согласен на обработку персональных данных в соответствии
+            с <a href="#">политикой обработки персональных данных</a>.
+            Имя и телефон нужны только для ответа на заявку.</span>
+        </label>
+
+        <div>
+          <button class="btn btn--solid btn--wide" type="submit">Отправить заявку</button>
+        </div>
+
+        <p class="tiny">Заявка не является заказом и ни к чему не обязывает.
+          Стоимость и срок подтверждает менеджер салона.</p>
+
+      </form>
+
+      <div class="sent" id="sent" hidden>
+        <span class="eyebrow eyebrow--bronze">Заявка отправлена</span>
+        <h2 class="t-h2" style="margin:14px 0">Спасибо, получили</h2>
+        <p class="muted">Свяжемся в рабочее время: пн–сб с 11:00 до 18:00,
+          воскресенье выходной. Если вопрос срочный, позвоните —
+          <a href="tel:+79186575027">+7 918 657-50-27</a>.</p>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

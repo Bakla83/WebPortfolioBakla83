@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Каталог — Brand Gallery, Краснодар</title>
+<meta name="description" content="Каталог итальянской мебели премиум-класса в Краснодаре: диваны, столы, гардеробные, кухни. Фильтр по цене, фабрике и наличию.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<main class="wrap">
+
+  <nav class="crumbs" id="ccrumbs"></nav>
+
+  <div class="cat__head">
+    <h1 class="t-h1" id="ctitle">Каталог</h1>
+    <!-- Переключатель наличия стоит над списком, а не внутри фильтров:
+         по словам заказчицы это самый нажимаемый элемент каталога.
+         Есть цена — товар у нас или на складе в Москве; нет цены —
+         под заказ, цена по запросу. -->
+    <div class="stock">
+      <button data-stock="all">Все</button>
+      <button data-stock="in">В наличии</button>
+      <button data-stock="order">Под заказ</button>
+    </div>
+  </div>
+
+  <div class="cat">
+
+    <aside>
+      <button class="fopen" id="fopen">Разделы и фильтры</button>
+      <div class="filters" id="filters"></div>
+      <button class="fclose" id="fclose">Показать результаты</button>
+    </aside>
+
+    <div>
+      <div class="toolbar">
+        <span class="toolbar__found" id="found"></span>
+        <div class="toolbar__sort">
+          <label class="tiny" for="sort">Сортировка</label>
+          <select id="sort">
+            <option value="default">по умолчанию</option>
+            <option value="stock">сначала в наличии</option>
+            <option value="cheap">сначала дешевле</option>
+            <option value="rich">сначала дороже</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid--3" id="grid"></div>
+    </div>
+
+  </div>
+
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

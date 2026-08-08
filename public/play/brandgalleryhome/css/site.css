@@ -1,0 +1,1151 @@
+/* =========================================================================
+   brandgalleryhome.ru — дизайн-макет
+
+   Направление: светлая галерея. Тёплый белый фон, много воздуха, тонкая
+   антиква в заголовках, разрядка в подписях. Карточки без рамок и теней —
+   композицию держит фотография, а не обводка. Так выглядят сайты самих
+   фабрик, и мебель на таком фоне читается как экспонат, а не как товар
+   из прайса.
+
+   Шрифты лежат локально в design/fonts. Ни одного обращения наружу
+   со страницы нет — см. «Главный принцип» в CLAUDE.md.
+
+   Порядок: шрифты → переменные → база → типографика → кнопки → шапка →
+   подвал → заглушки фотографий → карточки → главная → каталог →
+   карточка товара → фабрики → заявка → адаптив.
+   ========================================================================= */
+
+/* ------------------------------------------------------------- шрифты */
+
+/* Оба шрифта переменные: один файл на всю линейку начертаний.
+   Разбиты по алфавитам, чтобы браузер качал только нужное.
+   Знак рубля живёт в latin-ext — без этого файла цены поедут
+   на системный шрифт. */
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../fonts/cormorant-cyrillic.woff2') format('woff2');
+  font-weight: 300 600; font-style: normal; font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../fonts/cormorant-latin.woff2') format('woff2');
+  font-weight: 300 600; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../fonts/cormorant-latin-ext.woff2') format('woff2');
+  font-weight: 300 600; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/inter-cyrillic.woff2') format('woff2');
+  font-weight: 300 600; font-style: normal; font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/inter-latin.woff2') format('woff2');
+  font-weight: 300 600; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/inter-latin-ext.woff2') format('woff2');
+  font-weight: 300 600; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* --------------------------------------------------------- переменные */
+
+:root {
+  /* Фон тёплый, не чисто белый: на нём светлая мебель не сливается
+     с листом, а бронза не выглядит грязной. */
+  --paper:    #faf8f5;
+  --paper-2:  #f3efe8;
+  --paper-3:  #ece7de;
+
+  --ink:      #1a1917;
+  --ink-2:    #6b655c;
+  --ink-3:    #9c9488;
+
+  --line:     #e4ded4;
+  --line-2:   #d3cabd;
+
+  --bronze:   #8a6d3b;
+  --bronze-2: #6e5530;
+  --green:    #4c6b52;
+
+  --wrap: 1360px;
+  --gut: 40px;
+
+  /* Одна кривая на весь сайт: движение должно быть спокойным,
+     дёрганые переходы дешевят интерфейс. */
+  --ease: cubic-bezier(.22, .61, .36, 1);
+  --dur: .45s;
+}
+
+/* -------------------------------------------------------------- база */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; cursor: pointer; background: none; border: 0; }
+input, textarea, select { font: inherit; color: inherit; }
+
+::selection { background: var(--paper-3); }
+
+:focus-visible { outline: 1px solid var(--bronze); outline-offset: 3px; }
+
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gut); }
+.wrap--narrow { max-width: 900px; }
+
+.section { padding: 96px 0; }
+.section--tight { padding: 64px 0; }
+.section--first { padding-top: 48px; }
+
+.rule { height: 1px; background: var(--line); border: 0; margin: 0; }
+
+/* Появление секций при прокрутке. Сдвиг маленький и медленный —
+   это должно читаться как выдержка, а не как анимация. */
+.reveal { opacity: 0; transform: translateY(18px); }
+.reveal.is-in {
+  opacity: 1; transform: none;
+  transition: opacity .9s var(--ease), transform .9s var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal.is-in { opacity: 1; transform: none; transition: none; }
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* -------------------------------------------------------- типографика */
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -.005em;
+}
+
+.t-hero  { font-size: clamp(2.75rem, 6.2vw, 5.25rem); }
+.t-h1    { font-size: clamp(2.1rem, 4.2vw, 3.4rem); }
+.t-h2    { font-size: clamp(1.8rem, 3.2vw, 2.6rem); }
+.t-h3    { font-size: clamp(1.3rem, 2vw, 1.6rem); }
+
+/* Надзаголовок в разрядку. Главный приём набора на всём сайте:
+   он задаёт спокойный ритм и отделяет служебное от смыслового. */
+.eyebrow {
+  font-size: .6875rem;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.eyebrow--bronze { color: var(--bronze); }
+
+.lede {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+  max-width: 56ch;
+}
+.muted { color: var(--ink-2); }
+.small { font-size: .875rem; }
+.tiny  { font-size: .8125rem; color: var(--ink-3); }
+
+.section__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 44px;
+}
+.section__head .eyebrow { display: block; margin-bottom: 14px; }
+
+/* ------------------------------------------------------------ кнопки */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 17px 34px;
+  border: 1px solid var(--ink);
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease),
+              border-color var(--dur) var(--ease);
+}
+.btn:hover { background: var(--ink); color: var(--paper); }
+
+.btn--solid { background: var(--ink); color: var(--paper); }
+.btn--solid:hover { background: var(--bronze); border-color: var(--bronze); color: #fff; }
+
+.btn--light { border-color: rgba(250,248,245,.55); color: var(--paper); }
+.btn--light:hover { background: var(--paper); border-color: var(--paper); color: var(--ink); }
+
+.btn--wide { width: 100%; justify-content: center; }
+.btn[disabled] { opacity: .4; pointer-events: none; }
+
+.btn-row { display: flex; flex-wrap: wrap; gap: 14px; }
+/* В узкой колонке карточки две кнопки разной ширины смотрятся неряшливо —
+   ставим их друг под другом на всю ширину. */
+.btn-row--stack { flex-direction: column; align-items: stretch; }
+.btn-row--stack .btn { justify-content: center; }
+
+/* Ссылка-подчёркивание: линия растёт от левого края.
+   Заменяет стрелки — глифа со стрелкой в наборе нет, а рисовать
+   его картинкой ради «→» не стоит. */
+.linkline {
+  display: inline-block;
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding-bottom: 6px;
+  position: relative;
+  white-space: nowrap;
+}
+.linkline::after {
+  content: ''; position: absolute; left: 0; bottom: 0;
+  width: 100%; height: 1px; background: var(--ink-3);
+  transform-origin: left;
+  transition: transform var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.linkline:hover::after { background: var(--bronze); transform: scaleX(1.12); }
+
+/* ------------------------------------------------------------- шапка */
+
+.topbar {
+  border-bottom: 1px solid var(--line);
+  font-size: .75rem;
+  color: var(--ink-2);
+  background: var(--paper);
+}
+.topbar .wrap {
+  display: flex; align-items: center; gap: 28px;
+  height: 40px;
+}
+.topbar__geo { letter-spacing: .04em; }
+.topbar__right { margin-left: auto; display: flex; align-items: center; gap: 24px; }
+.topbar a:hover { color: var(--bronze); }
+
+/* Адрес почты длинный. В узкой строке он вытесняет телефон и запись
+   в шоурум, поэтому ниже 1100 пикселей остаётся только в подвале
+   и в блоке шоурума. */
+@media (max-width: 1100px) {
+  .topbar__mail { display: none; }
+}
+
+.head {
+  position: sticky; top: 0; z-index: 60;
+  background: var(--paper);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.head.is-stuck { border-bottom-color: var(--line); }
+
+.head__row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  padding: 26px 0 20px;
+  /* Над выехавшим мобильным меню: логотип и бургер должны остаться
+     видимыми и нажимаемыми, когда меню открыто. */
+  position: relative; z-index: 2;
+}
+.head__left { display: flex; align-items: center; gap: 18px; }
+.head__right { display: flex; align-items: center; justify-content: flex-end; gap: 22px; }
+
+/* Логотип набран шрифтом. На рабочем сайте здесь встанет её файл —
+   пропорции блока рассчитаны под горизонтальный знак. */
+.logo { text-align: center; display: block; }
+.logo__name {
+  display: block;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: .34em;
+  text-indent: .34em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.logo__sub {
+  display: block;
+  margin-top: 7px;
+  font-size: .5625rem;
+  font-weight: 500;
+  letter-spacing: .3em;
+  text-indent: .3em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.iconbtn {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-size: .75rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-2);
+  transition: color var(--dur) var(--ease);
+}
+.iconbtn:hover { color: var(--ink); }
+/* flex: none и снятый max-width обязательны: базовое `svg { max-width:100% }`
+   считается от ширины флекс-контейнера, а она сама меряется по содержимому.
+   Когда подпись рядом с иконкой скрыта (мобильная шапка), круг замыкается
+   и значок схлопывается в ноль. */
+.iconbtn svg {
+  flex: none; width: 17px; height: 17px; max-width: none;
+  stroke: currentColor; fill: none; stroke-width: 1.2;
+}
+.iconbtn__n {
+  min-width: 19px; height: 19px; padding: 0 5px;
+  display: inline-grid; place-items: center;
+  border-radius: 10px; background: var(--ink); color: var(--paper);
+  font-size: .625rem; letter-spacing: 0; font-weight: 500;
+}
+.iconbtn__n.is-zero { background: none; color: var(--ink-3); }
+
+.nav {
+  display: flex; justify-content: center; gap: 38px;
+  padding-bottom: 22px;
+}
+.nav a {
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  position: relative;
+  padding-bottom: 4px;
+  transition: color var(--dur) var(--ease);
+}
+.nav a::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+  height: 1px; background: var(--bronze);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform var(--dur) var(--ease);
+}
+.nav a:hover, .nav a.is-on { color: var(--ink); }
+.nav a:hover::after, .nav a.is-on::after { transform: scaleX(1); }
+
+.burger { display: none; padding: 6px; }
+.burger span {
+  display: block; width: 22px; height: 1px; background: var(--ink);
+  margin: 5px 0; transition: transform var(--dur) var(--ease), opacity .2s;
+}
+.burger.is-on span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.burger.is-on span:nth-child(2) { opacity: 0; }
+.burger.is-on span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* -------------------------------------------------------------- поиск */
+
+/* Панель поиска выезжает из-под шапки. Постоянное поле в такой вёрстке
+   выглядит как строка в интернет-магазине; иконка сохраняет спокойствие
+   шапки и при этом поиск доступен с каждой страницы. */
+.searchpanel {
+  position: absolute; left: 0; right: 0; top: 100%;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height var(--dur) var(--ease);
+}
+.searchpanel.is-open { max-height: 70vh; overflow-y: auto; }
+.searchpanel__in { padding: 34px 0 30px; }
+.searchpanel input {
+  width: 100%;
+  border: 0; border-bottom: 1px solid var(--line-2);
+  background: none;
+  padding: 10px 0 16px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 300;
+}
+.searchpanel input::placeholder { color: var(--ink-3); }
+.searchpanel input:focus { outline: 0; border-bottom-color: var(--bronze); }
+
+.qhits { margin-top: 26px; display: grid; gap: 2px; }
+.qhits a {
+  display: flex; align-items: center; gap: 18px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  transition: background var(--dur) var(--ease);
+}
+.qhits a:hover { background: var(--paper-2); }
+.qhits .ph { width: 58px; height: 46px; flex: 0 0 auto; }
+.qhits__name { display: block; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.25rem; }
+.qhits__meta { display: block; font-size: .8125rem; color: var(--ink-3); }
+.qhits__price { margin-left: auto; font-size: .875rem; white-space: nowrap; }
+
+/* ------------------------------------------------------------- подвал */
+
+.foot {
+  background: var(--paper-2);
+  margin-top: 40px;
+  padding: 80px 0 34px;
+  font-size: .875rem;
+  color: var(--ink-2);
+}
+.foot__cols {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: 48px;
+}
+.foot h4 {
+  font-family: 'Inter', sans-serif;
+  font-size: .6875rem; font-weight: 500;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ink); margin-bottom: 20px;
+}
+.foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 11px; }
+.foot a:hover { color: var(--bronze); }
+.foot__logo .logo { text-align: left; margin-bottom: 20px; }
+.foot__legal {
+  margin-top: 56px; padding-top: 26px;
+  border-top: 1px solid var(--line-2);
+  font-size: .75rem; color: var(--ink-3);
+  display: flex; flex-wrap: wrap; gap: 10px 28px;
+}
+.foot__legal p { margin: 0; max-width: 78ch; }
+
+/* Служебная строка для приёмки макета. На рабочем сайте её нет. */
+.mockbar {
+  padding: 14px 0 0; margin-top: 22px;
+  border-top: 1px solid var(--line-2);
+  font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex; flex-wrap: wrap; gap: 8px 20px;
+}
+.mockbar a:hover { color: var(--bronze); }
+
+/* -------------------------------------------------- заглушки фотографий */
+
+/* Своих снимков пока нет, а серый прямоугольник убивает впечатление
+   от макета. Поэтому заглушка — тёплая подложка и контурный рисунок
+   предмета по типу товара. Когда придут фотографии, подложка меняется
+   на <img> без правки вёрстки. */
+.ph {
+  position: relative;
+  overflow: hidden;
+  background: var(--paper-2);
+  display: grid; place-items: center;
+}
+.ph--1 { background: linear-gradient(155deg, #f5f1ea, #e8e1d5); }
+.ph--2 { background: linear-gradient(155deg, #f2efe9, #e2dbd1); }
+.ph--3 { background: linear-gradient(155deg, #f4f0e8, #e6ded1); }
+.ph--4 { background: linear-gradient(155deg, #f1eee9, #ded8ce); }
+.ph--5 { background: linear-gradient(155deg, #f6f2ec, #e9e2d6); }
+
+.ph svg {
+  width: 62%; max-width: 250px; height: auto;
+  stroke: var(--bronze); fill: none;
+  stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round;
+  opacity: .3;
+  transition: transform 1.1s var(--ease), opacity var(--dur) var(--ease);
+}
+.ph__mark {
+  position: absolute; left: 0; right: 0; bottom: 14px;
+  text-align: center;
+  font-size: .5625rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--ink-3); opacity: .65;
+}
+
+/* ------------------------------------------------------ карточка товара */
+
+.grid { display: grid; gap: 44px 30px; }
+.grid--2 { grid-template-columns: repeat(2, 1fr); }
+.grid--3 { grid-template-columns: repeat(3, 1fr); }
+.grid--4 { grid-template-columns: repeat(4, 1fr); }
+
+.card { display: flex; flex-direction: column; position: relative; }
+.card__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  margin-bottom: 20px;
+  display: block;
+}
+.card__media .ph { position: absolute; inset: 0; }
+.card:hover .ph svg { transform: scale(1.045); opacity: .38; }
+
+/* Наличие видно, не открывая товар: по брифу это первое, что спрашивают. */
+.badge {
+  position: absolute; left: 14px; top: 14px; z-index: 2;
+  padding: 6px 12px;
+  background: rgba(250,248,245,.92);
+  font-size: .5625rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase;
+}
+.badge--in { color: var(--green); }
+.badge--order { color: var(--ink-2); }
+
+.card__brand {
+  font-size: .625rem; font-weight: 500;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--bronze);
+  margin-bottom: 9px;
+}
+.card__brand a:hover { color: var(--bronze-2); text-decoration: underline; text-underline-offset: 3px; }
+.card__name {
+  display: block;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.375rem; font-weight: 400; line-height: 1.2;
+  margin-bottom: 7px;
+  transition: color var(--dur) var(--ease);
+}
+.card:hover .card__name { color: var(--bronze-2); }
+.card__lead { font-size: .8125rem; color: var(--ink-3); margin-bottom: 12px; }
+.card__price {
+  margin-top: auto;
+  font-size: .9375rem;
+  letter-spacing: .02em;
+}
+.card__price em { font-style: normal; color: var(--ink-3); }
+
+/* Кнопка подборки проявляется на наведении: на десктопе она не мешает
+   смотреть каталог, на тач-устройствах показана всегда. */
+.card__add {
+  margin-top: 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+  font-size: .625rem; font-weight: 500;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-2);
+  text-align: left;
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.card:hover .card__add, .card__add:focus-visible { opacity: 1; }
+.card__add:hover { color: var(--bronze); }
+.card__add.is-in { opacity: 1; color: var(--bronze); }
+
+@media (hover: none) {
+  .card__add { opacity: 1; }
+}
+
+/* ------------------------------------------------------------- главная */
+
+.hero {
+  position: relative;
+  min-height: min(78vh, 720px);
+  display: grid; align-items: center;
+  overflow: hidden;
+  background: linear-gradient(150deg, #f3efe7 0%, #e8e0d3 55%, #ded4c4 100%);
+}
+.hero__art {
+  position: absolute; right: -4%; bottom: -6%;
+  width: min(60%, 760px);
+  stroke: var(--bronze); fill: none; stroke-width: .9;
+  stroke-linecap: round; stroke-linejoin: round;
+  opacity: .16;
+  pointer-events: none;
+}
+.hero__in { position: relative; padding: 96px 0; }
+.hero .eyebrow { display: block; margin-bottom: 26px; }
+.hero h1 { max-width: 15ch; }
+.hero__sub { margin: 28px 0 40px; max-width: 46ch; color: var(--ink-2); font-size: 1.0625rem; }
+.hero__note {
+  position: absolute; right: var(--gut); bottom: 22px;
+  font-size: .5625rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Полоса доводов под первым экраном: снимает главные возражения
+   до того, как человек уйдёт в каталог. */
+.claims {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--line);
+}
+.claims div {
+  padding: 40px 34px 40px 0;
+  border-left: 1px solid var(--line);
+  padding-left: 34px;
+}
+.claims div:first-child { border-left: 0; padding-left: 0; }
+.claims b {
+  display: block;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.5rem; font-weight: 400; margin-bottom: 8px;
+}
+.claims span { font-size: .875rem; color: var(--ink-2); }
+
+/* Плитки разделов. Первая крупная: лидеры продаж должны быть заметно
+   больше остальных, а не одинаковыми квадратами в общем ряду. */
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+.tile { position: relative; display: block; overflow: hidden; }
+.tile .ph { position: absolute; inset: 0; }
+.tile__box { position: relative; aspect-ratio: 1 / 1; }
+.tile--big { grid-column: span 2; grid-row: span 2; }
+.tile--big .tile__box { aspect-ratio: auto; height: 100%; min-height: 100%; }
+.tile__cap {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  padding: 26px 24px;
+  background: linear-gradient(to top, rgba(26,25,23,.5), rgba(26,25,23,0));
+  color: #fff;
+}
+.tile__cap h3 { font-size: 1.5rem; color: #fff; }
+.tile--big .tile__cap h3 { font-size: 2.1rem; }
+.tile__cap span {
+  display: block; margin-bottom: 8px;
+  font-size: .6875rem; letter-spacing: .18em; text-transform: uppercase; opacity: .8;
+}
+.tile .ph svg { transition: transform 1.2s var(--ease); }
+.tile:hover .ph svg { transform: scale(1.06); }
+
+/* Ряд фабрик: за ними приходят по имени, поэтому это имена в наборе,
+   а не мелкие логотипы в ряд. */
+/* Двенадцать ячеек: одиннадцать фабрик и ссылка на общий список.
+   Число делится на 6, 4 и 2 — сетка остаётся полной на всех
+   разрешениях, без обрубленного ряда. */
+.brands {
+  display: grid; grid-template-columns: repeat(6, 1fr);
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.brands a {
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 38px 18px;
+  text-align: center;
+  transition: background var(--dur) var(--ease);
+}
+.brands a:hover { background: var(--paper-2); }
+.brands b {
+  display: block;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.25rem; font-weight: 400; line-height: 1.2;
+}
+.brands span { display: block; margin-top: 8px; font-size: .625rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3); }
+
+/* Блок шоурума. Половина заявок — это визит, а не форма, поэтому
+   ему отведён полноценный экран, а не строчка в контактах. */
+.showroom { display: grid; grid-template-columns: 1.15fr 1fr; }
+.showroom__art { position: relative; min-height: 520px; }
+.showroom__art .ph { position: absolute; inset: 0; }
+/* В крупном блоке контур должен масштабироваться вместе с ним,
+   иначе рисунок теряется посередине пустого поля. */
+.showroom__art .ph svg { width: 54%; max-width: 460px; }
+.showroom__txt {
+  background: var(--ink); color: var(--paper);
+  padding: 76px 64px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.showroom__txt h2 { color: var(--paper); }
+.showroom__txt .eyebrow { color: rgba(250,248,245,.55); display: block; margin-bottom: 22px; }
+.showroom__txt p { color: rgba(250,248,245,.72); max-width: 40ch; }
+.showroom__facts { margin: 30px 0 38px; display: grid; gap: 14px; }
+.showroom__facts div { display: flex; gap: 18px; font-size: .9375rem; }
+.showroom__facts b {
+  flex: 0 0 118px; font-weight: 400;
+  font-size: .6875rem; letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(250,248,245,.5); padding-top: 4px;
+}
+
+/* Статьи — верх воронки: «как выбрать», «сколько ждать поставку». */
+.post { display: block; }
+.post__box { position: relative; aspect-ratio: 3 / 2; margin-bottom: 18px; }
+.post__box .ph { position: absolute; inset: 0; }
+.post h3 { font-size: 1.375rem; margin-bottom: 10px; }
+.post:hover h3 { color: var(--bronze-2); }
+
+/* ------------------------------------------------------------- каталог */
+
+.crumbs {
+  font-size: .75rem; color: var(--ink-3);
+  padding: 26px 0; letter-spacing: .04em;
+}
+.crumbs a:hover { color: var(--bronze); }
+.crumbs span { margin: 0 8px; opacity: .5; }
+
+.cat { display: grid; grid-template-columns: 246px 1fr; gap: 64px; align-items: start; }
+
+.cat__head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 24px; flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+/* Переключатель наличия. По словам заказчицы — самый нажимаемый
+   элемент каталога, поэтому он стоит над списком, а не внутри фильтров. */
+.stock {
+  display: inline-flex;
+  border: 1px solid var(--line-2);
+}
+.stock button {
+  padding: 13px 26px;
+  font-size: .6875rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--ink-2);
+  border-right: 1px solid var(--line-2);
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.stock button:last-child { border-right: 0; }
+.stock button:hover { color: var(--ink); }
+.stock button.is-on { background: var(--ink); color: var(--paper); }
+
+.toolbar {
+  display: flex; align-items: center; gap: 22px;
+  padding-bottom: 18px; margin-bottom: 40px;
+  border-bottom: 1px solid var(--line);
+}
+.toolbar__found { font-size: .8125rem; color: var(--ink-3); letter-spacing: .04em; }
+.toolbar__sort { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.toolbar select {
+  border: 0; border-bottom: 1px solid var(--line-2);
+  background: none; padding: 5px 22px 5px 2px;
+  font-size: .8125rem;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-2) 50%),
+                    linear-gradient(135deg, var(--ink-2) 50%, transparent 50%);
+  background-position: right 8px center, right 3px center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+.toolbar select:focus { outline: 0; border-bottom-color: var(--bronze); }
+
+/* ------------------------------------------------------------- фильтры */
+
+.filters { position: sticky; top: 140px; }
+.fgroup { padding: 22px 0; border-bottom: 1px solid var(--line); }
+.fgroup:first-child { padding-top: 0; }
+.fgroup > b {
+  display: block; margin-bottom: 15px;
+  font-size: .625rem; font-weight: 500;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3);
+}
+.fgroup label {
+  display: flex; align-items: center; gap: 11px;
+  padding: 6px 0; font-size: .875rem; cursor: pointer;
+  color: var(--ink-2);
+  transition: color var(--dur) var(--ease);
+}
+.fgroup label:hover { color: var(--ink); }
+.fgroup .n { margin-left: auto; font-size: .6875rem; color: var(--ink-3); }
+
+/* Свои чекбоксы и радио: системные элементы управления — единственное
+   место, где стандартный интерфейс браузера ломает набор страницы. */
+.fgroup input[type=checkbox], .fgroup input[type=radio] {
+  appearance: none; margin: 0;
+  width: 13px; height: 13px; flex: 0 0 13px;
+  border: 1px solid var(--line-2);
+  background: var(--paper);
+  position: relative;
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.fgroup input[type=radio] { border-radius: 50%; }
+.fgroup input:hover { border-color: var(--ink-3); }
+.fgroup input:checked { border-color: var(--bronze); background: var(--bronze); }
+.fgroup input[type=checkbox]:checked::after {
+  content: ''; position: absolute; left: 3px; top: .5px;
+  width: 4px; height: 8px;
+  border: solid var(--paper); border-width: 0 1.4px 1.4px 0;
+  transform: rotate(42deg);
+}
+.fgroup input[type=radio]:checked::after {
+  content: ''; position: absolute; inset: 3px;
+  border-radius: 50%; background: var(--paper);
+}
+.fgroup label:has(input:checked) { color: var(--ink); }
+
+/* Разделы каталога отделены от фильтров: раздел отвечает «где я»,
+   фильтр — «что показать внутри». Это разные по смыслу вещи. */
+.fgroup--nav > b { color: var(--ink); }
+.fgroup--nav label:has(input:checked) { color: var(--bronze-2); }
+
+.price-row { display: flex; align-items: center; gap: 12px; }
+.price-row input {
+  width: 100%; min-width: 0;
+  border: 0; border-bottom: 1px solid var(--line-2);
+  background: none; padding: 7px 0; font-size: .875rem;
+}
+.price-row input:focus { outline: 0; border-bottom-color: var(--bronze); }
+.price-row span { color: var(--ink-3); }
+
+.price-slider { width: 100%; margin-top: 18px; appearance: none; background: none; }
+.price-slider::-webkit-slider-runnable-track { height: 1px; background: var(--line-2); }
+.price-slider::-moz-range-track { height: 1px; background: var(--line-2); }
+.price-slider::-webkit-slider-thumb {
+  appearance: none; width: 13px; height: 13px; margin-top: -6px;
+  border-radius: 50%; background: var(--ink); cursor: pointer;
+}
+.price-slider::-moz-range-thumb {
+  width: 13px; height: 13px; border: 0;
+  border-radius: 50%; background: var(--ink); cursor: pointer;
+}
+
+.freset {
+  margin-top: 22px;
+  font-size: .6875rem; font-weight: 500;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-3);
+  transition: color var(--dur) var(--ease);
+}
+.freset:hover { color: var(--bronze); }
+
+/* Длинные списки свёрнуты. У материалов это критично: их больше двадцати,
+   и развёрнутый список делает колонку фильтров вдвое длиннее каталога. */
+.fgroup label.is-extra { display: none; }
+.fgroup.is-open label.is-extra { display: flex; }
+.fmore {
+  margin-top: 10px;
+  font-size: .6875rem; font-weight: 500;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--bronze);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--dur) var(--ease);
+}
+.fmore:hover { border-bottom-color: var(--bronze); }
+
+.fopen, .fclose { display: none; }
+
+.empty { padding: 80px 0; text-align: center; }
+.empty h3 { margin-bottom: 14px; }
+
+/* -------------------------------------------------------- карточка товара */
+
+.prod { display: grid; grid-template-columns: 1.25fr 1fr; gap: 72px; align-items: start; }
+
+.gal__main { position: relative; aspect-ratio: 4 / 5; }
+.gal__main .ph { position: absolute; inset: 0; }
+.gal__row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 12px; }
+.gal__row .ph { aspect-ratio: 1 / 1; cursor: pointer; }
+.gal__row .ph.is-on { outline: 1px solid var(--bronze); outline-offset: -1px; }
+
+.prod__side { position: sticky; top: 140px; }
+.prod__brand { display: inline-block; margin-bottom: 16px; }
+.prod__brand:hover { color: var(--bronze-2); }
+.prod h1 { margin-bottom: 18px; }
+/* Цифры принудительно в верхний регистр: у антиквы по умолчанию
+   минускульные цифры, и «940 000» в них читается как набор разновысоких
+   знаков. В тексте это красиво, в цене — мешает. */
+.prod__price {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.4rem; font-weight: 300;
+  font-variant-numeric: lining-nums;
+  margin: 26px 0 6px;
+}
+.prod__price em { font-style: normal; font-size: 1.9rem; color: var(--ink-2); }
+.prod__stock { font-size: .8125rem; letter-spacing: .04em; }
+.prod__stock.in { color: var(--green); }
+.prod__stock.order { color: var(--ink-2); }
+
+/* Срок поставки и отделка — первое, что спрашивают. Поэтому они здесь,
+   рядом с ценой, а не в таблице характеристик внизу страницы. */
+.answers {
+  margin: 32px 0;
+  border-top: 1px solid var(--line);
+}
+.answers div {
+  display: flex; gap: 22px;
+  padding: 15px 0; border-bottom: 1px solid var(--line);
+  font-size: .9375rem;
+}
+.answers b {
+  flex: 0 0 148px; font-weight: 400;
+  font-size: .6875rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--ink-3); padding-top: 4px;
+}
+
+.specs { width: 100%; border-collapse: collapse; margin-top: 22px; }
+.specs td { padding: 13px 0; border-bottom: 1px solid var(--line); font-size: .875rem; vertical-align: top; }
+.specs td:first-child { width: 45%; color: var(--ink-3); }
+
+.prod__block { margin-top: 52px; }
+.prod__block h2 { margin-bottom: 18px; }
+.prod__block p { color: var(--ink-2); max-width: 62ch; }
+
+.offer-note {
+  margin-top: 26px; padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: .75rem; color: var(--ink-3); line-height: 1.6;
+}
+
+/* ------------------------------------------------------------- фабрики */
+
+.fab__head {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 72px;
+  align-items: center; margin-bottom: 30px;
+}
+.fab__mark {
+  aspect-ratio: 16 / 10; position: relative;
+}
+.fab__mark .ph { position: absolute; inset: 0; }
+.fab__name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2.2rem, 4.4vw, 3.6rem); font-weight: 300;
+  letter-spacing: .02em;
+}
+.fab__text { margin-top: 24px; color: var(--ink-2); max-width: 50ch; }
+.fab__stats { display: flex; gap: 46px; margin-top: 34px; }
+.fab__stats b {
+  display: block;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2rem; font-weight: 300;
+  font-variant-numeric: lining-nums;
+}
+.fab__stats span { font-size: .625rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3); }
+
+/* ------------------------------------------------------- подборка и заявка */
+
+.req { display: grid; grid-template-columns: 1.15fr 1fr; gap: 72px; align-items: start; }
+
+.picked { border-top: 1px solid var(--line); }
+.picked__row {
+  display: flex; align-items: center; gap: 22px;
+  padding: 22px 0; border-bottom: 1px solid var(--line);
+}
+.picked .ph { width: 88px; height: 110px; flex: 0 0 88px; }
+.picked__name { display: block; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.3rem; }
+.picked__name:hover { color: var(--bronze-2); }
+.picked__meta { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-top: 6px; }
+.picked__price { margin-left: auto; text-align: right; font-size: .9375rem; white-space: nowrap; }
+.picked__x {
+  flex: 0 0 auto; width: 30px; height: 30px;
+  display: grid; place-items: center;
+  color: var(--ink-3); font-size: 1.1rem; line-height: 1;
+  transition: color var(--dur) var(--ease);
+}
+.picked__x:hover { color: var(--bronze); }
+.picked__empty { padding: 70px 0; text-align: center; }
+
+.sum {
+  margin-top: 28px; padding-top: 22px;
+  border-top: 1px solid var(--line-2);
+  display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+}
+.sum:empty { display: none; }
+.sum b {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.9rem; font-weight: 300;
+  font-variant-numeric: lining-nums;
+}
+
+.form { display: grid; gap: 24px; }
+/* Только прямой потомок: иначе подпись поля перекрасила бы и подписи
+   галочек, которые лежат внутри того же блока. */
+.field > label, .fieldlab {
+  display: block; margin-bottom: 8px;
+  font-size: .625rem; font-weight: 500;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3);
+}
+.field input, .field textarea {
+  width: 100%;
+  border: 0; border-bottom: 1px solid var(--line-2);
+  background: none; padding: 9px 0;
+  font-size: .9375rem;
+}
+.field textarea { resize: vertical; min-height: 84px; }
+.field input:focus, .field textarea:focus { outline: 0; border-bottom-color: var(--bronze); }
+
+.checks { display: grid; gap: 10px; }
+.checks label {
+  display: flex; align-items: center; gap: 11px; margin: 0;
+  font-size: .875rem; font-weight: 400;
+  letter-spacing: 0; text-transform: none;
+  color: var(--ink-2); cursor: pointer;
+}
+.checks label:hover { color: var(--ink); }
+.checks input {
+  appearance: none; margin: 0; width: 13px; height: 13px; flex: 0 0 13px;
+  border: 1px solid var(--line-2); background: var(--paper); position: relative;
+}
+.checks input:checked { border-color: var(--bronze); background: var(--bronze); }
+.checks input:checked::after {
+  content: ''; position: absolute; left: 3px; top: .5px;
+  width: 4px; height: 8px;
+  border: solid var(--paper); border-width: 0 1.4px 1.4px 0;
+  transform: rotate(42deg);
+}
+
+/* Согласие на обработку данных: не предзаполнено, со ссылкой на политику.
+   Без него форма не отправляется — требование 152-ФЗ. */
+.agree { display: flex; gap: 12px; align-items: flex-start; font-size: .75rem; color: var(--ink-2); line-height: 1.55; cursor: pointer; }
+.agree input {
+  appearance: none; margin: 2px 0 0; width: 13px; height: 13px; flex: 0 0 13px;
+  border: 1px solid var(--line-2); background: var(--paper); position: relative;
+}
+.agree input:checked { border-color: var(--bronze); background: var(--bronze); }
+.agree input:checked::after {
+  content: ''; position: absolute; left: 3px; top: .5px;
+  width: 4px; height: 8px;
+  border: solid var(--paper); border-width: 0 1.4px 1.4px 0;
+  transform: rotate(42deg);
+}
+.agree a { text-decoration: underline; text-underline-offset: 2px; }
+
+.sent { padding: 60px 0; }
+.sent h2 { margin-bottom: 16px; }
+
+/* ------------------------------------------------------------- адаптив */
+
+@media (max-width: 1180px) {
+  :root { --gut: 28px; }
+  .cat { grid-template-columns: 210px 1fr; gap: 40px; }
+  .prod { gap: 44px; }
+  .brands { grid-template-columns: repeat(4, 1fr); }
+  .showroom__txt { padding: 56px 40px; }
+}
+
+@media (max-width: 980px) {
+  .section { padding: 68px 0; }
+  .nav { gap: 26px; }
+  .grid--4 { grid-template-columns: repeat(3, 1fr); }
+  .claims { grid-template-columns: repeat(2, 1fr); }
+  .claims div:nth-child(3) { border-left: 0; padding-left: 0; }
+  .claims div:nth-child(1), .claims div:nth-child(2) { border-bottom: 1px solid var(--line); }
+  .tiles { grid-template-columns: repeat(2, 1fr); }
+  .tile--big { grid-column: span 2; grid-row: span 1; }
+  .tile--big .tile__box { aspect-ratio: 16 / 10; min-height: 0; }
+  .showroom { grid-template-columns: 1fr; }
+  .showroom__art { min-height: 340px; }
+  .prod { grid-template-columns: 1fr; }
+  .prod__side { position: static; }
+  .req { grid-template-columns: 1fr; }
+  .fab__head { grid-template-columns: 1fr; gap: 32px; }
+  .foot__cols { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+
+  /* Фильтры на мобильном — панель на весь экран по кнопке.
+     В боковой колонке их держать негде. */
+  .cat { grid-template-columns: 1fr; gap: 0; }
+  .fopen {
+    display: block; width: 100%; margin-bottom: 26px;
+    padding: 15px; border: 1px solid var(--ink);
+    font-size: .6875rem; font-weight: 500;
+    letter-spacing: .18em; text-transform: uppercase; text-align: center;
+  }
+  .filters {
+    position: fixed; inset: 0; z-index: 90;
+    background: var(--paper);
+    padding: 26px var(--gut) 100px;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform var(--dur) var(--ease), visibility var(--dur);
+    top: 0;
+  }
+  .filters.is-open { transform: none; visibility: visible; }
+
+  /* Кнопка «показать результаты» появляется только вместе с панелью,
+     иначе она висела бы поверх каталога всё время. */
+  .filters.is-open ~ .fclose {
+    display: block;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 91;
+    padding: 19px; background: var(--ink); color: var(--paper);
+    font-size: .6875rem; font-weight: 500;
+    letter-spacing: .18em; text-transform: uppercase; text-align: center;
+  }
+}
+
+@media (max-width: 760px) {
+  .head__row { grid-template-columns: auto 1fr auto; gap: 12px; padding: 18px 0 16px; }
+  .head__left { gap: 10px; }
+  .burger { display: block; }
+  .topbar__geo { display: none; }
+  .topbar .wrap { justify-content: space-between; }
+  .iconbtn span:not(.iconbtn__n) { display: none; }
+  /* Только в шапке: там логотип зажат бургером и корзиной. В подвале
+     места достаточно, и уменьшать его незачем. */
+  .head .logo__name { font-size: 1rem; letter-spacing: .16em; text-indent: .16em; }
+  .head .logo__sub { font-size: .4375rem; letter-spacing: .16em; text-indent: .16em; }
+
+  .nav {
+    display: none;
+    position: fixed; inset: 0; z-index: 1;
+    background: var(--paper);
+    flex-direction: column; justify-content: flex-start;
+    gap: 0; padding: 116px var(--gut) 40px;
+    overflow-y: auto;
+  }
+  .nav.is-open { display: flex; }
+  .nav a {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.6rem; font-weight: 300;
+    letter-spacing: 0; text-transform: none;
+    color: var(--ink);
+    padding: 16px 0; border-bottom: 1px solid var(--line);
+  }
+  .nav a::after { display: none; }
+
+  /* Заголовок секции и ссылка рядом с ним на узком экране не помещаются
+     в строку: заголовок начинает переноситься по одному слову. */
+  .section__head { flex-direction: column; align-items: flex-start; gap: 18px; margin-bottom: 30px; }
+  .hero .btn-row { flex-direction: column; align-items: stretch; }
+  .hero .btn { justify-content: center; }
+
+  .grid { gap: 34px 18px; }
+  .grid--4, .grid--3 { grid-template-columns: repeat(2, 1fr); }
+  .grid--2 { grid-template-columns: 1fr; }
+  .brands { grid-template-columns: repeat(2, 1fr); }
+  .hero { min-height: 0; }
+  .hero__in { padding: 64px 0 80px; }
+  .hero__art { width: 90%; right: -18%; opacity: .12; }
+  .hero__note { display: none; }
+  .showroom__txt { padding: 44px 28px; }
+  .showroom__facts b { flex-basis: 96px; }
+  .gal__row { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .answers b { flex-basis: 108px; }
+  .picked .ph { width: 66px; height: 82px; flex-basis: 66px; }
+  .picked__price { width: 100%; text-align: left; margin: 8px 0 0; order: 5; }
+  .foot { padding: 56px 0 30px; }
+  .foot__cols { grid-template-columns: 1fr; gap: 34px; }
+  .card__media { margin-bottom: 14px; }
+}
+
+@media (max-width: 460px) {
+  :root { --gut: 20px; }
+
+  /* Подпись под знаком в шапке убираем: на узком экране она съедает
+     ширину, которой не хватает бургеру и корзине. В подвале остаётся. */
+  .head .logo__sub { display: none; }
+  .head .logo__name { font-size: .9375rem; letter-spacing: .13em; text-indent: .13em; }
+
+  /* Каталог остаётся в две колонки и на узком экране. Одна колонка
+     во всю ширину растягивает главную на пятнадцать экранов прокрутки,
+     а карточка мебели читается и в половину ширины. */
+  .grid { gap: 26px 14px; }
+  .tiles { gap: 14px; }
+  .card__name { font-size: 1.125rem; }
+  .card__lead, .card__price { font-size: .8125rem; }
+  .badge { left: 8px; top: 8px; padding: 5px 8px; font-size: .5rem; letter-spacing: .12em; }
+  .tile__cap { padding: 16px 14px; }
+  .tile__cap h3 { font-size: 1.125rem; }
+  .tile--big .tile__cap h3 { font-size: 1.5rem; }
+  .claims { grid-template-columns: 1fr; }
+  .claims div { border-left: 0; padding-left: 0; border-bottom: 1px solid var(--line); }
+  .stock { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; }
+  .stock button { border-right: 1px solid var(--line-2); padding: 13px 6px; letter-spacing: .1em; }
+  .toolbar { flex-wrap: wrap; gap: 12px; }
+  .toolbar__sort { margin-left: 0; }
+}
