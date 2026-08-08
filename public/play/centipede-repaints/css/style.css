@@ -895,7 +895,7 @@ button, input, select, textarea {
    схлопываются, и порядок чтения делает то же самое сам собой. */
 .sketch {
   display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr 1fr;
+  grid-template-columns: 1.3fr 1fr 1fr;
   gap: clamp(0.8rem, 1.8vw, 1.4rem);
   align-items: start;
 }
@@ -1459,11 +1459,11 @@ button, input, select, textarea {
   .header-cta { display: none; }
 }
 
-/* Превью уходит на всю ширину раньше остальных: рядом с тремя фотографиями
+/* Превью уходит на всю ширину раньше остальных: рядом с фотографиями
    в одну строку оно сжимается до размера, на котором уже не разобрать, что
    это рисунок, а не ещё один снимок. */
 @media (max-width: 1150px) {
-  .sketch { grid-template-columns: repeat(3, 1fr); }
+  .sketch { grid-template-columns: repeat(2, 1fr); }
   .sketch__item--plan { grid-column: 1 / -1; }
   .sketch__item--plan img { aspect-ratio: 16 / 9; }
 }
