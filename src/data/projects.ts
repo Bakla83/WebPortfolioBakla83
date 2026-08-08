@@ -269,8 +269,8 @@ export const PROJECTS: Project[] = [
       en: 'A landing for an artist who repaints model horses. In the repaint studio a coat is assembled piece by piece and the model changes colour as you watch.',
     },
     summary: {
-      ru: 'Первая работа в портфолио для настоящего заказчика: фотографии, клички моделей и текст о себе — авторские. Смысловой центр страницы — студия перекраса, где масть, отметина на морде, белые ноги и постановка переключаются по отдельности, а лошадь перерисовывается мгновенно. Сама лошадь нарисована кодом: один силуэт, десять мастей и многослойная светотень внутри маски по контуру — ровно так же тень кладут аэрографом на настоящей модели. Отдельный раздел отдан «Зите» — модели, которую художница разработала сама: нарисованное превью и три перекраса одной и той же скульптуры.',
-      en: 'The first piece in this portfolio made for a real client: the photographs, the model names and the artist statement are hers. The centre of the page is the repaint studio, where coat, face marking, white legs and stance are switched independently and the horse is redrawn instantly. The horse itself is drawn in code: one silhouette, ten coats and layered shading inside a mask that follows the outline — the same way an airbrush lays shadow on a real model. A separate section belongs to Zita, a model the artist sculpted herself: a drawn preview and three repaints of the same sculpture.',
+      ru: 'Первая работа в портфолио для настоящего заказчика: фотографии, клички моделей и текст о себе — авторские. Смысловой центр страницы — студия перекраса, где масть, отметина на морде, белые ноги и постановка переключаются по отдельности, а лошадь перерисовывается мгновенно. Сама лошадь нарисована кодом: один силуэт, десять мастей и многослойная светотень внутри маски по контуру — ровно так же тень кладут аэрографом на настоящей модели. Отдельный раздел отдан «Зите» — модели, которую художница разработала сама: нарисованное превью и два перекраса одной и той же скульптуры.',
+      en: 'The first piece in this portfolio made for a real client: the photographs, the model names and the artist statement are hers. The centre of the page is the repaint studio, where coat, face marking, white legs and stance are switched independently and the horse is redrawn instantly. The horse itself is drawn in code: one silhouette, ten coats and layered shading inside a mask that follows the outline — the same way an airbrush lays shadow on a real model. A separate section belongs to Zita, a model the artist sculpted herself: a drawn preview and two repaints of the same sculpture.',
     },
     highlights: {
       ru: [
@@ -326,8 +326,8 @@ export const PROJECTS: Project[] = [
         height: 1350,
         alt: { ru: 'Раздел о модели «Зита»', en: 'The section about the Zita model' },
         caption: {
-          ru: 'Зита — скульптура самой художницы: нарисованное превью и три перекраса одной модели',
-          en: 'Zita is the artist’s own sculpture: a drawn preview and three repaints of one model',
+          ru: 'Зита — модель по разработке самой художницы: нарисованное превью и два перекраса одной модели',
+          en: 'Zita is a model of the artist’s own design: a drawn preview and two repaints of one model',
         },
       },
       {

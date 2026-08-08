@@ -67,15 +67,14 @@ window.Centipede = window.Centipede || {};
       zita: {
         title: 'Зита — собственная модель',
         lead:
-          'Зита — не заводская отливка, ждущая перекраса, а модель, которую я ' +
-          'разработала сама. Сначала появилось нарисованное превью, затем ' +
+          'Зита была разработана мной, а скульптура появилась на свет благодаря ' +
+          'команде Horsestation. Сначала появилось нарисованное превью, затем ' +
           'скульптура, а дальше — перекрасы: одна и та же Зита в разных мастях.',
         planLabel: 'Превью',
         realLabel: 'Перекрас',
         alt1: 'Нарисованное превью модели Зита',
-        alt2: 'Зита — перекрас в светлой золотистой масти',
-        alt3: 'Зита — перекрас в тёмной масти',
-        alt4: 'Зита — перекрас в тёмно-буланой масти с золотым отливом',
+        alt2: 'Зита — перекрас в тёмной масти',
+        alt3: 'Зита — перекрас в тёмно-буланой масти с золотым отливом',
       },
 
       author: {
@@ -96,8 +95,7 @@ window.Centipede = window.Centipede || {};
         title2: 'есть характер',
         lead:
           'Я художник в мире конной миниатюры. Каждая лошадь здесь — полностью ' +
-          'ручная работа: снятая до чистого пластика и расписанная заново, ' +
-          'с проработанной мастью, отметинами и собственной историей.',
+          'ручная работа, с проработанной мастью, отметинами и собственной историей.',
         cta1: 'Посмотреть работы',
         cta2: 'Собрать масть',
         scroll: 'Листайте',
@@ -128,14 +126,14 @@ window.Centipede = window.Centipede || {};
            модель. Впишите свои значения, и строка появится сама. Порядок
            совпадает с img/work-1.jpg … work-8.jpg. */
         items: [
-          { name: 'Без названия',        scale: '', status: '' },
+          { name: 'Звезда',              scale: '', status: '' },
           { name: 'Сахар',               scale: '', status: '' },
           { name: 'Джадакисс',           scale: '', status: '' },
           { name: 'Барли',               scale: '', status: '' },
           { name: 'Рика',                scale: '', status: '' },
           { name: 'Винч',                scale: '', status: '' },
           { name: 'Центурион',           scale: '', status: '' },
-          { name: 'Саргрия с жеребёнком', scale: '', status: '' },
+          { name: 'Сангрия с жеребёнком', scale: '', status: '' },
         ],
       },
 
@@ -153,7 +151,7 @@ window.Centipede = window.Centipede || {};
           none: 'Без отметины',
           star: 'Звёздочка',
           blaze: 'Проточина',
-          bald: 'Лысина',
+          bald: 'Барсучья отметина',
         },
         socksNames: {
           0: 'Нет',
@@ -354,15 +352,14 @@ window.Centipede = window.Centipede || {};
       zita: {
         title: 'Zita — a model of my own',
         lead:
-          'Zita is not a factory casting waiting to be repainted but a model I ' +
-          'designed myself. First came the drawn preview, then the sculpture, and ' +
+          'Zita was designed by me, and the sculpture was brought to life by the ' +
+          'Horsestation team. First came the drawn preview, then the sculpture, and ' +
           'after that the repaints: the same Zita in different coats.',
         planLabel: 'Preview',
         realLabel: 'Repaint',
         alt1: 'Drawn preview of the Zita model',
-        alt2: 'Zita — a repaint in a light golden coat',
-        alt3: 'Zita — a repaint in a dark coat',
-        alt4: 'Zita — a repaint in a dark buckskin coat with a golden sheen',
+        alt2: 'Zita — a repaint in a dark coat',
+        alt3: 'Zita — a repaint in a dark buckskin coat with a golden sheen',
       },
 
       author: {
@@ -383,8 +380,7 @@ window.Centipede = window.Centipede || {};
         title2: 'a character',
         lead:
           'I am an artist in the world of equine miniatures. Every horse here is ' +
-          'entirely hand-made: stripped back to bare plastic and painted again, ' +
-          'with a worked-out coat, markings and a story of its own.',
+          'entirely hand-made, with a worked-out coat, markings and a story of its own.',
         cta1: 'See the work',
         cta2: 'Build a coat',
         scroll: 'Scroll',
@@ -413,14 +409,14 @@ window.Centipede = window.Centipede || {};
            а не слова, которые нужно переводить. Поправьте, если за границей
            модель известна под другим написанием. */
         items: [
-          { name: 'Untitled',          scale: '', status: '' },
+          { name: 'Zvezda',            scale: '', status: '' },
           { name: 'Sakhar',            scale: '', status: '' },
           { name: 'Jadakiss',          scale: '', status: '' },
           { name: 'Barley',            scale: '', status: '' },
           { name: 'Rika',              scale: '', status: '' },
           { name: 'Winch',             scale: '', status: '' },
           { name: 'Centurion',         scale: '', status: '' },
-          { name: 'Sargria with foal', scale: '', status: '' },
+          { name: 'Sangria with foal', scale: '', status: '' },
         ],
       },
 

@@ -33,7 +33,7 @@ window.Centipede = window.Centipede || {};
      здесь, а посетитель из конной миниатюры такое ловит сразу. */
   const WORK_COATS = [
     'appaloosa', 'cremello', 'palomino', 'pinto',
-    'grey', 'chestnut', 'buckskin', 'buckskin',
+    'grey', 'bay', 'buckskin', 'buckskin',
   ];
 
 
