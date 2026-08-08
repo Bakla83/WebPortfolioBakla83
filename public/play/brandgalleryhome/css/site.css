@@ -571,7 +571,11 @@ h1, h2, h3, h4 {
   opacity: .16;
   pointer-events: none;
 }
-.hero__in { position: relative; padding: 96px 0; }
+/* var(--gut) по бокам обязателен: сокращённая запись padding перебивает
+   поля, заданные в .wrap, и на телефоне заголовок героя упирался
+   в самый край экрана. На широком экране этого не видно — там ширину
+   держит max-width. */
+.hero__in { position: relative; padding: 96px var(--gut); }
 .hero .eyebrow { display: block; margin-bottom: 26px; }
 .hero h1 { max-width: 15ch; }
 .hero__sub { margin: 28px 0 40px; max-width: 46ch; color: var(--ink-2); font-size: 1.0625rem; }
@@ -1109,11 +1113,16 @@ h1, h2, h3, h4 {
   .grid--2 { grid-template-columns: 1fr; }
   .brands { grid-template-columns: repeat(2, 1fr); }
   .hero { min-height: 0; }
-  .hero__in { padding: 64px 0 80px; }
+  .hero__in { padding: 64px var(--gut) 80px; }
   .hero__art { width: 90%; right: -18%; opacity: .12; }
   .hero__note { display: none; }
   .showroom__txt { padding: 44px 28px; }
   .showroom__facts b { flex-basis: 96px; }
+  /* Подпись и значение в строку не помещаются: колонка подписи фиксированной
+     ширины плюс адрес шоурума не дают блоку сжаться, и вся страница уезжает
+     вбок. На узком экране подпись встаёт отдельной строкой над значением. */
+  .showroom__facts div { flex-wrap: wrap; gap: 2px 18px; }
+  .showroom__facts b { flex: 0 0 100%; padding-top: 0; }
   .gal__row { grid-template-columns: repeat(4, 1fr); gap: 8px; }
   .answers b { flex-basis: 108px; }
   .picked .ph { width: 66px; height: 82px; flex-basis: 66px; }

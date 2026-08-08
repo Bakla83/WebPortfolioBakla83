@@ -403,7 +403,9 @@ input, textarea, select { font: inherit; color: inherit; }
 
 /* ----------------------------------------------------------- каталог */
 
-.cat__top { padding: 34px 0 0; }
+/* Боковые поля из .wrap: без них шапка каталога на телефоне прилипала
+   к краю экрана — сокращённая запись padding их перебивает. */
+.cat__top { padding: 34px var(--gut) 0; }
 .crumbs { display: flex; flex-wrap: wrap; gap: 9px; font-size: 12px; color: var(--ink-3); margin-bottom: 22px; }
 .crumbs a:hover { color: var(--terra); }
 
@@ -570,28 +572,6 @@ input, textarea, select { font: inherit; color: inherit; }
 .foot__legal { padding-top: 26px; font-size: 12px; line-height: 1.7; }
 .foot__legal p { margin: 0 0 8px; }
 
-/* -------------------------------------------- полоса выбора варианта */
-
-/* Служебная полоса макета. На рабочем сайте её не будет. */
-.vbar {
-  position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
-  z-index: 90; display: flex; align-items: center; gap: 6px;
-  background: #fff; border: 1px solid var(--line);
-  box-shadow: 0 10px 34px rgba(0, 0, 0, .14);
-  padding: 6px; border-radius: 999px; max-width: calc(100vw - 24px);
-}
-.vbar__back { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #6b655c; padding: 8px 12px; white-space: nowrap; }
-.vbar__back:hover { color: #a2503a; }
-.vbar__set { display: flex; gap: 4px; }
-.vbar__set a {
-  display: flex; align-items: center; gap: 7px;
-  padding: 8px 14px; border-radius: 999px;
-  font-size: 12px; color: #6b655c; white-space: nowrap;
-}
-.vbar__set a b { font-weight: 600; color: #1a1917; }
-.vbar__set a.is-on { background: #191917; color: #fff; }
-.vbar__set a.is-on b { color: #fff; }
-
 /* ------------------------------------------------------------ адаптив */
 
 @media (max-width: 1200px) {
@@ -633,8 +613,13 @@ input, textarea, select { font: inherit; color: inherit; }
 
   .manifest { padding: 54px 0 60px; }
   .manifest__marks { grid-template-columns: 1fr; }
-  .fstrip__row { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .fstrip__row a span { font-size: 11px; }
+  /* minmax(0, 1fr) вместо 1fr: по умолчанию колонка сетки не сжимается
+     уже своего содержимого, и три подписи с длинными названиями мебели
+     раздували полосу фабрики шире экрана — страница ехала вбок.
+     min-width: 0 снимает то же ограничение с колонок самой полосы. */
+  .fstrip > * { min-width: 0; }
+  .fstrip__row { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .fstrip__row a span { font-size: 11px; overflow-wrap: anywhere; }
   .strip__head { flex-direction: column; align-items: flex-start; gap: 14px; margin-bottom: 30px; }
 
   /* На телефоне фильтры — панель на весь экран по кнопке.
@@ -662,10 +647,6 @@ input, textarea, select { font: inherit; color: inherit; }
   .picked__price { grid-column: 2 / 4; text-align: right; }
 
   .foot__cols { grid-template-columns: 1fr; gap: 30px; }
-  .vbar { bottom: 10px; padding: 4px; }
-  .vbar__back { display: none; }
-  .vbar__set a { padding: 7px 13px; font-size: 12px; gap: 0; }
-  .vbar__set a span { display: none; }
 }
 
 @media (max-width: 420px) {

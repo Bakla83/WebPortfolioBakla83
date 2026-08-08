@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Итальянская мебель премиум-класса в Краснодаре — Brand Gallery</title>
 <meta name="description" content="Салон итальянской мебели премиум-класса в Краснодаре. Прямые поставки с фабрик Италии, шоурум в городе, часть коллекций в наличии.">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/site.css">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../css/site.css">
+<link rel="stylesheet" href="css/d.css">
 </head>
 <body>
 
@@ -85,9 +86,14 @@
     </div>
   </section>
 
-  <!-- «Приходят за конкретными фабриками» — прямая цитата из брифа.
-       Это же самый недоиспользованный источник поискового трафика:
-       марочные запросы вроде «Meridiani Краснодар». -->
+  <!-- Отличие варианта D от A: вместо сетки логотипов внизу страницы —
+       лента фабрик, как в варианте B. У каждой марки своя полоса: имя,
+       рассказ, сколько позиций и три вещи, на которые можно нажать.
+
+       Смысл замены: «приходят за конкретными фабриками» — прямая цитата
+       из брифа, и марочные запросы вроде «Meridiani Краснодар» дают самый
+       тёплый трафик. С сетки логотипов на страницы фабрик почти не
+       заходили — с ленты заходят. -->
   <section class="section reveal">
     <div class="wrap">
       <div class="section__head">
@@ -97,7 +103,7 @@
         </div>
         <a class="linkline" href="factory.html">Все фабрики</a>
       </div>
-      <div class="brands" id="brands"></div>
+      <div id="fstrips"></div>
     </div>
   </section>
 
@@ -162,8 +168,9 @@
 }
 </script>
 
-<script src="js/data.js"></script>
-<script src="js/site.js"></script>
-<script src="js/switch.js"></script>
+<script src="../../js/data.js"></script>
+<script src="../../js/site.js"></script>
+<script src="../../js/switch.js"></script>
+<script src="js/d.js"></script>
 </body>
 </html>

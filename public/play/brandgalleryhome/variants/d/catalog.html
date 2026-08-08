@@ -6,7 +6,8 @@
 <title>Каталог — Brand Gallery, Краснодар</title>
 <meta name="description" content="Каталог итальянской мебели премиум-класса в Краснодаре: диваны, столы, гардеробные, кухни. Фильтр по цене, фабрике и наличию.">
 <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/c.css">
+<link rel="stylesheet" href="../../css/site.css">
+<link rel="stylesheet" href="css/d.css">
 </head>
 <body>
 
@@ -16,8 +17,10 @@
 
   <div class="cat__head">
     <h1 class="t-h1" id="ctitle">Каталог</h1>
-    <!-- Переключатель наличия над списком: по словам заказчицы это самый
-         нажимаемый элемент каталога. -->
+    <!-- Переключатель наличия стоит над списком, а не внутри фильтров:
+         по словам заказчицы это самый нажимаемый элемент каталога.
+         Есть цена — товар у нас или на складе в Москве; нет цены —
+         под заказ, цена ещё не заполнена. -->
     <div class="stock">
       <button data-stock="all">Все</button>
       <button data-stock="in">В наличии</button>
@@ -25,25 +28,18 @@
     </div>
   </div>
 
-  <!-- Полка марок и есть «страницы фабрик» этого варианта: выбрана одна
-       марка — под полкой разворачивается её описание. -->
-  <nav class="brandbar" id="brandbar" aria-label="Фабрики"></nav>
-  <div class="brandcard" id="brandcard"></div>
-
   <div class="cat">
 
     <aside>
+      <button class="fopen" id="fopen">Разделы и фильтры</button>
       <div class="filters" id="filters"></div>
       <button class="fclose" id="fclose">Показать результаты</button>
     </aside>
 
     <div>
       <div class="toolbar">
-        <div style="display:flex;align-items:center;gap:12px">
-          <button class="fopen" id="fopen">Фильтры</button>
-          <span class="toolbar__found" id="found"></span>
-        </div>
-        <div>
+        <span class="toolbar__found" id="found"></span>
+        <div class="toolbar__sort">
           <label class="tiny" for="sort">Сортировка</label>
           <select id="sort">
             <option value="default">по умолчанию</option>
@@ -54,11 +50,9 @@
         </div>
       </div>
 
-      <!-- Активные условия висят чипами: снять фильтр можно, не открывая
-           колонку. На телефоне это единственный способ увидеть, по чему
-           отфильтровано. -->
-      <div class="chips" id="chips"></div>
-
+      <!-- grid--4 вместо grid--3: второе заимствование, из варианта C.
+           На 355 позициях плотная сетка экономит заметную часть прокрутки,
+           а карточка мебели читается и в четверть ширины. -->
       <div class="grid grid--4" id="grid"></div>
     </div>
 
@@ -67,8 +61,8 @@
 </main>
 
 <script src="../../js/data.js"></script>
-<script src="../js/vlib.js"></script>
-<script src="js/c.js"></script>
+<script src="../../js/site.js"></script>
 <script src="../../js/switch.js"></script>
+<script src="js/d.js"></script>
 </body>
 </html>

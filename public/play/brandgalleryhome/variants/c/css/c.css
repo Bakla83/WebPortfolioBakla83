@@ -462,23 +462,6 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
 .foot__legal { padding-top: 20px; font-size: 12px; line-height: 1.65; }
 .foot__legal p { margin: 0 0 6px; }
 
-/* -------------------------------------------- полоса выбора варианта */
-
-.vbar {
-  position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
-  z-index: 90; display: flex; align-items: center; gap: 6px;
-  background: #fff; border: 1px solid var(--line);
-  box-shadow: 0 10px 34px rgba(0, 0, 0, .14);
-  padding: 6px; border-radius: 999px; max-width: calc(100vw - 24px);
-}
-.vbar__back { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); padding: 8px 12px; white-space: nowrap; }
-.vbar__back:hover { color: var(--brand); }
-.vbar__set { display: flex; gap: 4px; }
-.vbar__set a { display: flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px; font-size: 12px; color: var(--ink-2); white-space: nowrap; }
-.vbar__set a b { font-weight: 600; color: var(--ink); }
-.vbar__set a.is-on { background: var(--ink); color: #fff; }
-.vbar__set a.is-on b { color: #fff; }
-
 /* ------------------------------------------------------------ адаптив */
 
 @media (max-width: 1280px) {
@@ -536,10 +519,6 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
   .picked__x { grid-column: 3; grid-row: 1; }
   .picked__price { grid-column: 2 / 4; text-align: right; }
 
-  .vbar { bottom: 10px; padding: 4px; }
-  .vbar__back { display: none; }
-  .vbar__set a { padding: 7px 13px; font-size: 12px; gap: 0; }
-  .vbar__set a span { display: none; }
 }
 
 @media (max-width: 480px) {

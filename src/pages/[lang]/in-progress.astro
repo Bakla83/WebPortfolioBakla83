@@ -34,11 +34,11 @@ const shareUrl = new URL(DEMO_SRC, site).href;
 const content = {
   ru: {
     title: 'BrandGallery — салон итальянской мебели',
-    lead: 'Сайт мебельного салона в Краснодаре. Сейчас на стадии выбора дизайна: собраны три варианта планировки, заказчица выбирает один — дальше он доводится до пяти экранов и уходит в разработку.',
+    lead: 'Сайт мебельного салона в Краснодаре. Сейчас на стадии выбора дизайна: собраны четыре рабочих макета, заказчица отмечает, что нравится, — дальше выбранное доводится до пяти экранов и уходит в разработку.',
     stage: 'Стадия: выбор варианта дизайна',
     variantsTitle: 'Что показывается',
     variantsLead:
-      'Варианты различаются не цветом, а устройством: тем, куда человек попадает с главной и как ищет мебель. Каталог, фильтры и поиск у всех трёх общие — иначе сравнение было бы нечестным.',
+      'Варианты различаются не цветом, а устройством: тем, куда человек попадает с главной и как ищет мебель. Каталог, фильтры и поиск у всех четырёх общие — иначе сравнение было бы нечестным. Внизу каждой страницы полоса переключения: она открывает то же самое место в соседнем варианте.',
     variants: [
       {
         key: 'A',
@@ -55,6 +55,11 @@ const content = {
         name: 'Салон-магазин',
         text: 'Вход через поиск и наличие: короткая главная, плотный каталог в четыре колонки, липкий блок цены.',
       },
+      {
+        key: 'D',
+        name: 'То, что советую',
+        text: 'A как основа плюс лента фабрик из B и плотный каталог с липкой ценой из C. Собран отдельно, чтобы рекомендацию можно было посмотреть, а не представлять.',
+      },
     ],
     shareTitle: 'Ссылка для заказчицы',
     shareText:
@@ -68,11 +73,11 @@ const content = {
   },
   en: {
     title: 'BrandGallery — Italian furniture showroom',
-    lead: 'A website for a furniture showroom in Krasnodar. Currently at the design-choice stage: three layout options are built, the client picks one — then it is finished to five screens and goes into development.',
+    lead: 'A website for a furniture showroom in Krasnodar. Currently at the design-choice stage: four working mock-ups are built, the client marks what she likes — then the chosen parts are finished to five screens and go into development.',
     stage: 'Stage: choosing the design',
     variantsTitle: 'What is on show',
     variantsLead:
-      'The options differ in structure, not colour: where the home page sends you and how you look for furniture. Catalogue, filters and search are shared by all three — otherwise the comparison would not be fair.',
+      'The options differ in structure, not colour: where the home page sends you and how you look for furniture. Catalogue, filters and search are shared by all four — otherwise the comparison would not be fair. A strip at the bottom of every page opens the same place in the next variant.',
     variants: [
       {
         key: 'A',
@@ -88,6 +93,11 @@ const content = {
         key: 'C',
         name: 'Showroom shop',
         text: 'Entry through search and stock: a short home page, a dense four-column catalogue, a sticky price block.',
+      },
+      {
+        key: 'D',
+        name: 'What I recommend',
+        text: 'A as the base, plus the factory ribbon from B and the dense catalogue with a sticky price from C. Built separately so the recommendation can be looked at, not imagined.',
       },
     ],
     shareTitle: 'Link for the client',

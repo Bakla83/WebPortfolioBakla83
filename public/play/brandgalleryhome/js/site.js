@@ -267,7 +267,10 @@
         '<a href="product.html?id=1">карточка товара</a>' +
         '<a href="factory.html">фабрики</a>' +
         '<a href="request.html">подборка и заявка</a>' +
-        '<a href="variants/index.html">все три варианта</a>' +
+        /* Ссылки на другие варианты здесь больше нет: она была относительной
+           и ломалась в варианте D, который живёт в подпапке. Переход между
+           вариантами теперь в общей полосе внизу (js/switch.js) — она
+           одинаково работает на всех страницах. */
       '</div>' +
       '</div></footer>';
 
@@ -350,7 +353,7 @@
           ph(p.type, p.id) +
           '<span><span class="qhits__name">' + esc(p.name) + '</span>' +
           '<span class="qhits__meta">' + esc(p.factory) + '</span></span>' +
-          '<span class="qhits__price">' + (p.price ? money(p.price) : 'по запросу') + '</span>' +
+          '<span class="qhits__price">' + (p.price ? money(p.price) : 'ещё нет цены') + '</span>' +
           '</a>';
       }).join('');
     });
@@ -373,7 +376,7 @@
       '<a class="card__name" href="product.html?id=' + p.id + '">' + esc(p.name) + '</a>' +
       '<div class="card__lead">' + (p.lead ? 'Срок ' + p.lead : 'Готов к отгрузке') + '</div>' +
       '<div class="card__price">' +
-        (p.price ? money(p.price) : '<em>Цена по запросу</em>') + '</div>' +
+        (p.price ? money(p.price) : '<em>Ещё нет цены</em>') + '</div>' +
       '<button class="card__add' + (inPick ? ' is-in' : '') + '" data-add="' + p.id + '">' +
         (inPick ? 'В подборке' : 'В подборку') + '</button>' +
       '</article>';
@@ -451,13 +454,19 @@
         '</a>';
     }).join('');
 
-    // Одиннадцать фабрик плюс ссылка на общий список: ровно двенадцать
-    // ячеек, сетка не обрывается ни на одном разрешении.
-    $('#brands').innerHTML = Object.keys(D.FACTORIES).slice(0, 11).map(function (n) {
-      return '<a href="factory.html?f=' + encodeURIComponent(n) + '">' +
-        '<b>' + esc(n) + '</b><span>' + esc(D.FACTORIES[n].country) + '</span></a>';
-    }).join('') +
-      '<a href="factory.html"><b>Все фабрики</b><span>список целиком</span></a>';
+    /* Одиннадцать фабрик плюс ссылка на общий список: ровно двенадцать
+       ячеек, сетка не обрывается ни на одном разрешении.
+
+       Проверка на существование блока нужна варианту D: он строится на этом
+       же скрипте, но сетку логотипов там заменила лента фабрик. */
+    var brands = $('#brands');
+    if (brands) {
+      brands.innerHTML = Object.keys(D.FACTORIES).slice(0, 11).map(function (n) {
+        return '<a href="factory.html?f=' + encodeURIComponent(n) + '">' +
+          '<b>' + esc(n) + '</b><span>' + esc(D.FACTORIES[n].country) + '</span></a>';
+      }).join('') +
+        '<a href="factory.html"><b>Все фабрики</b><span>список целиком</span></a>';
+    }
 
     $('#showroomart').innerHTML = ph('interior', 3);
 
@@ -510,7 +519,7 @@
       if (skip !== 'material' && state.material.length && state.material.indexOf(p.material) === -1) return false;
       if (skip !== 'color' && state.color.length && state.color.indexOf(p.color) === -1) return false;
       if (skip !== 'style' && state.style.length && state.style.indexOf(p.style) === -1) return false;
-      // Товары без цены из ценового диапазона не выкидываем: «по запросу»
+      // Товары без цены из ценового диапазона не выкидываем: цена там
       // не значит «дороже максимума», и прятать их было бы враньём.
       if (p.price && (p.price < state.min || p.price > state.max)) return false;
       return true;
@@ -624,7 +633,7 @@
           '</div>' +
           '<input class="price-slider" type="range" id="prange" min="' + LO + '" max="' + HI +
             '" step="10000" value="' + state.max + '" aria-label="Верхняя граница цены">' +
-          '<div class="tiny" style="margin-top:10px">Позиции «по запросу» показываются всегда</div>' +
+          '<div class="tiny" style="margin-top:10px">Позиции без цены показываются всегда</div>' +
         '</div>' +
         checks('factory', 'Фабрика') +
         checks('material', 'Материал') +
@@ -773,7 +782,7 @@
         '<h1 class="t-h1">' + esc(p.name) + '</h1>' +
 
         '<div class="prod__price">' +
-          (p.price ? money(p.price) : '<em>Цена по запросу</em>') + '</div>' +
+          (p.price ? money(p.price) : '<em>Ещё нет цены</em>') + '</div>' +
         '<div class="prod__stock ' + (p.stock === 'order' ? 'order' : 'in') + '">' +
           D.STOCK[p.stock] + '</div>' +
 
@@ -953,7 +962,7 @@
               (p.lead ? ' · ' + p.lead : '') + '</div>' +
           '</div>' +
           '<div class="picked__price">' +
-            (p.price ? money(p.price) : '<span class="muted">по запросу</span>') + '</div>' +
+            (p.price ? money(p.price) : '<span class="muted">ещё нет цены</span>') + '</div>' +
           '<button class="picked__x" data-del="' + p.id + '" ' +
             'aria-label="Убрать из подборки">×</button>' +
           '</div>';
@@ -1004,4 +1013,13 @@
   initFactory();
   initRequest();
   initReveal();
+
+  /* Небольшой экспорт для варианта D: он собран на этом же скрипте и
+     дорисовывает поверх ленту фабрик. Без общих заглушек и склонений
+     ему пришлось бы завести свои копии, и два варианта разъехались бы
+     при первой правке. */
+  window.SITE = {
+    esc: esc, money: money, plural: plural, art: art, ph: ph,
+    byId: byId, bindAdd: bindAdd,
+  };
 })();

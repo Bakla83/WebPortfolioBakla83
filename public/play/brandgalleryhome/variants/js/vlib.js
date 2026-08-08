@@ -228,7 +228,7 @@ window.VLIB = (function () {
           ph(p.type, p.id) +
           '<span><span class="qhits__name">' + esc(p.name) + '</span>' +
           '<span class="qhits__meta">' + esc(p.factory) + '</span></span>' +
-          '<span class="qhits__price">' + (p.price ? money(p.price) : 'по запросу') + '</span>' +
+          '<span class="qhits__price">' + (p.price ? money(p.price) : 'ещё нет цены') + '</span>' +
           '</a>';
       }).join('');
     });
@@ -276,7 +276,7 @@ window.VLIB = (function () {
       if (skip !== 'material' && state.material.length && state.material.indexOf(p.material) === -1) return false;
       if (skip !== 'color' && state.color.length && state.color.indexOf(p.color) === -1) return false;
       if (skip !== 'style' && state.style.length && state.style.indexOf(p.style) === -1) return false;
-      // Товары без цены из ценового диапазона не выкидываем: «по запросу»
+      // Товары без цены из ценового диапазона не выкидываем: цена там
       // не значит «дороже максимума».
       if (p.price && (p.price < state.min || p.price > state.max)) return false;
       return true;
@@ -437,7 +437,7 @@ window.VLIB = (function () {
           '</div>' +
           '<input class="price-slider" type="range" id="prange" min="' + LO + '" max="' + HI +
             '" step="10000" value="' + state.max + '" aria-label="Верхняя граница цены">' +
-          '<div class="fnote">Позиции «по запросу» показываются всегда</div>' +
+          '<div class="fnote">Позиции без цены показываются всегда</div>' +
         '</div>' +
         checks('factory', 'Фабрика') +
         checks('material', 'Материал') +
@@ -594,7 +594,7 @@ window.VLIB = (function () {
               (p.lead ? ' · ' + p.lead : '') + '</div>' +
           '</div>' +
           '<div class="picked__price">' +
-            (p.price ? money(p.price) : '<span class="muted">по запросу</span>') + '</div>' +
+            (p.price ? money(p.price) : '<span class="muted">ещё нет цены</span>') + '</div>' +
           '<button class="picked__x" data-del="' + p.id + '" ' +
             'aria-label="Убрать из подборки">×</button>' +
           '</div>';
@@ -653,30 +653,11 @@ window.VLIB = (function () {
     items.forEach(function (el) { io.observe(el); });
   }
 
-  /* Полоса переключения между вариантами. Нужна только в макете:
-     заказчица должна сравнивать одно и то же место в трёх вариантах,
-     а не искать нужную вкладку. */
-  function switcher(cur) {
-    var V = [
-      ['../../index.html', 'A', 'светлая галерея'],
-      ['../b/index.html', 'B', 'дом фабрик'],
-      ['../c/index.html', 'C', 'салон-магазин'],
-    ];
-    // На узком экране остаётся только буква: три полных названия
-    // в одну строку не помещаются.
-    var html = '<div class="vbar"><a class="vbar__back" href="../index.html">Все три варианта</a>' +
-      '<span class="vbar__set">' + V.map(function (v) {
-        return '<a href="' + v[0] + '"' + (v[1] === cur ? ' class="is-on"' : '') +
-          ' title="' + v[2] + '"><span>BrandGallery</span><b>' + v[1] + '</b></a>';
-      }).join('') + '</span></div>';
-    document.body.insertAdjacentHTML('beforeend', html);
-  }
-
   return {
     D: D, $: $, $$: $$, esc: esc, money: money, plural: plural,
     picked: picked, toggle: toggle, paintCount: paintCount, bindAdd: bindAdd,
     byId: byId, ART: ART, ROOM_ART: ROOM_ART, art: art, ph: ph,
     initSearch: initSearch, catalog: catalog, request: request,
-    reveal: reveal, switcher: switcher,
+    reveal: reveal,
   };
 })();

@@ -1,0 +1,125 @@
+/* =========================================================================
+   BrandGallery D — надстройка над вариантом A.
+
+   Подключается ПОСЛЕ css/site.css и содержит только то, чем D от него
+   отличается. Своей палитры и своих шрифтов здесь нет намеренно: D — это
+   тот же светлый салон, и любая правка общего оформления должна
+   доезжать до него сама.
+
+   Всего три отличия:
+     1. лента фабрик на главной (взята из варианта B, перекрашена в палитру A);
+     2. липкий блок цены в карточке товара (взят из варианта C);
+     3. плотный каталог — сделан классом grid--4 в разметке, стилей не требует.
+   ========================================================================= */
+
+/* ------------------------------------------------------- лента фабрик */
+
+.fstrip {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: center;
+  padding: clamp(34px, 3.5vw, 52px) 0;
+  border-top: 1px solid var(--line);
+}
+
+.fstrip:last-child { border-bottom: 1px solid var(--line); }
+
+.fstrip__txt { min-width: 0; }
+
+.fstrip__txt .eyebrow { display: block; margin-bottom: 10px; }
+
+.fstrip__name {
+  margin: 0 0 14px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  line-height: 1.1;
+}
+
+.fstrip__name a { transition: color var(--dur) var(--ease); }
+.fstrip:hover .fstrip__name a { color: var(--bronze); }
+
+.fstrip__text {
+  margin: 0 0 18px;
+  color: var(--ink-2);
+  font-size: .9375rem;
+  max-width: 52ch;
+}
+
+.fstrip__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  font-size: .6875rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.fstrip__meta b { color: var(--green); font-weight: 500; }
+
+/* minmax(0, 1fr) вместо 1fr: колонка сетки по умолчанию не сжимается
+   уже своего содержимого, и три длинных названия мебели раздували бы
+   полосу шире экрана. */
+.fstrip__row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+
+.fstrip__row a { display: block; }
+
+.fstrip__row .ph { aspect-ratio: 4 / 5; }
+
+.fstrip__cap {
+  display: block;
+  margin-top: 10px;
+  font-size: .8125rem;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+  transition: color var(--dur) var(--ease);
+}
+
+.fstrip__row a:hover .fstrip__cap { color: var(--bronze); }
+
+/* ------------------------------------------ липкий блок цены в карточке */
+
+/* Правая колонка перестаёт быть липкой целиком: прилипает только блок
+   покупки, иначе прилипать нечему — колонка сама по себе самая длинная. */
+.prod__side { position: static; }
+
+.dbuy {
+  position: sticky;
+  top: 92px;
+  z-index: 1;
+  padding-bottom: 18px;
+  /* Фон обязателен: без него описание и таблица характеристик просвечивают
+     сквозь блок, когда проезжают под ним. */
+  background: var(--paper);
+}
+
+/* Тонкая черта появляется только когда блок реально прилип и под ним
+   что-то едет; в статичном положении она бы делила карточку пополам. */
+.dbuy::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: var(--line);
+  opacity: 0;
+  transition: opacity .2s var(--ease);
+}
+
+.dbuy.is-stuck::after { opacity: 1; }
+
+@media (max-width: 980px) {
+  /* На узком экране колонки становятся одна под другой, и липкий блок
+     начал бы перекрывать описание. Проще оставить его на месте. */
+  .dbuy { position: static; padding-bottom: 0; }
+  .dbuy::after { display: none; }
+
+  .fstrip { grid-template-columns: 1fr; gap: 22px; }
+}
+
+@media (max-width: 560px) {
+  .fstrip { padding: 26px 0; }
+  .fstrip__row { gap: 8px; }
+  .fstrip__cap { font-size: .75rem; }
+}

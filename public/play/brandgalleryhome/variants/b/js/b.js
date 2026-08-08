@@ -145,7 +145,7 @@
         esc(p.factory) + '</a></div>' +
       '<a class="card__name" href="product.html?id=' + p.id + '">' + esc(p.name) + '</a>' +
       '<div class="card__lead">' + (p.lead ? 'Срок ' + p.lead : 'Готов к отгрузке') + '</div>' +
-      '<div class="card__price">' + (p.price ? money(p.price) : '<em>Цена по запросу</em>') + '</div>' +
+      '<div class="card__price">' + (p.price ? money(p.price) : '<em>Ещё нет цены</em>') + '</div>' +
       '<button class="card__add' + (inPick ? ' is-in' : '') + '" data-add="' + p.id + '">' +
         (inPick ? 'В подборке' : 'В подборку') + '</button>' +
       '</article>';
@@ -374,7 +374,7 @@
         '<a class="eyebrow eyebrow--terra" href="factory.html?f=' + encodeURIComponent(p.factory) +
           '">' + esc(p.factory) + ' · ' + esc(p.country) + '</a>' +
         '<h1 class="t-h1">' + esc(p.name) + '</h1>' +
-        '<div class="prod__price">' + (p.price ? money(p.price) : '<em>Цена по запросу</em>') + '</div>' +
+        '<div class="prod__price">' + (p.price ? money(p.price) : '<em>Ещё нет цены</em>') + '</div>' +
         '<div class="prod__stock' + (p.stock === 'order' ? ' is-order' : '') + '">' +
           D.STOCK[p.stock] + '</div>' +
 
@@ -426,5 +426,4 @@
   initProduct();
   V.request({ picked: '#picked', sum: '#sum', form: '#reqform', sent: '#sent' });
   V.reveal();
-  V.switcher('B');
 })();
