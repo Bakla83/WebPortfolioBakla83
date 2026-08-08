@@ -31,9 +31,10 @@
     bag: '<svg viewBox="0 0 24 24"><path d="M5 7h14l-1.2 13H6.2z"/><path d="M9 7V5.5a3 3 0 0 1 6 0V7"/></svg>',
   };
 
+  /* «В наличии» в меню нет: это состояние товара, а не раздел, —
+     переключатель живёт в самом каталоге, над списком. */
   var NAV = [
     ['catalog.html', 'Весь каталог'],
-    ['catalog.html?stock=in', 'В наличии', 'stock'],
     ['catalog.html?type=divany', 'Диваны'],
     ['catalog.html?room=garderobnye', 'Гардеробные'],
     ['catalog.html?type=stoly', 'Столы и стулья'],
