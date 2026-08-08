@@ -197,11 +197,44 @@ ul.pm b { font-weight: 600; }
   color: var(--ink-3);
 }
 
-.vcard p { margin: 0; font-size: 15px; color: var(--ink-2); flex: 1; }
+.vcard p { margin: 0; font-size: 15px; color: var(--ink-2); }
+
+/* Кнопки прижаты к низу через auto, а не растягиванием абзаца: у карточки D
+   абзацев несколько, и flex: 1 растянул бы каждый из них. */
+.vcard .links { margin-top: auto; }
 
 /* Рекомендованный вариант выделен рамкой, а не цветом: подсказка
    должна быть заметной, но не должна выглядеть как реклама. */
 .vcard--d { border-color: var(--ink); border-width: 2px; }
+
+/* Список отличий. Нужен именно у D: он намеренно повторяет вариант A,
+   и без прямого перечисления разницу на первых экранах не заметить. */
+.diff { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+
+.diff li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+
+.diff li::before {
+  content: '';
+  position: absolute;
+  left: 4px; top: 9px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.diff b { color: var(--ink); }
+
+.diff__how {
+  font-size: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--paper-2);
+}
 
 /* ------------------------------------------------------ просьба и таблица */
 

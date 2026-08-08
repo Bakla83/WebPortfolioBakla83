@@ -24,6 +24,23 @@
   var S = window.SITE;
   if (!D || !S) return;
 
+  /* --------------------------------------------- марки на первом экране */
+
+  function initHeroMarks() {
+    var box = document.getElementById('heromarks');
+    if (!box) return;
+
+    // Шесть имён, а не одиннадцать: строка должна читаться одним взглядом
+    // и не переноситься на три ряда.
+    var names = Object.keys(D.FACTORIES).filter(function (n) {
+      return D.products.some(function (p) { return p.factory === n; });
+    }).slice(0, 6);
+
+    box.innerHTML = names.map(function (n) {
+      return '<a href="factory.html?f=' + encodeURIComponent(n) + '">' + S.esc(n) + '</a>';
+    }).join('') + '<a class="hero__marks-all" href="factory.html">все фабрики</a>';
+  }
+
   /* ------------------------------------------------------ лента фабрик */
 
   function initStrips() {
@@ -120,6 +137,7 @@
     }, { threshold: [1], rootMargin: -(top + 1) + 'px 0px 0px 0px' }).observe(buy);
   }
 
+  initHeroMarks();
   initStrips();
   initBuy();
 })();

@@ -12,7 +12,55 @@
      3. плотный каталог — сделан классом grid--4 в разметке, стилей не требует.
    ========================================================================= */
 
+/* -------------------------------------------- марки на первом экране */
+
+/* Первый экран у D чуть ниже, чем у A: строка марок должна помещаться
+   в него целиком, иначе она не работает — её просто не увидят. */
+.hero { min-height: min(70vh, 620px); }
+.hero__in { padding: 56px var(--gut) 62px; }
+
+/* Ширина под одну строку: во вторую строка марок уезжает под плавающую
+   полосу переключения вариантов, и на ноутбуке её не видно. */
+.hero__marks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 20px;
+  margin-top: 30px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line-2);
+  max-width: 960px;
+}
+
+.hero__marks a {
+  font-size: .75rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  transition: color var(--dur) var(--ease);
+}
+
+.hero__marks a:hover { color: var(--bronze); }
+
+.hero__marks-all {
+  color: var(--bronze) !important;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+}
+
+@media (max-width: 760px) {
+  .hero__marks { margin-top: 32px; padding-top: 18px; gap: 8px 16px; }
+  .hero__marks a { font-size: .6875rem; letter-spacing: .1em; }
+}
+
 /* ------------------------------------------------------- лента фабрик */
+
+/* Подложка отбивает ленту от остальной страницы. Без неё вариант D
+   на первых двух экранах не отличить от A, и сравнивать нечего. */
+.section--band {
+  background: var(--paper-2);
+  border-block: 1px solid var(--line);
+}
 
 .fstrip {
   display: grid;

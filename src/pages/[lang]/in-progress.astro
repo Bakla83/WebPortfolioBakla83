@@ -34,7 +34,7 @@ const shareUrl = new URL(DEMO_SRC, site).href;
 const content = {
   ru: {
     title: 'BrandGallery — салон итальянской мебели',
-    lead: 'Сайт мебельного салона в Краснодаре. Сейчас на стадии выбора дизайна: собраны четыре рабочих макета, заказчица отмечает, что нравится, — дальше выбранное доводится до пяти экранов и уходит в разработку.',
+    lead: 'Сайт мебельного салона в Краснодаре. Четыре рабочих макета: по ним можно ходить, искать мебель, складывать в подборку и отправлять заявку.',
     stage: 'Стадия: выбор варианта дизайна',
     variantsTitle: 'Что показывается',
     variantsLead:
@@ -61,19 +61,16 @@ const content = {
         text: 'A как основа плюс лента фабрик из B и плотный каталог с липкой ценой из C. Собран отдельно, чтобы рекомендацию можно было посмотреть, а не представлять.',
       },
     ],
-    shareTitle: 'Ссылка для заказчицы',
+    shareTitle: 'Ссылка',
     shareText:
       'Своего домена у сайта пока нет, поэтому макеты живут здесь. Ссылку можно отправить как есть — она открывает сразу страницу выбора, заходить в портфолио для этого не нужно.',
     shareOpen: 'Открыть',
-    noteTitle: 'Про эту страницу',
-    noteText:
-      'Страница закрыта от поисковиков и не попадает в карту сайта. Открыть её можно только через пункт «В процессе создания» в меню «Работы».',
     demoNote:
       'Внутри рамки — настоящие макеты: фильтры, поиск и подборка работают. С телефона лучше открывать по ссылке, в отдельной вкладке.',
   },
   en: {
     title: 'BrandGallery — Italian furniture showroom',
-    lead: 'A website for a furniture showroom in Krasnodar. Currently at the design-choice stage: four working mock-ups are built, the client marks what she likes — then the chosen parts are finished to five screens and go into development.',
+    lead: 'A website for a furniture showroom in Krasnodar. Four working mock-ups: you can walk through them, search for furniture, build a shortlist and send an enquiry.',
     stage: 'Stage: choosing the design',
     variantsTitle: 'What is on show',
     variantsLead:
@@ -100,13 +97,10 @@ const content = {
         text: 'A as the base, plus the factory ribbon from B and the dense catalogue with a sticky price from C. Built separately so the recommendation can be looked at, not imagined.',
       },
     ],
-    shareTitle: 'Link for the client',
+    shareTitle: 'Link',
     shareText:
       'The site has no domain of its own yet, so the mock-ups live here. The link can be sent as is — it opens the choice page directly, with no detour through the portfolio.',
     shareOpen: 'Open',
-    noteTitle: 'About this page',
-    noteText:
-      'The page is closed to search engines and stays out of the sitemap. The only way in is the “Work in progress” item in the “Work” menu.',
     demoNote:
       'Real mock-ups inside the frame: filters, search and the shortlist all work. On a phone it is better to open the link in its own tab.',
   },
@@ -169,11 +163,6 @@ const demo: ProjectDemo = {
       </ul>
 
       <LiveDemo demo={demo} lang={lang} title={content.title} />
-
-      <div class="note">
-        <b>{content.noteTitle}</b>
-        <p class="muted">{content.noteText}</p>
-      </div>
     </div>
   </section>
 </Base>
@@ -291,14 +280,4 @@ const demo: ProjectDemo = {
     font-size: 0.9rem;
   }
 
-  .note {
-    margin-top: var(--space-4);
-    padding-left: var(--space-2);
-    border-left: 2px solid var(--line-strong);
-  }
-
-  .note p {
-    margin: 0.3rem 0 0;
-    font-size: 0.9rem;
-  }
 </style>
