@@ -38,10 +38,10 @@
   var NAV = [
     ['factory.html', 'Фабрики', true],
     ['catalog.html', 'Каталог'],
-    ['#', 'Дизайнерам'],
-    ['#', 'О салоне'],
-    ['#', 'Статьи'],
-    ['#', 'Контакты'],
+    ['designers.html', 'Дизайнерам'],
+    ['about.html', 'О салоне'],
+    ['articles.html', 'Статьи'],
+    ['contacts.html', 'Контакты'],
   ];
 
   function logo() {
@@ -76,7 +76,9 @@
       '</div></div>' +
 
       '<nav class="nav" id="nav">' + NAV.map(function (n) {
-        var on = n[0] === here;
+        /* Страница статьи подсвечивает пункт «Статьи»: без этого раздел
+           внутри себя же выглядит как чужой. */
+        var on = n[0] === here || (here === 'article.html' && n[0] === 'articles.html');
         return '<a href="' + n[0] + '"' +
           (on ? ' class="is-on"' : (n[2] ? ' class="is-key"' : '')) + '>' + n[1] + '</a>';
       }).join('') + '</nav>' +
@@ -91,9 +93,9 @@
       return '<li><a href="factory.html?f=' + encodeURIComponent(n) + '">' + esc(n) + '</a></li>';
     }).join('');
 
-    var rooms = Object.keys(D.ROOMS).slice(0, 6).map(function (k) {
-      return '<li><a href="catalog.html?room=' + k + '">' + D.ROOMS[k] + '</a></li>';
-    }).join('');
+    /* Колонки «по помещению» в подвале больше нет: её место заняли ссылки
+       на сам салон. Вход по помещению в этом варианте и так вторичный —
+       он строкой стоит на главной. */
 
     var foot = '<footer class="foot"><div class="wrap">' +
       '<div class="foot__cols">' +
@@ -102,7 +104,16 @@
           'премиум-класса. Прямые поставки с фабрик Италии, шоурум в Краснодаре.</p></div>' +
         '<div><h4>Фабрики</h4><ul>' + marks +
           '<li><a href="factory.html">Все фабрики</a></li></ul></div>' +
-        '<div><h4>По помещению</h4><ul>' + rooms + '</ul></div>' +
+        /* Ссылки на сам салон в подвале — не только для человека:
+           «О салоне», «Дизайнерам» и «Контакты» с каждой страницы
+           это то, чем эти разделы держатся в выдаче. */
+        '<div><h4>Салон</h4><ul>' +
+          '<li><a href="about.html">О салоне</a></li>' +
+          '<li><a href="designers.html">Дизайнерам</a></li>' +
+          '<li><a href="articles.html">Статьи</a></li>' +
+          '<li><a href="contacts.html">Контакты и схема проезда</a></li>' +
+          '<li><a href="catalog.html">Каталог</a></li>' +
+        '</ul></div>' +
         '<div><h4>Шоурум в Краснодаре</h4><ul>' +
           '<li>' + ADDRESS + '</li><li>' + HOURS_FULL + '</li>' +
           '<li><a href="tel:' + TEL + '">' + PHONE + '</a></li>' +

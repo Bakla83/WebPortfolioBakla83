@@ -40,9 +40,10 @@
     ['catalog.html?type=stoly', 'Столы и стулья'],
     ['catalog.html?room=kuhni', 'Кухни'],
     ['catalog.html#brands', 'Фабрики'],
-    ['#', 'Дизайнерам'],
-    ['#', 'Статьи'],
-    ['#', 'Контакты'],
+    ['designers.html', 'Дизайнерам'],
+    ['about.html', 'О салоне'],
+    ['articles.html', 'Статьи'],
+    ['contacts.html', 'Контакты'],
   ];
 
   function chrome() {
@@ -82,7 +83,9 @@
 
       '<nav class="nav" id="nav">' + NAV.map(function (n) {
         var cls = [];
-        if (n[0] === here) cls.push('is-on');
+        /* Страница статьи подсвечивает пункт «Статьи»: без этого раздел
+           внутри себя же выглядит как чужой. */
+        if (n[0] === here || (here.indexOf('article.html') === 0 && n[0] === 'articles.html')) cls.push('is-on');
         if (n[2] === 'stock') cls.push('is-stock');
         return '<a href="' + n[0] + '"' + (cls.length ? ' class="' + cls.join(' ') + '"' : '') +
           '>' + n[1] + '</a>';
@@ -93,17 +96,22 @@
       return '<li><a href="catalog.html?room=' + k + '">' + D.ROOMS[k] + '</a></li>';
     }).join('');
 
-    var marks = Object.keys(D.FACTORIES).slice(0, 6).map(function (n) {
-      return '<li><a href="catalog.html?factory=' + encodeURIComponent(n) + '">' + esc(n) + '</a></li>';
-    }).join('');
-
     var foot = '<footer class="foot"><div class="wrap">' +
       '<div class="foot__cols">' +
         '<div><a class="logo" href="index.html"><span class="logo__name">Brand Gallery</span></a>' +
           '<p style="margin-top:14px;max-width:36ch">Салон итальянской мебели премиум-класса. ' +
           'Прямые поставки с фабрик Италии, шоурум в Краснодаре.</p></div>' +
         '<div><h4>По помещению</h4><ul>' + rooms + '</ul></div>' +
-        '<div><h4>Фабрики</h4><ul>' + marks + '</ul></div>' +
+        /* Колонку фабрик заменили ссылки на сам салон: марки в этом варианте
+           и так стоят полкой в каталоге, а «О салоне», «Дизайнерам»
+           и «Контакты» до сих пор были доступны только из шапки. */
+        '<div><h4>Салон</h4><ul>' +
+          '<li><a href="about.html">О салоне</a></li>' +
+          '<li><a href="designers.html">Дизайнерам</a></li>' +
+          '<li><a href="articles.html">Статьи</a></li>' +
+          '<li><a href="contacts.html">Контакты и схема проезда</a></li>' +
+          '<li><a href="catalog.html#brands">Фабрики</a></li>' +
+        '</ul></div>' +
         '<div><h4>Шоурум в Краснодаре</h4><ul>' +
           '<li>' + ADDRESS + '</li><li>' + HOURS_FULL + '</li>' +
           '<li><a href="tel:' + TEL + '">' + PHONE + '</a></li>' +
@@ -183,15 +191,9 @@
 
     $('#showroomart').innerHTML = ph('interior', 3);
 
-    var POSTS = [
-      ['Как выбрать итальянский диван и не ошибиться с размером', 'Разбор на примерах из зала'],
-      ['Сколько на самом деле ждать мебель из Италии', 'Что влияет на срок и как его сократить'],
-      ['Чем отличается массив от шпона в мебели премиум-класса', 'Материалы и уход'],
-    ];
-    $('#posts').innerHTML = POSTS.map(function (a, i) {
-      return '<a href="#">' + ph('frame', i + 4) + '<h3>' + a[0] + '</h3>' +
-        '<span>' + a[1] + '</span></a>';
-    }).join('');
+    /* Статьи на главной рисует общий js/pages.js — там же лежат их тексты.
+       Копия заголовков здесь означала бы, что однажды на главной будет
+       одно название, а в ленте статей другое. */
   }
 
   /* ------------------------------------------------------------- каталог */

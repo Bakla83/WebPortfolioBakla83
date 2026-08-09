@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Статья — Brand Gallery, Краснодар</title>
+<meta name="description" content="Статья салона Brand Gallery о выборе итальянской мебели.">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/b.css">
+</head>
+<body>
+
+<!-- Одна страница на обе статьи: какая именно — в адресе, как у карточки
+     товара и страницы фабрики. Текст подставляет общий js/pages.js
+     оттуда же, откуда его берёт лента статей. -->
+<main class="wrap" style="padding-top:20px;padding-bottom:90px">
+
+  <nav class="crumbs">
+    <a href="index.html">Главная</a><span>·</span>
+    <a href="articles.html">Статьи</a><span>·</span><span data-art-tag></span>
+  </nav>
+
+  <article class="art">
+
+    <header>
+      <div class="art__meta">
+        <span data-art-date></span>
+        <span data-art-read></span>
+      </div>
+      <h1 class="art__title" data-art-title></h1>
+      <p class="art__lead" data-art-lead></p>
+    </header>
+
+    <div class="art__art" data-art-art></div>
+
+    <div class="artbody" data-art-body></div>
+
+    <div class="artend">
+      <div class="prose">
+        <p>Что-то из этого проще решить в зале за полчаса, чем перепиской.
+          В шоуруме на Бабушкина стоят образцы коллекций, каталоги фабрик
+          и палитры материалов — <a href="request.html?showroom=1">запишитесь
+          на визит</a>, и менеджер подготовит нужные образцы к вашему приходу.</p>
+      </div>
+      <div class="btn-row" style="margin-top:26px">
+        <a class="btn btn--terra" href="catalog.html">Смотреть каталог</a>
+        <a class="btn" href="contacts.html">Схема проезда</a>
+      </div>
+    </div>
+
+    <div data-art-next>
+      <a class="artnext">
+        <div class="artnext__media" data-next-art></div>
+        <div>
+          <span class="eyebrow" data-next-tag></span>
+          <h3 data-next-title></h3>
+        </div>
+      </a>
+    </div>
+
+  </article>
+
+</main>
+
+<script src="../../js/data.js"></script>
+<script src="../js/vlib.js"></script>
+<script src="js/b.js"></script>
+<script src="../../js/pages.js"></script>
+<script src="../../js/switch.js"></script>
+</body>
+</html>

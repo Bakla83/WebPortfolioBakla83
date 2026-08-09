@@ -122,6 +122,12 @@ input, textarea, select { font: inherit; color: inherit; }
 
 ::selection { background: var(--paper-3); }
 
+/* Атрибут hidden должен побеждать раскладку. Иначе форма, скрытая после
+   отправки (form.hidden = true), остаётся на экране: у неё display: grid,
+   а правило браузера для [hidden] слабее по весу — и рядом с ответом
+   «спасибо, получили» продолжает висеть пустая форма. */
+[hidden] { display: none !important; }
+
 :focus-visible { outline: 1px solid var(--bronze); outline-offset: 3px; }
 
 .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gut); }
@@ -684,6 +690,12 @@ h1, h2, h3, h4 {
 .post h3 { font-size: 1.375rem; margin-bottom: 10px; }
 .post:hover h3 { color: var(--bronze-2); }
 
+/* Статья, которой ещё нет. Показываем приглушённо и без ссылки:
+   ряд из трёх ячеек не обрывается на двух, но и обещания страницы,
+   которой не существует, здесь нет. */
+.post.is-soon { opacity: .5; }
+.post.is-soon .ph svg { opacity: .2; }
+
 /* ------------------------------------------------------------- каталог */
 
 .crumbs {
@@ -1157,4 +1169,292 @@ h1, h2, h3, h4 {
   .stock button { border-right: 1px solid var(--line-2); padding: 13px 6px; letter-spacing: .1em; }
   .toolbar { flex-wrap: wrap; gap: 12px; }
   .toolbar__sort { margin-left: 0; }
+}
+
+/* =========================================================================
+   Текстовые страницы: о салоне, дизайнерам, статьи, контакты
+
+   Оформление то же самое — тёплый лист, антиква, воздух, — но набор здесь
+   другой: на этих страницах главное не фотография, а текст. Поэтому
+   колонка узкая, интервал крупнее, а разделители — волосяные линии,
+   а не рамки.
+   ========================================================================= */
+
+/* ------------------------------------------------- заголовок страницы */
+
+.phead { padding: 18px 0 56px; border-bottom: 1px solid var(--line); margin-bottom: 64px; }
+.phead .eyebrow { display: block; margin-bottom: 18px; }
+.phead .lede { margin: 26px 0 0; font-size: 1.1875rem; }
+
+/* ------------------------------------------------------------- текст */
+
+/* Ширина колонки задана в знаках, а не в пикселях: на длинной строке
+   глаз теряет начало следующей, и текст перестают читать. */
+.prose { max-width: 68ch; }
+.prose p { margin: 0 0 22px; color: var(--ink-2); line-height: 1.75; }
+.prose p:last-child { margin-bottom: 0; }
+.prose h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); margin: 48px 0 18px; }
+.prose h2:first-child { margin-top: 0; }
+.prose ul { margin: 0 0 22px; padding: 0; list-style: none; }
+.prose li {
+  position: relative; padding-left: 26px; margin-bottom: 12px;
+  color: var(--ink-2); line-height: 1.7;
+}
+.prose li::before {
+  content: ''; position: absolute; left: 0; top: .72em;
+  width: 12px; height: 1px; background: var(--bronze);
+}
+.prose b { color: var(--ink); font-weight: 500; }
+.prose a { border-bottom: 1px solid var(--line-2); }
+.prose a:hover { border-color: var(--bronze); color: var(--bronze-2); }
+
+/* Две колонки только для вводного рассказа о салоне: он длинный,
+   и в одну колонку выглядит стеной. */
+.cols2 { columns: 2; column-gap: 60px; max-width: none; }
+.cols2 p { break-inside: avoid; }
+
+/* -------------------------------------------------------------- цифры */
+
+.numbers {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  margin: 64px 0;
+}
+.numbers div { padding: 40px 30px; border-left: 1px solid var(--line); }
+.numbers div:first-child { border-left: 0; padding-left: 0; }
+.numbers b {
+  display: block;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2.2rem, 3.4vw, 3rem); font-weight: 300; line-height: 1;
+  font-variant-numeric: lining-nums;
+  margin-bottom: 14px;
+}
+.numbers span { font-size: .8125rem; color: var(--ink-2); }
+
+/* --------------------------------------------------------------- шаги */
+
+/* Нумерация набрана антиквой и крупно: это ритм страницы, а не служебные
+   цифры. Списком с точками тот же смысл читался бы как инструкция. */
+.steps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); }
+.steps div { background: var(--paper); padding: 38px 40px; }
+.steps b {
+  display: block; margin-bottom: 16px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.4rem; font-weight: 300; line-height: 1; color: var(--bronze);
+  font-variant-numeric: lining-nums;
+}
+.steps h3 { font-size: 1.375rem; margin-bottom: 10px; }
+.steps p { margin: 0; font-size: .9375rem; color: var(--ink-2); }
+
+/* --------------------------------------------------------- заглушки зала */
+
+.shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.shots div { position: relative; aspect-ratio: 4 / 3; }
+.shots .ph { position: absolute; inset: 0; }
+
+/* ---------------------------------------------------------- тёмная полоса */
+
+/* Единственный тёмный блок на светлом сайте — приглашение в шоурум.
+   Страница «Дизайнерам» получает такой же: это второе обращение,
+   не к покупателю, и его нужно отделить от остальной страницы. */
+.darkband { background: var(--ink); color: var(--paper); padding: 84px 0; }
+.darkband h1, .darkband h2 { color: var(--paper); }
+.darkband .eyebrow { color: rgba(250,248,245,.55); display: block; margin-bottom: 22px; }
+.darkband p { color: rgba(250,248,245,.72); }
+.darkband .lede { color: rgba(250,248,245,.78); max-width: 52ch; }
+.darkband__in { display: grid; grid-template-columns: 1.2fr 1fr; gap: 72px; align-items: end; }
+.darkband__facts { display: grid; gap: 14px; }
+.darkband__facts div { border-top: 1px solid rgba(250,248,245,.18); padding-top: 12px; }
+.darkband__facts b {
+  display: block; font-weight: 400;
+  font-size: .6875rem; letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(250,248,245,.5); margin-bottom: 6px;
+}
+
+/* ----------------------------------------------------------- условия */
+
+.terms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); }
+.terms div { background: var(--paper); padding: 36px 34px; }
+.terms .eyebrow { display: block; margin-bottom: 16px; }
+.terms h3 { font-size: 1.375rem; margin-bottom: 12px; }
+.terms p { margin: 0; font-size: .9375rem; color: var(--ink-2); }
+
+/* Открытым текстом отмечаем то, чего в макете ещё нет: на показе должно
+   быть видно, что поле не заполнено, а не что условие скрыто. */
+.todo {
+  display: inline-block; margin-top: 12px;
+  font-size: .6875rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--bronze);
+  border-bottom: 1px dotted var(--bronze);
+}
+
+/* ------------------------------------------------------------- статьи */
+
+.artlist { display: grid; grid-template-columns: repeat(2, 1fr); gap: 56px 40px; }
+.artcard { display: block; }
+.artcard__media { position: relative; aspect-ratio: 3 / 2; margin-bottom: 22px; }
+.artcard__media .ph { position: absolute; inset: 0; }
+.artcard .eyebrow { display: block; margin-bottom: 12px; }
+.artcard__title { font-size: clamp(1.5rem, 2.4vw, 2rem); margin-bottom: 14px; }
+.artcard:hover .artcard__title { color: var(--bronze-2); }
+.artcard p { color: var(--ink-2); margin: 0 0 14px; font-size: .9375rem; line-height: 1.7; }
+.artcard:hover .ph svg { transform: scale(1.045); }
+
+/* План статей: показывает, что раздел не разовый. Это не ссылки —
+   статей ещё нет, и ставить на них ссылку было бы враньём. */
+.plan { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.plan div {
+  padding: 20px 0; border-bottom: 1px solid var(--line);
+  display: flex; gap: 24px; align-items: baseline; flex-wrap: wrap;
+}
+.plan span { flex: 0 0 200px; font-size: .6875rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3); }
+.plan b { font-weight: 400; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.25rem; }
+
+/* ------------------------------------------------------ страница статьи */
+
+.art { max-width: 760px; margin: 0 auto; }
+.art__meta {
+  display: flex; gap: 20px; flex-wrap: wrap;
+  font-size: .6875rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 20px;
+}
+.art__title { font-size: clamp(2rem, 4vw, 3.1rem); }
+.art__lead { margin: 26px 0 0; font-size: 1.1875rem; line-height: 1.65; color: var(--ink-2); }
+.art__art { position: relative; aspect-ratio: 16 / 9; margin: 48px 0 56px; }
+.art__art .ph { position: absolute; inset: 0; }
+
+.artbody p { margin: 0 0 24px; line-height: 1.8; }
+.artbody h2 { font-size: clamp(1.6rem, 2.6vw, 2.1rem); margin: 56px 0 20px; }
+.artbody ul { margin: 0 0 24px; padding: 0; list-style: none; }
+.artbody li { position: relative; padding-left: 26px; margin-bottom: 14px; line-height: 1.7; }
+.artbody li::before {
+  content: ''; position: absolute; left: 0; top: .72em;
+  width: 12px; height: 1px; background: var(--bronze);
+}
+.artbody b { font-weight: 500; }
+
+/* Врезка вынесена в поля колонки: она должна читаться как реплика
+   в стороне от текста, а не как ещё один абзац. */
+.artbody .pull {
+  margin: 40px 0; padding: 0 0 0 30px;
+  border-left: 1px solid var(--bronze);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.5rem; font-weight: 300; line-height: 1.35;
+}
+.artbody .artnote {
+  margin: 36px 0; padding: 26px 30px;
+  background: var(--paper-2);
+  font-size: .9375rem; color: var(--ink-2);
+}
+
+.artend { margin-top: 64px; padding-top: 40px; border-top: 1px solid var(--line); }
+.artnext { display: grid; grid-template-columns: 180px 1fr; gap: 28px; align-items: center; margin-top: 40px; }
+.artnext__media { position: relative; aspect-ratio: 3 / 2; }
+.artnext__media .ph { position: absolute; inset: 0; }
+.artnext h3 { font-size: 1.5rem; margin: 10px 0 0; }
+.artnext:hover h3 { color: var(--bronze-2); }
+
+/* ------------------------------------------------------------- контакты */
+
+.contacts { display: grid; grid-template-columns: 380px 1fr; gap: 64px; align-items: start; }
+/* Схема проезда шире телефона и прокручивается внутри своего блока.
+   Без этого колонка сетки растягивается под неё — по умолчанию ячейка
+   грида не сжимается уже своего содержимого, — и вбок едет вся страница. */
+.contacts > * { min-width: 0; }
+.cblock { border-top: 1px solid var(--line); }
+.cblock div { padding: 22px 0; border-bottom: 1px solid var(--line); }
+.cblock b {
+  display: block; margin-bottom: 8px; font-weight: 400;
+  font-size: .6875rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3);
+}
+.cblock span, .cblock a { font-size: 1.0625rem; }
+.cblock a { border-bottom: 1px solid var(--line-2); }
+.cblock a:hover { color: var(--bronze-2); border-color: var(--bronze); }
+.cblock .tiny { font-size: .75rem; }
+
+/* Карта. В макете это схема: страница не делает ни одного внешнего
+   запроса. Место, поля и подпись — те же, что займёт карта Яндекса
+   на рабочем сайте. */
+.map { position: relative; background: var(--paper-2); }
+.map svg { width: 100%; height: auto; display: block; }
+.map .mp-block { fill: #ece7de; }
+.map .mp-road { fill: none; stroke: #ffffff; stroke-width: 54; }
+.map .mp-road-line { fill: none; stroke: var(--line-2); stroke-width: 1; stroke-dasharray: 12 12; }
+.map .mp-here { fill: var(--ink); }
+.map .mp-park { fill: none; stroke: var(--line-2); stroke-width: 1.5; }
+.map .mp-park text {
+  fill: var(--ink-3); font-size: 34px; text-anchor: middle;
+  font-family: 'Inter', Arial, sans-serif;
+}
+.map .mp-pin { fill: var(--bronze); }
+.map .mp-pin circle { fill: var(--paper); }
+.map .mp-label text {
+  fill: var(--ink-2); font-size: 22px;
+  font-family: 'Inter', Arial, sans-serif;
+  letter-spacing: .12em; text-transform: uppercase;
+}
+.map .mp-label .mp-label--v { transform: rotate(90deg); transform-origin: 560px 60px; }
+.map .mp-label .mp-label--s { fill: var(--ink-3); font-size: 19px; letter-spacing: .1em; }
+.map .mp-label .mp-label--on { fill: var(--paper); }
+
+.mapnote {
+  display: flex; gap: 20px; flex-wrap: wrap; justify-content: space-between;
+  padding: 16px 0; border-bottom: 1px solid var(--line);
+  font-size: .75rem; color: var(--ink-3);
+}
+
+.reqs { border-top: 1px solid var(--line); padding-top: 26px; font-size: .8125rem; color: var(--ink-2); }
+.reqs p { margin: 0 0 8px; }
+
+/* --------------------------------------------- адаптив текстовых страниц */
+
+@media (max-width: 1180px) {
+  .contacts { grid-template-columns: 320px 1fr; gap: 40px; }
+  .darkband__in { gap: 44px; }
+}
+
+@media (max-width: 980px) {
+  .phead { padding-bottom: 40px; margin-bottom: 44px; }
+  .cols2 { columns: 1; }
+  .numbers { grid-template-columns: repeat(2, 1fr); margin: 44px 0; }
+  .numbers div { padding: 30px 24px; }
+  .numbers div:nth-child(3) { border-left: 0; padding-left: 0; }
+  .numbers div:nth-child(1), .numbers div:nth-child(2) { border-bottom: 1px solid var(--line); }
+  .terms { grid-template-columns: 1fr; }
+  .darkband { padding: 60px 0; }
+  .darkband__in { grid-template-columns: 1fr; gap: 40px; align-items: start; }
+  .contacts { grid-template-columns: 1fr; gap: 44px; }
+  .artlist { gap: 40px 26px; }
+  .shots { grid-template-columns: 1fr 1fr; }
+  .shots div:first-child { grid-column: span 2; }
+}
+
+@media (max-width: 760px) {
+  .steps { grid-template-columns: 1fr; }
+  .steps div { padding: 28px 0; }
+  .numbers div:first-child, .numbers div:nth-child(3) { padding-left: 0; }
+  .artlist { grid-template-columns: 1fr; }
+  .artnext { grid-template-columns: 1fr; gap: 18px; }
+  .art__art { margin: 34px 0 40px; }
+  .artbody .pull { font-size: 1.3rem; padding-left: 22px; margin: 32px 0; }
+  .artbody .artnote { padding: 20px 22px; }
+  .plan div { gap: 6px; }
+  .plan span { flex: 0 0 100%; }
+  .terms div { padding: 28px 24px; }
+
+  /* Подпись на кнопке не переносится по замыслу — иначе капс в разрядку
+     разваливается. На узком экране две такие кнопки в строку не влезают,
+     поэтому они встают друг под другом, как в первом экране главной. */
+  .artend .btn-row { flex-direction: column; align-items: stretch; }
+  /* Перенос разрешён только здесь: в узкую колонку 320 px кнопка
+     с длинной подписью не влезает даже во всю ширину, а сжаться ниже
+     своей строки она не может. */
+  .artend .btn { justify-content: center; white-space: normal; text-align: center; padding: 16px 20px; }
+
+  /* Подписи на схеме набраны в единицах самой схемы: вместе с ней они
+     сжимаются и на телефоне становятся нечитаемыми. Поэтому на узком
+     экране схема показывается в своём размере и прокручивается вбок
+     внутри блока, а не тянет вбок всю страницу. */
+  .map { overflow-x: auto; }
+  .map svg { width: 640px; max-width: none; }
 }
