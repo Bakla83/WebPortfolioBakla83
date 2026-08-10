@@ -57,17 +57,29 @@
 
 /* --------------------------------------------------------- переменные */
 
+/* Белый остался у карточек, полей и шапки — им нужно быть светлее фона,
+   иначе сетка товаров перестаёт читаться как набор карточек. Всё, что
+   под ними, уведено в холодную зелень: страница, подложки и линии.
+   Цвет слабый по насыщенности и сильный по количеству — так спокойнее,
+   чем несколько ярких пятен на белом. */
 :root {
   --bg:       #ffffff;
-  --surface:  #f5f6f5;
-  --surface-2:#eceeed;
+  --page:     #f5f8f6;   /* фон страницы под карточками */
+  --surface:  #eaf0ec;   /* подложки: подвал, верхняя строка, заглушки */
+  --surface-2:#dde7e1;
 
   --ink:      #16181a;
   --ink-2:    #5a6166;
   --ink-3:    #8b9298;
 
-  --line:     #e2e5e4;
-  --line-2:   #cfd4d2;
+  --line:     #dde6e1;
+  --line-2:   #c6d3cc;
+
+  /* Зелёный фирменный, разбавленный до фона: активные фильтры, чипы,
+     колонка фильтров. Прозрачность, а не готовый цвет, — ложится
+     и на белую карточку, и на страницу. */
+  --brand-soft:  rgba(30, 74, 60, .09);
+  --brand-soft-2: rgba(30, 74, 60, .16);
 
   --brand:    #1E4A3C;   /* тёмно-зелёный: кнопки и активные состояния */
   --brand-2:  #163a2f;
@@ -95,7 +107,7 @@ html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: var(--page);
   color: var(--ink);
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
   font-size: 15px;
@@ -406,10 +418,14 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
 
 .cat__head { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; margin-bottom: 16px; }
 
-.stock { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
-.stock button { padding: 8px 18px; border-radius: 999px; font-size: 13.5px; font-weight: 500; color: var(--ink-2); }
-.stock button.is-on { background: var(--bg); color: var(--ink); box-shadow: 0 1px 2px rgba(0, 0, 0, .08); }
-.stock button[data-stock="in"].is-on { color: var(--stock); }
+/* Переключатель наличия — самый нажимаемый элемент каталога, и по нему
+   же читается, что сейчас показано. Поэтому выбранное состояние залито
+   зелёным, а не выбелено: белая плашка на светлой подложке терялась. */
+.stock { display: inline-flex; background: var(--brand-soft); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+.stock button { padding: 8px 18px; border-radius: 999px; font-size: 13.5px; font-weight: 500; color: var(--ink-2); transition: background var(--dur) var(--ease), color var(--dur) var(--ease); }
+.stock button:hover { color: var(--brand); }
+.stock button.is-on { background: var(--brand); color: #fff; box-shadow: 0 1px 2px rgba(16, 24, 20, .18); }
+.stock button.is-on:hover { color: #fff; }
 
 /* Полка марок — «страницы фабрик» этого варианта: описание разворачивается
    прямо над сеткой, когда выбрана одна марка. */
@@ -428,7 +444,24 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
 .brandcard__n { text-align: right; font-size: 13px; color: var(--ink-2); white-space: nowrap; }
 .brandcard__n b { display: block; font-size: 22px; color: var(--stock); }
 
-.cat { display: grid; grid-template-columns: 268px minmax(0, 1fr); gap: 26px; align-items: start; padding-bottom: 70px; }
+/* Колонку фильтров можно убрать: она занимает четверть ширины, а человек,
+   который уже отфильтровал, дальше просто смотрит товар. Ширина колонки
+   и зазор анимируются вместе — сетка не прыгает, а разъезжается.
+
+   Сама колонка при этом не переверстывается: у панели фиксированная
+   ширина, и на схлопывании её подрезает край, а не перекладывает
+   галочки в две строки. */
+.cat {
+  display: grid; grid-template-columns: 268px minmax(0, 1fr);
+  gap: 26px; align-items: start; padding-bottom: 70px;
+  transition: grid-template-columns .38s var(--ease), gap .38s var(--ease);
+}
+.cat > aside {
+  min-width: 0; overflow: hidden;
+  transition: opacity .24s var(--ease), transform .34s var(--ease);
+}
+.cat.is-folded { grid-template-columns: 0 minmax(0, 1fr); gap: 0; }
+.cat.is-folded > aside { opacity: 0; transform: translateX(-14px); pointer-events: none; }
 
 /* Колонка фильтров развёрнута всегда: в этом варианте она главный
    инструмент, а не выдвижная панель.
@@ -440,11 +473,16 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
    класс is-fixed ставит скрипт. Иначе до низа колонки не добраться:
    липкий блок увозит его за нижний край. */
 .filters {
+  width: 268px;
+  background: var(--bg);
   border: 1px solid var(--line); border-radius: var(--r);
-  padding: 16px; display: grid; gap: 18px; align-content: start;
+  padding: 16px; display: grid; gap: 14px; align-content: start;
 }
 .filters.is-fixed { position: sticky; top: 128px; }
-.fgroup b { display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 8px; }
+/* Названия групп зелёным: по ним колонка читается как список разделов,
+   а не как сплошная простыня галочек. */
+.fgroup b { display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 8px; color: var(--brand); }
+.fgroup + .fgroup { border-top: 1px solid var(--line); padding-top: 14px; }
 .fgroup label { display: flex; align-items: center; gap: 9px; padding: 4px 0; font-size: 13.5px; cursor: pointer; }
 /* Значения фильтров приходят из данных как есть: помещения и фабрики
    с заглавной, материалы, цвета и стили — со строчной («кожа»,
@@ -470,25 +508,46 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
 .freset { justify-self: start; font-size: 13px; font-weight: 500; color: var(--brand); }
 .fopen, .fclose { display: none; }
 
+/* Кнопка «скрыть/показать» живёт в строке над сеткой, а не в самой
+   колонке: колонка сворачивается в ноль, и кнопка внутри неё уехала бы
+   вместе с ней. */
+.ffold {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 36px; padding: 0 14px;
+  border: 1px solid var(--line-2); border-radius: 999px;
+  background: var(--brand-soft); color: var(--brand);
+  font-size: 13px; font-weight: 500; white-space: nowrap;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.ffold:hover { background: var(--brand-soft-2); border-color: var(--brand); }
+.ffold svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; }
+/* Стрелка показывает направление действия: колонка уедет влево. */
+.ffold svg { transition: transform .32s var(--ease); }
+.ffold[aria-expanded="false"] svg { transform: rotate(180deg); }
+
 /* Липкая строка над сеткой: сколько нашлось, сортировка и чипы
    активных фильтров. Снять фильтр можно, не открывая колонку. */
 .toolbar {
   position: sticky; top: 128px; z-index: 20;
-  background: var(--bg); padding: 8px 0 12px;
+  background: var(--page); padding: 8px 0 12px;
   display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
 }
 .toolbar__found { font-size: 13.5px; color: var(--ink-2); }
 .toolbar select { border: 1px solid var(--line-2); border-radius: var(--r-s); padding: 9px 12px; font-size: 13.5px; background: var(--bg); }
 
 .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+/* Чип — это выбранное условие, поэтому он зелёный: рядом с ним
+   «Сбросить всё» намеренно бесцветное и пунктирное. */
 .chip {
   display: inline-flex; align-items: center; gap: 7px;
-  padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 999px;
-  font-size: 12.5px; background: var(--surface);
+  padding: 6px 12px; border: 1px solid transparent; border-radius: 999px;
+  font-size: 12.5px; font-weight: 500;
+  background: var(--brand-soft); color: var(--brand);
 }
-.chip span { color: var(--ink-3); font-size: 14px; line-height: 1; }
-.chip:hover { border-color: var(--brand); color: var(--brand); }
-.chip--all { background: none; border-style: dashed; }
+.chip span { color: currentColor; opacity: .6; font-size: 14px; line-height: 1; }
+.chip:hover { background: var(--brand-soft-2); border-color: var(--brand); }
+.chip--all { background: none; color: var(--ink-2); font-weight: 400; border-color: var(--line-2); border-style: dashed; }
+.chip--all:hover { background: none; color: var(--brand); }
 
 .empty { grid-column: 1 / -1; text-align: center; padding: 60px 0; }
 .empty h3 { font-size: 19px; margin-bottom: 8px; }
@@ -505,7 +564,7 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
 
 /* Липкий блок покупки: цена, наличие, срок и кнопки видны, пока человек
    листает характеристики. */
-.buy { position: sticky; top: 128px; border: 1px solid var(--line); border-radius: var(--r); padding: 20px; }
+.buy { position: sticky; top: 128px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; }
 .buy__brand { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
 .buy__brand:hover { color: var(--brand); }
 .buy h1 { margin: 6px 0 14px; font-size: 22px; }
@@ -529,7 +588,7 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
 .req { display: grid; grid-template-columns: minmax(0, 1.15fr) 400px; gap: 30px; align-items: start; padding-bottom: 70px; }
 
 .picked { display: grid; gap: 10px; }
-.picked__row { display: grid; grid-template-columns: 64px 1fr auto auto; gap: 14px; align-items: center; border: 1px solid var(--line); border-radius: var(--r); padding: 10px 14px 10px 10px; }
+.picked__row { display: grid; grid-template-columns: 64px 1fr auto auto; gap: 14px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 14px 10px 10px; }
 .picked__row .ph { aspect-ratio: 1; border-radius: var(--r-s); }
 .picked__name { font-size: 14.5px; font-weight: 500; }
 .picked__name:hover { color: var(--brand); }
@@ -541,12 +600,12 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
 .picked__empty h3 { font-size: 18px; margin-bottom: 8px; }
 .picked__empty p { color: var(--ink-2); margin: 0 0 20px; }
 
-.sum { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-top: 16px; padding: 14px 16px; background: var(--surface); border-radius: var(--r); }
+.sum { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-top: 16px; padding: 14px 16px; background: var(--brand-soft); border-radius: var(--r); }
 .sum__lab { font-size: 12.5px; color: var(--ink-2); }
 .sum b { font-size: 24px; font-weight: 700; }
 .sum__note { font-size: 12px; color: var(--ink-3); }
 
-.form { display: grid; gap: 16px; border: 1px solid var(--line); border-radius: var(--r); padding: 20px; }
+.form { display: grid; gap: 16px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; }
 .field label, .fieldlab { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; }
 .field input, .field textarea { width: 100%; border: 1px solid var(--line-2); border-radius: var(--r-s); padding: 11px 13px; font-size: 14.5px; }
 .field input:focus, .field textarea:focus { border-color: var(--brand); outline: none; }
@@ -581,6 +640,7 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
   .claims { grid-template-columns: repeat(2, 1fr); }
   .foot__cols { grid-template-columns: 1fr 1fr; }
   .cat { grid-template-columns: 232px minmax(0, 1fr); }
+  .filters { width: 232px; }
   .prod, .req { grid-template-columns: 1fr; }
   .buy, .filters, .toolbar { position: static; max-height: none; }
   .filters.is-fixed { position: static; top: auto; }
@@ -635,17 +695,41 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
   .brandcard.is-on { grid-template-columns: 64px 1fr; }
   .brandcard__n { grid-column: 1 / -1; text-align: left; }
 
-  /* Фильтры на телефоне — панель на весь экран по кнопке. */
-  .cat { grid-template-columns: 1fr; }
-  .fopen { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 0 16px; border: 1px solid var(--line-2); border-radius: var(--r-s); font-size: 13.5px; font-weight: 500; }
-  /* Фон здесь обязателен: панель лежит поверх каталога, и без него
-     сквозь фильтры просвечивают шапка и карточки товара. */
-  .filters { display: none; position: fixed; inset: 0; z-index: 70; background: var(--bg); border: 0; border-radius: 0; padding: 16px var(--gut) 84px; max-height: none; overflow: auto; }
-  /* Панель на весь экран сильнее липкой колонки: на телефоне колонки нет. */
+  /* Фильтры на телефоне — панель на весь экран по кнопке. Колонки здесь
+     нет, поэтому и сворачивать нечего: кнопка «скрыть» уступает место
+     кнопке «Фильтры». */
+  .cat, .cat.is-folded { grid-template-columns: 1fr; gap: 0; }
+  .cat.is-folded > aside { opacity: 1; transform: none; pointer-events: auto; }
+  .ffold { display: none; }
+  .fopen { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border: 1px solid var(--line-2); border-radius: 999px; background: var(--brand-soft); color: var(--brand); font-size: 13.5px; font-weight: 500; }
+
+  /* Панель выезжает снизу и уходит туда же. Через display её было бы
+     не анимировать вовсе: показ и скрытие происходили бы мгновенно,
+     поэтому закрытая панель убрана видимостью, а не раскладкой.
+     Фон обязателен — иначе сквозь фильтры просвечивает каталог. */
+  .filters {
+    display: grid; position: fixed; inset: 0; z-index: 70; width: auto;
+    background: var(--bg); border: 0; border-radius: 0;
+    padding: 16px var(--gut) 84px; max-height: none; overflow: auto;
+    visibility: hidden; opacity: 0; transform: translateY(18px);
+    transition: opacity .24s var(--ease), transform .3s var(--ease), visibility 0s .3s;
+  }
   .filters.is-fixed { position: fixed; top: 0; }
-  .filters.is-open { display: grid; }
-  .fclose { display: none; position: fixed; left: var(--gut); right: var(--gut); bottom: 14px; z-index: 71; height: 48px; background: var(--brand); color: #fff; border-radius: var(--r-s); font-size: 14px; font-weight: 500; }
-  .filters.is-open ~ .fclose { display: block; }
+  .filters.is-open {
+    visibility: visible; opacity: 1; transform: none;
+    transition: opacity .24s var(--ease), transform .3s var(--ease), visibility 0s;
+  }
+  .fclose {
+    display: block; position: fixed; left: var(--gut); right: var(--gut); bottom: 14px; z-index: 71;
+    height: 48px; background: var(--brand); color: #fff; border-radius: var(--r-s);
+    font-size: 14px; font-weight: 500;
+    visibility: hidden; opacity: 0; transform: translateY(12px);
+    transition: opacity .24s var(--ease), transform .3s var(--ease), visibility 0s .3s;
+  }
+  .filters.is-open ~ .fclose {
+    visibility: visible; opacity: 1; transform: none;
+    transition: opacity .24s var(--ease) .06s, transform .3s var(--ease) .06s, visibility 0s;
+  }
 
   .foot__cols { grid-template-columns: 1fr; gap: 22px; }
   .picked__row { grid-template-columns: 56px 1fr auto; row-gap: 6px; }
@@ -899,7 +983,7 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
 }
 .mapnote + .map { border-radius: 0 0 var(--r) var(--r); }
 
-.reqs { border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; font-size: 13px; color: var(--ink-2); }
+.reqs { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; font-size: 13px; color: var(--ink-2); }
 .reqs p { margin: 0 0 6px; }
 .reqs p:last-child { margin-bottom: 0; }
 

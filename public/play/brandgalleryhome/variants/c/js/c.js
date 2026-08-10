@@ -324,6 +324,44 @@
     }
 
     window.addEventListener('resize', fitFilters);
+    foldFilters();
+
+    /* Свёрнутая колонка фильтров запоминается: человек ходит из каталога
+       в карточку товара и обратно десятки раз, и каждый раз убирать
+       колонку заново — это работа, которую он уже сделал.
+
+       Само схлопывание рисует css: ширина колонки и зазор анимируются,
+       скрипту остаётся класс и подпись на кнопке. */
+    function foldFilters() {
+      var FOLDKEY = 'bgh-c-filters-folded';
+      var cat = $('#cat'), btn = $('#ffold'), txt = $('#ffoldtxt');
+      if (!cat || !btn) return;
+
+      function paint(on, quiet) {
+        cat.classList.toggle('is-folded', on);
+        btn.setAttribute('aria-expanded', on ? 'false' : 'true');
+        txt.textContent = on ? 'Показать фильтры' : 'Скрыть фильтры';
+        try { localStorage.setItem(FOLDKEY, on ? '1' : '0'); } catch (e) {}
+        /* Колонка снова видна — пересчитываем, помещается ли она в экран
+           целиком (от этого зависит, липкая она или обычная). */
+        if (!quiet && !on) setTimeout(fitFilters, 400);
+      }
+
+      var saved = '0';
+      try { saved = localStorage.getItem(FOLDKEY) || '0'; } catch (e) {}
+
+      /* Первая отрисовка без перехода: иначе при каждом открытии каталога
+         колонка на глазах уезжала бы в уже сохранённое положение. */
+      if (saved === '1') {
+        cat.style.transition = 'none';
+        paint(true, true);
+        requestAnimationFrame(function () { cat.style.transition = ''; });
+      }
+
+      btn.addEventListener('click', function () {
+        paint(!cat.classList.contains('is-folded'));
+      });
+    }
 
     /* Полка марок и есть «страница фабрики» этого варианта: выбрана одна
        марка — над сеткой разворачивается её описание и счётчик наличия. */
