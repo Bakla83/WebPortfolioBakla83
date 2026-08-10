@@ -224,15 +224,44 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
 /* ----------------------------------------------------------- главная */
 
 /* Первый экран короткий: заголовок с городом, строка поиска и быстрые
-   разделы. Товары должны начинаться до первой прокрутки. */
-.hero { background: var(--surface); border-bottom: 1px solid var(--line); padding: 42px 0 38px; }
-.hero h1 { max-width: 20ch; }
-.hero p { margin: 12px 0 22px; color: var(--ink-2); max-width: 58ch; }
+   разделы. Товары должны начинаться до первой прокрутки.
+
+   За текстом — фотография интерьера. Снимок лежит отдельным слоем
+   с запасом в 20 пикселей по кругу: слой чуть смещается за курсором,
+   и без запаса из-под него по краям вылезала бы страница. */
+.hero { position: relative; overflow: hidden; padding: 56px 0 48px; background: #0b1411; }
+.hero > .wrap { position: relative; z-index: 2; }
+
+.hero__bg {
+  position: absolute; inset: -20px; z-index: 0;
+  background: #0b1411 url('../img/hero-living.jpg') center 58% / cover no-repeat;
+  /* Возврат на место — плавный и заметный, слежение за курсором — быстрое:
+     одной длительностью на оба движения картинка либо тянется за мышью
+     с задержкой, либо возвращается рывком. */
+  transition: transform .5s var(--ease);
+  will-change: transform;
+}
+.hero.is-live .hero__bg { transition-duration: .12s; }
+
+/* Полог: слева, где стоит текст, темнее — там снимок и так в тени,
+   а к правому краю окно и зелень остаются видны. */
+.hero__veil {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(100deg,
+    rgba(9, 18, 15, .90) 0%, rgba(9, 18, 15, .78) 40%,
+    rgba(9, 18, 15, .50) 72%, rgba(9, 18, 15, .38) 100%);
+}
+
+.hero h1 { max-width: 20ch; color: #fff; text-shadow: 0 1px 20px rgba(0, 0, 0, .35); }
+.hero p { margin: 12px 0 22px; color: rgba(255, 255, 255, .84); max-width: 58ch; }
 .hero__q { max-width: 620px; }
 .hero__chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 .hero__chips a { padding: 9px 15px; background: var(--bg); border: 1px solid var(--line-2); border-radius: 999px; font-size: 13.5px; }
 .hero__chips a:hover { border-color: var(--brand); color: var(--brand); }
-.hero__chips a.is-stock { background: var(--stock); border-color: var(--stock); color: #fff; }
+/* Тёмно-зелёная плашка на тёмном снимке теряется — её держит светлый
+   контур: это по-прежнему главная кнопка первого экрана. */
+.hero__chips a.is-stock { background: var(--stock); border-color: rgba(255, 255, 255, .6); color: #fff; font-weight: 500; }
+.hero__chips a.is-stock:hover { background: var(--brand-2); border-color: #fff; color: #fff; }
 
 .claims { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 26px; }
 .claims div { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; }
@@ -586,6 +615,14 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
   }
   .nav.is-open { display: flex; }
   .nav a { padding: 13px 12px; }
+
+  /* На узком экране текст идёт во всю ширину и попадает на светлую часть
+     снимка — окно и витраж. Полог здесь не боковой, а сверху вниз. */
+  .hero { padding: 38px 0 32px; }
+  .hero__veil {
+    background: linear-gradient(180deg,
+      rgba(9, 18, 15, .88) 0%, rgba(9, 18, 15, .74) 55%, rgba(9, 18, 15, .68) 100%);
+  }
 
   .grid--4, .grid--3 { grid-template-columns: repeat(2, 1fr); }
   /* Соседняя карточка обрезана краем экрана: это и есть подсказка,

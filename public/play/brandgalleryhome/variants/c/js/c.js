@@ -55,7 +55,7 @@
        и телефоном. Она вне липкой шапки: уезжает при прокрутке и не отъедает
        у телефона высоту экрана вместе с поиском. */
     var head = '<div class="head__mob">' +
-        '<a href="contacts.html">Контакты и схема проезда</a>' +
+        '<a href="contacts.html">Контактная информация</a>' +
         '<a href="tel:' + TEL + '">' + PHONE + '</a>' +
       '</div>' +
 
@@ -119,7 +119,7 @@
           '<li><a href="about.html">О салоне</a></li>' +
           '<li><a href="designers.html">Дизайнерам</a></li>' +
           '<li><a href="articles.html">Статьи</a></li>' +
-          '<li><a href="contacts.html">Контакты и схема проезда</a></li>' +
+          '<li><a href="contacts.html">Контактная информация</a></li>' +
           '<li><a href="catalog.html#brands">Фабрики</a></li>' +
         '</ul></div>' +
         '<div><h4>Шоурум в Краснодаре</h4><ul>' +
@@ -148,6 +148,45 @@
 
     V.initSearch({ input: '#q', hits: '#qhits', product: 'product.html' });
     V.paintCount();
+  }
+
+  /* ---------------------------------------------------------- первый экран */
+
+  /* Снимок за текстом чуть уходит от курсора — не «эффект», а признак
+     живой страницы: глубина появляется от смещения в десяток пикселей,
+     на большем это уже аттракцион и мешает читать заголовок.
+
+     Мышью — значит только мышью: на телефоне наведения нет, а тому,
+     кто просил систему убрать анимацию, картинка стоит неподвижно. */
+  function heroArt() {
+    var hero = $('[data-hero]');
+    if (!hero) return;
+
+    var bg = $('.hero__bg', hero);
+    if (!bg) return;
+
+    var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!fine || calm) return;
+
+    var SHIFT = 14;   // предел смещения по горизонтали, пикселей
+    var LIFT = 9;     // по вертикали — меньше: вертикаль читается сильнее
+
+    hero.addEventListener('mousemove', function (e) {
+      var b = hero.getBoundingClientRect();
+      // −1…1 от центра секции
+      var x = (e.clientX - b.left) / b.width * 2 - 1;
+      var y = (e.clientY - b.top) / b.height * 2 - 1;
+      hero.classList.add('is-live');
+      // Против курсора: так снимок кажется лежащим глубже текста.
+      bg.style.transform = 'translate3d(' + (-x * SHIFT).toFixed(1) + 'px,' +
+        (-y * LIFT).toFixed(1) + 'px,0)';
+    });
+
+    hero.addEventListener('mouseleave', function () {
+      hero.classList.remove('is-live');
+      bg.style.transform = '';
+    });
   }
 
   /* ------------------------------------------------------------- ленты */
@@ -434,6 +473,7 @@
     // глазами сумму. Механика остаётся строкой ниже.
     sumLabel: 'Цена',
   });
+  heroArt();
   rails();
   V.reveal();
 })();
