@@ -303,6 +303,38 @@ window.VLIB = (function () {
 
     var FLIMIT = 8;
 
+    /* Группу фильтров можно свернуть — включает вариант (o.foldGroups).
+       Свёрнутое состояние живёт здесь, а не в разметке: колонка
+       перерисовывается на каждый щелчок по галочке, и то, что человек
+       свернул «Фабрику», должно это пережить. И между страницами тоже:
+       из карточки товара в каталог ходят десятки раз.
+
+       Заголовок при этом кнопка, а не строка с обработчиком: с клавиатуры
+       она доступна сама, без tabindex и обработки пробела. */
+    var SHUTKEY = 'bgh-fgroups-shut';
+    var shut = {};
+    if (o.foldGroups) {
+      try { shut = JSON.parse(localStorage.getItem(SHUTKEY)) || {}; } catch (e) { shut = {}; }
+    }
+
+    function group(key, cls, title, inner, chosen) {
+      if (!o.foldGroups) return '<div class="fgroup' + cls + '"><b>' + title + '</b>' + inner + '</div>';
+
+      var off = !!shut[key];
+      return '<div class="fgroup' + cls + (off ? ' is-shut' : '') + '">' +
+        '<button class="fgroup__h" type="button" data-fold="' + key + '" ' +
+          'aria-expanded="' + (off ? 'false' : 'true') + '">' +
+          '<b>' + title + '</b>' +
+          /* Сколько условий выбрано — единственное, что должно быть видно
+             у свёрнутой группы: иначе фильтр работает, а по колонке
+             этого не видно. */
+          (chosen ? '<span class="fgroup__n">' + chosen + '</span>' : '') +
+          '<svg class="fgroup__ch" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>' +
+        '</button>' +
+        '<div class="fgroup__body"><div class="fgroup__in">' + inner + '</div></div>' +
+      '</div>';
+    }
+
     function checks(field, title) {
       var counts = facet(field);
       var keys = Object.keys(counts).sort();
@@ -320,7 +352,7 @@ window.VLIB = (function () {
         ? '<button class="fmore" type="button" data-more>Показать все · ' + keys.length + '</button>'
         : '';
 
-      return '<div class="fgroup"><b>' + title + '</b>' + body + more + '</div>';
+      return group(field, '', title, body + more, state[field].length);
     }
 
     /* Наличие отдельной группой в колонке фильтров. Включает его вариант
@@ -349,14 +381,16 @@ window.VLIB = (function () {
         ['order', 'Под заказ', counts.order],
       ];
 
-      return '<div class="fgroup fgroup--nav fgroup--stock"><b>' + title + '</b>' +
-        opts.map(function (o2) {
-          var on = o2[0] === 'all' ? state.stock === 'all' : state.stock === o2[0];
-          return '<label><input type="' + kind + '" name="r-stock" ' +
-            (multi && o2[0] !== 'all' ? 'data-sm' : 'data-s') + ' value="' + o2[0] + '"' +
-            (on ? ' checked' : '') + '>' +
-            '<span>' + o2[1] + '</span><span class="n">' + o2[2] + '</span></label>';
-        }).join('') + '</div>';
+      var body = opts.map(function (o2) {
+        var on = o2[0] === 'all' ? state.stock === 'all' : state.stock === o2[0];
+        return '<label><input type="' + kind + '" name="r-stock" ' +
+          (multi && o2[0] !== 'all' ? 'data-sm' : 'data-s') + ' value="' + o2[0] + '"' +
+          (on ? ' checked' : '') + '>' +
+          '<span>' + o2[1] + '</span><span class="n">' + o2[2] + '</span></label>';
+      }).join('');
+
+      return group('stock', ' fgroup--nav fgroup--stock', title, body,
+        state.stock === 'all' ? 0 : 1);
     }
 
     /* Помещение и тип мебели: переключателями (по одному) или галочками
@@ -380,7 +414,7 @@ window.VLIB = (function () {
       var kind = multi ? 'checkbox' : 'radio';
       var none = !state[field].length;
 
-      return '<div class="fgroup fgroup--nav"><b>' + title + '</b>' +
+      var body =
         '<label><input type="' + kind + '" name="r-' + field + '" ' +
           (multi ? 'data-all="' + field + '"' : 'data-r="' + field + '" value=""') +
           (none ? ' checked' : '') + '><span>Все</span>' +
@@ -391,7 +425,9 @@ window.VLIB = (function () {
             (multi ? 'data-f' : 'data-r') + '="' + field +
             '" value="' + k + '"' + (on ? ' checked' : '') + '>' +
             '<span>' + esc(dict[k]) + '</span><span class="n">' + counts[k] + '</span></label>';
-        }).join('') + '</div>';
+        }).join('');
+
+      return group(field, ' fgroup--nav', title, body, state[field].length);
     }
 
     function url() {
@@ -485,7 +521,7 @@ window.VLIB = (function () {
         (o.stockGroup ? stockChecks('Наличие') : '') +
         radios('room', 'Помещение', D.ROOMS) +
         radios('type', 'Тип мебели', D.TYPES) +
-        '<div class="fgroup"><b>Цена, ₽</b>' +
+        group('price', '', 'Цена, ₽',
           '<div class="price-row">' +
             '<input type="number" id="pmin" value="' + state.min + '" step="10000" aria-label="Цена от">' +
             '<span>—</span>' +
@@ -493,8 +529,8 @@ window.VLIB = (function () {
           '</div>' +
           '<input class="price-slider" type="range" id="prange" min="' + LO + '" max="' + HI +
             '" step="10000" value="' + state.max + '" aria-label="Верхняя граница цены">' +
-          '<div class="fnote">Позиции без цены показываются всегда</div>' +
-        '</div>' +
+          '<div class="fnote">Позиции без цены показываются всегда</div>',
+          (state.min !== LO || state.max !== HI) ? 1 : 0) +
         checks('factory', 'Фабрика') +
         checks('material', 'Материал') +
         checks('color', 'Цвет') +
@@ -588,6 +624,19 @@ window.VLIB = (function () {
           if (cb.checked && i === -1) state[f].push(cb.value);
           if (!cb.checked && i !== -1) state[f].splice(i, 1);
           render();
+        });
+      });
+
+      /* Сворачивание группы ничего не пересчитывает и не перерисовывает:
+         перерисовка сменила бы разметку прямо во время перехода, и вместо
+         плавного схлопывания получился бы прыжок. */
+      $$('[data-fold]', box).forEach(function (b) {
+        b.addEventListener('click', function () {
+          var k = b.dataset.fold, off = !shut[k];
+          shut[k] = off;
+          b.setAttribute('aria-expanded', off ? 'false' : 'true');
+          b.parentNode.classList.toggle('is-shut', off);
+          try { localStorage.setItem(SHUTKEY, JSON.stringify(shut)); } catch (e) {}
         });
       });
 

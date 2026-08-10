@@ -40,13 +40,10 @@
     <div>
       <div class="toolbar">
         <div style="display:flex;align-items:center;gap:12px">
-          <!-- Кнопка телефона: фильтры панелью на весь экран. -->
+          <!-- Кнопка телефона: фильтры панелью на весь экран. Колонку
+               целиком не прячем — сворачиваются отдельные группы,
+               заголовками в самой колонке. -->
           <button class="fopen" id="fopen">Фильтры</button>
-          <!-- Кнопка широкого экрана: свернуть и развернуть колонку. -->
-          <button class="ffold" id="ffold" type="button" aria-expanded="true" aria-controls="filters">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5l-6 7 6 7"/></svg>
-            <span id="ffoldtxt">Скрыть фильтры</span>
-          </button>
           <span class="toolbar__found" id="found"></span>
         </div>
         <div>
