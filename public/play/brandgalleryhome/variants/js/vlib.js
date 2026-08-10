@@ -247,14 +247,21 @@ window.VLIB = (function () {
     if (!grid) return;
 
     var params = new URLSearchParams(location.search);
+    function list(v) { return (v || '').split(',').filter(Boolean); }
+
+    /* Помещение и тип мебели тоже списки, а не одно значение. В адресе
+       формат прежний и совместимый: ?room=kuhni читается как список
+       из одного пункта, ссылки из меню и с главной работают как работали.
+       Одиночный выбор от этого не пропал — вариант рисует переключатели
+       (radios), и они кладут в список ровно один пункт. */
     var state = {
       stock: params.get('stock') || 'all',
-      room: params.get('room') || '',
-      type: params.get('type') || '',
-      factory: (params.get('factory') || '').split(',').filter(Boolean),
-      material: (params.get('material') || '').split(',').filter(Boolean),
-      color: (params.get('color') || '').split(',').filter(Boolean),
-      style: (params.get('style') || '').split(',').filter(Boolean),
+      room: list(params.get('room')),
+      type: list(params.get('type')),
+      factory: list(params.get('factory')),
+      material: list(params.get('material')),
+      color: list(params.get('color')),
+      style: list(params.get('style')),
       min: Number(params.get('min') || 0),
       max: Number(params.get('max') || 0),
       sort: params.get('sort') || 'default',
@@ -270,8 +277,11 @@ window.VLIB = (function () {
     function match(p, skip) {
       if (state.stock === 'in' && p.stock === 'order') return false;
       if (state.stock === 'order' && p.stock !== 'order') return false;
-      if (state.room && p.room !== state.room) return false;
-      if (state.type && p.type !== state.type) return false;
+      /* Свою группу фильтр из подсчёта исключает: иначе после выбора
+         «Гостиная» в списке помещений остаётся одна гостиная, и второе
+         помещение к ней уже не добавить. */
+      if (skip !== 'room' && state.room.length && state.room.indexOf(p.room) === -1) return false;
+      if (skip !== 'type' && state.type.length && state.type.indexOf(p.type) === -1) return false;
       if (skip !== 'factory' && state.factory.length && state.factory.indexOf(p.factory) === -1) return false;
       if (skip !== 'material' && state.material.length && state.material.indexOf(p.material) === -1) return false;
       if (skip !== 'color' && state.color.length && state.color.indexOf(p.color) === -1) return false;
@@ -328,6 +338,11 @@ window.VLIB = (function () {
         if (p.stock === 'order') counts.order++; else counts.in++;
       });
 
+      /* Галочками наличие тоже выбирается набором: отмечены обе — это
+         и есть «все», поэтому отдельная строка «Все» их снимает. */
+      var multi = !!o.multiNav;
+      var kind = multi ? 'checkbox' : 'radio';
+
       var opts = [
         ['all', 'Все', counts.in + counts.order],
         ['in', 'В наличии', counts.in],
@@ -336,32 +351,45 @@ window.VLIB = (function () {
 
       return '<div class="fgroup fgroup--nav fgroup--stock"><b>' + title + '</b>' +
         opts.map(function (o2) {
-          return '<label><input type="radio" name="r-stock" data-s value="' + o2[0] + '"' +
-            (state.stock === o2[0] ? ' checked' : '') + '>' +
+          var on = o2[0] === 'all' ? state.stock === 'all' : state.stock === o2[0];
+          return '<label><input type="' + kind + '" name="r-stock" ' +
+            (multi && o2[0] !== 'all' ? 'data-sm' : 'data-s') + ' value="' + o2[0] + '"' +
+            (on ? ' checked' : '') + '>' +
             '<span>' + o2[1] + '</span><span class="n">' + o2[2] + '</span></label>';
         }).join('') + '</div>';
     }
 
+    /* Помещение и тип мебели: переключателями (по одному) или галочками
+       (сколько угодно) — решает вариант через o.multiNav. Разметка группы
+       и подсчёты общие, различается только тип поля и обработчик. */
     function radios(field, title, dict) {
       var counts = facet(field);
       var keys = Object.keys(dict).filter(function (k) { return counts[k]; });
       if (!keys.length) return '';
 
+      // «Все» считает то же самое, но без условий своей группы.
       var total = D.products.filter(function (p) {
         var saved = state[field];
-        state[field] = '';
+        state[field] = [];
         var ok = match(p, field);
         state[field] = saved;
         return ok;
       }).length;
 
+      var multi = !!o.multiNav;
+      var kind = multi ? 'checkbox' : 'radio';
+      var none = !state[field].length;
+
       return '<div class="fgroup fgroup--nav"><b>' + title + '</b>' +
-        '<label><input type="radio" name="r-' + field + '" data-r="' + field + '" value=""' +
-          (state[field] ? '' : ' checked') + '><span>Все</span>' +
+        '<label><input type="' + kind + '" name="r-' + field + '" ' +
+          (multi ? 'data-all="' + field + '"' : 'data-r="' + field + '" value=""') +
+          (none ? ' checked' : '') + '><span>Все</span>' +
           '<span class="n">' + total + '</span></label>' +
         keys.map(function (k) {
-          return '<label><input type="radio" name="r-' + field + '" data-r="' + field +
-            '" value="' + k + '"' + (state[field] === k ? ' checked' : '') + '>' +
+          var on = state[field].indexOf(k) !== -1;
+          return '<label><input type="' + kind + '" name="r-' + field + '" ' +
+            (multi ? 'data-f' : 'data-r') + '="' + field +
+            '" value="' + k + '"' + (on ? ' checked' : '') + '>' +
             '<span>' + esc(dict[k]) + '</span><span class="n">' + counts[k] + '</span></label>';
         }).join('') + '</div>';
     }
@@ -369,9 +397,7 @@ window.VLIB = (function () {
     function url() {
       var u = new URLSearchParams();
       if (state.stock !== 'all') u.set('stock', state.stock);
-      if (state.room) u.set('room', state.room);
-      if (state.type) u.set('type', state.type);
-      ['factory', 'material', 'color', 'style'].forEach(function (f) {
+      ['room', 'type', 'factory', 'material', 'color', 'style'].forEach(function (f) {
         if (state[f].length) u.set(f, state[f].join(','));
       });
       if (state.min !== LO) u.set('min', state.min);
@@ -396,8 +422,10 @@ window.VLIB = (function () {
       if (state.stock !== 'all') {
         out.push(chip('stock', '', state.stock === 'in' ? 'В наличии' : 'Под заказ'));
       }
-      if (state.room) out.push(chip('room', '', D.ROOMS[state.room]));
-      if (state.type) out.push(chip('type', '', D.TYPES[state.type]));
+      /* Каждое выбранное помещение и каждый тип — своим чипом: снимается
+         по одному, а не всей группой. */
+      state.room.forEach(function (v) { out.push(chip('room', v, D.ROOMS[v])); });
+      state.type.forEach(function (v) { out.push(chip('type', v, D.TYPES[v])); });
       ['factory', 'material', 'color', 'style'].forEach(function (f) {
         state[f].forEach(function (v) { out.push(chip(f, v, v)); });
       });
@@ -415,13 +443,11 @@ window.VLIB = (function () {
           if (f === 'all') {
             state.factory = []; state.material = []; state.color = []; state.style = [];
             state.min = LO; state.max = HI; state.stock = 'all';
-            state.room = ''; state.type = '';
+            state.room = []; state.type = [];
           } else if (f === 'price') {
             state.min = LO; state.max = HI;
           } else if (f === 'stock') {
             state.stock = 'all';
-          } else if (f === 'room' || f === 'type') {
-            state[f] = '';
           } else {
             state[f] = state[f].filter(function (x) { return x !== v; });
           }
@@ -488,8 +514,12 @@ window.VLIB = (function () {
 
     function paintTitle() {
       var parts = [];
-      if (state.room) parts.push(D.ROOMS[state.room]);
-      if (state.type) parts.push(D.TYPES[state.type]);
+      /* Заголовок перечисляет выбранное, пока это читается строкой.
+         Дальше — «Каталог» и чипы: «Гостиная, Спальня, Кухни, Кабинет,
+         Детская в наличии» уже не заголовок, а список. */
+      var named = state.room.map(function (k) { return D.ROOMS[k]; })
+        .concat(state.type.map(function (k) { return D.TYPES[k]; }));
+      if (named.length && named.length <= 3) parts = named;
 
       var title = parts.length ? parts.join(' · ') : 'Каталог';
       if (state.stock === 'in') title += ' в наличии';
@@ -501,9 +531,13 @@ window.VLIB = (function () {
       if (o.crumbs) {
         var crumbs = '<a href="index.html">Главная</a><span>·</span>' +
           '<a href="catalog.html">Каталог</a>';
-        if (state.room) crumbs += '<span>·</span><a href="catalog.html?room=' + state.room + '">' +
-          D.ROOMS[state.room] + '</a>';
-        if (state.type) crumbs += '<span>·</span>' + D.TYPES[state.type];
+        /* Хлебные крошки — путь, а не список условий: они показывают
+           раздел только когда он один. */
+        if (state.room.length === 1) {
+          crumbs += '<span>·</span><a href="catalog.html?room=' + state.room[0] + '">' +
+            D.ROOMS[state.room[0]] + '</a>';
+        }
+        if (state.type.length === 1) crumbs += '<span>·</span>' + D.TYPES[state.type[0]];
         $(o.crumbs).innerHTML = crumbs;
       }
     }
@@ -511,9 +545,18 @@ window.VLIB = (function () {
     function bindFilters() {
       var box = $(o.filters);
 
+      // Одиночный выбор: в списке остаётся ровно один пункт или ни одного.
       $$('[data-r]', box).forEach(function (rb) {
         rb.addEventListener('change', function () {
-          state[rb.dataset.r] = rb.value;
+          state[rb.dataset.r] = rb.value ? [rb.value] : [];
+          render();
+        });
+      });
+
+      // Строка «Все» в группе с галочками: снимает всю группу.
+      $$('[data-all]', box).forEach(function (cb) {
+        cb.addEventListener('change', function () {
+          state[cb.dataset.all] = [];
           render();
         });
       });
@@ -523,6 +566,17 @@ window.VLIB = (function () {
       $$('[data-s]', box).forEach(function (rb) {
         rb.addEventListener('change', function () {
           state.stock = rb.value;
+          paintSwitch();
+          render();
+        });
+      });
+
+      /* Наличие галочками: отмечены обе — это «все», снята последняя —
+         тоже «все». Пустой список тут означал бы каталог без товаров. */
+      $$('[data-sm]', box).forEach(function (cb) {
+        cb.addEventListener('change', function () {
+          var on = $$('[data-sm]', box).filter(function (x) { return x.checked; });
+          state.stock = on.length === 1 ? on[0].value : 'all';
           paintSwitch();
           render();
         });
