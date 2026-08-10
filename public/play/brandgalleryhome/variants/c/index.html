@@ -48,7 +48,16 @@
         <h2 class="t-h2">В наличии сейчас</h2>
         <a class="linkline" href="catalog.html?stock=in">Всё, что в наличии</a>
       </div>
-      <div class="grid grid--4" id="hot"></div>
+      <!-- Ряд листается вбок: на телефоне пальцем, на широком экране
+           стрелками. Восемь позиций сеткой отодвигали бы всё остальное
+           на два экрана вниз. -->
+      <div class="rail rail--4" data-rail>
+        <div class="rail__track" id="hot"></div>
+        <button class="rail__btn rail__btn--prev" type="button" aria-label="Назад">
+          <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <button class="rail__btn rail__btn--next" type="button" aria-label="Вперёд">
+          <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+      </div>
     </div>
   </section>
 
@@ -134,7 +143,13 @@
         <h2 class="t-h2">Статьи</h2>
         <a class="linkline" href="articles.html">Все статьи</a>
       </div>
-      <div class="posts" data-art-list="tile" data-art-soon></div>
+      <div class="rail rail--3" data-rail>
+        <div class="rail__track posts" data-art-list="tile" data-art-soon></div>
+        <button class="rail__btn rail__btn--prev" type="button" aria-label="Назад">
+          <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <button class="rail__btn rail__btn--next" type="button" aria-label="Вперёд">
+          <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+      </div>
     </div>
   </section>
 

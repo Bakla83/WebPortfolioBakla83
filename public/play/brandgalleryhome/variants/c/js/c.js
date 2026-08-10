@@ -49,7 +49,17 @@
   function chrome() {
     var here = (location.pathname.split('/').pop() || 'index.html') + location.search;
 
-    var head = '<header class="head">' +
+    /* На телефоне верхняя строка с адресом и телефоном скрыта, а «Контакты»
+       лежат последним пунктом в меню под бургером — до них надо додуматься.
+       Поэтому над шапкой стоит короткая строка с переходом в контакты
+       и телефоном. Она вне липкой шапки: уезжает при прокрутке и не отъедает
+       у телефона высоту экрана вместе с поиском. */
+    var head = '<div class="head__mob">' +
+        '<a href="contacts.html">Контакты и схема проезда</a>' +
+        '<a href="tel:' + TEL + '">' + PHONE + '</a>' +
+      '</div>' +
+
+      '<header class="head">' +
       '<div class="head__top"><div class="wrap">' +
         '<span>' + ADDRESS_SHORT + ' · ' + HOURS + '</span>' +
         '<span><a href="request.html?showroom=1">Записаться в шоурум</a>' +
@@ -140,6 +150,48 @@
     V.paintCount();
   }
 
+  /* ------------------------------------------------------------- ленты */
+
+  /* Ряды, которые листаются вбок. На телефоне их листают пальцем, на
+     широком экране — стрелками по краям: колесо мыши горизонтальную
+     прокрутку не даёт, и без стрелок половина ряда остаётся невидимой.
+     Стрелки появляются только тогда, когда ряд действительно длиннее
+     экрана, — иначе они врут о том, что дальше что-то есть. */
+  function rails() {
+    $$('[data-rail]').forEach(function (rail) {
+      var track = $('.rail__track', rail);
+      if (!track) return;
+
+      var prev = $('.rail__btn--prev', rail);
+      var next = $('.rail__btn--next', rail);
+
+      function paint() {
+        var max = track.scrollWidth - track.clientWidth;
+        var can = max > 4;
+        rail.classList.toggle('is-rail', can);
+        if (!can) return;
+        prev.disabled = track.scrollLeft <= 2;
+        next.disabled = track.scrollLeft >= max - 2;
+      }
+
+      function step(dir) {
+        track.scrollBy({ left: dir * Math.round(track.clientWidth * .82), behavior: 'smooth' });
+      }
+
+      prev.addEventListener('click', function () { step(-1); });
+      next.addEventListener('click', function () { step(1); });
+      track.addEventListener('scroll', paint, { passive: true });
+      window.addEventListener('resize', paint);
+
+      paint();
+      /* Содержимое лент рисуют разные скрипты, часть — уже после нас
+         (лента статей живёт в общем pages.js). Пересчитываем, когда
+         ширина ряда изменилась. */
+      if ('ResizeObserver' in window) new ResizeObserver(paint).observe(track);
+      else setTimeout(paint, 300);
+    });
+  }
+
   /* ------------------------------------------------------------ карточка */
 
   function card(p) {
@@ -206,8 +258,29 @@
       title: '#ctitle', crumbs: '#ccrumbs', sort: '#sort', chips: '#chips',
       open: '#fopen', close: '#fclose',
       card: card,
-      after: paintBrands,
+      /* Наличие стоит и над списком, и первой группой в колонке фильтров:
+         переключатель над сеткой видят не все, а «в наличии» — самое
+         частое условие на этом сайте. */
+      stockGroup: true,
+      after: function (state, api) { paintBrands(state, api); fitFilters(); },
     });
+
+    /* Колонка фильтров не обрезается и не прокручивается внутри себя:
+       разбивка по материалу, цвету и стилю длинная, и во внутреннем окне
+       из неё видно две строки. Пока колонка помещается в экран — она
+       липкая, как раньше; переросла экран — становится обычной длинной
+       колонкой, иначе до её низа не добраться. */
+    function fitFilters() {
+      var box = $('#filters');
+      if (!box) return;
+      /* Ниже 1080 колонки нет вовсе: там фильтры лежат под сеткой,
+         а на телефоне открываются панелью на весь экран — липкость
+         в обоих случаях только мешает. */
+      var wide = window.matchMedia('(min-width: 1081px)').matches;
+      box.classList.toggle('is-fixed', wide && box.scrollHeight + 160 < window.innerHeight);
+    }
+
+    window.addEventListener('resize', fitFilters);
 
     /* Полка марок и есть «страница фабрики» этого варианта: выбрана одна
        марка — над сеткой разворачивается её описание и счётчик наличия. */
@@ -351,6 +424,12 @@
   initHome();
   initCatalog();
   initProduct();
-  V.request({ picked: '#picked', sum: '#sum', form: '#reqform', sent: '#sent' });
+  V.request({
+    picked: '#picked', sum: '#sum', form: '#reqform', sent: '#sent',
+    // «С известной ценой» объясняет механику подборки, а человек ищет
+    // глазами сумму. Механика остаётся строкой ниже.
+    sumLabel: 'Цена',
+  });
+  rails();
   V.reveal();
 })();

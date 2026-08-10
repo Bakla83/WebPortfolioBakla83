@@ -313,6 +313,35 @@ window.VLIB = (function () {
       return '<div class="fgroup"><b>' + title + '</b>' + body + more + '</div>';
     }
 
+    /* Наличие отдельной группой в колонке фильтров. Включает его вариант
+       (o.stockGroup): там, где переключатель наличия стоит только над
+       списком, из основного каталога в наличие иначе не попасть —
+       человек должен догадаться нажать на строку над сеткой. */
+    function stockChecks(title) {
+      var counts = { in: 0, order: 0 };
+      D.products.forEach(function (p) {
+        var saved = state.stock;
+        state.stock = 'all';
+        var ok = match(p);
+        state.stock = saved;
+        if (!ok) return;
+        if (p.stock === 'order') counts.order++; else counts.in++;
+      });
+
+      var opts = [
+        ['all', 'Все', counts.in + counts.order],
+        ['in', 'В наличии', counts.in],
+        ['order', 'Под заказ', counts.order],
+      ];
+
+      return '<div class="fgroup fgroup--nav fgroup--stock"><b>' + title + '</b>' +
+        opts.map(function (o2) {
+          return '<label><input type="radio" name="r-stock" data-s value="' + o2[0] + '"' +
+            (state.stock === o2[0] ? ' checked' : '') + '>' +
+            '<span>' + o2[1] + '</span><span class="n">' + o2[2] + '</span></label>';
+        }).join('') + '</div>';
+    }
+
     function radios(field, title, dict) {
       var counts = facet(field);
       var keys = Object.keys(dict).filter(function (k) { return counts[k]; });
@@ -427,6 +456,7 @@ window.VLIB = (function () {
       }
 
       $(o.filters).innerHTML =
+        (o.stockGroup ? stockChecks('Наличие') : '') +
         radios('room', 'Помещение', D.ROOMS) +
         radios('type', 'Тип мебели', D.TYPES) +
         '<div class="fgroup"><b>Цена, ₽</b>' +
@@ -484,6 +514,16 @@ window.VLIB = (function () {
       $$('[data-r]', box).forEach(function (rb) {
         rb.addEventListener('change', function () {
           state[rb.dataset.r] = rb.value;
+          render();
+        });
+      });
+
+      /* Наличие из колонки фильтров и переключатель над списком — одно
+         и то же состояние: после выбора перекрашиваем и его. */
+      $$('[data-s]', box).forEach(function (rb) {
+        rb.addEventListener('change', function () {
+          state.stock = rb.value;
+          paintSwitch();
           render();
         });
       });
@@ -605,7 +645,8 @@ window.VLIB = (function () {
 
       if (o.sum) {
         $(o.sum).innerHTML = known.length
-          ? '<span class="sum__lab">С известной ценой</span><b>' + money(total) + '</b>' +
+          ? '<span class="sum__lab">' + (o.sumLabel || 'С известной ценой') + '</span>' +
+            '<b>' + money(total) + '</b>' +
             (known.length < list.length
               ? '<span class="sum__note">по остальным ' + (list.length - known.length) + ' ' +
                 plural(list.length - known.length, ['позиции', 'позициям', 'позициям']) +

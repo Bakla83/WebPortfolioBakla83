@@ -147,6 +147,10 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
    всё время. */
 .head { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--line); }
 
+/* Строка контактов только для телефона: на широком экране то же самое
+   стоит в head__top. */
+.head__mob { display: none; }
+
 .head__top { background: var(--surface); border-bottom: 1px solid var(--line); font-size: 12.5px; color: var(--ink-2); }
 .head__top .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; height: 36px; }
 .head__top a:hover { color: var(--brand); }
@@ -269,7 +273,10 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
 .card__add:hover { border-color: var(--brand); color: var(--brand); }
-.card__add.is-in { background: var(--brand); border-color: var(--brand); color: #fff; }
+/* Отмеченная карточка красится тем же зелёным, что и «в наличии»:
+   в этом варианте зелёный означает «это уже у вас», и два разных
+   зелёных в одной карточке читаются как два разных состояния. */
+.card__add.is-in { background: var(--stock); border-color: var(--stock); color: #fff; }
 
 /* Разделы — плотная сетка плиток с числом позиций. */
 .tiles { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
@@ -309,6 +316,56 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
 .posts h3 { font-size: 15px; padding: 12px 14px 4px; }
 .posts span { display: block; padding: 0 14px 14px; font-size: 12.5px; color: var(--ink-3); }
 
+/* ------------------------------------------------------- ленты вбок */
+
+/* Ряды «В наличии сейчас» и «Статьи» листаются вправо-влево, а не
+   лежат сеткой: наличия восемь позиций, и сеткой они съедали бы экран,
+   ради которого главная и сделана короткой.
+
+   Правило то же, что у полки марок в каталоге: прокрутка пальцем,
+   привязка к краю карточки, стрелки для мыши. Стрелки показываются
+   классом is-rail — его ставит скрипт, когда ряд правда длиннее экрана. */
+.rail { position: relative; }
+.rail__track {
+  display: flex; gap: 18px;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity; scroll-padding-left: 2px;
+  padding: 2px 2px 10px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+.rail__track > * { flex: 0 0 auto; scroll-snap-align: start; }
+.rail--4 .rail__track > * { width: calc((100% - 54px) / 4); }
+/* Статей пока три, и ровно три помещаются в ряд — тогда листать было бы
+   нечего и лента врала бы стрелками. Поэтому ширина считается на 2,6:
+   третья карточка обрезана краем и ряд листается на любом экране. */
+.rail--3 .rail__track > * { width: calc((100% - 36px) / 2.6); }
+
+/* Полоса прокрутки в этом ряду лишняя: границу ряда и так видно
+   по обрезанной карточке, а на широком экране полоса тянется
+   через весь блок и спорит с рамками карточек. */
+.rail__track::-webkit-scrollbar { height: 0; }
+
+.rail__btn {
+  display: none; position: absolute; top: calc(50% - 22px); z-index: 5;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--bg); border: 1px solid var(--line-2);
+  box-shadow: var(--shadow);
+  align-items: center; justify-content: center;
+  transition: opacity var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.rail.is-rail .rail__btn { display: inline-flex; }
+.rail__btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.rail__btn:hover { border-color: var(--brand); color: var(--brand); }
+.rail__btn:disabled { opacity: 0; pointer-events: none; }
+.rail__btn--prev { left: -18px; }
+.rail__btn--next { right: -18px; }
+
+/* Пальцем ряд листается и без стрелок, а места по краям на телефоне нет. */
+@media (hover: none), (max-width: 860px) {
+  .rail.is-rail .rail__btn { display: none; }
+}
+
 /* ----------------------------------------------------------- каталог */
 
 .crumbs { display: flex; flex-wrap: wrap; gap: 7px; font-size: 12.5px; color: var(--ink-3); padding: 16px 0 12px; }
@@ -340,16 +397,31 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
 
 .cat { display: grid; grid-template-columns: 268px minmax(0, 1fr); gap: 26px; align-items: start; padding-bottom: 70px; }
 
-/* Колонка фильтров развёрнута всегда и липкая: в этом варианте
-   она главный инструмент, а не выдвижная панель. */
+/* Колонка фильтров развёрнута всегда: в этом варианте она главный
+   инструмент, а не выдвижная панель.
+
+   Внутреннего окна с прокруткой у неё больше нет. Разбивка по материалу,
+   цвету и стилю длинная, и в окне высотой в экран от каждой группы
+   было видно по паре строк. Теперь колонка идёт во всю свою длину,
+   а липкой остаётся только тогда, когда целиком помещается в экран, —
+   класс is-fixed ставит скрипт. Иначе до низа колонки не добраться:
+   липкий блок увозит его за нижний край. */
 .filters {
-  position: sticky; top: 128px;
   border: 1px solid var(--line); border-radius: var(--r);
-  padding: 16px; display: grid; gap: 18px;
-  max-height: calc(100vh - 148px); overflow: auto;
+  padding: 16px; display: grid; gap: 18px; align-content: start;
 }
+.filters.is-fixed { position: sticky; top: 128px; }
 .fgroup b { display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 8px; }
 .fgroup label { display: flex; align-items: center; gap: 9px; padding: 4px 0; font-size: 13.5px; cursor: pointer; }
+/* Значения фильтров приходят из данных как есть: помещения и фабрики
+   с заглавной, материалы, цвета и стили — со строчной («кожа»,
+   «песочный»). В одном столбце это выглядит как небрежность,
+   поэтому первая буква поднимается оформлением, а не правкой данных:
+   в карточке товара «отделка: кожа» должна остаться строчной. */
+.fgroup label > span:first-of-type { display: inline-block; }
+.fgroup label > span:first-of-type::first-letter { text-transform: uppercase; }
+/* «В наличии» в колонке фильтров — тем же зелёным, что и в карточках. */
+.fgroup--stock label:nth-child(3) span:first-of-type { color: var(--stock); font-weight: 500; }
 .fgroup label.is-extra { display: none; }
 .fgroup.is-open label.is-extra { display: flex; }
 .fgroup label .n { margin-left: auto; font-size: 12px; color: var(--ink-3); }
@@ -471,16 +543,28 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
 
 @media (max-width: 1080px) {
   .grid--4 { grid-template-columns: repeat(3, 1fr); }
+  .rail--4 .rail__track > * { width: calc((100% - 36px) / 3); }
+  .rail--3 .rail__track > * { width: calc((100% - 18px) / 2); }
   .claims { grid-template-columns: repeat(2, 1fr); }
   .foot__cols { grid-template-columns: 1fr 1fr; }
   .cat { grid-template-columns: 232px minmax(0, 1fr); }
   .prod, .req { grid-template-columns: 1fr; }
   .buy, .filters, .toolbar { position: static; max-height: none; }
+  .filters.is-fixed { position: static; top: auto; }
 }
 
 @media (max-width: 860px) {
   :root { --gut: 16px; }
   .head__top { display: none; }
+  /* Вместо скрытой верхней строки — переход в контакты и телефон
+     над шапкой: на телефоне до подвала с адресом ещё надо доехать. */
+  .head__mob {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 8px var(--gut);
+    background: var(--surface); border-bottom: 1px solid var(--line);
+    font-size: 12.5px; color: var(--ink-2);
+  }
+  .head__mob a:last-child { font-weight: 500; color: var(--brand); white-space: nowrap; }
   /* Поиск уезжает на вторую строку, но остаётся на виду: в этом варианте
      он главный вход, прятать его за иконку нельзя. */
   .head__row { grid-template-columns: 1fr auto; gap: 10px; }
@@ -500,6 +584,10 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
   .nav a { padding: 13px 12px; }
 
   .grid--4, .grid--3 { grid-template-columns: repeat(2, 1fr); }
+  /* Соседняя карточка обрезана краем экрана: это и есть подсказка,
+     что ряд листается. */
+  .rail--4 .rail__track > * { width: calc((100% - 18px) / 2); }
+  .rail--3 .rail__track > * { width: 80%; }
   .tiles { grid-template-columns: repeat(3, 1fr); }
   .posts { grid-template-columns: 1fr; }
   .showroom { grid-template-columns: 1fr; }
@@ -509,7 +597,11 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
   /* Фильтры на телефоне — панель на весь экран по кнопке. */
   .cat { grid-template-columns: 1fr; }
   .fopen { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 0 16px; border: 1px solid var(--line-2); border-radius: var(--r-s); font-size: 13.5px; font-weight: 500; }
-  .filters { display: none; position: fixed; inset: 0; z-index: 70; border: 0; border-radius: 0; padding: 16px var(--gut) 84px; max-height: none; overflow: auto; }
+  /* Фон здесь обязателен: панель лежит поверх каталога, и без него
+     сквозь фильтры просвечивают шапка и карточки товара. */
+  .filters { display: none; position: fixed; inset: 0; z-index: 70; background: var(--bg); border: 0; border-radius: 0; padding: 16px var(--gut) 84px; max-height: none; overflow: auto; }
+  /* Панель на весь экран сильнее липкой колонки: на телефоне колонки нет. */
+  .filters.is-fixed { position: fixed; top: 0; }
   .filters.is-open { display: grid; }
   .fclose { display: none; position: fixed; left: var(--gut); right: var(--gut); bottom: 14px; z-index: 71; height: 48px; background: var(--brand); color: #fff; border-radius: var(--r-s); font-size: 14px; font-weight: 500; }
   .filters.is-open ~ .fclose { display: block; }
@@ -523,6 +615,8 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
 
 @media (max-width: 480px) {
   .tiles { grid-template-columns: repeat(2, 1fr); }
+  .rail--4 .rail__track > * { width: 68%; }
+  .rail--3 .rail__track > * { width: 84%; }
   .prod__gal { grid-template-columns: 1fr; }
   .prod__thumbs { grid-template-columns: repeat(4, 1fr); }
   .hero__chips a { font-size: 12.5px; padding: 8px 12px; }
