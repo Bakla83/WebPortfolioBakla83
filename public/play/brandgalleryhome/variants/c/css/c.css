@@ -778,6 +778,11 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
 }
 
 @media (max-width: 480px) {
+  /* Знак уменьшен и в шапке, и в подвале: на узком экране «Brand Gallery
+     Home» на полном размере переносится на вторую строку. */
+  .head .logo__name { font-size: 17px; letter-spacing: .03em; }
+  .foot .logo__name { font-size: 20px; letter-spacing: .06em; }
+
   .tiles { grid-template-columns: repeat(2, 1fr); }
   .rail--4 .rail__track > * { width: 68%; }
   .rail--3 .rail__track > * { width: 84%; }

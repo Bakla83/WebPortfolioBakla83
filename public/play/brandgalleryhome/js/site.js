@@ -188,7 +188,7 @@
 
   function logo(sub) {
     return '<a class="logo" href="index.html">' +
-      '<span class="logo__name">Brand Gallery</span>' +
+      '<span class="logo__name">Brand Gallery Home</span>' +
       (sub === false ? '' : '<span class="logo__sub">Итальянская мебель · Краснодар</span>') +
       '</a>';
   }
@@ -669,7 +669,7 @@
       if (state.stock === 'in') title += ' в наличии';
       if (state.stock === 'order') title += ' под заказ';
       $('#ctitle').textContent = title;
-      document.title = title + ' — Brand Gallery, Краснодар';
+      document.title = title + ' — Brand Gallery Home, Краснодар';
 
       var crumbs = '<a href="index.html">Главная</a><span>·</span>' +
         '<a href="catalog.html">Каталог</a>';
@@ -768,7 +768,7 @@
     var p = byId(id) || D.products[0];
     var inPick = picked().indexOf(p.id) !== -1;
 
-    document.title = p.name + ', ' + p.factory + ' — Brand Gallery, Краснодар';
+    document.title = p.name + ', ' + p.factory + ' — Brand Gallery Home, Краснодар';
 
     $('#pcrumbs').innerHTML = '<a href="index.html">Главная</a><span>·</span>' +
       '<a href="catalog.html">Каталог</a><span>·</span>' +
@@ -904,7 +904,7 @@
     var all = D.products.filter(function (p) { return p.factory === name; });
     var inStock = all.filter(function (p) { return p.stock !== 'order'; });
 
-    document.title = name + ' в Краснодаре — Brand Gallery';
+    document.title = name + ' в Краснодаре — Brand Gallery Home';
     $('#fcrumbs').innerHTML = '<a href="index.html">Главная</a><span>·</span>' +
       '<a href="factory.html">Фабрики</a><span>·</span>' + esc(name);
 

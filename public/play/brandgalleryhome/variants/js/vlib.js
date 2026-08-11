@@ -562,7 +562,7 @@ window.VLIB = (function () {
       if (state.stock === 'order') title += ' под заказ';
 
       if (o.title) $(o.title).textContent = title;
-      document.title = title + ' — Brand Gallery, Краснодар';
+      document.title = title + ' — Brand Gallery Home, Краснодар';
 
       if (o.crumbs) {
         var crumbs = '<a href="index.html">Главная</a><span>·</span>' +

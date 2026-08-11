@@ -71,7 +71,7 @@
         '<div class="head__left">' +
           '<button class="burger" id="burger" aria-label="Меню" aria-expanded="false">' +
             '<span></span><span></span><span></span></button>' +
-          '<a class="logo" href="index.html"><span class="logo__name">Brand Gallery</span>' +
+          '<a class="logo" href="index.html"><span class="logo__name">Brand Gallery Home</span>' +
           '<span class="logo__sub">Итальянская мебель · Краснодар</span></a>' +
         '</div>' +
 
@@ -108,7 +108,7 @@
 
     var foot = '<footer class="foot"><div class="wrap">' +
       '<div class="foot__cols">' +
-        '<div><a class="logo" href="index.html"><span class="logo__name">Brand Gallery</span></a>' +
+        '<div><a class="logo" href="index.html"><span class="logo__name">Brand Gallery Home</span></a>' +
           '<p style="margin-top:14px;max-width:36ch">Салон итальянской мебели премиум-класса. ' +
           'Прямые поставки с фабрик Италии, шоурум в Краснодаре.</p></div>' +
         '<div><h4>По помещению</h4><ul>' + rooms + '</ul></div>' +
@@ -387,7 +387,7 @@
     var p = V.byId(id) || D.products[0];
     var inPick = V.picked().indexOf(p.id) !== -1;
 
-    document.title = p.name + ', ' + p.factory + ' — Brand Gallery, Краснодар';
+    document.title = p.name + ', ' + p.factory + ' — Brand Gallery Home, Краснодар';
 
     $('#pcrumbs').innerHTML = '<a href="index.html">Главная</a><span>·</span>' +
       '<a href="catalog.html">Каталог</a><span>·</span>' +

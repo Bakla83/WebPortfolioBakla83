@@ -569,6 +569,9 @@ input, textarea, select { font: inherit; color: inherit; }
 .foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
 .foot a:hover { color: var(--terra); }
 .foot .logo { text-align: left; color: var(--onDark); }
+/* Первая колонка подвала уже полного знака: на 27px «Brand Gallery Home»
+   переносится на вторую строку даже на широком экране. */
+.foot .logo__name { font-size: 23px; letter-spacing: .08em; }
 .foot__legal { padding-top: 26px; font-size: 12px; line-height: 1.7; }
 .foot__legal p { margin: 0 0 8px; }
 
@@ -592,9 +595,13 @@ input, textarea, select { font: inherit; color: inherit; }
 
 @media (max-width: 760px) {
   .head__top { display: none; }
-  .head__row { grid-template-columns: auto 1fr auto; padding: 14px 0; }
+  .head__row { grid-template-columns: auto 1fr auto; gap: 12px; padding: 14px 0; }
   .logo { text-align: left; }
   .logo__sub { display: none; }
+  /* Знак в шапке уменьшен: между бургером и корзиной ему остаётся около
+     полутора сотен пикселей, и на полном размере «Brand Gallery Home»
+     ломается на три строки, раздувая шапку. */
+  .head .logo__name { font-size: 17px; letter-spacing: .04em; }
   .iconbtn span:not(.iconbtn__n) { display: none; }
   .burger { display: flex; }
 
@@ -650,6 +657,14 @@ input, textarea, select { font: inherit; color: inherit; }
 }
 
 @media (max-width: 420px) {
+  /* На самых узких экранах знаку остаётся около сотни пикселей между
+     бургером и корзиной. Ужимаем отступы шапки и сам знак, иначе
+     «Brand Gallery Home» ломается на три строки. */
+  .head__row { gap: 8px; }
+  .head__left { gap: 6px; }
+  .head .logo__name { font-size: 13px; letter-spacing: .03em; }
+  .foot .logo__name { font-size: 19px; letter-spacing: .06em; }
+
   .grid--3, .grid--4 { gap: 22px 12px; }
   .card__name { font-size: 19px; }
   .card__price { font-size: 19px; }

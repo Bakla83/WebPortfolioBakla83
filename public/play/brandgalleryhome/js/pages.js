@@ -279,7 +279,7 @@
     $$('[data-art-date]').forEach(function (el) { el.textContent = a.date; });
     $$('[data-art-read]').forEach(function (el) { el.textContent = a.read; });
 
-    document.title = a.title + ' — Brand Gallery, Краснодар';
+    document.title = a.title + ' — Brand Gallery Home, Краснодар';
     var desc = document.querySelector('meta[name="description"]');
     if (desc) desc.setAttribute('content', a.lead);
 

@@ -46,7 +46,7 @@
 
   function logo() {
     return '<a class="logo" href="index.html">' +
-      '<span class="logo__name">Brand Gallery</span>' +
+      '<span class="logo__name">Brand Gallery Home</span>' +
       '<span class="logo__sub">Итальянская мебель · Краснодар</span></a>';
   }
 
@@ -316,7 +316,7 @@
     var all = D.products.filter(function (p) { return p.factory === name; });
     var inStock = all.filter(function (p) { return p.stock !== 'order'; });
 
-    document.title = name + ' в Краснодаре — Brand Gallery';
+    document.title = name + ' в Краснодаре — Brand Gallery Home';
 
     box.innerHTML =
       '<div class="fab__cover"><div class="wrap">' +
@@ -368,7 +368,7 @@
     var p = V.byId(id) || D.products[0];
     var inPick = V.picked().indexOf(p.id) !== -1;
 
-    document.title = p.name + ', ' + p.factory + ' — Brand Gallery, Краснодар';
+    document.title = p.name + ', ' + p.factory + ' — Brand Gallery Home, Краснодар';
 
     $('#pcrumbs').innerHTML = '<a href="index.html">Главная</a><span>·</span>' +
       '<a href="factory.html">Фабрики</a><span>·</span>' +
