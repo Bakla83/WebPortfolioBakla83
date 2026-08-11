@@ -339,12 +339,25 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
 .brandline a span { font-size: 12px; color: var(--ink-3); }
 .brandline a:hover { border-color: var(--brand); color: var(--brand); }
 
-.showroom { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
-.showroom .ph { aspect-ratio: 16 / 10; height: 100%; }
-.showroom__txt { padding: clamp(22px, 3vw, 38px); }
+/* minmax(0, 1fr) вместо 1fr обязателен: колонка по умолчанию не сжимается
+   уже своего содержимого, и на среднем экране половины переставали
+   помещаться в блок — текст уезжал под снимок и обрезался рамкой. */
+.showroom { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+
+/* Снимок лежит слоем в своей половине и не участвует в расчёте ширины.
+   Раньше он держал aspect-ratio при height:100% — то есть требовал ширину
+   по собственной высоте, и чем выше становился текст на узком экране,
+   тем шире картинка отжимала соседнюю колонку. Высоту ряда задаёт текст,
+   а min-height не даёт снимку выродиться в полоску на широком экране. */
+.showroom__art { position: relative; min-width: 0; min-height: clamp(220px, 24vw, 360px); }
+.showroom__art > .ph { position: absolute; inset: 0; }
+.showroom__txt { min-width: 0; padding: clamp(20px, 3vw, 38px); }
 .showroom__txt p { color: var(--ink-2); margin: 10px 0 20px; }
 .showroom__facts { display: grid; gap: 10px; margin-bottom: 22px; font-size: 14px; }
 .showroom__facts b { display: block; font-size: 12px; color: var(--ink-3); font-weight: 400; }
+/* Почта и адрес — самые длинные неразрывные строки на странице:
+   без переноса именно они распирают колонку на узком экране. */
+.showroom__facts div { overflow-wrap: anywhere; }
 
 .faq { display: grid; gap: 10px; }
 .faq details { border: 1px solid var(--line); border-radius: var(--r); background: var(--bg); }
@@ -377,7 +390,6 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
   scroll-snap-type: x proximity; scroll-padding-left: 2px;
   padding: 2px 2px 10px;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
 }
 .rail__track > * { flex: 0 0 auto; scroll-snap-align: start; }
 .rail--4 .rail__track > * { width: calc((100% - 54px) / 4); }
@@ -386,10 +398,21 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
    третья карточка обрезана краем и ряд листается на любом экране. */
 .rail--3 .rail__track > * { width: calc((100% - 36px) / 2.6); }
 
-/* Полоса прокрутки в этом ряду лишняя: границу ряда и так видно
+/* Полоса прокрутки в этих рядах лишняя: границу ряда и так видно
    по обрезанной карточке, а на широком экране полоса тянется
-   через весь блок и спорит с рамками карточек. */
-.rail__track::-webkit-scrollbar { height: 0; }
+   через весь блок и спорит с рамками карточек.
+
+   Убирать её нужно обоими способами. Одного ::-webkit-scrollbar мало:
+   как только у элемента задан scrollbar-width, Chrome рисует полосу
+   по нему и правило псевдоэлемента целиком игнорирует — из-за этого
+   под лентой статей и появлялась тонкая полоса. Одного scrollbar-width
+   тоже мало: старые webkit-браузеры его не знают. */
+.rail__track,
+.brandbar,
+.nav { scrollbar-width: none; -ms-overflow-style: none; }
+.rail__track::-webkit-scrollbar,
+.brandbar::-webkit-scrollbar,
+.nav::-webkit-scrollbar { width: 0; height: 0; }
 
 .rail__btn {
   display: none; position: absolute; top: calc(50% - 22px); z-index: 5;
@@ -644,6 +667,15 @@ h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.15; letter-spacing: -.0
 }
 
 @media (max-width: 1080px) {
+  /* Меню перестаёт помещаться в строку около этой ширины и начинает
+     ездить вбок — последний пункт срезан краем экрана. Прятать разделы
+     рано: до телефонного бургера ещё двести пикселей. Поэтому поля
+     пунктов ужимаются, а остаток при самой узкой ширине переносится
+     на вторую строку. Боком меню здесь не листается: полосы прокрутки
+     у него нет, и обрезанный пункт выглядел бы просто пропавшим. */
+  .nav { gap: 0; font-size: 13px; flex-wrap: wrap; overflow-x: visible; }
+  .nav a { padding: 8px clamp(7px, 1vw, 11px); }
+
   .grid--4 { grid-template-columns: repeat(3, 1fr); }
   .rail--4 .rail__track > * { width: calc((100% - 36px) / 3); }
   .rail--3 .rail__track > * { width: calc((100% - 18px) / 2); }
