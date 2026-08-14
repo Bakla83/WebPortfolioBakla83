@@ -1,34 +1,22 @@
-/**
- * Клиентская логика сайта: тема, мобильное меню, выпадающий список,
- * запоминание языка и кнопки «скопировать».
- *
- * Всё построено так, что без JS сайт остаётся рабочим: ссылки — настоящие
- * ссылки, меню открывается отдельной страницей не нужно, тема приходит
- * из :root. Скрипт только добавляет удобства.
- */
-
 const THEME_KEY = 'theme';
 const LANG_KEY = 'lang';
 
 type Theme = 'dark' | 'light';
 
-/** localStorage может бросать в приватном режиме — везде оборачиваем. */
 function safeSet(key: string, value: string): void {
   try {
     localStorage.setItem(key, value);
   } catch {
-    /* пользователь запретил хранилище — просто не запоминаем выбор */
+
   }
 }
-
-/* ------------------------------------------------------------------ тема */
 
 function currentTheme(): Theme {
   return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
 }
 
 function syncToggleLabel(button: HTMLElement): void {
-  // Кнопка предлагает противоположную тему — подпись должна это отражать
+
   const next = currentTheme() === 'dark' ? 'light' : 'dark';
   const label = next === 'light' ? button.dataset.labelLight : button.dataset.labelDark;
   if (label) {
@@ -51,8 +39,6 @@ function initTheme(): void {
   });
 }
 
-/* --------------------------------------------------------- мобильное меню */
-
 function initMobileMenu(): void {
   const panel = document.querySelector<HTMLElement>('[data-menu-panel]');
   const openBtn = document.querySelector<HTMLElement>('[data-menu-open]');
@@ -62,7 +48,7 @@ function initMobileMenu(): void {
   const setOpen = (open: boolean): void => {
     panel.hidden = !open;
     openBtn.setAttribute('aria-expanded', String(open));
-    // Фон не должен прокручиваться под открытым меню
+
     document.body.style.overflow = open ? 'hidden' : '';
     if (open) {
       closeBtn?.focus();
@@ -78,8 +64,6 @@ function initMobileMenu(): void {
     if (event.key === 'Escape' && !panel.hidden) setOpen(false);
   });
 
-  // Переход по ссылке внутри меню закрывает его — иначе при возврате
-  // из кэша браузера меню остаётся открытым, а тело заблокированным
   panel.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => setOpen(false));
   });
@@ -89,13 +73,10 @@ function initMobileMenu(): void {
   });
 }
 
-/* -------------------------------------------------- выпадающий список меню */
-
 function initDropdowns(): void {
   const dropdowns = document.querySelectorAll<HTMLDetailsElement>('[data-dropdown]');
   if (!dropdowns.length) return;
 
-  // Клик мимо закрывает: <details> сам этого не умеет
   document.addEventListener('click', (event) => {
     const target = event.target as Node;
     dropdowns.forEach((dropdown) => {
@@ -113,11 +94,8 @@ function initDropdowns(): void {
   });
 }
 
-/* ----------------------------------------------------------------- язык */
-
 function initLangMemory(): void {
-  // Явный выбор языка запоминается, чтобы корневой / в следующий раз
-  // открыл именно его, а не то, что стоит в браузере
+
   document.querySelectorAll<HTMLAnchorElement>('[data-lang-switcher] a[data-lang]').forEach((a) => {
     a.addEventListener('click', () => {
       const code = a.dataset.lang;
@@ -125,8 +103,6 @@ function initLangMemory(): void {
     });
   });
 }
-
-/* ------------------------------------------------------------- копировать */
 
 function initCopyButtons(): void {
   document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((button) => {
@@ -144,19 +120,16 @@ function initCopyButtons(): void {
           }, 1800);
         }
       } catch {
-        /* без разрешения на буфер обмена — пользователь скопирует руками */
+
       }
     });
   });
 }
 
-/* ------------------------------------------------------ появление секций */
-
 function initReveal(): void {
   const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
   if (!items.length) return;
 
-  // Уважаем системную настройку: при reduce-motion просто показываем всё
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     items.forEach((item) => item.classList.add('is-visible'));
     return;

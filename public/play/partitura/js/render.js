@@ -1,26 +1,12 @@
-/*
-  Раскладка и отрисовка нотного листа.
-
-  Ни шрифта, ни картинок: все знаки — ключи, головки, штили, вязки, паузы,
-  диезы — строятся кодом как пути SVG. Причина простая: музыкальные шрифты
-  вроде Bravura весят сотни килобайт и их пришлось бы тянуть с чужого
-  домена, а системные шрифты музыкальные символы либо не содержат вовсе,
-  либо рисуют их в неверном масштабе относительно стана. Свои пути ещё и
-  масштабируются вместе с ним: весь размер задаётся одной величиной S —
-  расстоянием между линейками.
-
-  Единица высоты — полпромежутка: соседние ступени стоят через S/2, поэтому
-  нота попадает то на линейку, то между линейками сама собой.
-*/
 window.Partitura = window.Partitura || {};
 
 (function (ns) {
   'use strict';
 
-  const S = 12; // расстояние между линейками
+  const S = 12;
   const STAFF_H = S * 4;
   const PAD_X = 18;
-  const SYS_TOP = 52; // запас сверху под добавочные линейки и штили
+  const SYS_TOP = 52;
   const SYS_BOTTOM = 52;
   const SYS_H = SYS_TOP + STAFF_H + SYS_BOTTOM;
 
@@ -33,23 +19,18 @@ window.Partitura = window.Partitura || {};
   const ACC_W = 13;
   const METER_W = 28;
 
-  /** Ступень верхней линейки стана: фа второй октавы / ля малой. */
   const TOP_LINE_D = { treble: 38, bass: 26 };
 
   const sc = ns.score;
-
-  /* ─────────────────────────────── геометрия ─────────────────────────────── */
 
   function topLineD(clef) {
     return TOP_LINE_D[clef] || TOP_LINE_D.treble;
   }
 
-  /** Ступень → y относительно верхней линейки стана. */
   function yOfD(clef, d, staffTop) {
     return staffTop + ((topLineD(clef) - d) * S) / 2;
   }
 
-  /** Обратный переход: y → ближайшая ступень. Нужен для клика по стану. */
   function dOfY(clef, y, staffTop) {
     return topLineD(clef) - Math.round(((y - staffTop) * 2) / S);
   }
@@ -62,21 +43,11 @@ window.Partitura = window.Partitura || {};
     return fifths === 0 ? 0 : Math.abs(fifths) * 10 + 8;
   }
 
-  /* ──────────────────────────────── раскладка ──────────────────────────── */
-
-  /**
-   * Считает, какой такт на какой строке стоит и где именно лежит каждая нота.
-   *
-   * Разметка идёт до отрисовки и отдельно от неё: по этой же раскладке
-   * работают попадание мышью, подсветка при воспроизведении и прокрутка
-   * к звучащему такту.
-   */
   function layout(score, width) {
     const bars = sc.measures(score);
     const inner = Math.max(320, width) - PAD_X * 2;
     const headWidth = CLEF_W[score.clef] + keySigWidth(score.fifths);
 
-    /* Ширины тактов считаются один раз, до разбиения по строкам. */
     const measured = bars.map(function (bar) {
       const items = bar.events.map(function (entry) {
         const accs = (entry.event.notes || []).filter(function (note) {
@@ -99,7 +70,6 @@ window.Partitura = window.Partitura || {};
       return { items: items, width: Math.max(56, width), number: bar.number, ticks: bar.ticks };
     });
 
-    /* Раскладка по строкам: такт целиком либо влезает, либо переносится. */
     const systems = [];
     let current = null;
 
@@ -122,9 +92,6 @@ window.Partitura = window.Partitura || {};
 
     if (!systems.length) systems.push({ bars: [], used: 0, meter: true });
 
-    /* Растяжка: такты в полной строке расходятся на всю ширину. Последнюю
-       строку растягиваем, только если она и так почти заполнена — иначе
-       два такта размазало бы на весь лист. */
     const positions = {};
     systems.forEach(function (system, si) {
       const room = inner - headWidth - (system.meter ? METER_W : 0);
@@ -166,32 +133,19 @@ window.Partitura = window.Partitura || {};
     };
   }
 
-  /* ──────────────────────────────── знаки ──────────────────────────────── */
-
-  /*
-    Скрипичный ключ — одна непрерывная линия: хвост снизу, ствол вверх,
-    верхняя петля, спуск с пересечением ствола, нижняя чаша и завиток,
-    сходящийся к линейке соль. Координаты в промежутках стана, начало
-    отсчёта — точка на линейке соль, поэтому ключ сам встаёт на место
-    и в скрипичном стане, и в любом масштабе.
-  */
   const TREBLE_PATH =
     'M -0.5 4.05 ' +
-    'C 0.05 3.85 0.34 3.35 0.34 2.75 ' + /* хвост загибается в ствол */
-    'C 0.34 1.4 0.16 -0.9 0.05 -2.6 ' + /* ствол идёт вверх сквозь стан */
-    'C -0.02 -3.75 0.25 -4.5 0.72 -4.5 ' + /* верхушка уходит вправо */
-    'C 1.15 -4.5 1.3 -3.9 1.1 -3.35 ' + /* и заворачивает вниз */
-    'C 0.88 -2.75 0.3 -2.25 -0.25 -1.7 ' + /* спуск влево через ствол */
-    'C -0.95 -1.0 -1.45 -0.2 -1.4 0.6 ' + /* левая стенка чаши */
-    'C -1.35 1.5 -0.6 2.1 0.25 1.95 ' + /* дно чаши */
-    'C 1.05 1.8 1.5 1.05 1.35 0.3 ' + /* правая стенка вверх */
-    'C 1.2 -0.35 0.5 -0.7 0.0 -0.35 ' + /* поворот внутрь */
-    'C -0.4 -0.05 -0.45 0.5 -0.05 0.6'; /* завиток сходится к линейке соль */
+    'C 0.05 3.85 0.34 3.35 0.34 2.75 ' +
+    'C 0.34 1.4 0.16 -0.9 0.05 -2.6 ' +
+    'C -0.02 -3.75 0.25 -4.5 0.72 -4.5 ' +
+    'C 1.15 -4.5 1.3 -3.9 1.1 -3.35 ' +
+    'C 0.88 -2.75 0.3 -2.25 -0.25 -1.7 ' +
+    'C -0.95 -1.0 -1.45 -0.2 -1.4 0.6 ' +
+    'C -1.35 1.5 -0.6 2.1 0.25 1.95 ' +
+    'C 1.05 1.8 1.5 1.05 1.35 0.3 ' +
+    'C 1.2 -0.35 0.5 -0.7 0.0 -0.35 ' +
+    'C -0.4 -0.05 -0.45 0.5 -0.05 0.6';
 
-  /*
-    Басовый ключ: голова на линейке фа, хвост уходит вниз-влево, две точки
-    обнимают ту же линейку — именно они и указывают, какая это линейка.
-  */
   const BASS_PATH =
     'M -1.06 -0.28 ' +
     'C -1.02 -1.0 -0.32 -1.42 0.28 -1.2 ' +
@@ -200,7 +154,7 @@ window.Partitura = window.Partitura || {};
 
   function clefMarkup(clef, x, staffTop) {
     if (clef === 'bass') {
-      // Ноль местной системы координат — четвёртая линейка снизу (фа)
+
       const y = staffTop + S;
       return (
         '<g class="glyph glyph--clef" transform="translate(' + (x + 16) + ' ' + y + ') scale(' + S + ')">' +
@@ -213,7 +167,6 @@ window.Partitura = window.Partitura || {};
       );
     }
 
-    // Ноль — вторая линейка снизу (соль первой октавы)
     const y = staffTop + S * 3;
     return (
       '<g class="glyph glyph--clef" transform="translate(' + (x + 19) + ' ' + y + ') scale(' + S + ')">' +
@@ -223,7 +176,6 @@ window.Partitura = window.Partitura || {};
     );
   }
 
-  /** Диез: два наклонных бруска и две почти вертикальные линии. */
   function sharpMarkup(x, y, scale) {
     const k = scale === undefined ? 1 : scale;
     return (
@@ -236,7 +188,6 @@ window.Partitura = window.Partitura || {};
     );
   }
 
-  /** Бемоль: вертикаль с петлёй, петля висит ниже линии ступени. */
   function flatMarkup(x, y, scale) {
     const k = scale === undefined ? 1 : scale;
     return (
@@ -248,7 +199,6 @@ window.Partitura = window.Partitura || {};
     );
   }
 
-  /** Бекар: две вертикали и два бруска между ними. */
   function naturalMarkup(x, y, scale) {
     const k = scale === undefined ? 1 : scale;
     return (
@@ -267,10 +217,8 @@ window.Partitura = window.Partitura || {};
     return naturalMarkup(x, y);
   }
 
-  /* ─────────────────────────────── паузы ─────────────────────────────── */
-
   function restMarkup(ticks, cx, staffTop) {
-    const mid = staffTop + S * 2; // третья линейка
+    const mid = staffTop + S * 2;
     const parts = [];
 
     if (ticks >= sc.WHOLE) {
@@ -291,7 +239,7 @@ window.Partitura = window.Partitura || {};
           '</g>',
       );
     } else {
-      // Восьмая и шестнадцатая: наклонный ствол с одной или двумя точками-флажками
+
       const dots = ticks >= sc.WHOLE / 8 ? 1 : 2;
       let inner =
         '<path d="M 0.5 -1.0 L -0.28 1.2" fill="none" stroke="currentColor" ' +
@@ -310,8 +258,6 @@ window.Partitura = window.Partitura || {};
     return parts.join('');
   }
 
-  /* ─────────────────────────────── ноты ─────────────────────────────── */
-
   function headMarkup(cx, cy, open) {
     const rx = open ? HEAD_RX * 1.02 : HEAD_RX;
     return (
@@ -324,7 +270,6 @@ window.Partitura = window.Partitura || {};
     );
   }
 
-  /** Флажок восьмой и шестнадцатой — когда нота стоит одна, без вязки. */
   function flagMarkup(x, y, dir, count) {
     let out = '';
     for (let i = 0; i < count; i++) {
@@ -338,13 +283,6 @@ window.Partitura = window.Partitura || {};
     return out;
   }
 
-  /**
-   * С какой стороны головки стоит штиль.
-   *
-   * Правило нотации: штиль вверх пишется справа от головки, штиль вниз —
-   * слева. Если перепутать, нота выглядит сломанной: штиль отходит от
-   * головки в пустоту, особенно заметно у половинных с полым овалом.
-   */
   function stemX(cx, dir) {
     return cx + (dir === -1 ? HEAD_RX - STEM_W / 2 : -HEAD_RX + STEM_W / 2);
   }
@@ -367,13 +305,6 @@ window.Partitura = window.Partitura || {};
     return out;
   }
 
-  /*
-    Группировка под вязку.
-
-    Восьмые и шестнадцатые объединяются, пока не кончится доля: именно так
-    в нотах видно сильную долю. Пауза, длинная нота или граница доли рвут
-    группу. Одиночная нота вязки не получает — ей рисуется флажок.
-  */
   function beamGroups(score, bar) {
     const unit = score.meter.unit === 8 ? 12 : sc.WHOLE / score.meter.unit;
     const groups = [];
@@ -396,24 +327,15 @@ window.Partitura = window.Partitura || {};
     return groups;
   }
 
-  /* ─────────────────────────────── отрисовка ─────────────────────────────── */
-
-  /**
-   * Рисует лист целиком и возвращает раскладку — она же используется для
-   * попадания мышью и для подсветки при воспроизведении.
-   */
   function draw(svg, score, state) {
     const width = svg.clientWidth || svg.parentNode.clientWidth || 900;
     const info = layout(score, width);
     const parts = [];
-    const beamed = {}; // индексы нот, у которых вязка вместо флажка
+    const beamed = {};
 
     info.systems.forEach(function (system) {
       const staffTop = system.staffTop;
 
-      /* ─── линейки ─── */
-      // Последняя строка обрывается на заключительной черте: тянуть пустой
-      // стан до края листа значило бы обещать продолжение, которого нет
       const lineEnd = system.index === info.systems.length - 1 ? system.endX : system.x1;
       let lines = '';
       for (let i = 0; i < 5; i++) {
@@ -423,10 +345,8 @@ window.Partitura = window.Partitura || {};
       }
       parts.push('<g class="staff">' + lines + '</g>');
 
-      /* ─── ключ ─── */
       parts.push(clefMarkup(score.clef, system.x0, staffTop));
 
-      /* ─── знаки при ключе ─── */
       let kx = system.x0 + CLEF_W[score.clef];
       const order = score.fifths > 0 ? sc.SHARP_ORDER : sc.FLAT_ORDER;
       const count = Math.abs(score.fifths);
@@ -437,7 +357,6 @@ window.Partitura = window.Partitura || {};
         kx += 10;
       }
 
-      /* ─── размер такта ─── */
       if (system.meter) {
         const mx = system.contentX - METER_W / 2 - 2;
         parts.push(
@@ -446,7 +365,6 @@ window.Partitura = window.Partitura || {};
         );
       }
 
-      /* ─── такты ─── */
       system.bars.forEach(function (bar, bi) {
         if (bi === 0) {
           parts.push(
@@ -482,11 +400,9 @@ window.Partitura = window.Partitura || {};
       });
     });
 
-    /* ─── каретка: место, куда встанет следующая нота ─── */
     const caret = caretMarkup(score, info, state);
     if (caret) parts.push(caret);
 
-    /* ─── призрачная нота под курсором ─── */
     if (state.hoverD !== null && state.hoverD !== undefined && !state.playing) {
       const spot = caretSpot(score, info, state);
       if (spot) {
@@ -506,16 +422,14 @@ window.Partitura = window.Partitura || {};
     return info;
   }
 
-  /** Ступень, на которой рисуется знак при ключе. */
   function keySigStep(clef, letter, sharp) {
-    // Стандартные позиции для скрипичного ключа, басовый — на две ступени ниже
+
     const trebleSharp = { 3: 38, 0: 35, 4: 39, 1: 36, 5: 33, 2: 37, 6: 34 };
     const trebleFlat = { 6: 34, 2: 37, 5: 33, 1: 36, 4: 32, 0: 35, 3: 31 };
     const base = sharp ? trebleSharp[letter] : trebleFlat[letter];
     return clef === 'bass' ? base - 14 : base;
   }
 
-  /** Где сейчас стоит курсор ввода: после выделенной ноты или в конце листа. */
   function caretSpot(score, info, state) {
     const positions = info.positions;
     const keys = Object.keys(positions);
@@ -549,7 +463,6 @@ window.Partitura = window.Partitura || {};
     );
   }
 
-  /** Вязка: общая для группы прямая, штили дотягиваются до неё. */
   function beamMarkup(score, group, staffTop, beamed) {
     const clef = score.clef;
     let sum = 0;
@@ -562,23 +475,19 @@ window.Partitura = window.Partitura || {};
       return n + item.event.notes.length;
     }, 0);
 
-    const dir = avg < topLineD(clef) - 4 ? -1 : 1; // выше середины — штиль вниз
+    const dir = avg < topLineD(clef) - 4 ? -1 : 1;
     const edge = [];
 
     group.forEach(function (item) {
       const ds = item.event.notes.map(function (note) {
         return note.d;
       });
-      // Штиль отсчитывается от дальней головки аккорда: вверх — от верхней,
-      // вниз — от нижней, иначе вязка перечеркнёт часть нот
+
       const extreme = dir === -1 ? Math.max.apply(null, ds) : Math.min.apply(null, ds);
       edge.push(yOfD(clef, extreme, staffTop) + dir * STEM_LEN);
       beamed[item.index] = { dir: dir };
     });
 
-    // Прямая вязка: линия по самому дальнему штилю. Наклонная красивее,
-    // но требует пересчёта каждого штиля под угол — при коротких группах
-    // разницы почти не видно.
     const y = dir === -1 ? Math.min.apply(null, edge) : Math.max.apply(null, edge);
     const x0 = stemX(group[0].cx, dir) - STEM_W / 2;
     const x1 = stemX(group[group.length - 1].cx, dir) + STEM_W / 2;
@@ -590,7 +499,6 @@ window.Partitura = window.Partitura || {};
       beamed[item.index].y = y;
     });
 
-    /* Вторая вязка — только там, где рядом стоят шестнадцатые. */
     const second = S * 0.62;
     group.forEach(function (item, i) {
       if (item.ticks > sc.WHOLE / 16) return;
@@ -603,7 +511,7 @@ window.Partitura = window.Partitura || {};
       if (next && next.ticks <= sc.WHOLE / 16) {
         to = stemX(next.cx, dir);
       } else if (prev && prev.ticks <= sc.WHOLE / 16) {
-        return; // уже нарисовано соседом слева
+        return;
       } else {
         from = x - S * 0.9;
         to = x;
@@ -617,7 +525,6 @@ window.Partitura = window.Partitura || {};
     return out;
   }
 
-  /** Одно событие: пауза или аккорд с головками, штилем, знаками и точкой. */
   function eventMarkup(score, item, staffTop, state, beamed) {
     const clef = score.clef;
     const event = item.event;
@@ -653,14 +560,13 @@ window.Partitura = window.Partitura || {};
           out += accidentalMarkup(note.acc, item.cx - HEAD_RX - S * 0.62, y);
         }
         if (event.dot) {
-          // Нота на линейке — точка уходит в промежуток выше
+
           const onLine = ((topLineD(clef) - note.d) % 2 + 2) % 2 === 0;
           out += '<circle class="dot" cx="' + (item.cx + HEAD_RX + S * 0.5) + '" cy="' +
             (onLine ? y - S * 0.5 : y) + '" r="' + S * 0.16 + '"/>';
         }
       });
 
-      /* Штиль: от крайней головки вверх или вниз. Целая нота его не имеет. */
       if (item.ticks < sc.WHOLE) {
         const topD = Math.max.apply(null, ds);
         const bottomD = Math.min.apply(null, ds);
@@ -677,13 +583,6 @@ window.Partitura = window.Partitura || {};
       }
     }
 
-    /*
-      Область захвата — только вокруг головок, а не весь слот события.
-
-      Слот занимает всю высоту стана, и уже со второй ноты кликнуть по
-      стану становилось некуда: попадание всегда доставалось соседней
-      ноте, и вместо новой ноты человек получал выделение старой.
-    */
     let hitTop = staffTop + S * 1.2;
     let hitBottom = staffTop + S * 2.8;
     if (!sc.isRest(event)) {
@@ -700,8 +599,6 @@ window.Partitura = window.Partitura || {};
       HEAD_RX * 3.2 + '" height="' + (hitBottom - hitTop) + '"/>' + out + '</g>'
     );
   }
-
-  /* ────────────────────────────── экспорт ────────────────────────────── */
 
   ns.render = {
     S: S,

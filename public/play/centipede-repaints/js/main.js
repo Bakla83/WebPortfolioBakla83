@@ -1,18 +1,3 @@
-/*
-  Сборка страницы: галерея, студия перекраса, справочник мастей, этапы,
-  вопросы, форма и навигация.
-
-  Общий принцип — весь текст живёт в js/i18n.js, вся геометрия лошадей в
-  js/horses.js, а здесь только то, что их соединяет. Поэтому почти каждый
-  блок собирается функцией render*(), и при смене языка эти же функции
-  вызываются заново: перевод динамических карточек иначе пришлось бы
-  дублировать в разметке.
-
-  Художественная часть работ (масть, поза, отметины) намеренно не в
-  словарях: она одинакова для обоих языков и меняться при переключении
-  языка не должна — иначе гнедая лошадь на английской версии внезапно
-  становилась бы серой.
-*/
 window.Centipede = window.Centipede || {};
 
 (function (ns) {
@@ -24,21 +9,11 @@ window.Centipede = window.Centipede || {};
   const PALETTE_KEY = 'centipede-palette';
   const CALM_KEY = 'centipede-calm';
 
-  /* Масти восьми работ — только для подписи под карточкой. Индексы
-     совпадают с i18n.works.items. Рисованных лошадей в галерее нет
-     намеренно: рядом с настоящими фотографиями рисунок всегда проигрывает,
-     поэтому до появления снимков карточка честно показывает пустую рамку. */
-  /* Масти проставлены по тому, что видно на фотографиях в img/. Сверьте с
-     реальными работами: снимок и подпись расходятся заметнее всего именно
-     здесь, а посетитель из конной миниатюры такое ловит сразу. */
   const WORK_COATS = [
     'appaloosa', 'cremello', 'palomino', 'pinto',
     'grey', 'bay', 'buckskin', 'buckskin',
   ];
 
-
-  /* Состояние студии. seed фиксирован: узор масти не должен перестраиваться
-     от смены отметины — это выглядело бы как подмена модели. */
   const studio = { coat: 'bay', face: 'blaze', socks: 2, pose: 'stand', seed: 29 };
 
   const FACES = ['none', 'star', 'blaze', 'bald'];
@@ -46,8 +21,6 @@ window.Centipede = window.Centipede || {};
   const POSES = ['alert', 'stand', 'step', 'low'];
 
   let bg = null;
-
-  /* ---------------------------------------------------------- утилиты --- */
 
   function $(sel, root) { return (root || document).querySelector(sel); }
   function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
@@ -59,14 +32,10 @@ window.Centipede = window.Centipede || {};
     return n;
   }
 
-  /* Строки из словарей попадают в innerHTML только через это: в переводе
-     однажды окажется кавычка или амперсанд, и разметку порвёт молча. */
   function esc(s) {
     return String(s == null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
-
-  /* --------------------------------------------------------- галерея --- */
 
   function renderWorks() {
     const grid = $('#works-grid');
@@ -94,10 +63,6 @@ window.Centipede = window.Centipede || {};
           '<span class="work__empty-text">' + esc(d.photoSoon) + '</span>' +
         '</div>';
 
-      /* Если рядом с index.html лежит img/work-1.jpg — карточка показывает
-         фотографию вместо рамки. Проверка идёт загрузкой, а не запросом
-         списка файлов: у статичной страницы нет способа заглянуть в папку,
-         зато неудачная загрузка ничего не стоит и просто оставляет рамку. */
       const probe = new Image();
       probe.onload = function () {
         const img = el('img', 'work__photo');
@@ -113,9 +78,6 @@ window.Centipede = window.Centipede || {};
       const body = el('div', 'work__body');
       body.appendChild(el('h3', 'work__name', item.name));
 
-      /* Масштаб и статус выводятся, только если заполнены. Пустая строка в
-         словаре — это «пока неизвестно», и придумывать за автора, продана
-         модель или нет, страница не должна. */
       const meta = el('p', 'work__meta');
       meta.appendChild(el('span', null, coatName));
       if (item.scale) {
@@ -138,11 +100,6 @@ window.Centipede = window.Centipede || {};
     observeReveal(grid);
   }
 
-  /* ---------------------------------------------------------- студия --- */
-
-  /* Четыре строки карточки — то же, что уходит в заявку. Пары «подпись —
-     значение», а не одна строка через запятую: «Гнедая, две задние» без
-     подписи читается как загадка, а с подписью — как паспорт модели. */
   function studioSpec() {
     return [
       [i18n.t('studio.coat'),  i18n.t('coats.names.' + studio.coat)],
@@ -156,9 +113,6 @@ window.Centipede = window.Centipede || {};
     const stage = $('#studio-stage');
     if (!stage) return;
 
-    /* Класс ставится в том же кадре, что и новая разметка: браузер успевает
-       показать только конечное состояние, и масть проявляется, а не
-       переключается рывком. */
     stage.classList.add('is-swapping');
     stage.innerHTML = H.svg({
       coat: studio.coat, pose: studio.pose, face: studio.face,
@@ -187,8 +141,6 @@ window.Centipede = window.Centipede || {};
     }
   }
 
-  /* Кнопки-образцы мастей: сам образец красится тем же цветом, что и
-     корпус модели, поэтому выбирать приходится глазами, а не по названию. */
   function renderCoatSwatches() {
     const box = $('#studio-coats');
     if (!box) return;
@@ -210,8 +162,6 @@ window.Centipede = window.Centipede || {};
     });
   }
 
-  /* Переключатели с одинаковым поведением: три группы кнопок отличаются
-     только полем состояния, поэтому строятся одной функцией. */
   function renderChoices(boxId, field, values, labelFn) {
     const box = $(boxId);
     if (!box) return;
@@ -262,9 +212,6 @@ window.Centipede = window.Centipede || {};
         if (b) setStudio('coat', b.dataset.coat);
       });
 
-      /* Десять образцов подряд — это десять нажатий Tab, чтобы дойти до
-         последнего. Стрелки переводят выбор между ними так же, как в любой
-         группе радиокнопок, и фокус едет следом. */
       coats.addEventListener('keydown', function (e) {
         const step = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1
           : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
@@ -294,18 +241,13 @@ window.Centipede = window.Centipede || {};
         studio.face = FACES[Math.floor(Math.random() * FACES.length)];
         studio.socks = SOCKS[Math.floor(Math.random() * SOCKS.length)];
         studio.pose = POSES[Math.floor(Math.random() * POSES.length)];
-        // Зерно тоже меняется: «случайная» должна давать и новый рисунок
-        // яблок, иначе серая всегда выглядит одинаково.
+
         studio.seed = Math.floor(Math.random() * 9999) + 1;
         renderStudioHorse();
         syncStudioControls();
       });
     }
 
-    /* Формы на странице нет, поэтому «Хочу такую» делает то единственное,
-       что здесь имеет смысл: кладёт карточку модели в буфер и уводит к
-       контактам. Дальше человек вставляет её в личное сообщение — ровно
-       тот текст, который иначе пришлось бы набирать руками. */
     const toOrder = $('#studio-to-order');
     if (toOrder) {
       toOrder.addEventListener('click', function () {
@@ -316,8 +258,7 @@ window.Centipede = window.Centipede || {};
         try {
           navigator.clipboard.writeText(text);
         } catch (err) {
-          // Буфер может быть недоступен (файл открыт локально, старый
-          // браузер) — тогда просто уводим к контактам без копирования.
+
         }
 
         const done = $('#studio-copied');
@@ -332,8 +273,6 @@ window.Centipede = window.Centipede || {};
       });
     }
   }
-
-  /* ----------------------------------------------------- справочник --- */
 
   function renderCoats() {
     const grid = $('#coats-grid');
@@ -358,8 +297,6 @@ window.Centipede = window.Centipede || {};
       grid.appendChild(card);
     });
 
-    /* Наведение переодевает модель в студии. Клик делает то же самое —
-       на телефоне никакого наведения нет, а поведение должно совпадать. */
     function pickFrom(e) {
       const c = e.target.closest('.coat');
       if (c) setStudio('coat', c.dataset.coat);
@@ -371,8 +308,6 @@ window.Centipede = window.Centipede || {};
 
     observeReveal(grid);
   }
-
-  /* ---------------------------------------------------------- этапы --- */
 
   function renderProcess() {
     const list = $('#process-list');
@@ -392,8 +327,6 @@ window.Centipede = window.Centipede || {};
 
     observeReveal(list);
   }
-
-  /* -------------------------------------------------------- вопросы --- */
 
   function renderFaq() {
     const list = $('#faq-list');
@@ -433,8 +366,6 @@ window.Centipede = window.Centipede || {};
     observeReveal(list);
   }
 
-  /* ------------------------------------------------------ навигация --- */
-
   function initHeader() {
     const header = $('.site-header');
     const burger = $('#burger');
@@ -465,8 +396,6 @@ window.Centipede = window.Centipede || {};
       onScroll();
     }
 
-    /* Подсветка текущего раздела в меню. IntersectionObserver вместо
-       расчёта позиций на каждый кадр прокрутки. */
     const links = $$('#site-nav a');
     const map = {};
     links.forEach(function (a) {
@@ -489,8 +418,6 @@ window.Centipede = window.Centipede || {};
     });
   }
 
-  /* -------------------------------------------------------- палитра --- */
-
   function initPalette() {
     const box = $('#palette');
     if (!box) return;
@@ -502,8 +429,7 @@ window.Centipede = window.Centipede || {};
       document.documentElement.setAttribute('data-palette', v);
       try { localStorage.setItem(PALETTE_KEY, v); } catch (err) {}
       syncPalette();
-      // Фон читает цвета из тех же переменных — ему надо сказать, что
-      // они изменились, иначе взвесь останется в старой палитре.
+
       if (bg) bg.refresh();
     });
 
@@ -540,12 +466,8 @@ window.Centipede = window.Centipede || {};
     sync();
   }
 
-  /* ---------------------------------------------------------- герой --- */
-
   function initHero() {
-    /* Заголовок разбирается на буквы для волны появления. Пробелы
-       заменяются неразрывными: иначе строка схлопывается, потому что
-       каждый span становится отдельным inline-блоком. */
+
     $$('[data-kinetic]').forEach(function (node) {
       const text = node.textContent;
       node.setAttribute('aria-label', text);
@@ -569,16 +491,11 @@ window.Centipede = window.Centipede || {};
           socks: Number(slot.dataset.socks || 0),
           seed: Number(slot.dataset.seed || 5),
           ground: false,
-          // Лошади в герое растворены до 16% непрозрачности и лежат под
-          // текстом. Считать для них размытую светотень — это четыре
-          // лишних фильтра на первый экран ради того, чего не видно.
+
           detail: 'lite',
         });
       });
 
-      /* Параллакс: чем больше data-depth, тем «ближе» лошадь к зрителю и
-         тем сильнее она смещается за курсором. Считается в rAF, потому
-         что pointermove приходит чаще, чем экран успевает перерисоваться. */
       let px = 0, py = 0, tick = false;
       window.addEventListener('pointermove', function (e) {
         px = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -598,8 +515,6 @@ window.Centipede = window.Centipede || {};
     }
   }
 
-  /* ------------------------------------------------------ появление --- */
-
   let revealObserver = null;
 
   function observeReveal(root) {
@@ -616,8 +531,6 @@ window.Centipede = window.Centipede || {};
       if (!n.classList.contains('is-in')) revealObserver.observe(n);
     });
   }
-
-  /* ----------------------------------------------------------- старт --- */
 
   function renderAll() {
     renderWorks();

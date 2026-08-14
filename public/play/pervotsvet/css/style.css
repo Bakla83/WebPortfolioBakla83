@@ -1,15 +1,3 @@
-/* =========================================================================
-   Первоцвет — цветочная мастерская
-
-   Палитра живёт в токенах --f-*, и её целиком переопределяют три настроения
-   (data-mood на <html>). Эти же токены читает фон на canvas, поэтому один
-   клик по «настроению» перекрашивает и вёрстку, и лепестки.
-
-   Порядок: токены → база → фон → шапка → кнопки → секции → адаптив.
-   ========================================================================= */
-
-/* --------------------------------------------------------------- токены */
-
 :root {
   --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --font-ui: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -29,7 +17,6 @@
   --ease: cubic-bezier(0.22, 0.8, 0.28, 1);
 }
 
-/* Рассвет — пудровая роза, персик, золото */
 :root,
 :root[data-mood='dawn'] {
   --bg: #fffaf4;
@@ -59,7 +46,6 @@
   --f-ribbon-deep: #d8a677;
 }
 
-/* Луг — зелень, лимон, полевая белизна */
 :root[data-mood='meadow'] {
   --bg: #fcfdf6;
   --bg-2: #eff7e2;
@@ -88,7 +74,6 @@
   --f-ribbon-deep: #adc48b;
 }
 
-/* Сад — сирень, абрикос, тёплые сливки */
 :root[data-mood='orchard'] {
   --bg: #fdf9f7;
   --bg-2: #f5edf9;
@@ -117,8 +102,6 @@
   --f-ribbon-deep: #c2a3cd;
 }
 
-/* ------------------------------------------------------------------ база */
-
 *,
 *::before,
 *::after {
@@ -126,8 +109,7 @@
 }
 
 html {
-  /* Фон на <html>: слои .bg и canvas лежат на z-index -1 и должны
-     оказаться НАД фоном страницы, но под содержимым. */
+
   background: var(--bg);
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
@@ -247,8 +229,6 @@ button {
   transform: none;
 }
 
-/* ------------------------------------------------------------------ фон */
-
 .bg,
 .bg-canvas {
   position: fixed;
@@ -261,7 +241,6 @@ button {
   overflow: hidden;
 }
 
-/* Солнце: тёплое пятно света в верхнем углу, задаёт всё настроение */
 .bg__sun {
   position: absolute;
   top: -30vh;
@@ -314,7 +293,6 @@ button {
   animation: drift-c 47s ease-in-out infinite;
 }
 
-/* Дымка снизу: под ней прячутся основания травы на canvas */
 .bg__haze {
   position: absolute;
   inset: auto 0 0 0;
@@ -337,7 +315,6 @@ button {
   50% { transform: translate3d(5vw, -7vh, 0) scale(1.1); }
 }
 
-/* Свечение под курсором. Только для мыши — на тач-экране бессмысленно. */
 .cursor-glow {
   position: fixed;
   top: 0;
@@ -360,8 +337,6 @@ button {
 .has-cursor-glow .cursor-glow {
   opacity: 0.6;
 }
-
-/* ---------------------------------------------------------------- шапка */
 
 .site-header {
   position: sticky;
@@ -492,7 +467,6 @@ button {
   border-color: var(--accent);
 }
 
-/* Лепесток внутри кнопки: крутится, пока фон живой, и замирает вместе с ним */
 .icon-btn__petal {
   width: 15px;
   height: 15px;
@@ -563,8 +537,6 @@ button {
 .is-open .burger span:nth-child(2) { opacity: 0; }
 .is-open .burger span:nth-child(3) { transform: translateY(-4.6px) rotate(-45deg); }
 
-/* --------------------------------------------------------------- кнопки */
-
 .btn {
   --mx: 0px;
   --my: 0px;
@@ -628,15 +600,12 @@ button {
   width: 100%;
 }
 
-/* ---------------------------------------------------------------- герой */
-
 .hero {
   position: relative;
   display: grid;
   align-items: center;
   min-height: min(94svh, 900px);
-  /* Снизу запас больше: там подсказка про клик и указатель прокрутки,
-     иначе они наезжают друг на друга на невысоких экранах. */
+
   padding-block: clamp(3rem, 8vh, 7rem) clamp(6rem, 14vh, 10rem);
   overflow: hidden;
   text-align: center;
@@ -654,8 +623,7 @@ button {
   top: var(--y);
   width: calc(var(--s) * clamp(84px, 11vw, 168px));
   opacity: 0.9;
-  /* Кремовые сорта (ромашка, краспедия) на светлом фоне почти сливаются —
-     мягкая тень возвращает им силуэт. */
+
   filter: drop-shadow(0 8px 16px rgba(120, 78, 55, 0.12));
   transform: translate(-50%, -50%) translate3d(var(--px, 0px), var(--py, 0px), 0) rotate(var(--r));
   transition: transform 0.5s var(--ease);
@@ -712,8 +680,7 @@ button {
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  /* Появляется целиком: transform живёт на самом элементе, поэтому
-     градиентная заливка не рассыпается (в отличие от разбивки по буквам). */
+
   animation: line-rise 0.8s var(--ease) 0.3s backwards;
   transition: transform 0.45s var(--ease);
 }
@@ -729,10 +696,6 @@ button {
   transform: translateY(-0.07em);
 }
 
-/* Буквы поднимаются по очереди — заголовок «прорастает» */
-/* Шаг между буквами намеренно мелкий: на длинной строке даже 26 мс на букву
-   растягивают появление заголовка почти на две секунды, и человек успевает
-   решить, что страница сломалась. */
 .kin {
   display: inline-block;
   animation: kin-rise 0.6s var(--ease) backwards;
@@ -740,8 +703,6 @@ button {
   transition: transform 0.4s var(--ease), color 0.4s var(--ease);
 }
 
-/* Слово целиком не переносится — внутри него буквы отдельные inline-block,
-   и без этого строка рвалась бы в произвольном месте. */
 .kin-word {
   display: inline-block;
   white-space: nowrap;
@@ -850,8 +811,6 @@ button {
   50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
 }
 
-/* ----------------------------------------------------------- настроение */
-
 .moods__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -898,8 +857,6 @@ button {
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
 }
 
-/* Образцы показывают палитру самого настроения, а не текущего: иначе все
-   три кнопки были бы одного цвета и выбирать было бы не из чего. */
 .mood--dawn .mood__swatch i:nth-child(1) { background: #f0a2b8; }
 .mood--dawn .mood__swatch i:nth-child(2) { background: #f8bd93; }
 .mood--dawn .mood__swatch i:nth-child(3) { background: #f3b53f; }
@@ -922,8 +879,6 @@ button {
   font-size: 0.86rem;
   color: var(--ink-soft);
 }
-
-/* -------------------------------------------------------------- каталог */
 
 .catalog__grid {
   display: grid;
@@ -1017,8 +972,6 @@ button {
   color: var(--ink-soft);
 }
 
-/* ---------------------------------------------------------- конструктор */
-
 .builder__layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
@@ -1077,7 +1030,6 @@ button {
   color: var(--ink-soft);
 }
 
-/* Подтверждение клика: цветок «отрывается» и уходит в вазу */
 .picker__btn.is-picked .picker__art {
   animation: picked 0.5s var(--ease);
 }
@@ -1097,7 +1049,7 @@ button {
 .builder__stage {
   position: sticky;
   top: 92px;
-  /* Ваза узкая, и в широкой колонке она терялась бы в пустоте */
+
   max-width: 440px;
   margin-inline: auto;
 }
@@ -1129,9 +1081,7 @@ button {
   height: auto;
   transform: translateX(-50%);
   color: var(--f-stem);
-  /* Стекло рисуется поверх стеблей — сквозь него они и должны просвечивать.
-     Но кликов оно перехватывать не должно: нижняя половина букета иначе
-     перестаёт нажиматься. */
+
   z-index: 30;
   pointer-events: none;
   opacity: 0.8;
@@ -1150,14 +1100,6 @@ button {
   pointer-events: none;
 }
 
-/*
-  Кликабельна только головка, а не весь прямоугольник стебля. В плотном
-  букете рамки соседних стеблей перекрывают друг друга, и без этого клик по
-  крайнему цветку убирал бы центральный — тот лежит выше по слою.
-
-  Головка занимает верхний квадрат: в системе координат SVG она укладывается
-  в ±50, то есть ровно в ширину элемента.
-*/
 .stem {
   position: absolute;
   left: 0;
@@ -1276,8 +1218,6 @@ button {
   flex: 1;
 }
 
-/* ----------------------------------------------------------------- шаги */
-
 .steps__track {
   position: relative;
   padding-left: 64px;
@@ -1330,8 +1270,6 @@ button {
 .step__text {
   color: var(--ink-soft);
 }
-
-/* ------------------------------------------------------------- подписка */
 
 .plans__grid {
   display: grid;
@@ -1433,8 +1371,6 @@ button {
   margin-top: auto;
 }
 
-/* --------------------------------------------------------------- отзывы */
-
 .voices {
   overflow: hidden;
 }
@@ -1457,7 +1393,7 @@ button {
 }
 
 @keyframes marquee {
-  /* Лента продублирована, поэтому полный цикл — ровно половина ширины */
+
   to { transform: translateX(-50%); }
 }
 
@@ -1503,7 +1439,6 @@ button {
   color: var(--ink-soft);
 }
 
-/* Дубль ленты обычным списком — для скринридера и клавиатуры */
 .voices__sr {
   position: absolute;
   width: 1px;
@@ -1515,8 +1450,6 @@ button {
   clip-path: inset(50%);
   white-space: nowrap;
 }
-
-/* ------------------------------------------------------------- контакты */
 
 .contact__layout {
   display: grid;
@@ -1627,8 +1560,6 @@ button {
   font-weight: 600;
 }
 
-/* --------------------------------------------------------------- подвал */
-
 .site-footer {
   padding-block: clamp(2rem, 4vw, 3.5rem);
   border-top: 1px solid var(--line);
@@ -1682,8 +1613,6 @@ button {
   text-align: right;
 }
 
-/* ---------------------------------------------------------- появление */
-
 [data-reveal] {
   opacity: 0;
   transform: translateY(20px);
@@ -1694,8 +1623,6 @@ button {
   opacity: 1;
   transform: none;
 }
-
-/* ---------------------------------------------------------------- адаптив */
 
 @media (max-width: 1000px) {
   .builder__layout,
@@ -1785,8 +1712,6 @@ button {
     display: none;
   }
 
-  /* На узком экране восемь цветов лезут прямо на кнопки. Оставляем те,
-     что держат углы, остальные убираем — фон и без них живой. */
   .hero__flower:nth-child(3),
   .hero__flower:nth-child(6),
   .hero__flower:nth-child(7) {
@@ -1802,22 +1727,12 @@ button {
   }
 }
 
-/* Крупные пальцы вместо курсора: наведение недоступно, значит подсказки
-   вроде «кликните по фону» должны работать и по тапу — они и работают,
-   а декоративные эффекты наведения просто не запускаются. */
 @media (hover: none) {
   .cursor-glow {
     display: none;
   }
 }
 
-/* ------------------------------------------------------ спокойный режим */
-
-/*
-  Приглушение движения. Срабатывает либо по системной настройке, либо по
-  кнопке в шапке — фон на canvas при этом рисует один статичный кадр,
-  а здесь гасятся все CSS-анимации.
-*/
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

@@ -1,33 +1,13 @@
-/**
- * Готовит снимки экрана Android-приложения «Что приготовить» для сайта.
- *
- * Исходники — вертикальные JPEG 1280×2500 из папки с проектами. Скрипт делает
- * из них две вещи:
- *   1) три WebP для галереи на странице работы (ширина 1080, вес втрое меньше);
- *   2) обложку 2160×1350 — три экрана на тёмной подложке.
- *
- * Обложка собирается, а не берётся одним снимком, потому что карточка в списке
- * работ показывает картинку в пропорции 16/10 с object-fit: cover. Вертикальный
- * снимок телефона она обрезала бы до узкой полосы из середины экрана — от
- * приложения не осталось бы ничего узнаваемого.
- *
- * Запуск:  npm run screens
- */
 import sharp from 'sharp';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
-// Пути относительные: папку с проектами можно перенести, скрипт не сломается.
-// Исходники лежат в самом приложении, а не рядом с сайтом: снимки — часть той
-// работы, а не сайта, и в корне проектов от них не остаётся мусора.
 const SRC = join(import.meta.dirname, '..', '..', 'chto-prigotovit-android', 'screenshots');
 const OUT = join(import.meta.dirname, '..', 'public', 'media', 'chto-prigotovit-android');
 
-/** [файл-исходник, имя на сайте, высота на обложке] */
 const SCREENS = [
   ['mobile app choose.jpg', 'products', 1010],
-  // Тёмная тема стоит в середине и выше остальных: на тёмной подложке она
-  // иначе теряется, а так светлые экраны работают ей рамкой.
+
   ['mobile app dark theme.jpg', 'recipes-dark', 1160],
   ['mobile app.jpg', 'recipe', 1010],
 ];
@@ -39,7 +19,6 @@ const RADIUS = 30;
 
 await mkdir(OUT, { recursive: true });
 
-/* --------------------------------------------------------- 1. галерея (WebP) */
 for (const [file, name] of SCREENS) {
   const out = await sharp(join(SRC, file))
     .resize({ width: 1080, withoutEnlargement: true })
@@ -51,9 +30,6 @@ for (const [file, name] of SCREENS) {
   );
 }
 
-/* ------------------------------------------------------------- 2. обложка */
-
-/** Снимок нужной высоты со скруглёнными углами и тонкой светлой рамкой. */
 async function phone(file, height) {
   const body = await sharp(join(SRC, file)).resize({ height }).png().toBuffer();
   const { width } = await sharp(body).metadata();
@@ -62,7 +38,7 @@ async function phone(file, height) {
     `<svg width="${width}" height="${height}">` +
       `<rect width="${width}" height="${height}" rx="${RADIUS}" ry="${RADIUS}" fill="#fff"/></svg>`,
   );
-  // Рамка рисуется поверх: без неё тёмный экран сливается с подложкой
+
   const stroke = Buffer.from(
     `<svg width="${width}" height="${height}">` +
       `<rect x="0.75" y="0.75" width="${width - 1.5}" height="${height - 1.5}" ` +
@@ -77,7 +53,6 @@ async function phone(file, height) {
     .png()
     .toBuffer();
 
-  // Тень — размытый чёрный прямоугольник той же формы, со сдвигом вниз
   const shadow = await sharp({
     create: { width: width + 120, height: height + 120, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
   })
@@ -107,7 +82,7 @@ let x = Math.round((W - totalWidth) / 2);
 const layers = [];
 for (const p of phones) {
   const top = Math.round((H - p.height) / 2);
-  // Тень холст шире картинки на 60px с каждой стороны — на столько же сдвигаем
+
   layers.push({ input: p.shadow, top: top - 60 + 18, left: x - 60 });
   layers.push({ input: p.image, top, left: x });
   x += p.width + GAP;
@@ -130,13 +105,6 @@ const background = Buffer.from(
    </svg>`,
 );
 
-/*
-  Обложка — JPEG, а не PNG и не WebP. PNG на такой картинке весит больше
-  мегабайта (плавная подложка сжимается плохо, а палитра из 256 цветов даёт
-  вокруг снимков пятнистый ореол). WebP был бы легче, но эта же картинка идёт
-  в og:image, а его читают чужие сборщики превью — не все понимают WebP.
-  Цветность не прореживаем: на обложке мелкий текст интерфейса.
-*/
 const cover = await sharp(background)
   .composite(layers)
   .jpeg({ quality: 88, mozjpeg: true, chromaSubsampling: '4:4:4' })

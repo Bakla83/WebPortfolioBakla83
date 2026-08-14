@@ -8,7 +8,7 @@ import type { Project } from '../data/types';
 interface Props {
   project: Project;
   lang: EnabledLocale;
-  /** Показывать подпись раздела — нужно на главной, где карточки перемешаны. */
+
   showSection?: boolean;
 }
 
@@ -21,8 +21,6 @@ const teaser = pick(project.teaser, lang);
 const href = localePath(lang, `work/${project.section}/${project.slug}`);
 const accent = section?.accent ?? 'gold';
 
-// Пока обложки нет, рисуем плашку из инициалов и акцента раздела —
-// сетка не разъезжается, и карточка не выглядит сломанной.
 const initials = title
   .replace(/[^\p{L}\p{N}\s]/gu, ' ')
   .trim()
@@ -55,9 +53,6 @@ const techShown = project.tech.slice(0, 3);
         )
       }
 
-      <!-- Метка запускаемой работы. Стоит поверх обложки, потому что это
-           главное её отличие от остальных: карточку можно не просто
-           посмотреть, а открыть и потыкать. -->
       {
         project.demo && (
           <span class="card__playable">
@@ -69,8 +64,6 @@ const techShown = project.tech.slice(0, 3);
         )
       }
 
-      <!-- Всплывающее описание. На узких экранах оно не всплывает,
-           а просто стоит в потоке — на тач-устройствах наведения нет. -->
       <div class="card__overlay">
         <p class="card__teaser">{teaser}</p>
         <span class="card__more">
@@ -106,7 +99,6 @@ const techShown = project.tech.slice(0, 3);
       box-shadow 0.28s var(--ease), opacity 0.5s var(--ease);
   }
 
-  /* Появление при прокрутке; при reduce-motion класс ставится сразу */
   .card[data-reveal] {
     opacity: 0;
     transform: translateY(14px);
@@ -163,7 +155,6 @@ const techShown = project.tech.slice(0, 3);
     text-decoration: none;
   }
 
-  /* --- Обложка --- */
   .card__media {
     position: relative;
     aspect-ratio: 16 / 10;
@@ -216,7 +207,6 @@ const techShown = project.tech.slice(0, 3);
     );
   }
 
-  /* --- Всплывающее описание --- */
   .card__overlay {
     display: none;
   }
@@ -228,7 +218,6 @@ const techShown = project.tech.slice(0, 3);
     color: var(--ink-dim);
   }
 
-  /* --- Тело карточки --- */
   .card__body {
     display: flex;
     flex-direction: column;
@@ -266,11 +255,6 @@ const techShown = project.tech.slice(0, 3);
     padding-top: 0.35rem;
   }
 
-  /*
-    С 900px карточка получает наведение: описание уезжает в оверлей,
-    а из тела убирается, чтобы текст не дублировался.
-    Ниже — тач, наведения нет, поэтому описание остаётся в потоке.
-  */
   @media (min-width: 900px) {
     .card__overlay {
       position: absolute;

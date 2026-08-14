@@ -1,26 +1,3 @@
-/**
- * Пересъёмка снимков лендингов для карточек и галерей на страницах работ.
- *
- * Снимки — не декорация: на странице работы они показывают, как лендинг
- * выглядит на самом деле. Как только текст на лендинге меняется, снимок
- * начинает врать, и его надо переснять. Руками это делается долго и каждый
- * раз с новым кадрированием, поэтому кадры описаны здесь: секция, размер
- * окна и имя файла.
- *
- * Снимает Playwright по копии из `public/play/<slug>/` — той самой, что
- * уезжает на сайт. Копию отдаёт локальный сервер, а не file://: страница
- * тянет шрифты и работает с localStorage, и по file:// часть этого молча
- * отваливается.
- *
- * Размеры окна взяты под 2160×1350 (16/10 — пропорция карточки в списке
- * работ) и 1170×2532 (телефон). Множитель 2 не для красоты: на снимке
- * читается мелкий текст интерфейса, а он снят с экрана без ретины выглядит
- * мылом.
- *
- * Запуск:
- *   npm run shots                 — переснять все описанные работы
- *   npm run shots centipede-repaints  — только одну
- */
 import { chromium } from 'playwright';
 import sharp from 'sharp';
 import { createServer } from 'node:http';
@@ -31,17 +8,9 @@ import { extname, join, resolve } from 'node:path';
 const ROOT = resolve(import.meta.dirname, '..');
 const PUBLIC = join(ROOT, 'public');
 
-// Ширина окна — ноутбучные 1440: у`wrap` есть предел, и на более узком окне
-// содержимое упирается в края, а на снимке пропадают поля, по которым
-// страница и читается как страница, а не как скриншот вёрстки.
 const DESKTOP = { width: 1440, height: 900, deviceScaleFactor: 1.5 };
 const MOBILE = { width: 585, height: 1266, deviceScaleFactor: 2 };
 
-/**
- * `at` — селектор секции, к которой прокручивается страница. Секция встаёт
- * верхним краем к верху окна: её собственный отступ сверху как раз оставляет
- * заголовку воздух, а шапка остаётся видимой.
- */
 const JOBS = [
   {
     slug: 'centipede-repaints',
@@ -67,7 +36,6 @@ const TYPES = {
   '.svg': 'image/svg+xml',
 };
 
-/** Отдаёт public/ как есть: без индексов каталогов и без обработки — только файлы. */
 function serve() {
   const server = createServer(async (req, res) => {
     const path = join(PUBLIC, decodeURIComponent(req.url.split('?')[0]));
@@ -113,8 +81,6 @@ for (const job of jobs) {
       locale: 'ru-RU',
     });
 
-    // Язык и палитра выставляются до первой отрисовки — ровно так же, как это
-    // делает сама страница. Иначе снимок ловит момент до переключения.
     await context.addInitScript(() => {
       try {
         localStorage.setItem('centipede-lang', 'ru');
@@ -128,16 +94,13 @@ for (const job of jobs) {
     await page.evaluate(() => document.fonts.ready);
 
     if (shot.at) {
-      // scrollTo, а не scrollIntoView: у секций задан scroll-margin под
-      // якорную навигацию, и он увёл бы кадр вниз от заголовка.
+
       await page.evaluate((sel) => {
         const el = document.querySelector(sel);
         if (el) window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY);
       }, shot.at);
     }
 
-    // Появление блоков по прокрутке длится около секунды; снимок раньше
-    // поймал бы полупрозрачный, наполовину сдвинутый текст.
     await page.waitForTimeout(1600);
 
     const png = await page.screenshot({ type: 'png' });

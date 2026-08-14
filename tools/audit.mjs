@@ -1,24 +1,3 @@
-/**
- * Функциональная проверка собранного сайта.
- *
- * Проверяет то, чего не видно на скриншоте и что легко сломать незаметно:
- * переключатели темы и языка, мобильное меню, выпадающий список, всплывающие
- * описания карточек, целостность всех внутренних ссылок и картинок.
- *
- * Главное: сервер отдаёт страницы с теми же заголовками, что и Cloudflare,
- * включая строгую CSP из public/_headers. Локальный `npm run dev` их не
- * применяет, поэтому поломка из-за CSP видна только после деплоя — а этот
- * скрипт ловит её заранее. Именно так нашёлся инлайновый скрипт, который
- * Astro вшивал в HTML: на Cloudflare он блокировался, и вместе с ним
- * переставали работать меню, тема и появление карточек.
- *
- * Запуск:
- *   npm run build
- *   npm run audit
- *
- * Нужен playwright (в devDependencies). Браузер ставится один раз:
- *   npx playwright install chromium
- */
 import { createServer } from 'node:http';
 import { readFile, readdir } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
@@ -41,13 +20,6 @@ const MIME = {
   '.txt': 'text/plain; charset=utf-8',
 };
 
-/*
-  Разбирает public/_headers целиком, а не только блок `/*`.
-
-  Правила расписаны по путям: у страниц портфолио строгая CSP, у запускаемых
-  копий работ (/play/*) — своя. Если читать один общий блок, проверка шла бы
-  вообще без CSP и перестала бы ловить то, ради чего написана.
-*/
 const rawHeaders = await readFile(join(DIST, '_headers'), 'utf8');
 const headerRules = [];
 {
@@ -67,7 +39,6 @@ const headerRules = [];
   }
 }
 
-/** Шаблон Cloudflare: `*` — любой хвост, остальное сравнивается буквально. */
 function matches(pattern, path) {
   const rx = new RegExp(
     '^' + pattern.split('*').map((part) => part.replace(/[.+?^${}()|[\]\\]/g, '\\$&')).join('.*') + '$',
@@ -75,7 +46,6 @@ function matches(pattern, path) {
   return rx.test(path);
 }
 
-/** Заголовки для конкретного пути: подходящие правила накладываются по порядку. */
 function headersFor(path) {
   const out = {};
   for (const rule of headerRules) {
@@ -88,8 +58,7 @@ console.log('Правил в _headers:', headerRules.map((r) => r.pattern).join(
 
 const server = createServer(async (req, res) => {
   const path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-  // Заголовки выбираются по адресу запроса, а не по найденному файлу:
-  // Cloudflare делает так же — /ru отдаёт ru.html, но правило ищет по /ru
+
   const headers = headersFor(path);
 
   for (const candidate of [path, `${path}.html`, join(path, 'index.html')]) {
@@ -103,7 +72,7 @@ const server = createServer(async (req, res) => {
       });
       return res.end(body);
     } catch {
-      /* пробуем следующий вариант пути */
+
     }
   }
   res.writeHead(404, { ...headers, 'Content-Type': 'text/html' }).end('404');
@@ -118,11 +87,10 @@ const fail = [];
 const ok = (name, cond, detail = '') =>
   (cond ? pass : fail).push(`${name}${detail ? ' — ' + detail : ''}`);
 
-/* ------------------------------------------- 1. автоопределение языка на / */
 for (const [locale, expected] of [
   ['en-US', '/en'],
   ['ru-RU', '/ru'],
-  // Языка нет среди включённых — должен сработать запасной
+
   ['fr-FR', '/ru'],
 ]) {
   const ctx = await browser.newContext({ locale });
@@ -133,7 +101,6 @@ for (const [locale, expected] of [
   await ctx.close();
 }
 
-/* ------------------------------------------------------------------ 2. тема */
 {
   const ctx = await browser.newContext({ colorScheme: 'dark' });
   const page = await ctx.newPage();
@@ -153,7 +120,6 @@ for (const [locale, expected] of [
   await ctx.close();
 }
 
-/* ------------------------------------------------------------------ 3. язык */
 {
   const ctx = await browser.newContext({ locale: 'ru-RU' });
   const page = await ctx.newPage();
@@ -175,7 +141,6 @@ for (const [locale, expected] of [
   await ctx.close();
 }
 
-/* ------------------------------------------------------- 4. мобильное меню */
 {
   const ctx = await browser.newContext({
     viewport: { width: 390, height: 844 },
@@ -218,7 +183,6 @@ for (const [locale, expected] of [
   await ctx.close();
 }
 
-/* ---------------------------------------------------- 5. выпадающий список */
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await ctx.newPage();
@@ -226,8 +190,7 @@ for (const [locale, expected] of [
 
   await page.click('[data-dropdown] > summary');
   ok('список разделов открывается', await page.isVisible('.dropdown__panel'));
-  // Пункт «в процессе создания» из счёта исключён: это не раздел портфолио,
-  // а единственный вход на страницу работы, которая ещё делается.
+
   const items = await page.locator('.dropdown__panel a:not(.dropdown__item--wip)').count();
   ok('в списке шесть разделов', items === 6, `нашли ${items}`);
 
@@ -248,7 +211,6 @@ for (const [locale, expected] of [
   await ctx.close();
 }
 
-/* -------------------------------------------- 6. карточки работ и появление */
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await ctx.newPage();
@@ -262,15 +224,12 @@ for (const [locale, expected] of [
   const after = await overlay.evaluate((el) => getComputedStyle(el).opacity);
   ok('описание всплывает при наведении', Number(after) > Number(before), `${before} → ${after}`);
 
-  // Карточки стартуют с opacity 0 и показываются скриптом. Если JS не
-  // отработал, они останутся невидимыми — на глаз это «пустая страница».
   const cards = await page.locator('.card').count();
   const visible = await page.locator('.card.is-visible').count();
   ok('все карточки проявились', visible === cards, `${visible} из ${cards}`);
   await ctx.close();
 }
 
-/* ------------------------- 7. обход всех страниц: ссылки, картинки, консоль */
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await ctx.newPage();
@@ -298,19 +257,10 @@ for (const [locale, expected] of [
       continue;
     }
 
-    /*
-      Картинки с loading="lazy" ниже первого экрана браузер честно не грузит,
-      пока до них не долистают, и naturalWidth у них ноль. Без прокрутки
-      проверка считала бы их битыми — ловила бы не поломку, а работающую
-      ленивую загрузку. Поэтому сначала прокручиваем страницу до низа и ждём,
-      пока сеть успокоится, и только потом смотрим на результат.
-    */
     await page.evaluate(async () => {
       const root = document.documentElement;
       const previous = root.style.scrollBehavior;
-      // Плавная прокрутка из стилей страницы превращает каждый scrollTo в
-      // анимацию; в цикле они перебивают друг друга, и до низа дело не
-      // доходит. На время обхода выключаем её инлайновым стилем.
+
       root.style.scrollBehavior = 'auto';
 
       const step = window.innerHeight;
@@ -356,7 +306,6 @@ for (const [locale, expected] of [
   await ctx.close();
 }
 
-/* ------------------------------------------------------- 8. служебные файлы */
 {
   const ctx = await browser.newContext();
   const page = await ctx.newPage();
@@ -368,26 +317,8 @@ for (const [locale, expected] of [
   await ctx.close();
 }
 
-/* --------------------------------------- 9. запускаемые копии работ (/play) */
-/*
-  Ради этого блока и переписан разбор _headers. Копии работ живут под своей,
-  более мягкой политикой, и сломать её проще всего незаметно: достаточно
-  добавить в исходный проект инлайновый скрипт, который sync-demos не вынес,
-  или подключить шрифты с нового домена. На собранном сайте это выглядит как
-  пустая белая рамка, и заметить можно только открыв каждую работу руками.
-*/
 {
-  /*
-    Список берём из собранного сайта, а не из projects.ts: Node не умеет
-    импортировать TypeScript напрямую, а главное — проверять надо ровно то,
-    что уехало в dist. Появится новая работа — подхватится сама.
-  */
-  /*
-    Копии, на которые ссылается страница работы в производстве. Своей
-    страницы проекта у них нет и быть не должно: работа ещё делается и в
-    портфолио не заведена. Список читается из собранной страницы, а не
-    задаётся руками, — иначе он устареет молча.
-  */
+
   const wipHtml = await readFile(join(DIST, 'ru', 'in-progress.html'), 'utf8').catch(() => '');
   const wipSlugs = new Set([...wipHtml.matchAll(/\/play\/([^/"'\s]+)\//g)].map((m) => m[1]));
 
@@ -395,7 +326,6 @@ for (const [locale, expected] of [
   for (const dir of await readdir(join(DIST, 'play'), { withFileTypes: true }).catch(() => [])) {
     if (!dir.isDirectory()) continue;
 
-    // Раздел работы неизвестен, поэтому ищем её страницу среди собранных
     let section = null;
     for (const candidate of await readdir(join(DIST, 'ru', 'work'), { withFileTypes: true }).catch(() => [])) {
       if (!candidate.isDirectory()) continue;
@@ -405,7 +335,7 @@ for (const [locale, expected] of [
         section = candidate.name;
         break;
       } catch {
-        /* работа не из этого раздела */
+
       }
     }
 
@@ -430,7 +360,7 @@ for (const [locale, expected] of [
     const problems = [];
     page.on('console', (m) => {
       const text = m.text();
-      // Ошибки CSP браузер пишет именно в консоль — это главный сигнал
+
       if (m.type() === 'error') problems.push(text);
     });
     page.on('pageerror', (e) => problems.push(e.message));
@@ -449,14 +379,11 @@ for (const [locale, expected] of [
       headers['x-frame-options'] ?? '(нет)',
     );
 
-    // Шрифты Google блокируются CSP «тихо» — только записью в консоль,
-    // поэтому отдельной проверки на них нет, ловится тем же списком
     ok(`копия ${demo.slug} без ошибок`, problems.length === 0, problems.slice(0, 2).join('; '));
 
     const alive = await page.evaluate(() => {
       if (document.body && document.body.innerHTML.length > 200) return true;
-      // У игры разметки почти нет — весь экран это <canvas>. Признак работы:
-      // холст растянут под окно, а не остался дефолтным 300×150.
+
       return [...document.querySelectorAll('canvas')].some((c) => c.width > 300 || c.height > 150);
     });
     ok(`копия ${demo.slug} что-то отрисовала`, Boolean(alive));
@@ -464,8 +391,6 @@ for (const [locale, expected] of [
     await ctx.close();
   }
 
-  // Рамка на самой странице проекта: кнопка должна её создавать,
-  // а вложенная страница — грузиться (frame-src 'self' в строгой политике)
   const framed = demos.filter((d) => d.section);
   if (framed.length) {
     const demo = framed[0];
@@ -491,7 +416,6 @@ for (const [locale, expected] of [
   }
 }
 
-/* ------------------------------- 10. строгая политика на страницах портфолио */
 {
   const ctx = await browser.newContext();
   const page = await ctx.newPage();

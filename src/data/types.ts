@@ -8,7 +8,6 @@ export type SectionSlug =
   | 'mobile-apps'
   | 'models-3d';
 
-/** Акцентный цвет раздела — из палитры золото / фиолетовый / зелёный. */
 export type Accent = 'gold' | 'purple' | 'green';
 
 export interface Section {
@@ -16,12 +15,12 @@ export interface Section {
   title: Localized<string>;
   description: Localized<string>;
   accent: Accent;
-  /** Порядок в меню и на главной. */
+
   order: number;
 }
 
 export interface ProjectImage {
-  /** Путь в /public (например /media/salt-run/cover.png) или URL на cdn.sanity.io. */
+
   src: string;
   alt: Localized<string>;
   caption?: Localized<string>;
@@ -31,41 +30,26 @@ export interface ProjectImage {
 
 export interface ProjectVideo {
   provider: 'youtube' | 'vimeo';
-  /** Идентификатор ролика, не полная ссылка. */
+
   id: string;
   title: Localized<string>;
 }
 
 export interface ProjectModel {
-  /** .glb или .gltf — .blend браузер не открывает, его нужно экспортировать. */
+
   src: string;
   poster?: string;
   alt: Localized<string>;
 }
 
-/**
- * Запускаемая копия работы: лендинг, сайт или веб-игра открываются прямо на
- * странице проекта, а не показываются скриншотами.
- *
- * Файлы кладёт `npm run demos` (tools/sync-demos.mjs) — он копирует проект из
- * соседней папки в public/play/<slug>/ и выносит инлайновые скрипты, чтобы
- * копия не нарушала CSP сайта.
- */
 export interface ProjectDemo {
-  /** Путь к копии, например /play/hrebet/index.html. */
+
   src: string;
-  /**
-   * Пропорции рамки. Игре нужен формат экрана, длинному лендингу — повыше.
-   * Записывается как в CSS: '16 / 10'.
-   */
+
   ratio?: string;
-  /**
-   * Ограничение ширины рамки, например '420px'. Нужно портретным работам:
-   * телефонная игра во всю ширину колонки превращается в узкую полоску
-   * посреди пустого поля.
-   */
+
   maxWidth?: string;
-  /** Подсказка под рамкой: что попробовать, чем управлять. */
+
   note?: Localized<string>;
 }
 
@@ -74,7 +58,7 @@ export type LinkKind = 'live' | 'source' | 'steam' | 'download' | 'other';
 export interface ProjectLink {
   kind: LinkKind;
   url: string;
-  /** Если не задано — берётся стандартная подпись для этого типа ссылки. */
+
   label?: Localized<string>;
 }
 
@@ -82,11 +66,11 @@ export interface Project {
   slug: string;
   section: SectionSlug;
   title: Localized<string>;
-  /** Короткий текст, всплывающий при наведении на карточку. Одна-две строки. */
+
   teaser: Localized<string>;
-  /** Вводный абзац на странице проекта. */
+
   summary: Localized<string>;
-  /** Маркированный список особенностей. */
+
   highlights?: Localized<string[]>;
   tech: string[];
   year: number;
@@ -96,11 +80,11 @@ export interface Project {
   gallery?: ProjectImage[];
   videos?: ProjectVideo[];
   models?: ProjectModel[];
-  /** Есть у веб-работ: лендингов, сайтов и веб-игр. */
+
   demo?: ProjectDemo;
   links?: ProjectLink[];
-  /** Попадает в блок «Избранное» на главной. */
+
   featured?: boolean;
-  /** Меньше — выше в списке раздела. */
+
   order?: number;
 }

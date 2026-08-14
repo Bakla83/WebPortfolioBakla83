@@ -1,23 +1,3 @@
-/*
-  Живой фон.
-
-  Один canvas на всю страницу, четыре системы поверх друг друга:
-    · лепестки  — падают, ловят ветер, разлетаются от курсора;
-    · пыльца    — светящиеся точки, медленно тянутся к курсору;
-    · трава     — полоса внизу, гнётся от ветра и раздвигается ладонью;
-    · цветение  — распускается там, где кликнули.
-
-  Почему canvas, а не CSS-анимации: элементов под сотню, и каждый реагирует
-  на курсор и скролл. На DOM это сотня перерисовок макета в кадр; на canvas —
-  один вызов отрисовки, и мы полностью управляем частотой.
-
-  Цвета берутся из CSS-переменных палитры, поэтому переключатель настроения
-  перекрашивает и фон тоже — достаточно позвать refreshPalette().
-
-  Движение полностью отключается: системная настройка prefers-reduced-motion
-  или кнопка «приглушить» в шапке. В этом режиме рисуется один статичный
-  кадр — фон остаётся живописным, но перестаёт двигаться.
-*/
 window.Pervotsvet = window.Pervotsvet || {};
 
 (function (ns) {
@@ -51,8 +31,6 @@ window.Pervotsvet = window.Pervotsvet || {};
   const pick = (arr) => arr[(Math.random() * arr.length) | 0];
   const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
 
-  /* ------------------------------------------------------------- палитра */
-
   function readPalette() {
     const cs = getComputedStyle(document.documentElement);
     const v = (name, fallback) => (cs.getPropertyValue(name) || fallback).trim() || fallback;
@@ -77,13 +55,6 @@ window.Pervotsvet = window.Pervotsvet || {};
     });
   }
 
-  /* --------------------------------------------------------------- ветер */
-
-  /*
-    Сумма трёх синусов вместо настоящего шума. Периоды подобраны
-    несоизмеримыми, поэтому картина не повторяется на глаз, а стоит это
-    три вызова Math.sin вместо таблицы градиентов.
-  */
   function windAt(x, y, t) {
     return (
       0.34 * Math.sin(y * 0.0062 + t * 0.55) +
@@ -91,8 +62,6 @@ window.Pervotsvet = window.Pervotsvet || {};
       0.16 * Math.sin((x + y) * 0.0027 + t * 0.9)
     );
   }
-
-  /* ------------------------------------------------------------ лепестки */
 
   function makePetal(fromTop) {
     return {
@@ -117,7 +86,6 @@ window.Pervotsvet = window.Pervotsvet || {};
     p.vx += (w + gust * p.depth) * 0.05 * step;
     p.vy += 0.012 * p.depth * step;
 
-    // Курсор расталкивает лепестки — эффект ладони, проведённой сквозь них
     if (pointer.active) {
       const dx = p.x - pointer.x;
       const dy = p.y - pointer.y;
@@ -139,7 +107,6 @@ window.Pervotsvet = window.Pervotsvet || {};
     p.rot += (p.spin + p.vx * 0.004) * step;
     p.flutter += p.flutterSpeed * step;
 
-    // Ушёл вниз — возвращается сверху, число лепестков остаётся постоянным
     if (p.y > H + 30) {
       Object.assign(p, makePetal(true));
       p.y = rand(-60, -20);
@@ -153,7 +120,7 @@ window.Pervotsvet = window.Pervotsvet || {};
     ctx.save();
     ctx.translate(p.x, p.y);
     ctx.rotate(p.rot);
-    // Сжатие по горизонтали изображает поворот лепестка к зрителю ребром
+
     ctx.scale(0.35 + Math.abs(Math.cos(p.flutter)) * 0.65, 1);
     ctx.beginPath();
     ctx.moveTo(0, -s);
@@ -165,8 +132,6 @@ window.Pervotsvet = window.Pervotsvet || {};
     ctx.fill();
     ctx.restore();
   }
-
-  /* -------------------------------------------------------------- пыльца */
 
   function makeMote() {
     return {
@@ -185,8 +150,6 @@ window.Pervotsvet = window.Pervotsvet || {};
     m.x += (m.vx + Math.sin(m.phase) * 0.22 + gust * 0.3) * step;
     m.y += m.vy * step;
 
-    // В отличие от лепестков пыльцу курсор притягивает — она собирается
-    // вокруг ладони и подсказывает, что фон вообще реагирует на движение
     if (pointer.active) {
       const dx = pointer.x - m.x;
       const dy = pointer.y - m.y;
@@ -225,8 +188,6 @@ window.Pervotsvet = window.Pervotsvet || {};
     ctx.globalAlpha = 1;
   }
 
-  /* --------------------------------------------------------------- трава */
-
   function buildBlades() {
     blades = [];
     const gapPx = W < 700 ? 13 : 10;
@@ -243,7 +204,7 @@ window.Pervotsvet = window.Pervotsvet || {};
         shade: rand(0.35, 1),
         bud: null,
       };
-      // На каждой девятой травинке — полевой цветок
+
       if (Math.random() < 0.11) {
         blade.bud = { r: rand(2.6, 5.2), color: pick(palette.bud) };
       }
@@ -262,7 +223,6 @@ window.Pervotsvet = window.Pervotsvet || {};
         Math.sin(time * 0.8 + b.phase) * 0.5 +
         windAt(b.x * 0.7, tipY, time * 0.6) * 16;
 
-      // Курсор раздвигает травинки, если ведёшь рукой у нижнего края
       if (pointer.active) {
         const dx = b.x - pointer.x;
         const dy = tipY - pointer.y;
@@ -297,8 +257,6 @@ window.Pervotsvet = window.Pervotsvet || {};
     ctx.globalAlpha = 1;
   }
 
-  /* ------------------------------------------------------------ цветение */
-
   function bloomAt(x, y) {
     blooms.push({
       x: x,
@@ -313,7 +271,6 @@ window.Pervotsvet = window.Pervotsvet || {};
       core: palette.mote,
     });
 
-    // Пара лепестков в довесок — цветок как будто осыпается от прикосновения
     for (let i = 0; i < 3; i++) {
       const p = makePetal(false);
       p.x = x + rand(-14, 14);
@@ -337,7 +294,7 @@ window.Pervotsvet = window.Pervotsvet || {};
       }
 
       const t = b.age / b.life;
-      // Быстро распускается, потом медленно тает
+
       const grow = 1 - Math.pow(1 - Math.min(t * 2.4, 1), 3);
       const fade = t < 0.55 ? 1 : 1 - (t - 0.55) / 0.45;
       const r = b.maxR * grow;
@@ -367,8 +324,6 @@ window.Pervotsvet = window.Pervotsvet || {};
     ctx.globalAlpha = 1;
   }
 
-  /* ------------------------------------------------------------ отрисовка */
-
   function render(step) {
     ctx.clearRect(0, 0, W, H);
 
@@ -385,8 +340,7 @@ window.Pervotsvet = window.Pervotsvet || {};
 
     const raw = now - lastFrame;
     lastFrame = now;
-    // Ограничение сверху спасает от рывка после возврата на вкладку:
-    // иначе первый кадр получит дельту в несколько секунд
+
     const step = clamp(raw / 16.67, 0.2, 3);
 
     time += step * 0.016;
@@ -411,8 +365,6 @@ window.Pervotsvet = window.Pervotsvet || {};
     rafId = 0;
   }
 
-  /* ------------------------------------------------------------- размеры */
-
   function resize() {
     DPR = Math.min(window.devicePixelRatio || 1, 2);
     W = window.innerWidth;
@@ -424,8 +376,6 @@ window.Pervotsvet = window.Pervotsvet || {};
     canvas.style.height = H + 'px';
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 
-    // Плотность по площади: на телефоне лепестков должно быть меньше не
-    // ради красоты, а чтобы не сажать батарею
     const area = W * H;
     const petalTarget = Math.round(clamp(area / 26000, 16, 58));
     const moteTarget = Math.round(clamp(area / 14000, 24, 90));
@@ -441,13 +391,12 @@ window.Pervotsvet = window.Pervotsvet || {};
     if (calm) staticFrame();
   }
 
-  /** Один кадр без движения — для приглушённого режима. */
   function staticFrame() {
     time = 12;
     gust = 0;
     pointer.active = false;
     for (let i = 0; i < petals.length; i++) {
-      // Раскидываем по всей высоте, иначе все окажутся у верхнего края
+
       petals[i].y = rand(0, H);
       petals[i].x = rand(0, W);
     }
@@ -465,8 +414,6 @@ window.Pervotsvet = window.Pervotsvet || {};
     }
   }
 
-  /* -------------------------------------------------------------- ввод */
-
   function onPointerMove(e) {
     const nx = e.clientX;
     const ny = e.clientY;
@@ -476,7 +423,6 @@ window.Pervotsvet = window.Pervotsvet || {};
     pointer.y = ny;
     pointer.active = true;
 
-    // Быстрое движение стряхивает лепесток — курсор «задевает» ветку
     const speed = Math.hypot(pointer.vx, pointer.vy);
     if (speed > 26 && pointer.moved <= 0 && petals.length < 130) {
       const p = makePetal(false);
@@ -496,7 +442,7 @@ window.Pervotsvet = window.Pervotsvet || {};
   }
 
   function onClick(e) {
-    // Клик по управлению — это действие, а не игра с фоном
+
     if (e.target.closest('a, button, input, textarea, select, label, .vase, [data-flower-btn]')) return;
     bloomAt(e.clientX, e.clientY);
   }
@@ -506,8 +452,6 @@ window.Pervotsvet = window.Pervotsvet || {};
     gust += clamp((y - lastScroll) * 0.016, -1.6, 1.6);
     lastScroll = y;
   }
-
-  /* ---------------------------------------------------------------- старт */
 
   readPalette();
   resize();
@@ -525,7 +469,6 @@ window.Pervotsvet = window.Pervotsvet || {};
   window.addEventListener('click', onClick);
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  // Невидимая вкладка не должна жечь процессор
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) stop();
     else if (!calm) start();

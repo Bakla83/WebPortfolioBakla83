@@ -16,7 +16,6 @@ const strings = t(lang);
 
 const paragraphs = pick(ABOUT_TEXT, lang);
 
-// Считаем по данным, а не руками: цифры не разъедутся при добавлении работ
 const projects = await getProjects();
 const filledSections = SECTIONS_BY_ORDER.filter((section) =>
   projects.some((project) => project.section === section.slug),

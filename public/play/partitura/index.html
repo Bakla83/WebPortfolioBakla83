@@ -11,15 +11,12 @@
 
 <link rel="stylesheet" href="css/style.css" />
 
-<!-- Тема и язык ставятся до первой отрисовки: иначе на секунду видно
-     светлую тему и русский текст поверх того, что человек уже выбрал. -->
 <script src="inline-1.js"></script>
 </head>
 <body>
 
 <a class="skip-link" href="#sheet" data-i18n="a11y.skip">Перейти к нотному листу</a>
 
-<!-- ═════════════════════════════ СПРАЙТ ═════════════════════════════ -->
 <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
   <defs>
     <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></symbol>
@@ -39,7 +36,6 @@
   </defs>
 </svg>
 
-<!-- ══════════════════════════════ ШАПКА ══════════════════════════════ -->
 <header class="topbar">
   <div class="brand">
     <span class="brand__mark" aria-hidden="true">
@@ -70,7 +66,7 @@
 </header>
 
 <main>
-  <!-- ═══════════════════════════ ПАНЕЛЬ ВВОДА ═══════════════════════════ -->
+
   <section class="bar" data-i18n-aria-label="a11y.tools" aria-label="Инструменты ввода">
     <div class="bar__group" role="group" data-i18n-aria-label="a11y.durations" aria-label="Длительность">
       <span class="bar__label" data-i18n="tools.duration">Длительность</span>
@@ -134,7 +130,6 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════ НОТНЫЙ ЛИСТ ═══════════════════════════ -->
   <section class="sheet" id="sheet">
     <div class="sheet__head">
       <div class="field">
@@ -172,7 +167,6 @@
     </p>
   </section>
 
-  <!-- ════════════════════════════ ПИАНИНО ════════════════════════════ -->
   <section class="piano-block">
     <div class="piano-block__head">
       <h2 class="piano-block__title" data-i18n="piano.title">Пианино</h2>
@@ -191,7 +185,6 @@
     </div>
   </section>
 
-  <!-- ═════════════════════════════ ФАЙЛЫ ═════════════════════════════ -->
   <section class="files">
     <div class="files__intro">
       <h2 class="files__title" data-i18n="files.title">Забрать с собой</h2>
@@ -223,7 +216,6 @@
   </section>
 </main>
 
-<!-- ═════════════════════════════ ПОДСКАЗКА ═════════════════════════════ -->
 <div class="modal" id="help" hidden>
   <div class="modal__panel" role="dialog" aria-modal="true" data-i18n-aria-label="help.title" aria-label="Как пользоваться">
     <button class="modal__close" id="help-close" type="button" data-i18n-aria-label="a11y.close" aria-label="Закрыть">

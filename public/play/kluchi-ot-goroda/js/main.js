@@ -1,14 +1,3 @@
-/*
-  Логика страницы.
-
-  Всё, что зависит от языка (варианты в калькуляторе, экскурсии, машины,
-  отзывы), строится здесь и перестраивается по подписке на смену языка —
-  чтобы не держать в разметке два перевода сразу.
-
-  Цены в рублях и одни для обеих версий: сочинский трансфер и иностранцу
-  выставляют в рублях. Разница только в форматировании — в английской
-  версии сумма подписана кодом валюты, чтобы не гадать по значку.
-*/
 (function () {
   'use strict';
 
@@ -24,9 +13,6 @@
     return i18n.t(i18n.get(), key);
   }
 
-  /* ──────────────────────────────── данные ──────────────────────────────── */
-
-  /** Цена и время от аэропорта. Названия — в словарях (calc.destinations). */
   const DESTINATIONS = [
     { id: 'adler', price: 900, minutes: 15 },
     { id: 'sirius', price: 1200, minutes: 20 },
@@ -39,11 +25,6 @@
     { id: 'gagra', price: 5200, minutes: 110 },
   ];
 
-  /*
-    Классы машин по возрастанию. Подбор идёт по первому, куда влезают и люди,
-    и чемоданы: шесть человек с шестью чемоданами не сядут в седан, даже если
-    формально «до шести».
-  */
   const CARS = [
     { id: 'standard', pax: 3, bags: 3, factor: 1 },
     { id: 'minivan', pax: 6, bags: 6, factor: 1.6 },
@@ -66,7 +47,6 @@
 
   const TOUR_FILTERS = ['all', 'mountains', 'sea', 'city', 'abkhazia'];
 
-  /** Силуэты машин: рисуются кодом, чтобы не тащить картинки ради трёх карточек. */
   const CAR_ART = {
     standard:
       '<path d="M6 34c0-6 4-8 10-9l14-1 14-10c2-2 5-3 8-3h22c4 0 8 1 11 4l10 9 11 2c5 1 8 3 8 8z" fill="currentColor" opacity=".9"/>' +
@@ -97,8 +77,6 @@
     return (MONEY[i18n.get()] || MONEY.ru).format(Math.round(value));
   }
 
-  /* ─────────────────────────────── калькулятор ─────────────────────────────── */
-
   function pickCar(people, bags) {
     return CARS.filter((car) => car.pax >= people && car.bags >= bags)[0] || CARS[CARS.length - 1];
   }
@@ -106,8 +84,7 @@
   function isNight(value) {
     const hour = parseInt((value || '').split(':')[0], 10);
     if (isNaN(hour)) return false;
-    // Ночным считается прилёт с 23:00 до 06:00 — время, когда обычный
-    // городской транспорт уже не ходит
+
     return hour >= 23 || hour < 6;
   }
 
@@ -151,8 +128,6 @@
   function renderCalc() {
     const state = readCalc();
 
-    // Подписи зависят от направления: «куда едем» и «время прилёта» имеют
-    // смысл только для встречи, на обратном пути они читаются наоборот
     const destLabel = $('label[for="calc-dest"]');
     const timeLabel = $('label[for="calc-time"]');
     if (destLabel) destLabel.textContent = state.toAirport ? t('calc.destTo') : t('calc.dest');
@@ -197,8 +172,6 @@
       const destName = t('calc.destinations.' + state.dest.id);
       const route = state.toAirport ? destName + ' → AER' : 'AER → ' + destName;
 
-      // Переносим расчёт в заявку: иначе человеку пришлось бы
-      // переписывать его руками, а нам — верить, что он не ошибся
       prefillNote(
         t('contacts.prefillTransfer') + ': ' + route +
           ', ' + state.people + ' × ' + t('calc.people').toLowerCase() +
@@ -207,8 +180,6 @@
       );
     });
   }
-
-  /* ──────────────────────────────── экскурсии ──────────────────────────────── */
 
   let activeFilter = 'all';
 
@@ -280,8 +251,6 @@
     observeReveals(grid);
   }
 
-  /* ───────────────────────────────── машины ───────────────────────────────── */
-
   function renderFleet() {
     const grid = $('#fleet-grid');
     if (!grid) return;
@@ -314,8 +283,6 @@
     observeReveals(grid);
   }
 
-  /* ───────────────────────────────── отзывы ───────────────────────────────── */
-
   function renderVoices() {
     const grid = $('#voices-grid');
     if (!grid) return;
@@ -330,8 +297,6 @@
 
     observeReveals(grid);
   }
-
-  /* ────────────────────────────────── форма ────────────────────────────────── */
 
   function prefillNote(text) {
     const note = $('#f-note');
@@ -363,7 +328,6 @@
       });
     });
 
-    // Код рейса всегда пишут заглавными — приводим сами, чтобы человек об этом не думал
     const flight = $('#f-flight');
     if (flight) {
       flight.addEventListener('input', function () {
@@ -384,8 +348,6 @@
         return;
       }
 
-      // Бэкенда у лендинга нет: заявка никуда не уходит, и делать вид,
-      // что ушла, нечестно. Здесь подключается почта, CRM или бот.
       if (status) {
         status.textContent = t('contacts.sent');
         status.hidden = false;
@@ -395,8 +357,6 @@
       $$('[data-error-for]', form).forEach((el) => (el.hidden = true));
     });
   }
-
-  /* ───────────────────────────── тема и язык ───────────────────────────── */
 
   function initTheme() {
     const btn = $('#theme-toggle');
@@ -429,8 +389,6 @@
       });
     });
   }
-
-  /* ──────────────────────────────── шапка ──────────────────────────────── */
 
   function initNav() {
     const burger = $('#burger');
@@ -495,14 +453,11 @@
     Object.keys(map).forEach((id) => spy.observe(document.getElementById(id)));
   }
 
-  /* ─────────────────────────── появление и цифры ─────────────────────────── */
-
   let revealObserver = null;
   let firstBuild = true;
 
   function observeReveals(root) {
-    // Перестроенные блоки (смена языка) показываем сразу: карточка, которая
-    // уже была на экране, не должна проявляться заново
+
     if (!firstBuild) {
       $$('[data-reveal]', root).forEach((el) => el.classList.add('is-visible'));
       return;
@@ -563,8 +518,6 @@
     nodes.forEach((el) => io.observe(el));
   }
 
-  /* ───────────────────────────────── старт ───────────────────────────────── */
-
   function rebuildLocalised() {
     renderCalcOptions();
     renderCalc();
@@ -575,7 +528,7 @@
   }
 
   i18n.onChange(rebuildLocalised);
-  i18n.apply(i18n.get()); // переводит разметку и через onChange строит остальное
+  i18n.apply(i18n.get());
 
   initLang();
   initTheme();

@@ -1,22 +1,3 @@
-/* =========================================================================
-   BrandGallery B — «дом фабрик»
-
-   Планировка построена вокруг марки. Главная — не витрина товаров,
-   а лента фабрик: каждая идёт отдельной полосой во всю ширину, со своим
-   именем крупно, страной, коротким рассказом и тремя позициями.
-   Каталог фильтруется прежде всего по фабрике: лента марок стоит над
-   сеткой, остальные фильтры убраны в раскрывающуюся строку.
-
-   Оформление редакционное: тёмный графит и кремовая бумага чередуются
-   полосами, заголовки набраны очень крупной антиквой, служебный текст —
-   узкими капсами в разрядку. Акцент один — терракота.
-
-   Порядок: шрифты → переменные → база → типографика → шапка → главная →
-   каталог → фабрика → подвал → полоса вариантов → адаптив.
-   ========================================================================= */
-
-/* ------------------------------------------------------------- шрифты */
-
 @font-face {
   font-family: 'Cormorant Garamond';
   src: url('../../../fonts/cormorant-cyrillic.woff2') format('woff2');
@@ -62,12 +43,10 @@
     U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
-/* --------------------------------------------------------- переменные */
-
 :root {
-  --paper:    #f2eee7;   /* кремовая бумага — основной фон */
+  --paper:    #f2eee7;
   --paper-2:  #e9e3d9;
-  --dark:     #191917;   /* графит — шапка, подвал, тёмные полосы */
+  --dark:     #191917;
   --dark-2:   #23231f;
 
   --ink:      #191917;
@@ -79,7 +58,7 @@
   --line:     #ddd5c8;
   --line-d:   #34332d;
 
-  --terra:    #a2503a;   /* единственный акцент */
+  --terra:    #a2503a;
   --terra-2:  #8a4130;
   --green:    #4c6b52;
 
@@ -89,8 +68,6 @@
   --ease: cubic-bezier(.22, .61, .36, 1);
   --dur: .5s;
 }
-
-/* -------------------------------------------------------------- база */
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
@@ -115,8 +92,6 @@ input, textarea, select { font: inherit; color: inherit; }
 
 .reveal { opacity: 0; transform: translateY(16px); }
 .reveal.is-in { opacity: 1; transform: none; transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); }
-
-/* -------------------------------------------------------- типографика */
 
 .eyebrow {
   display: block;
@@ -167,10 +142,6 @@ input, textarea, select { font: inherit; color: inherit; }
 }
 .linkline:hover { color: var(--terra); border-color: var(--terra); }
 
-/* ------------------------------------------------------------- шапка */
-
-/* Шапка тёмная и не липкая на первом экране: она держит верх полосы
-   и отбивает кремовый лист снизу. */
 .head { background: var(--dark); color: var(--onDark); position: relative; z-index: 40; }
 
 .head__top {
@@ -181,8 +152,6 @@ input, textarea, select { font: inherit; color: inherit; }
 .head__top a:hover { color: var(--terra); }
 .head__top span + span { display: flex; gap: 22px; }
 
-/* Адрес почты длинный: в узкой верхней строке он вытесняет телефон,
-   поэтому ниже 1100 пикселей остаётся только в подвале и в блоке шоурума. */
 @media (max-width: 1100px) {
   .head__mail { display: none; }
 }
@@ -225,8 +194,6 @@ input, textarea, select { font: inherit; color: inherit; }
 }
 .iconbtn__n.is-zero { background: transparent; color: var(--onDark-2); }
 
-/* Навигация вынесена отдельной строкой: главный пункт — «Фабрики»,
-   и он должен стоять первым и читаться как раздел, а не как сноска. */
 .nav {
   display: flex; justify-content: center; flex-wrap: wrap;
   gap: 34px;
@@ -242,7 +209,6 @@ input, textarea, select { font: inherit; color: inherit; }
 .burger { display: none; width: 40px; height: 34px; flex-direction: column; justify-content: center; gap: 5px; }
 .burger span { display: block; height: 1px; background: currentColor; transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease); }
 
-/* Поиск раскрывается полосой под шапкой — на всех страницах. */
 .searchpanel {
   position: absolute; left: 0; right: 0; top: 100%;
   background: var(--dark-2); color: var(--onDark);
@@ -270,8 +236,6 @@ input, textarea, select { font: inherit; color: inherit; }
 .qhits__price { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 19px; }
 .qhits__none { color: var(--onDark-2); font-size: 14px; }
 
-/* ------------------------------------------------ заглушки фотографий */
-
 .ph {
   position: relative; overflow: hidden;
   background: var(--paper-2);
@@ -284,10 +248,6 @@ input, textarea, select { font: inherit; color: inherit; }
 .ph--4 { background: #e2dcd0; }
 .ph--5 { background: #eae4d8; }
 
-/* ----------------------------------------------------------- главная */
-
-/* Первый экран — манифест, а не витрина: сообщение «мы возим эти марки»
-   должно читаться раньше, чем первая цена. */
 .manifest { background: var(--dark); color: var(--onDark); padding: clamp(70px, 9vw, 130px) 0; }
 .manifest__in { display: grid; grid-template-columns: 1.25fr .75fr; gap: 60px; align-items: end; }
 .manifest h1 { color: var(--onDark); }
@@ -312,8 +272,6 @@ input, textarea, select { font: inherit; color: inherit; }
 
 .strip__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; margin-bottom: 48px; }
 
-/* Лента фабрик — сердце варианта. Каждая марка отдельной полосой:
-   имя крупно, короткий рассказ, три позиции и счётчик наличия. */
 .fstrip {
   display: grid; grid-template-columns: minmax(280px, .8fr) 1.2fr;
   gap: clamp(30px, 4vw, 70px);
@@ -340,8 +298,6 @@ input, textarea, select { font: inherit; color: inherit; }
 }
 .fstrip__row a:hover span { color: var(--terra); }
 
-/* Витрина «в наличии» стоит после фабрик: в этом варианте она нужна,
-   но она не главный вход. */
 .grid { display: grid; gap: 30px 24px; }
 .grid--3 { grid-template-columns: repeat(3, 1fr); }
 .grid--4 { grid-template-columns: repeat(4, 1fr); }
@@ -381,8 +337,6 @@ input, textarea, select { font: inherit; color: inherit; }
 .strip--dark .ph { background: var(--dark-2); }
 .strip--dark .ph svg { stroke: var(--onDark-2); opacity: .5; }
 
-/* Вход по помещению в этом варианте вторичный — строкой ссылок,
-   а не сеткой плиток. */
 .roomline { display: flex; flex-wrap: wrap; gap: 10px; }
 .roomline a {
   display: inline-flex; align-items: baseline; gap: 8px;
@@ -401,10 +355,6 @@ input, textarea, select { font: inherit; color: inherit; }
 .showroom__facts { display: grid; gap: 16px; margin-bottom: 32px; }
 .showroom__facts b { display: block; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--onDark-2); margin-bottom: 4px; font-weight: 500; }
 
-/* ----------------------------------------------------------- каталог */
-
-/* Боковые поля из .wrap: без них шапка каталога на телефоне прилипала
-   к краю экрана — сокращённая запись padding их перебивает. */
 .cat__top { padding: 34px var(--gut) 0; }
 .crumbs { display: flex; flex-wrap: wrap; gap: 9px; font-size: 12px; color: var(--ink-3); margin-bottom: 22px; }
 .crumbs a:hover { color: var(--terra); }
@@ -421,8 +371,6 @@ input, textarea, select { font: inherit; color: inherit; }
 .stock button + button { border-left: 1px solid var(--line); }
 .stock button.is-on { background: var(--dark); color: var(--onDark); }
 
-/* Лента марок над сеткой — главный фильтр этого варианта.
-   Прокручивается горизонтально, чтобы не занимать четыре строки. */
 .marks {
   display: flex; gap: 0; overflow-x: auto;
   border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
@@ -453,9 +401,6 @@ input, textarea, select { font: inherit; color: inherit; }
 .fopen:hover { border-color: var(--terra); color: var(--terra); }
 .toolbar select { border: 1px solid var(--line); background: none; padding: 11px 14px; font-size: 13px; }
 
-/* Остальные фильтры — раскрывающейся строкой на всю ширину,
-   не боковой колонкой: колонка съедала бы место у сетки, а здесь
-   ширина важнее, чем в BrandGallery A. */
 .filters {
   display: none;
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -490,10 +435,6 @@ input, textarea, select { font: inherit; color: inherit; }
 
 .cat__grid { padding-bottom: 90px; }
 
-/* ---------------------------------------------------------- фабрика */
-
-/* Страница фабрики здесь не список товаров, а разворот журнала:
-   обложка, имя во всю ширину, рассказ, цифры, потом коллекции. */
 .fab__cover { background: var(--dark); color: var(--onDark); padding: clamp(50px, 6vw, 90px) 0; }
 .fab__cover .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(30px, 5vw, 70px); align-items: center; }
 .fab__title { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: clamp(40px, 6vw, 88px); line-height: 1; margin: 0 0 22px; }
@@ -510,8 +451,6 @@ input, textarea, select { font: inherit; color: inherit; }
 .fab__list b { display: block; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 25px; font-weight: 400; line-height: 1.14; }
 .fab__list span { display: block; margin-top: 8px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
 
-/* ------------------------------------------------- карточка товара */
-
 .prod { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(30px, 4vw, 64px); padding-bottom: 20px; }
 .prod__gal > .ph { aspect-ratio: 4 / 5; }
 .prod__thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
@@ -526,8 +465,6 @@ input, textarea, select { font: inherit; color: inherit; }
 .answers > div { background: var(--paper); display: flex; justify-content: space-between; gap: 20px; padding: 13px 16px; font-size: 14px; }
 .answers b { font-weight: 400; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); align-self: center; }
 .answers span { text-align: right; }
-
-/* --------------------------------------------------- подборка и заявка */
 
 .req { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(30px, 4vw, 64px); align-items: start; }
 
@@ -561,21 +498,16 @@ input, textarea, select { font: inherit; color: inherit; }
 .btn--wide { width: 100%; }
 .sent { border: 1px solid var(--terra); padding: clamp(24px, 3vw, 38px); }
 
-/* ------------------------------------------------------------- подвал */
-
 .foot { background: var(--dark); color: var(--onDark-2); padding: 70px 0 34px; margin-top: 0; font-size: 13.5px; }
 .foot__cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 40px; padding-bottom: 44px; border-bottom: 1px solid var(--line-d); }
 .foot h4 { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--onDark); margin: 0 0 16px; font-weight: 500; }
 .foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
 .foot a:hover { color: var(--terra); }
 .foot .logo { text-align: left; color: var(--onDark); }
-/* Первая колонка подвала уже полного знака: на 27px «Brand Gallery Home»
-   переносится на вторую строку даже на широком экране. */
+
 .foot .logo__name { font-size: 23px; letter-spacing: .08em; }
 .foot__legal { padding-top: 26px; font-size: 12px; line-height: 1.7; }
 .foot__legal p { margin: 0 0 8px; }
-
-/* ------------------------------------------------------------ адаптив */
 
 @media (max-width: 1200px) {
   .manifest__in { grid-template-columns: 1fr; gap: 44px; }
@@ -598,15 +530,11 @@ input, textarea, select { font: inherit; color: inherit; }
   .head__row { grid-template-columns: auto 1fr auto; gap: 12px; padding: 14px 0; }
   .logo { text-align: left; }
   .logo__sub { display: none; }
-  /* Знак в шапке уменьшен: между бургером и корзиной ему остаётся около
-     полутора сотен пикселей, и на полном размере «Brand Gallery Home»
-     ломается на три строки, раздувая шапку. */
+
   .head .logo__name { font-size: 17px; letter-spacing: .04em; }
   .iconbtn span:not(.iconbtn__n) { display: none; }
   .burger { display: flex; }
 
-  /* Меню на телефоне — на весь экран, набрано крупно антиквой:
-     сжатые капсы из шапки в столбик читаются плохо. */
   .nav {
     position: fixed; inset: 0; z-index: 60;
     display: none; flex-direction: column; justify-content: center;
@@ -620,17 +548,12 @@ input, textarea, select { font: inherit; color: inherit; }
 
   .manifest { padding: 54px 0 60px; }
   .manifest__marks { grid-template-columns: 1fr; }
-  /* minmax(0, 1fr) вместо 1fr: по умолчанию колонка сетки не сжимается
-     уже своего содержимого, и три подписи с длинными названиями мебели
-     раздували полосу фабрики шире экрана — страница ехала вбок.
-     min-width: 0 снимает то же ограничение с колонок самой полосы. */
+
   .fstrip > * { min-width: 0; }
   .fstrip__row { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
   .fstrip__row a span { font-size: 11px; overflow-wrap: anywhere; }
   .strip__head { flex-direction: column; align-items: flex-start; gap: 14px; margin-bottom: 30px; }
 
-  /* На телефоне фильтры — панель на весь экран по кнопке.
-     Строка на всю ширину здесь не помещается. */
   .filters {
     display: none;
     position: fixed; inset: 0; z-index: 70;
@@ -657,9 +580,7 @@ input, textarea, select { font: inherit; color: inherit; }
 }
 
 @media (max-width: 420px) {
-  /* На самых узких экранах знаку остаётся около сотни пикселей между
-     бургером и корзиной. Ужимаем отступы шапки и сам знак, иначе
-     «Brand Gallery Home» ломается на три строки. */
+
   .head__row { gap: 8px; }
   .head__left { gap: 6px; }
   .head .logo__name { font-size: 13px; letter-spacing: .03em; }
@@ -670,21 +591,6 @@ input, textarea, select { font: inherit; color: inherit; }
   .card__price { font-size: 19px; }
 }
 
-/* =========================================================================
-   BrandGallery B — текстовые страницы: о салоне, дизайнерам, статьи,
-   контакты.
-
-   Набор здесь редакционный, как и на остальных страницах варианта:
-   заголовок крупной антиквой на всю колонку, лид рядом, тёмные полосы
-   чередуются с кремовой бумагой. Карточек нет нигде — только полосы
-   и линии: сетка из плиток в этом варианте читалась бы как чужая.
-   ========================================================================= */
-
-/* --------------------------------------------- заголовок страницы */
-
-/* Заголовок и лид стоят рядом, а не друг под другом: это разворот,
-   и первый экран текстовой страницы должен читаться в две колонки,
-   как полоса фабрики. */
 .phead {
   display: grid; grid-template-columns: 1.1fr 1fr;
   gap: clamp(30px, 5vw, 80px);
@@ -693,12 +599,8 @@ input, textarea, select { font: inherit; color: inherit; }
   border-bottom: 1px solid var(--line);
   margin-bottom: clamp(40px, 5vw, 72px);
 }
-/* На тёмной полосе правая колонка бывает длинной — список контактов
-   выше заголовка. Прижимать заголовок к её низу нельзя: над ним
-   остаётся пустое поле в пол-экрана. */
-.phead--dark { border-bottom: 0; margin-bottom: 0; align-items: start; }
 
-/* ------------------------------------------------------------- текст */
+.phead--dark { border-bottom: 0; margin-bottom: 0; align-items: start; }
 
 .prose { max-width: 72ch; font-size: 17px; }
 .prose p { margin: 0 0 24px; color: var(--ink-2); line-height: 1.75; }
@@ -719,21 +621,15 @@ input, textarea, select { font: inherit; color: inherit; }
 .prose a { border-bottom: 1px solid var(--line); }
 .prose a:hover { color: var(--terra); border-color: var(--terra); }
 
-/* Вводный рассказ в две колонки: он длинный, а полоса широкая. */
 .cols2 { columns: 2; column-gap: 64px; max-width: none; }
 .cols2 p { break-inside: avoid; }
 
-/* Открытым текстом отмечаем то, чего в макете ещё нет. */
 .todo {
   display: inline-block;
   font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
   color: var(--terra); border-bottom: 1px dotted var(--terra);
 }
 
-/* -------------------------------------------------------------- цифры */
-
-/* Цифры идут строкой на тёмной полосе — так же, как имена фабрик:
-   это тот же приём, что держит главную. */
 .numbers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line-d); }
 .numbers div { background: var(--dark); padding: clamp(26px, 3vw, 44px); }
 .numbers b {
@@ -744,10 +640,6 @@ input, textarea, select { font: inherit; color: inherit; }
 }
 .numbers span { font-size: 13px; color: var(--onDark-2); }
 
-/* --------------------------------------------------------------- шаги */
-
-/* Шаг — полоса во всю ширину: номер, название, объяснение. Плитками
-   этот же список выглядел бы как тарифы. */
 .steps { border-top: 1px solid var(--line); }
 .steps div {
   display: grid; grid-template-columns: 110px minmax(220px, 1fr) 1.4fr;
@@ -766,8 +658,6 @@ input, textarea, select { font: inherit; color: inherit; }
 }
 .steps p { margin: 0; color: var(--ink-2); font-size: 15px; }
 
-/* ----------------------------------------------------------- условия */
-
 .terms { display: grid; gap: 1px; background: var(--line); border-top: 1px solid var(--line); }
 .terms > div {
   background: var(--paper);
@@ -781,16 +671,10 @@ input, textarea, select { font: inherit; color: inherit; }
 }
 .terms p { margin: 0; color: var(--ink-2); }
 
-/* --------------------------------------------------------- заглушки зала */
-
 .shots { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 16px; }
 .shots .ph { aspect-ratio: 4 / 3; }
 .shots div:first-child .ph { aspect-ratio: 16 / 11; }
 
-/* ------------------------------------------------------------- статьи */
-
-/* Лента статей устроена как лента фабрик: полоса на статью,
-   заголовок крупно, лид рядом. */
 .artlist { border-top: 1px solid var(--line); }
 .artstrip {
   display: grid; grid-template-columns: minmax(260px, .85fr) 1.15fr;
@@ -819,10 +703,6 @@ input, textarea, select { font: inherit; color: inherit; }
   font-weight: 300; font-size: 24px; color: var(--ink-2);
 }
 
-/* ------------------------------------------------------ страница статьи */
-
-/* Колонка шире, чем в A: набор здесь крупнее, и узкая колонка
-   рассыпала бы его на короткие обрывки. */
 .art { max-width: 860px; margin: 0 auto; }
 .art__meta {
   display: flex; gap: 22px; flex-wrap: wrap;
@@ -839,8 +719,7 @@ input, textarea, select { font: inherit; color: inherit; }
 
 .artbody { font-size: 17px; }
 .artbody p { margin: 0 0 24px; line-height: 1.8; }
-/* Буквица — редакционный приём и главное отличие статьи в этом варианте
-   от статьи в остальных. Работает только на первом абзаце. */
+
 .artbody > p:first-child::first-letter {
   float: left; line-height: .82; padding: 6px 14px 0 0;
   font-family: 'Cormorant Garamond', Georgia, serif;
@@ -859,8 +738,6 @@ input, textarea, select { font: inherit; color: inherit; }
 }
 .artbody b { font-weight: 500; }
 
-/* Врезка во всю ширину колонки на кремовой подложке: в редакционной
-   вёрстке она работает как заголовок-передышка. */
 .artbody .pull {
   margin: 44px 0; padding: clamp(24px, 3vw, 40px);
   background: var(--paper-2);
@@ -886,8 +763,6 @@ input, textarea, select { font: inherit; color: inherit; }
 }
 .artnext:hover h3 { color: var(--terra); }
 
-/* ------------------------------------------------------------- контакты */
-
 .contacts { display: grid; grid-template-columns: 1fr 1.25fr; gap: clamp(30px, 4vw, 70px); align-items: start; }
 .contacts > * { min-width: 0; }
 
@@ -902,16 +777,12 @@ input, textarea, select { font: inherit; color: inherit; }
 .cblock a:hover { color: var(--terra); border-color: var(--terra); }
 .cblock .tiny { font-size: 12.5px; }
 
-/* Контакты на тёмной полосе — так же, как приглашение в шоурум
-   на главной. Полоса отбивает их от текста страницы. */
 .cdark { background: var(--dark); color: var(--onDark); }
 .cdark .cblock { border-color: var(--line-d); }
 .cdark .cblock div { border-color: var(--line-d); }
 .cdark .cblock b { color: var(--onDark-2); }
 .cdark .cblock a { border-color: var(--line-d); }
 
-/* Карта. В макете это схема: страница не делает ни одного внешнего
-   запроса. Место и поля — те же, что займёт карта Яндекса. */
 .map { background: var(--paper-2); }
 .map svg { width: 100%; height: auto; display: block; }
 .map .mp-block { fill: #e2dbcf; }
@@ -940,8 +811,6 @@ input, textarea, select { font: inherit; color: inherit; }
 .reqs { font-size: 13px; color: var(--ink-2); }
 .reqs p { margin: 0 0 8px; }
 
-/* --------------------------------------------- адаптив текстовых страниц */
-
 @media (max-width: 1080px) {
   .phead { grid-template-columns: 1fr; gap: 26px; align-items: start; }
   .numbers { grid-template-columns: repeat(2, 1fr); }
@@ -961,17 +830,10 @@ input, textarea, select { font: inherit; color: inherit; }
   .artbody > p:first-child::first-letter { font-size: 58px; padding-right: 10px; }
   .artend .btn-row .btn { flex: 1 1 100%; }
 
-  /* Подписи на схеме набраны в единицах самой схемы: вместе с ней они
-     сжимаются и на телефоне становятся нечитаемыми. Поэтому схема
-     показывается в своём размере и прокручивается внутри блока,
-     а не тянет вбок всю страницу. */
   .map { overflow-x: auto; }
   .map svg { width: 640px; max-width: none; }
 }
 
-/* Строка статьи на главной: заголовок крупно, тема и время чтения
-   по краям. Полосой во всю ширину, как всё в этом варианте, — но без
-   картинки: на длинной главной статьи не должны отнимать целый экран. */
 .artline { border-top: 1px solid var(--line); }
 .artline a {
   display: grid; grid-template-columns: 180px 1fr auto;
@@ -995,8 +857,4 @@ input, textarea, select { font: inherit; color: inherit; }
   .artline .artline__read { display: none; }
 }
 
-/* Атрибут hidden должен побеждать раскладку. Иначе форма, скрытая после
-   отправки (form.hidden = true), остаётся на экране: у неё display: grid,
-   а правило браузера для [hidden] слабее по весу — и рядом с ответом
-   «спасибо, получили» продолжает висеть пустая форма. */
 [hidden] { display: none !important; }

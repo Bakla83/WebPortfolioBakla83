@@ -1,24 +1,3 @@
-/**
- * Переносит работы из src/data/projects.ts в Sanity — один раз, при первом
- * подключении CMS.
- *
- * Зачем: пока работы лежат только в файле, из админки их не отредактировать
- * и не удалить. После импорта каждая становится документом, которым можно
- * управлять кнопками, а файл остаётся запасным вариантом на случай, если CMS
- * окажется недоступна во время сборки.
- *
- * Запуск:
- *   node --experimental-strip-types tools/import-to-sanity.mjs --dry-run
- *   node --experimental-strip-types tools/import-to-sanity.mjs
- *
- * Нужны переменные окружения (положите их в .env в корне проекта):
- *   SANITY_PROJECT_ID   идентификатор проекта
- *   SANITY_DATASET      обычно production
- *   SANITY_WRITE_TOKEN  токен с правами Editor — ТОЛЬКО локально, не в git
- *
- * Скрипт использует createOrReplace с предсказуемым _id (project-<slug>),
- * поэтому повторный запуск не плодит дубли, а обновляет уже созданное.
- */
 import { readFile } from 'node:fs/promises';
 import { basename, extname, join } from 'node:path';
 import { PROJECTS } from '../src/data/projects.ts';
@@ -26,9 +5,6 @@ import { PROJECTS } from '../src/data/projects.ts';
 const ROOT = join(import.meta.dirname, '..');
 const DRY_RUN = process.argv.includes('--dry-run');
 
-/* ------------------------------------------------------------ окружение */
-
-// .env читаем сами: тянуть dotenv ради трёх строк не хочется
 async function loadEnv() {
   try {
     const raw = await readFile(join(ROOT, '.env'), 'utf8');
@@ -39,7 +15,7 @@ async function loadEnv() {
       if (value && !process.env[match[1]]) process.env[match[1]] = value;
     }
   } catch {
-    /* .env может не быть — тогда переменные пришли из окружения */
+
   }
 }
 
@@ -63,10 +39,8 @@ if (!TOKEN && !DRY_RUN) {
   process.exit(1);
 }
 
-/* -------------------------------------------------------------- утилиты */
-
 let keyCounter = 0;
-/** Элементам массивов Sanity нужен стабильный уникальный ключ. */
+
 const key = () => `k${(++keyCounter).toString(36)}${Date.now().toString(36).slice(-4)}`;
 
 const MIME = {
@@ -78,7 +52,6 @@ const MIME = {
   '.svg': 'image/svg+xml',
 };
 
-/** Один и тот же файл не загружаем дважды. */
 const uploaded = new Map();
 
 async function uploadImage(publicPath) {
@@ -116,7 +89,6 @@ async function uploadImage(publicPath) {
   return id;
 }
 
-/** Оборачивает { ru, en } в объект нужного Sanity типа, пустое отбрасывает. */
 const locale = (value, type) => {
   if (!value) return undefined;
   const out = { _type: type };
@@ -137,15 +109,13 @@ async function imageField(image, memberType) {
   };
 }
 
-/* --------------------------------------------------------------- импорт */
-
 const documents = [];
 
 for (const project of PROJECTS) {
   console.log(`\n${project.slug}`);
 
   const doc = {
-    // Предсказуемый _id — чтобы повторный запуск обновлял, а не дублировал
+
     _id: `project-${project.slug}`,
     _type: 'project',
     title: locale(project.title, 'localeString'),
@@ -190,7 +160,6 @@ for (const project of PROJECTS) {
     }));
   }
 
-  // undefined в JSON превратится в отсутствующее поле — Sanity этого не любит
   documents.push(JSON.parse(JSON.stringify(doc)));
 }
 

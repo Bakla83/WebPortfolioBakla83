@@ -7,11 +7,11 @@ import { t } from '../i18n/ui';
 
 interface Props {
   lang: EnabledLocale;
-  /** Путь без языкового префикса: '' для главной, 'about', 'work/landings'. */
+
   path?: string;
   title: string;
   description?: string;
-  /** Абсолютный или корневой путь к картинке для соцсетей. */
+
   ogImage?: string;
   noindex?: boolean;
 }
@@ -25,7 +25,6 @@ const site = Astro.site ?? new URL('https://webportfoliobakla83.pages.dev');
 const canonical = new URL(localePath(lang, path), site).href;
 const ogImageUrl = new URL(ogImage ?? '/og-default.png', site).href;
 
-// Полный заголовок: на главной не дублируем имя дважды.
 const fullTitle = title === strings.meta.siteName ? title : `${title} — ${strings.meta.siteName}`;
 ---
 
@@ -35,7 +34,6 @@ const fullTitle = title === strings.meta.siteName ? title : `${title} — ${stri
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Ставит тему до отрисовки. Блокирующий и первым — иначе будет вспышка. -->
     <script is:inline src="/theme-init.js"></script>
 
     <title>{fullTitle}</title>

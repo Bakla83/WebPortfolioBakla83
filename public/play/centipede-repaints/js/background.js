@@ -1,23 +1,3 @@
-/*
-  Живой фон на canvas.
-
-  Мастерская — это в первую очередь взвесь в воздухе: аэрограф даёт мелкую
-  сухую пыль, которая часами висит в луче света и оседает на всём подряд.
-  Отсюда три системы частиц на одном холсте:
-
-    pigment — мелкая пигментная пыль, её сдувает от курсора, как факелом
-              аэрографа, и сносит при быстрой прокрутке;
-    motes   — крупные редкие пылинки, они наоборот тянутся к курсору и
-              задают глубину: движутся медленнее и светятся ярче;
-    blooms  — вспышка пигмента по клику, разлетается и гаснет.
-
-  Цвета не заданы числами, а читаются из CSS-переменных --p-1…--p-4. Из-за
-  этого смена палитры перекрашивает и вёрстку, и взвесь одним движением, а
-  JS про палитры ничего не знает.
-
-  Всё останавливается, когда вкладка невидима или включён спокойный режим —
-  считать частицы в фоновой вкладке значит греть батарею просто так.
-*/
 window.Centipede = window.Centipede || {};
 
 (function (ns) {
@@ -35,16 +15,13 @@ window.Centipede = window.Centipede || {};
     let palette = ['#c98a4e', '#8f5a2c', '#e6cba0', '#6f4a2a'];
 
     let pointer = { x: -9999, y: -9999, active: false };
-    let wind = 0;          // порыв от прокрутки, затухает сам
+    let wind = 0;
     let lastScroll = 0;
     let calm = false;
     let running = false;
     let raf = 0;
     let last = 0;
 
-    /* Палитра берётся из CSS раз в смену темы, а не каждый кадр:
-       getComputedStyle — это принудительный пересчёт стилей, и вызывать
-       его шестьдесят раз в секунду означает съесть весь бюджет кадра. */
     function readPalette() {
       const cs = getComputedStyle(document.documentElement);
       const next = [];
@@ -69,8 +46,6 @@ window.Centipede = window.Centipede || {};
       seed();
     }
 
-    /* Плотность считается от площади, а не от ширины: на узком высоком
-       экране телефона частиц должно быть меньше, а не столько же. */
     function seed() {
       const area = W * H;
       const nPig = Math.round(Math.min(area / 5200, 260));
@@ -92,8 +67,7 @@ window.Centipede = window.Centipede || {};
         vy: -0.05 - Math.random() * 0.22,
         a: 0.12 + Math.random() * 0.38,
         c: Math.floor(Math.random() * 4),
-        // Фаза нужна, чтобы пылинки не качались синхронно: одинаковый
-        // синус на всех сразу читается как волна, а не как взвесь.
+
         ph: Math.random() * Math.PI * 2,
         sw: 0.2 + Math.random() * 0.5,
       };
@@ -115,8 +89,6 @@ window.Centipede = window.Centipede || {};
     function step(dt) {
       const t = performance.now() / 1000;
 
-      // Порыв от прокрутки затухает по экспоненте: резкий рывок сносит
-      // взвесь заметно, но через полсекунды воздух снова стоит.
       wind *= Math.pow(0.94, dt * 60);
       if (Math.abs(wind) < 0.001) wind = 0;
 
@@ -125,8 +97,6 @@ window.Centipede = window.Centipede || {};
         p.x += (p.vx + Math.sin(t * p.sw + p.ph) * 0.12 + wind) * dt * 60;
         p.y += p.vy * dt * 60;
 
-        // Факел аэрографа: вблизи курсора пылинку сдувает прочь, сила
-        // падает с квадратом расстояния.
         if (pointer.active) {
           const dx = p.x - pointer.x;
           const dy = p.y - pointer.y;
@@ -149,8 +119,6 @@ window.Centipede = window.Centipede || {};
         m.x += (m.vx + Math.sin(t * 0.3 + m.ph) * 0.06 + wind * 0.4) * dt * 60;
         m.y += m.vy * dt * 60;
 
-        // Крупная пыль, наоборот, втягивается за курсором — так два слоя
-        // расходятся по направлению и перестают выглядеть одним шумом.
         if (pointer.active) {
           const dx = pointer.x - m.x;
           const dy = pointer.y - m.y;
@@ -219,8 +187,6 @@ window.Centipede = window.Centipede || {};
       ctx.globalCompositeOperation = 'source-over';
     }
 
-    /* Один статичный кадр для спокойного режима: страница не должна
-       становиться пустой оттого, что человек выключил движение. */
     function still() {
       readPalette();
       seed();
@@ -229,8 +195,7 @@ window.Centipede = window.Centipede || {};
 
     function frame(now) {
       if (!running) return;
-      // Первый кадр после паузы даёт огромный dt — его надо срезать,
-      // иначе всю взвесь одним скачком выносит за экран.
+
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
       step(dt);
@@ -251,8 +216,6 @@ window.Centipede = window.Centipede || {};
       raf = 0;
     }
 
-    /* ------------------------------------------------------- события --- */
-
     window.addEventListener('resize', function () {
       resize();
       if (calm) draw();
@@ -270,15 +233,14 @@ window.Centipede = window.Centipede || {};
 
     window.addEventListener('scroll', function () {
       const y = window.scrollY || 0;
-      // Знак важен: вниз сносит взвесь влево, вверх — вправо.
+
       wind += Math.max(Math.min((y - lastScroll) * -0.012, 1.6), -1.6);
       lastScroll = y;
     }, { passive: true });
 
     window.addEventListener('pointerdown', function (e) {
       if (calm) return;
-      // Клик по кнопке или ссылке — это действие, а не желание брызнуть
-      // краской: вспышка там только мешает.
+
       if (e.target.closest('a, button, input, select, textarea, label')) return;
       bloom(e.clientX, e.clientY);
     });
@@ -306,8 +268,6 @@ window.Centipede = window.Centipede || {};
       blooms.push({ parts: parts, life: 1.5, max: 1.5 });
       if (blooms.length > 6) blooms.shift();
     }
-
-    /* ------------------------------------------------------------ API --- */
 
     const api = {
       setCalm: function (v) {

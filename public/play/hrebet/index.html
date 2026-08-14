@@ -15,16 +15,12 @@
 
 <link rel="stylesheet" href="css/style.css" />
 
-<!-- Тема и язык применяются ДО отрисовки страницы, чтобы не было вспышки
-     дефолтной тёмной/русской версии перед тем, как JS переключит на
-     сохранённые настройки пользователя. -->
 <script src="inline-1.js"></script>
 </head>
 <body>
 
 <a class="skip-link" href="#main" data-i18n="a11y.skip">Перейти к содержанию</a>
 
-<!-- ══════════════════════════ SVG-СПРАЙТ ══════════════════════════ -->
 <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
   <defs>
     <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
@@ -44,7 +40,6 @@
   </defs>
 </svg>
 
-<!-- ══════════════════════════ ШАПКА ══════════════════════════ -->
 <header class="site-header" id="site-header">
   <div class="container header-inner">
     <a href="#top" class="logo" id="top" aria-label="ХРЕБЕТ" data-i18n-aria-label="a11y.logo">
@@ -80,7 +75,6 @@
   </div>
 </header>
 
-<!-- ══════════════════════════ МОБИЛЬНОЕ МЕНЮ ══════════════════════════ -->
 <div class="mobile-nav" id="mobile-nav" hidden>
   <div class="mobile-nav-top">
     <span class="logo-text" data-i18n="brand.name">ХРЕБЕТ</span>
@@ -113,7 +107,6 @@
 
 <main id="main">
 
-  <!-- ══════════════════════════ HERO ══════════════════════════ -->
   <section class="hero" id="hero">
     <div class="hero-sky" aria-hidden="true"></div>
     <svg class="hero-mountains" id="hero-mountains" viewBox="0 0 1600 620" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
@@ -130,11 +123,6 @@
         </radialGradient>
       </defs>
 
-      <!-- Солнце — видно в светлой теме, луна — в тёмной. Обе group лежат в
-           одном месте композиции и переключаются перекрёстным затуханием
-           (см. css: .hero-sun-group / .hero-moon-group), а не подменой
-           одного и того же кружка другим цветом — так у луны может быть
-           собственная текстура (кратеры), а не просто «холодный солнце». -->
       <g class="hero-sun-group" aria-hidden="true">
         <circle class="hero-sun" cx="1230" cy="190" r="130" fill="url(#sunGlow)"/>
         <circle cx="1230" cy="190" r="34" fill="#fff3e0"/>
@@ -142,7 +130,7 @@
       <g class="hero-moon-group" aria-hidden="true">
         <circle cx="1230" cy="190" r="130" fill="url(#moonGlow)"/>
         <circle cx="1230" cy="190" r="32" fill="#eef2f6"/>
-        <!-- Кратеры: несколько приглушённых кругов внутри диска -->
+
         <circle cx="1219" cy="180" r="6.5" fill="#c7d0dc" opacity="0.55"/>
         <circle cx="1241" cy="196" r="4.5" fill="#c7d0dc" opacity="0.5"/>
         <circle cx="1224" cy="202" r="3.2" fill="#c7d0dc" opacity="0.45"/>
@@ -186,17 +174,10 @@
     </a>
   </section>
 
-  <!-- ══════════════════════════ БЕГУЩАЯ СТРОКА ══════════════════════════ -->
-  <!-- Содержимое строится в main.js: список вершин задан один раз в словаре
-       переводов и дублируется программно, чтобы обе половины ленты были
-       побайтово одинаковыми — это единственный надёжный способ добиться
-       бесшовной прокрутки (на глаз подобранное дублирование в разметке
-       ломается при любом изменении текста, в том числе при смене языка). -->
   <div class="marquee" aria-hidden="true">
     <div class="marquee-track" id="marquee-track"></div>
   </div>
 
-  <!-- ══════════════════════════ СТАТИСТИКА ══════════════════════════ -->
   <section class="stats" id="stats">
     <div class="container stats-grid">
       <div class="stat-item reveal">
@@ -218,7 +199,6 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════ ФИЛОСОФИЯ ══════════════════════════ -->
   <section class="philosophy section-light" id="philosophy">
     <svg class="philosophy-topo" viewBox="0 0 800 800" aria-hidden="true">
       <g fill="none" stroke="currentColor" stroke-width="1">
@@ -250,7 +230,6 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════ МАРШРУТЫ ══════════════════════════ -->
   <section class="routes section-light" id="routes">
     <div class="container">
       <div class="section-head">
@@ -380,7 +359,6 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════ ПРОЦЕСС ══════════════════════════ -->
   <section class="process" id="process">
     <div class="container">
       <div class="section-head">
@@ -429,7 +407,6 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════ ПОЧЕМУ МЫ ══════════════════════════ -->
   <section class="features" id="features">
     <div class="container">
       <div class="section-head">
@@ -480,7 +457,6 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════ ГАЛЕРЕЯ ══════════════════════════ -->
   <section class="gallery section-light" id="gallery">
     <div class="container">
       <div class="section-head">
@@ -521,7 +497,6 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════ ОТЗЫВЫ ══════════════════════════ -->
   <section class="reviews" id="reviews">
     <div class="container">
       <div class="section-head">
@@ -567,7 +542,6 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════ ВОПРОСЫ ══════════════════════════ -->
   <section class="faq section-light" id="faq">
     <div class="container faq-grid">
       <div class="faq-head">
@@ -641,7 +615,6 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════ КОНТАКТЫ / ЗАЯВКА ══════════════════════════ -->
   <section class="cta" id="contact">
     <div class="container cta-grid">
       <div class="cta-info">
@@ -704,7 +677,6 @@
 
 </main>
 
-<!-- ══════════════════════════ ПОДВАЛ ══════════════════════════ -->
 <footer class="site-footer">
   <div class="container footer-inner">
     <div class="footer-brand">

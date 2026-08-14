@@ -1,15 +1,3 @@
-/*
-  Терминал: ввод, история, дописывание по Tab и вывод.
-
-  Приглашение печатается двумя строками — ровно как настоящий Git Bash:
-  сверху пользователь, оболочка, путь и ветка в скобках, снизу доллар и
-  курсор. Ветка в приглашении не украшение: в уроке про ветки именно по ней
-  видно, где человек сейчас работает.
-
-  Команда, подставленная кнопкой из урока, набирается по букве. Это не
-  спецэффект: человек успевает прочитать её глазами, а привычка к строке
-  появляется, только если видеть, как она собирается.
-*/
 window.Vetka = window.Vetka || {};
 
 (function (ns) {
@@ -65,7 +53,6 @@ window.Vetka = window.Vetka || {};
     els.screen.scrollTop = els.screen.scrollHeight;
   }
 
-  /** Эхо введённой строки — теми же двумя строками, что и приглашение. */
   function echo(state, text) {
     const block = document.createElement('div');
     block.className = 'term__echo';
@@ -89,7 +76,6 @@ window.Vetka = window.Vetka || {};
     scroll();
   }
 
-  /** Служебная реплика тренажёра — визуально отделена от вывода команд. */
   function note(text, kind) {
     const block = document.createElement('div');
     block.className = 'term__note term__note--' + (kind || 'info');
@@ -110,7 +96,6 @@ window.Vetka = window.Vetka || {};
     return els.input.value;
   }
 
-  /** Печатает команду в строку ввода по букве. */
   function type(text, done) {
     if (typing) clearInterval(typing);
     els.input.value = '';
@@ -132,8 +117,6 @@ window.Vetka = window.Vetka || {};
       }
     }, 26);
   }
-
-  /* ─────────────────────────── дописывание по Tab ─────────────────────── */
 
   function complete() {
     const text = els.input.value;
@@ -157,7 +140,6 @@ window.Vetka = window.Vetka || {};
       return;
     }
 
-    // Общая часть всех совпадений — так же ведёт себя настоящая оболочка
     let common = hits[0];
     hits.forEach(function (hit) {
       while (hit.indexOf(common) !== 0) common = common.slice(0, -1);
@@ -165,8 +147,6 @@ window.Vetka = window.Vetka || {};
     if (common.length > text.length) els.input.value = common;
     else print(hits.map(function (hit) { return { t: hit, c: 'dim' }; }));
   }
-
-  /* ─────────────────────────────── события ─────────────────────────────── */
 
   function bind() {
     els.input.addEventListener('keydown', function (event) {
@@ -202,7 +182,6 @@ window.Vetka = window.Vetka || {};
       }
     });
 
-    // Клик по любому месту экрана возвращает курсор в строку ввода
     els.screen.addEventListener('pointerdown', function (event) {
       if (window.getSelection && String(window.getSelection())) return;
       if (event.target.closest('button')) return;

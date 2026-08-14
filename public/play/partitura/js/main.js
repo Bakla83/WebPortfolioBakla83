@@ -1,12 +1,3 @@
-/*
-  Связка: состояние редактора, ввод с нотного стана и с пианино, отмена,
-  воспроизведение, файлы.
-
-  Всё состояние живёт в одном объекте, а любое изменение партитуры идёт
-  через mutate() — она же кладёт снимок в стек отмены и перерисовывает
-  лист. Так не бывает случая, когда что-то поменялось, а на экране осталось
-  старое: забыть перерисовать просто негде.
-*/
 (function (ns) {
   'use strict';
 
@@ -17,7 +8,6 @@
 
   const THEME_KEY = 'partitura-theme';
 
-  /** Диапазон пианино: от до большой октавы до до третьей — четыре октавы. */
   const FIRST_MIDI = 36;
   const LAST_MIDI = 84;
   const WHITE_W = 30;
@@ -25,7 +15,6 @@
 
   const WHITE_PC = [0, 2, 4, 5, 7, 9, 11];
 
-  /** Буквы компьютерной клавиатуры → ступени внутри октавы. */
   const KEY_MAP = {
     a: 0, w: 1, s: 2, e: 3, d: 4, f: 5, t: 6, g: 7, y: 8, h: 9, u: 10, j: 11, k: 12, o: 13, l: 14,
   };
@@ -35,7 +24,7 @@
     selected: null,
     hoverD: null,
     playing: null,
-    dur: 2, // четвертная
+    dur: 2,
     dot: false,
     acc: 'none',
     rest: false,
@@ -48,8 +37,6 @@
   const redoStack = [];
 
   const el = {};
-
-  /* ────────────────────────────── помощники ────────────────────────────── */
 
   function byId(id) {
     return document.getElementById(id);
@@ -73,8 +60,6 @@
     return sc.noteLabel(spelled.d, sc.alterOf(spelled, state.score.fifths), noteNames());
   }
 
-  /* ─────────────────────────── изменение партитуры ─────────────────────── */
-
   function snapshot() {
     return JSON.stringify(sc.toJSON(state.score));
   }
@@ -84,7 +69,6 @@
     if (parsed) state.score = parsed;
   }
 
-  /** Единственная точка изменения: снимок → правка → перерисовка. */
   function mutate(fn) {
     const before = snapshot();
     fn();
@@ -119,8 +103,6 @@
     return Math.max(0, Math.min(index, state.score.events.length - 1));
   }
 
-  /* ──────────────────────────────── ввод нот ──────────────────────────── */
-
   function currentTicks() {
     return sc.DURATIONS[state.dur].ticks;
   }
@@ -140,7 +122,6 @@
     });
   }
 
-  /** Нота со стана: ступень известна, знак берётся с панели. */
   function addByStep(d) {
     if (state.rest) {
       insertEvent(makeEvent([]));
@@ -152,7 +133,6 @@
     preview(sc.midiOfNote(note, state.score.fifths));
   }
 
-  /** Нота с пианино: известен звук, запись подбирается по тональности. */
   function addByMidi(midi) {
     if (state.rest) {
       insertEvent(makeEvent([]));
@@ -192,8 +172,6 @@
     });
   }
 
-  /* ──────────────────────────────── пианино ──────────────────────────── */
-
   function buildPiano() {
     const whites = [];
     const blacks = [];
@@ -229,7 +207,6 @@
     labelPiano();
   }
 
-  /** Подписи на белых клавишах: буквенные или слоговые, октава — у «до». */
   function labelPiano() {
     const names = noteNames();
     el.piano.querySelectorAll('.key--white').forEach(function (key) {
@@ -267,9 +244,6 @@
     }, 180);
   }
 
-  /* ─────────────────────────────── панель ─────────────────────────────── */
-
-  /** Иконка длительности: та же нота, что появится в листе. */
   function durationIcon(id) {
     const open = id === 'whole' || id === 'half';
     const stem = id !== 'whole';
@@ -333,8 +307,6 @@
     el.redo.disabled = redoStack.length === 0;
   }
 
-  /* ────────────────────────────── перерисовка ────────────────────────────── */
-
   function refresh() {
     state.info = render.draw(el.score, state.score, state);
     syncTools();
@@ -364,9 +336,6 @@
     el.status.textContent = text;
   }
 
-  /* ──────────────────────────── попадание мышью ──────────────────────────── */
-
-  /** Экранная точка → координаты внутри SVG (лист может быть отмасштабирован). */
   function toSvgPoint(event) {
     const rect = el.score.getBoundingClientRect();
     const info = state.info;
@@ -389,13 +358,11 @@
     const system = systemAt(point);
     if (!system) return null;
     const d = render.dOfY(state.score.clef, point.y, system.staffTop);
-    // Ограничение по пианино: выше и ниже нот всё равно не сыграть
+
     const min = sc.spell(FIRST_MIDI, 0, 'sharp').d;
     const max = sc.spell(LAST_MIDI, 0, 'sharp').d;
     return Math.max(min, Math.min(max, d));
   }
-
-  /* ────────────────────────────── воспроизведение ────────────────────────── */
 
   function setPlaying(on) {
     el.play.classList.toggle('is-on', on);
@@ -432,7 +399,6 @@
     }
   }
 
-  /** Держит звучащую строку в поле зрения, но не дёргает лист без нужды. */
   function scrollToPlaying() {
     if (state.playing === null || !state.info) return;
     const item = state.info.positions[state.playing];
@@ -447,8 +413,6 @@
       paper.scrollTo({ top: Math.max(0, top - 12), behavior: 'smooth' });
     }
   }
-
-  /* ─────────────────────────────── файлы ─────────────────────────────── */
 
   function download(blob, name) {
     const url = URL.createObjectURL(blob);
@@ -522,10 +486,8 @@
     buildKeySelect();
   }
 
-  /* ────────────────────────────── события ────────────────────────────── */
-
   function bind() {
-    /* — панель ввода — */
+
     el.durations.addEventListener('click', function (event) {
       const btn = event.target.closest('[data-dur]');
       if (!btn) return;
@@ -562,7 +524,6 @@
       });
     });
 
-    /* — партитура — */
     el.clef.addEventListener('change', function () {
       mutate(function () {
         state.score.clef = el.clef.value;
@@ -599,7 +560,6 @@
       else startPlayback();
     });
 
-    /* — нотный лист — */
     el.score.addEventListener('pointerdown', function (event) {
       const point = toSvgPoint(event);
       if (!point) return;
@@ -637,7 +597,6 @@
       refresh();
     });
 
-    /* — пианино — */
     el.piano.addEventListener('pointerdown', function (event) {
       const key = event.target.closest('.key');
       if (!key) return;
@@ -661,7 +620,6 @@
       updateStatus();
     });
 
-    /* — файлы — */
     el.exportMidi.addEventListener('click', exportMidi);
     el.saveProject.addEventListener('click', saveProject);
     el.loadProject.addEventListener('click', function () {
@@ -675,7 +633,6 @@
       window.print();
     });
 
-    /* — тема, язык, подсказка — */
     el.theme.addEventListener('click', function () {
       const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
@@ -702,10 +659,8 @@
       if (event.target === el.help) el.help.hidden = true;
     });
 
-    /* — клавиатура компьютера — */
     document.addEventListener('keydown', onKey);
 
-    /* — размер окна — */
     let resizeTimer = null;
     window.addEventListener('resize', function () {
       clearTimeout(resizeTimer);
@@ -814,8 +769,6 @@
       else addByMidi(midi);
     }
   }
-
-  /* ─────────────────────────────── запуск ─────────────────────────────── */
 
   function collect() {
     [

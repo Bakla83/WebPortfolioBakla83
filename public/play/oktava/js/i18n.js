@@ -1,14 +1,3 @@
-/*
-  Локализация.
-
-  Ключ data-i18n="a.b" ищется как I18N[lang].a.b. Разметка в index.html
-  заполнена русским: если скрипт не выполнится, интерфейс останется
-  читаемым, просто без переключателя языков.
-
-  Атрибуты переводятся отдельно — data-i18n-content (meta),
-  data-i18n-aria-label: видимая подпись и подпись для скринридера у одного
-  элемента часто разные.
-*/
 window.Oktava = window.Oktava || {};
 
 (function (ns) {
@@ -227,7 +216,6 @@ window.Oktava = window.Oktava || {};
       .reduce((acc, part) => (acc && acc[part] !== undefined ? acc[part] : undefined), I18N[lang]);
   }
 
-  /** Подстановка вида {name} — для строк, куда попадает имя файла или ноты. */
   function fill(template, values) {
     return String(template).replace(/\{(\w+)\}/g, function (whole, key) {
       return values[key] !== undefined ? values[key] : whole;
@@ -257,7 +245,6 @@ window.Oktava = window.Oktava || {};
       if (typeof value === 'string') el.setAttribute('aria-label', value);
     });
 
-    // <title> живёт вне <body> и под общий обход не попадает
     const title = t(lang, 'meta.title');
     if (typeof title === 'string') document.title = title;
 

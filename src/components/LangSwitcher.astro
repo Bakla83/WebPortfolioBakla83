@@ -11,11 +11,6 @@ const { lang, path } = Astro.props;
 const strings = t(lang);
 ---
 
-<!--
-  Обычные ссылки, а не кнопки с JS: каждая языковая версия страницы —
-  отдельный адрес, её должно быть видно поисковику и можно открыть
-  в новой вкладке. Скрипт лишь запоминает выбор для корневого /.
--->
 <div class="lang" role="group" aria-label={strings.lang.label} data-lang-switcher>
   {
     ENABLED_LOCALES.map((code) => (

@@ -17,8 +17,7 @@
 
     <div class="cat__head">
       <h1 class="t-h1" id="ctitle">Каталог</h1>
-      <!-- Переключатель наличия стоит над списком, а не внутри фильтров:
-           по словам заказчицы это самый нажимаемый элемент каталога. -->
+
       <div class="stock">
         <button data-stock="all">Все</button>
         <button data-stock="in">В наличии</button>
@@ -26,9 +25,6 @@
       </div>
     </div>
 
-    <!-- Главный фильтр этого варианта — лента марок над сеткой.
-         Она же навигация: адрес вида catalog.html?factory=Baccarat
-         работает как отдельная страница под марочный запрос. -->
     <nav class="marks" id="marks" aria-label="Фабрики"></nav>
 
     <div class="toolbar">
@@ -47,8 +43,6 @@
       </div>
     </div>
 
-    <!-- Фильтры раскрываются строкой на всю ширину: боковая колонка
-         съедала бы место у сетки, а здесь ширина важнее. -->
     <div class="filters" id="filters"></div>
     <button class="fclose" id="fclose">Показать результаты</button>
 

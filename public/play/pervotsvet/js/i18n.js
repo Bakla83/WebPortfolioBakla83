@@ -1,17 +1,3 @@
-/*
-  Локализация.
-
-  Ключ data-i18n="a.b" ищется как I18N[lang].a.b. Разметка в index.html
-  заполнена русским текстом на случай, если JS не выполнится: страница
-  останется читаемой, просто без переключателя языков.
-
-  Атрибуты переводятся отдельными ключами — data-i18n-content (meta),
-  data-i18n-placeholder, data-i18n-aria-label. Разделение нужно, потому
-  что у одного элемента текст и подпись для скринридера часто разные.
-
-  Содержимое, которое строится скриптом (карточки, тарифы, отзывы),
-  берётся из тех же словарей напрямую — см. js/main.js.
-*/
 window.Pervotsvet = window.Pervotsvet || {};
 
 (function (ns) {
@@ -547,7 +533,6 @@ window.Pervotsvet = window.Pervotsvet || {};
     return SUPPORTED.indexOf(attr) !== -1 ? attr : 'ru';
   }
 
-  /** Переводит статическую разметку. Динамические блоки перерисовывает main.js. */
   function applyLang(lang) {
     document.documentElement.setAttribute('lang', lang);
 
@@ -571,7 +556,6 @@ window.Pervotsvet = window.Pervotsvet || {};
       if (typeof value === 'string') el.setAttribute('aria-label', value);
     });
 
-    // <title> живёт вне <body>, под общий обход не попадает
     const title = t(lang, 'meta.title');
     if (typeof title === 'string') document.title = title;
 
@@ -597,7 +581,7 @@ window.Pervotsvet = window.Pervotsvet || {};
     get: getLang,
     set: setLang,
     apply: applyLang,
-    /** Подписка на смену языка: вызывается и при первом применении. */
+
     onChange: function (fn) {
       listeners.push(fn);
     },

@@ -2,9 +2,6 @@
 import { ENABLED_LOCALES, LOCALE_META, DEFAULT_LOCALE, localePath } from '../i18n/config';
 import { t } from '../i18n/ui';
 
-// Корень сайта — только развилка по языку. Содержимого здесь нет,
-// поэтому страница закрыта от индексации: поисковик должен видеть
-// /ru и /en, а не пустой редирект.
 const strings = t(DEFAULT_LOCALE);
 ---
 
@@ -24,7 +21,6 @@ const strings = t(DEFAULT_LOCALE);
     }
     <link rel="alternate" hreflang="x-default" href={localePath(DEFAULT_LOCALE)} />
 
-    <!-- Без JS редиректа не будет — на этот случай ниже настоящие ссылки -->
     <noscript>
       <meta http-equiv="refresh" content={`0; url=${localePath(DEFAULT_LOCALE)}`} />
     </noscript>

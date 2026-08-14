@@ -1,14 +1,5 @@
 import type { Locale } from './config';
 
-/**
- * Строки интерфейса. Содержимое проектов лежит отдельно, в src/data/.
- *
- * Чтобы добавить язык: скопировать блок `en`, перевести, положить под
- * нужным кодом и включить язык в ENABLED_LOCALES (src/i18n/config.ts).
- * TypeScript сам покажет, если какой-то ключ забыт.
- */
-// Без `as const`: иначе каждое значение получит литеральный тип
-// («Работы» вместо string), и перевод перестанет подходить под UiStrings.
 const ru = {
   meta: {
     siteName: 'Владислав Баклан — портфолио',
@@ -248,7 +239,6 @@ const dictionaries: Partial<Record<Locale, UiStrings>> = { ru, en };
 export function t(locale: Locale): UiStrings {
   return dictionaries[locale] ?? ru;
 }
-
 
 export function plural(locale: Locale, n: number, strings: UiStrings): string {
   if (locale === 'ru') {

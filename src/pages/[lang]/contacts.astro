@@ -29,7 +29,7 @@ const groups = [
   ...group,
   items: CONTACTS.filter((contact) => contact.group === group.id),
 }))
-  // Пустая группа не рисуется: убрали площадку из данных — заголовок ушёл сам
+
   .filter((group) => group.items.length > 0);
 ---
 
@@ -94,8 +94,6 @@ const groups = [
       }
 
       {
-        /* Место указано не всегда — пустое значение не должно оставлять
-           за собой пустой абзац с отступами. */
         pick(PROFILE.location, lang) && (
           <p class="contacts-note muted">{pick(PROFILE.location, lang)}</p>
         )
@@ -241,7 +239,6 @@ const groups = [
     white-space: nowrap;
   }
 
-  /* :global — класс стоит на <svg> внутри компонента Icon */
   .contact__link :global(.contact__arrow) {
     margin-left: auto;
     flex: none;

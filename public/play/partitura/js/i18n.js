@@ -1,14 +1,3 @@
-/*
-  Локализация.
-
-  Ключ data-i18n="a.b" ищется как I18N[lang].a.b. Разметка в index.html
-  заполнена русским: если скрипт не выполнится, интерфейс останется
-  читаемым, просто без переключателя языков.
-
-  Атрибуты переводятся отдельно — data-i18n-content (meta),
-  data-i18n-aria-label и data-i18n-title: видимая подпись, всплывающая
-  подсказка и подпись для скринридера у одного элемента часто разные.
-*/
 window.Partitura = window.Partitura || {};
 
 (function (ns) {
@@ -83,7 +72,7 @@ window.Partitura = window.Partitura || {};
         meter: 'Размер',
         key: 'Тональность',
         major: 'мажор',
-        /* Тоники от пяти бемолей до пяти диезов — подряд, по кварто-квинтовому кругу */
+
         tonics: [
           'Ре-бемоль',
           'Ля-бемоль',
@@ -276,7 +265,6 @@ window.Partitura = window.Partitura || {};
       .reduce((acc, part) => (acc && acc[part] !== undefined ? acc[part] : undefined), I18N[lang]);
   }
 
-  /** Подстановка вида {name} — для строк со счётчиками и именами файлов. */
   function fill(template, values) {
     return String(template).replace(/\{(\w+)\}/g, function (whole, key) {
       return values[key] !== undefined ? values[key] : whole;
@@ -311,7 +299,6 @@ window.Partitura = window.Partitura || {};
       if (typeof value === 'string') el.setAttribute('title', value);
     });
 
-    // <title> живёт вне <body> и под общий обход не попадает
     const title = t(lang, 'meta.title');
     if (typeof title === 'string') document.title = title;
 

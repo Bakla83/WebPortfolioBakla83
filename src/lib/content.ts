@@ -2,21 +2,10 @@ import { PROJECTS as LOCAL_PROJECTS } from '../data/projects';
 import { fetchProjectsFromSanity, sanityConfigured } from './sanity';
 import type { Project, SectionSlug } from '../data/types';
 
-/**
- * Единая точка доступа к контенту для всех страниц.
- *
- * Пока Sanity не подключена (нет SANITY_PROJECT_ID), сайт живёт на локальных
- * данных из src/data/projects.ts. Как только переменная появится, содержимое
- * начнёт приходить из CMS — править страницы для этого не нужно.
- *
- * Если CMS настроена, но недоступна во время сборки, берутся локальные
- * данные: лучше собрать сайт с прошлым содержимым, чем уронить деплой.
- */
-
 let cache: Project[] | null = null;
 
 export async function getProjects(): Promise<Project[]> {
-  // Сборка обходит десятки страниц — запрос должен уйти один раз
+
   if (cache) return cache;
 
   const fromCms = sanityConfigured ? await fetchProjectsFromSanity() : null;

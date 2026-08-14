@@ -19,18 +19,11 @@ export interface SkillGroup {
 
 export const PROFILE = {
   name: { ru: 'Владислав Баклан', en: 'Vladislav Baklan' } satisfies Localized<string>,
-  /**
-   * сюда почту для связи — блок появится на сайте
-   * оставить пустым — раздел не отрисуется.
-   */
+
   email: '',
-  /**
-   * Место работает так же, как e-mail: пустые строки — и строка на странице
-   * контактов не отрисуется. Убирать сам ключ нельзя — на него ссылается
-   * contacts.astro, и сборка падает с «Cannot read properties of undefined».
-   */
+
   location: { ru: '', en: '' } satisfies Localized<string>,
-  /** Год начала — для строки копирайта в подвале. */
+
   since: 2023,
 } as const;
 
@@ -120,7 +113,6 @@ export const SKILL_GROUPS: SkillGroup[] = [
   },
 ];
 
-/** Абзацы для страницы «Обо мне». */
 export const ABOUT_TEXT: Localized<string[]> = {
   ru: [
     'Я разработчик полного цикла: беру проект от идеи и до момента, когда его можно открыть, запустить или установить. Мне одинаково интересны игровая механика, вёрстка интерфейса и то, как всё собирается в готовый продукт.',

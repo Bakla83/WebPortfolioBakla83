@@ -35,7 +35,7 @@ const workActive = path.startsWith('work');
     </a>
 
     <nav class="nav-desktop" aria-label={strings.nav.menu}>
-      <!-- <details> вместо своего дропдауна: нативная клавиатура и Esc бесплатно -->
+
       <details class="dropdown" data-dropdown>
         <summary class="nav-link" aria-current={workActive ? 'true' : undefined}>
           {strings.nav.work}
@@ -54,8 +54,6 @@ const workActive = path.startsWith('work');
             ))
           }
 
-          <!-- Единственный вход на страницу работы в производстве: её нет
-               ни на главной, ни в разделах, ни в карте сайта. -->
           <a
             href={localePath(lang, 'in-progress')}
             class="dropdown__item dropdown__item--wip"
@@ -96,8 +94,6 @@ const workActive = path.startsWith('work');
   </div>
 </header>
 
-<!-- Мобильное меню: обычный блок в потоке, скрыт через hidden.
-     Никаких порталов — так его не теряет скринридер. -->
 <div class="mobile-menu" id="mobile-menu" data-menu-panel hidden>
   <div class="wrap mobile-menu__inner">
     <div class="mobile-menu__top">
@@ -162,7 +158,6 @@ const workActive = path.startsWith('work');
     min-height: 68px;
   }
 
-  /* --- Логотип --- */
   .brand {
     display: flex;
     align-items: center;
@@ -211,14 +206,12 @@ const workActive = path.startsWith('work');
     white-space: nowrap;
   }
 
-  /* Подпись под именем съедает ширину на узких экранах — там она лишняя */
   @media (max-width: 560px) {
     .brand__role {
       display: none;
     }
   }
 
-  /* --- Десктопное меню --- */
   .nav-desktop {
     display: none;
     align-items: center;
@@ -255,7 +248,6 @@ const workActive = path.startsWith('work');
     background: var(--gold-soft);
   }
 
-  /* --- Выпадающий список разделов --- */
   .dropdown {
     position: relative;
   }
@@ -269,8 +261,6 @@ const workActive = path.startsWith('work');
     display: none;
   }
 
-  /* :global обязателен: класс висит на <svg> внутри компонента Icon,
-     а scoped-стили Astro на чужую разметку не распространяются. */
   .dropdown :global(.dropdown__chevron) {
     transform: rotate(90deg);
     transition: transform 0.2s var(--ease);
@@ -326,8 +316,6 @@ const workActive = path.startsWith('work');
     border-left-color: var(--green);
   }
 
-  /* Работа в производстве — не раздел портфолио, поэтому отделена чертой
-     и подписана иначе: иначе её читают как седьмое направление. */
   .dropdown__item--wip {
     display: flex;
     align-items: center;
@@ -367,7 +355,6 @@ const workActive = path.startsWith('work');
     }
   }
 
-  /* --- Правый блок --- */
   .site-header__tools {
     display: flex;
     align-items: center;
@@ -399,7 +386,6 @@ const workActive = path.startsWith('work');
     }
   }
 
-  /* --- Мобильное меню --- */
   .mobile-menu {
     position: fixed;
     inset: 0;

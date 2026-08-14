@@ -7,7 +7,7 @@ interface Props {
   demo: ProjectDemo;
   lang: EnabledLocale;
   title: string;
-  /** Обложка проекта — заставка до запуска. */
+
   poster?: ProjectImage;
 }
 
@@ -15,9 +15,6 @@ const { demo, lang, title, poster } = Astro.props;
 const strings = t(lang);
 const note = demo.note ? pick(demo.note, lang) : undefined;
 
-// Рамка грузится только по клику, как и плеер видео: иначе каждая страница
-// проекта тянула бы целый второй сайт вместе со шрифтами и скриптами —
-// и делала бы это ради посетителя, который, может быть, просто листает.
 ---
 
 <div
@@ -32,8 +29,7 @@ const note = demo.note ? pick(demo.note, lang) : undefined;
     .filter(Boolean)
     .join('; ') || undefined}
 >
-  <!-- Оконная рамка: сразу видно, что внутри настоящая страница,
-       а не картинка. Адрес показан ради того же. -->
+
   <div class="demo__chrome">
     <span class="demo__dots" aria-hidden="true"><i></i><i></i><i></i></span>
     <span class="demo__url">{demo.src}</span>
@@ -113,16 +109,12 @@ const note = demo.note ? pick(demo.note, lang) : undefined;
       frame.className = 'demo__frame';
       frame.loading = 'lazy';
       frame.allow = 'fullscreen; autoplay';
-      // Копия лежит на том же домене, но своя песочница ей не мешает:
-      // ни всплывающих окон вслепую, ни попыток увести верхнюю страницу.
+
       frame.setAttribute(
         'sandbox',
         'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox',
       );
 
-      // Заставка не убирается сразу: пока внутри грузятся шрифты и скрипты,
-      // рамка белая, и подмена выглядит как будто проект сломался. Ждём
-      // load и только тогда снимаем картинку из-под рамки.
       frame.addEventListener(
         'load',
         () => {
@@ -140,9 +132,7 @@ const note = demo.note ? pick(demo.note, lang) : undefined;
     start.addEventListener('click', launch);
 
     reload?.addEventListener('click', () => {
-      // Пересоздаём элемент, а не трогаем frame.src: у копии на том же
-      // домене перезапись src добавляет запись в историю вкладки, и кнопка
-      // «назад» начинает листать состояния игры вместо возврата на сайт.
+
       if (!frame) return;
       const fresh = frame.cloneNode() as HTMLIFrameElement;
       stage.replaceChildren(fresh);
@@ -156,7 +146,7 @@ const note = demo.note ? pick(demo.note, lang) : undefined;
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
-    /* Портретные работы (телефонная игра) сужаются и встают по центру */
+
     max-width: var(--demo-max, none);
     margin-inline: auto;
     width: 100%;
@@ -228,8 +218,7 @@ const note = demo.note ? pick(demo.note, lang) : undefined;
   .demo__stage {
     position: relative;
     aspect-ratio: var(--demo-ratio, 16 / 10);
-    /* Рамка не должна становиться щёлочкой на телефоне: там пропорции
-       дают меньше двухсот пикселей высоты, и внутри ничего не разобрать. */
+
     min-height: min(70svh, 460px);
     border: 1px solid var(--line);
     border-radius: 0 0 var(--radius) var(--radius);
@@ -315,7 +304,6 @@ const note = demo.note ? pick(demo.note, lang) : undefined;
     color: var(--ink-dim);
   }
 
-  /* Рамка ложится поверх заставки, а не вместо неё */
   .demo :global(.demo__frame) {
     position: absolute;
     inset: 0;
@@ -354,7 +342,7 @@ const note = demo.note ? pick(demo.note, lang) : undefined;
   }
 
   @media (max-width: 560px) {
-    /* В узкой шапке подписи кнопок съедают адрес — оставляем значки */
+
     .demo__tool span:not(.visually-hidden) {
       display: none;
     }

@@ -18,7 +18,7 @@ export async function getStaticPaths() {
   return ENABLED_LOCALES.flatMap((lang) =>
     projects.map((project) => ({
       params: { lang, section: project.section, slug: project.slug },
-      // Соседей передаём пропсом: в теле страницы список уже не запросить
+
       props: {
         project,
         siblings: projects
@@ -39,7 +39,6 @@ const teaser = pick(project.teaser, lang);
 const summary = pick(project.summary, lang);
 const highlights = project.highlights ? pick(project.highlights, lang) : [];
 
-// Соседи внутри раздела — для переходов «предыдущая / следующая»
 const index = siblings.findIndex((p) => p.slug === project.slug);
 const prev = index > 0 ? siblings[index - 1] : undefined;
 const next = index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : undefined;
@@ -75,7 +74,7 @@ const meta: { label: string; value: string }[] = [
   ogImage={project.cover?.src}
 >
   <article>
-    <!-- ============================ Заголовок ============================ -->
+
     <header class:list={['proj-hero', `proj-hero--${section.accent}`]}>
       <div class="wrap">
         <a class="proj-hero__back" href={localePath(lang, `work/${project.section}`)}>
@@ -122,13 +121,8 @@ const meta: { label: string; value: string }[] = [
       </div>
     </header>
 
-    <!-- =========================== Живая версия ========================== -->
-    <!-- Выше галереи: если работу можно открыть, скриншоты — уже вторично.
-         Рамка грузится по клику, поэтому лишнего веса странице не добавляет. -->
     {
       project.demo && (
-        /* Без --sunken: следом идёт утопленная галерея, и две подложки
-           подряд слиплись бы в одно серое поле с полоской посередине. */
         <section class="section proj-section">
           <div class="wrap">
             <h2>{strings.project.demo}</h2>
@@ -138,9 +132,6 @@ const meta: { label: string; value: string }[] = [
       )
     }
 
-    <!-- ============================== Галерея ============================ -->
-    <!-- Идёт до описания намеренно: работу сначала показывают, а потом
-         рассказывают о ней. Для 3D-рендеров картинка и есть весь проект. -->
     {
       project.gallery && project.gallery.length > 0 && (
         <section class="section proj-section proj-section--sunken">
@@ -152,7 +143,6 @@ const meta: { label: string; value: string }[] = [
       )
     }
 
-    <!-- ============================= Описание ============================ -->
     <section class="section proj-section">
       <div class="wrap wrap--narrow">
         <h2>{strings.project.overview}</h2>
@@ -173,7 +163,6 @@ const meta: { label: string; value: string }[] = [
       </div>
     </section>
 
-    <!-- =============================== Видео ============================= -->
     {
       project.videos && project.videos.length > 0 && (
         <section class="section proj-section proj-section--sunken">
@@ -189,7 +178,6 @@ const meta: { label: string; value: string }[] = [
       )
     }
 
-    <!-- ============================== Модели ============================= -->
     {
       project.models && project.models.length > 0 && (
         <section class="section proj-section">
@@ -205,7 +193,6 @@ const meta: { label: string; value: string }[] = [
       )
     }
 
-    <!-- ============================= Соседи ============================== -->
     <nav class="proj-nav" aria-label={strings.nav.work}>
       <div class="wrap proj-nav__inner">
         {
@@ -232,7 +219,7 @@ const meta: { label: string; value: string }[] = [
 </Base>
 
 <style>
-  /* --- Заголовок --- */
+
   .proj-hero {
     position: relative;
     padding-block: clamp(2rem, 1.2rem + 4vw, 4rem) clamp(1.5rem, 1rem + 2vw, 2.5rem);
@@ -309,7 +296,6 @@ const meta: { label: string; value: string }[] = [
     gap: var(--space-1);
   }
 
-  /* --- Содержимое --- */
   .proj-section h2 {
     font-size: clamp(1.25rem, 1.1rem + 0.8vw, 1.6rem);
     margin-bottom: var(--space-2);
@@ -344,7 +330,6 @@ const meta: { label: string; value: string }[] = [
     color: var(--ink-dim);
   }
 
-  /* Ромб-маркер вместо точки — та же геометрия, что у акцентов раздела */
   .proj-highlights li::before {
     content: '';
     position: absolute;
@@ -366,7 +351,6 @@ const meta: { label: string; value: string }[] = [
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
   }
 
-  /* --- Соседние работы --- */
   .proj-nav {
     border-top: 1px solid var(--line);
     padding-block: var(--space-3);

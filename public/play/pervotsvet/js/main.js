@@ -1,13 +1,3 @@
-/*
-  Логика страницы.
-
-  Всё, что зависит от языка (каталог, тарифы, отзывы, конструктор), строится
-  здесь и перестраивается по подписке на смену языка — так текст не приходится
-  дублировать в разметке на двух языках.
-
-  Цены хранятся отдельными суммами для каждой локали, а не пересчитываются по
-  курсу: 3 200 ₽ должно превращаться в аккуратные $42, а не в $34,78.
-*/
 (function () {
   'use strict';
 
@@ -25,8 +15,6 @@
   function t(key) {
     return i18n.t(i18n.get(), key);
   }
-
-  /* ---------------------------------------------------------------- данные */
 
   const BOUQUETS = [
     { id: 'first-morning', mix: ['tulip', 'daisy', 'craspedia', 'daisy', 'tulip'], price: { ru: 3200, en: 42 } },
@@ -75,8 +63,6 @@
     return t('flowers.' + type) || type;
   }
 
-  /* --------------------------------------------------------------- каталог */
-
   function renderCatalog() {
     const grid = $('#catalog-grid');
     if (!grid) return;
@@ -111,8 +97,6 @@
     observeReveals(grid);
   }
 
-  /* --------------------------------------------------------------- тарифы */
-
   function renderPlans() {
     const grid = $('#plans-grid');
     if (!grid) return;
@@ -138,8 +122,6 @@
     observeReveals(grid);
   }
 
-  /* --------------------------------------------------------------- отзывы */
-
   function renderVoices() {
     const marquee = $('#voices-marquee');
     const list = $('#voices-list');
@@ -152,8 +134,7 @@
       '</figure>';
 
     if (marquee) {
-      // Лента дублируется: вторая копия въезжает ровно тогда, когда первая
-      // уходит, и склейка не видна
+
       const row = items.map(card).join('');
       marquee.innerHTML = '<div class="voices__row">' + row + row + '</div>';
     }
@@ -165,8 +146,6 @@
     }
   }
 
-  /* ---------------------------------------------------------- конструктор */
-
   const stems = [];
   let stemSeq = 0;
 
@@ -175,8 +154,7 @@
     stems.push({
       uid: ++stemSeq,
       type: type,
-      // Длина и изгиб выбираются один раз при добавлении: если считать их
-      // при каждой перерисовке, букет будет дёргаться на любом клике
+
       len: 104 + Math.round(Math.random() * 52),
       bend: (Math.random() < 0.5 ? -1 : 1) * (8 + Math.random() * 16),
       lift: Math.round(Math.random() * 14),
@@ -213,7 +191,7 @@
       btn.addEventListener('click', function () {
         if (addStem(btn.dataset.flowerBtn)) {
           btn.classList.remove('is-picked');
-          // Перезапуск анимации: без reflow повторный клик её не проигрывает
+
           void btn.offsetWidth;
           btn.classList.add('is-picked');
           renderVase();
@@ -224,9 +202,6 @@
     });
   }
 
-  // Живые элементы вазы. Ваза перерисовывается точечно, а не через
-  // innerHTML: иначе при каждом добавлении цветка заново создавались бы все
-  // стебли, и анимация появления проигрывалась бы у всего букета сразу.
   const stemEls = new Map();
 
   function renderVase() {
@@ -246,9 +221,7 @@
 
     stems.forEach(function (s, i) {
       const p = n === 1 ? 0.5 : i / (n - 1);
-      // Веер раскрывается постепенно: три стебля стоят почти вертикально,
-      // пятнадцать разводятся широко. Фиксированный угол на малом букете
-      // разбрасывал бы цветы мимо вазы.
+
       const spread = Math.min(30, 7 + n * 1.7);
       const angle = n === 1 ? 0 : -spread + p * spread * 2;
 
@@ -266,10 +239,8 @@
         stemEls.set(s.uid, btn);
       }
 
-      // Веер пересчитывается на каждое изменение — CSS-переход разводит
-      // уже стоящие стебли плавно
       btn.style.setProperty('--angle', angle.toFixed(1) + 'deg');
-      // Центральные стебли выше по слою — так букет читается объёмным
+
       btn.style.zIndex = String(10 + Math.round((1 - Math.abs(p - 0.5) * 2) * 10));
       btn.setAttribute('aria-label', t('a11y.removeFlower') + ' — ' + flowerName(s.type));
     });
@@ -329,8 +300,6 @@
           return;
         }
 
-        // Состав переносится в форму — иначе человеку пришлось бы
-        // переписывать его руками, а флористу верить на слово
         const counts = {};
         stems.forEach((s) => (counts[s.type] = (counts[s.type] || 0) + 1));
         const summary = Object.keys(counts)
@@ -347,8 +316,6 @@
       });
     }
   }
-
-  /* ----------------------------------------------------------------- форма */
 
   function initForm() {
     const form = $('#order-form');
@@ -383,8 +350,6 @@
         return;
       }
 
-      // Бэкенда у лендинга нет: заявка никуда не уходит, и делать вид,
-      // что ушла, нечестно. Здесь подключается почта или CRM.
       setStatus(status, t('contact.sent'));
       form.reset();
       required.forEach((input) => input.removeAttribute('aria-invalid'));
@@ -394,8 +359,6 @@
       ns.background && ns.background.bloomAt(rect.left + rect.width / 2, rect.top + rect.height / 2);
     });
   }
-
-  /* ------------------------------------------------------- язык и палитра */
 
   function initLang() {
     $$('.lang__btn').forEach(function (btn) {
@@ -416,8 +379,6 @@
 
         $$('[data-mood-btn]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
 
-        // Переменные уже сменились, но фон на canvas читает их вручную.
-        // rAF — чтобы браузер успел пересчитать стили.
         requestAnimationFrame(function () {
           ns.background && ns.background.refreshPalette();
         });
@@ -452,8 +413,6 @@
     sync();
   }
 
-  /* -------------------------------------------------------------- шапка */
-
   function initNav() {
     const burger = $('#burger');
     const header = $('.site-header');
@@ -473,7 +432,6 @@
       });
     }
 
-    // Шапка уплотняется, как только страница тронулась с места
     let ticking = false;
     window.addEventListener(
       'scroll',
@@ -488,7 +446,6 @@
       { passive: true }
     );
 
-    // Подсветка активного раздела
     const links = $$('.site-nav a');
     const map = {};
     links.forEach(function (a) {
@@ -512,14 +469,11 @@
     Object.keys(map).forEach((id) => spy.observe(document.getElementById(id)));
   }
 
-  /* --------------------------------------------------------- появление */
-
   let revealObserver = null;
   let firstBuild = true;
 
   function observeReveals(root) {
-    // Перестроенные блоки (смена языка) показываем сразу: карточка, которая
-    // уже была на экране, не должна проявляться заново
+
     if (!firstBuild) {
       $$('[data-reveal]', root).forEach((el) => el.classList.add('is-visible'));
       return;
@@ -529,8 +483,7 @@
   }
 
   function initReveal() {
-    // Элементы, которые логично показывать с задержкой, помечаются здесь,
-    // а не в разметке: так HTML не зарастает служебными атрибутами
+
     $$('.section__title, .section__lead, .mood, .step, .voice, .contact__intro, .form, .builder__picker, .builder__stage')
       .forEach((el) => el.setAttribute('data-reveal', ''));
 
@@ -552,8 +505,6 @@
 
     observeReveals(document);
   }
-
-  /* ----------------------------------------------------------- счётчики */
 
   function initCounters() {
     const nodes = $$('[data-count]');
@@ -589,20 +540,10 @@
     nodes.forEach((el) => io.observe(el));
   }
 
-  /* -------------------------------------------------- кинетический текст */
-
-  /**
-   * Разбивает заголовок на буквы, чтобы они всплывали по очереди.
-   *
-   * Буквы обязательно группируются в слова: каждая из них — inline-block,
-   * а между такими элементами браузер имеет полное право перенести строку.
-   * Без обёртки заголовок на узком экране рвётся посреди слова («собираетс /
-   * я»). Обёртка со своим white-space: nowrap это запрещает.
-   */
   function splitKinetic() {
     $$('[data-kinetic]').forEach(function (el) {
       const text = el.textContent.trim().replace(/\s+/g, ' ');
-      // Полный текст нужен скринридеру: по буквам он прочитал бы его вслух
+
       el.setAttribute('aria-label', text);
 
       let i = 0;
@@ -619,9 +560,6 @@
     });
   }
 
-  /* ------------------------------------------------------------- стебель */
-
-  /** Лоза в разделе «как это работает» дорисовывается по мере прокрутки. */
   function initVine() {
     const path = $('#vine-path');
     const track = $('.steps__track');
@@ -641,7 +579,7 @@
     function update() {
       const rect = track.getBoundingClientRect();
       const vh = window.innerHeight;
-      // 0 — секция только показалась снизу, 1 — почти ушла вверх
+
       const progress = (vh - rect.top) / (rect.height + vh * 0.65);
       const clamped = Math.max(0, Math.min(1, progress));
       path.style.strokeDashoffset = String(length * (1 - clamped));
@@ -659,8 +597,6 @@
     );
     update();
   }
-
-  /* -------------------------------------------------- курсор и параллакс */
 
   function initPointerEffects() {
     if (reducedMotion() || !matchMedia('(hover: hover)').matches) return;
@@ -688,7 +624,6 @@
     function loop() {
       raf = 0;
 
-      // Свечение догоняет курсор с отставанием — движение выглядит мягким
       gx += (mx - gx) * 0.14;
       gy += (my - gy) * 0.14;
       if (glow) glow.style.transform = 'translate3d(' + gx + 'px,' + gy + 'px,0) translate(-50%,-50%)';
@@ -719,7 +654,6 @@
         }
       });
 
-      // Пока курсор не остановился, инерция свечения продолжает кадры
       if (Math.abs(mx - gx) > 0.4 || Math.abs(my - gy) > 0.4) raf = requestAnimationFrame(loop);
     }
 
@@ -727,16 +661,12 @@
     loop();
   }
 
-  /* --------------------------------------------------------------- герой */
-
   function initHeroGarden() {
     $$('.hero__flower').forEach(function (el) {
       const type = el.dataset.flower;
       el.innerHTML = flowers.svg(type, { sway: true });
     });
   }
-
-  /* ---------------------------------------------------------------- старт */
 
   function rebuildLocalised() {
     renderCatalog();
@@ -747,7 +677,6 @@
     splitKinetic();
   }
 
-  /** Первая сборка идёт до initReveal — там появление и раздаётся. */
   function finishFirstBuild() {
     firstBuild = false;
   }
@@ -755,7 +684,7 @@
   i18n.onChange(rebuildLocalised);
 
   initHeroGarden();
-  i18n.apply(i18n.get()); // переводит разметку и через onChange строит остальное
+  i18n.apply(i18n.get());
 
   initLang();
   initMoods();

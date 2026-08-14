@@ -15,19 +15,12 @@
 
 <link rel="stylesheet" href="css/style.css" />
 
-<!-- Язык, настроение и режим движения применяются ДО отрисовки страницы:
-     иначе посетитель на долю секунды видит русскую версию в палитре по
-     умолчанию, и только потом JS переключает её на сохранённую. -->
 <script src="inline-1.js"></script>
 </head>
 <body>
 
 <a class="skip-link" href="#main" data-i18n="a11y.skip">Перейти к содержимому</a>
 
-<!-- ================================================================ ФОН -->
-<!-- Три независимых слоя. CSS-слой даёт мягкий свет и не нагружает
-     процессор, canvas — всё, что реагирует на курсор, скролл и клики.
-     Оба помечены aria-hidden: для скринридера это чистая декорация. -->
 <div class="bg" aria-hidden="true">
   <div class="bg__sun"></div>
   <div class="bg__orb bg__orb--1"></div>
@@ -38,7 +31,6 @@
 <canvas id="bg-canvas" class="bg-canvas" aria-hidden="true"></canvas>
 <div class="cursor-glow" aria-hidden="true"></div>
 
-<!-- ============================================================= ШАПКА -->
 <header class="site-header" id="top">
   <div class="wrap site-header__inner">
     <a class="brand" href="#top">
@@ -78,10 +70,8 @@
 
 <main id="main">
 
-  <!-- ============================================================ ГЕРОЙ -->
   <section class="hero">
-    <!-- Цветы вокруг заголовка. data-depth задаёт, насколько сильно
-         элемент смещается за курсором: чем больше, тем «ближе» к зрителю. -->
+
     <div class="hero__garden" aria-hidden="true">
       <div class="hero__flower" data-flower="peony"      data-depth="26" style="--x:6%;  --y:16%; --s:1.15; --r:-14deg; --d:0s"></div>
       <div class="hero__flower" data-flower="tulip"      data-depth="18" style="--x:15%; --y:66%; --s:0.85; --r:12deg;  --d:.28s"></div>
@@ -98,9 +88,7 @@
 
       <h1 class="hero__title">
         <span class="hero__line" data-kinetic data-i18n="hero.title1">Весна собирается</span>
-        <!-- Вторая строка намеренно НЕ разбивается на буквы: у неё градиентная
-             заливка через background-clip, а transform на дочерних элементах
-             её ломает — буквы становятся прозрачными. Строка выезжает целиком. -->
+
         <span class="hero__line hero__line--accent" data-i18n="hero.title2">в букеты</span>
       </h1>
 
@@ -128,7 +116,6 @@
     </a>
   </section>
 
-  <!-- ======================================================= НАСТРОЕНИЕ -->
   <section class="section moods" id="moods">
     <div class="wrap">
       <p class="eyebrow" data-i18n="moods.eyebrow">Палитра</p>
@@ -157,7 +144,6 @@
     </div>
   </section>
 
-  <!-- ========================================================== КАТАЛОГ -->
   <section class="section catalog" id="bouquets">
     <div class="wrap">
       <p class="eyebrow" data-i18n="catalog.eyebrow">Готовые букеты</p>
@@ -166,11 +152,10 @@
         Состав меняется вместе с сезоном: если сорт отцвёл, флорист подберёт равноценную замену и обязательно вам её покажет.
       </p>
 
-      <div class="catalog__grid" id="catalog-grid"><!-- карточки строит js/main.js --></div>
+      <div class="catalog__grid" id="catalog-grid"></div>
     </div>
   </section>
 
-  <!-- ====================================================== КОНСТРУКТОР -->
   <section class="section builder" id="builder">
     <div class="wrap">
       <p class="eyebrow" data-i18n="builder.eyebrow">Конструктор</p>
@@ -182,7 +167,7 @@
       <div class="builder__layout">
         <div class="builder__picker">
           <h3 class="builder__subtitle" data-i18n="builder.pick">Что положим</h3>
-          <div class="picker__grid" id="picker-grid"><!-- кнопки строит js/main.js --></div>
+          <div class="picker__grid" id="picker-grid"></div>
           <p class="picker__note" data-i18n="builder.note">Нечётное число стеблей — старая флористическая примета. Мы её любим, но не настаиваем.</p>
         </div>
 
@@ -228,15 +213,13 @@
     </div>
   </section>
 
-  <!-- ============================================================ ШАГИ -->
   <section class="section steps" id="how">
     <div class="wrap">
       <p class="eyebrow" data-i18n="steps.eyebrow">Как это работает</p>
       <h2 class="section__title" data-i18n="steps.title">От заявки до двери — четыре шага</h2>
 
       <div class="steps__track">
-        <!-- Стебель прорисовывается по мере прокрутки: линия «растёт»
-             сверху вниз ровно настолько, насколько секция видна. -->
+
         <svg class="steps__vine" viewBox="0 0 40 900" preserveAspectRatio="none" aria-hidden="true">
           <path id="vine-path" d="M20 0 C36 110 4 200 20 300 C36 400 4 490 20 590 C36 690 4 790 20 900" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
         </svg>
@@ -267,7 +250,6 @@
     </div>
   </section>
 
-  <!-- ========================================================= ПОДПИСКА -->
   <section class="section plans" id="plans">
     <div class="wrap">
       <p class="eyebrow" data-i18n="plans.eyebrow">Подписка</p>
@@ -276,25 +258,21 @@
         Каждый раз новый состав из того, что лучше всего в эту неделю. Пауза и отмена — в один клик, без звонков.
       </p>
 
-      <div class="plans__grid" id="plans-grid"><!-- карточки строит js/main.js --></div>
+      <div class="plans__grid" id="plans-grid"></div>
     </div>
   </section>
 
-  <!-- =========================================================== ОТЗЫВЫ -->
   <section class="section voices">
     <div class="wrap">
       <p class="eyebrow" data-i18n="voices.eyebrow">Отзывы</p>
       <h2 class="section__title" data-i18n="voices.title">Что говорят</h2>
     </div>
 
-    <div class="voices__marquee" id="voices-marquee" aria-hidden="true"><!-- строит js/main.js --></div>
+    <div class="voices__marquee" id="voices-marquee" aria-hidden="true"></div>
 
-    <!-- Бегущая строка недоступна для чтения с клавиатуры и скринридера,
-         поэтому те же отзывы дублируются обычным списком для них. -->
     <ul class="voices__sr" id="voices-list"></ul>
   </section>
 
-  <!-- ========================================================= КОНТАКТЫ -->
   <section class="section contact" id="contacts">
     <div class="wrap contact__layout">
       <div class="contact__intro">
@@ -359,7 +337,6 @@
   </section>
 </main>
 
-<!-- ============================================================== ПОДВАЛ -->
 <footer class="site-footer">
   <div class="wrap site-footer__inner">
     <div class="site-footer__brand">

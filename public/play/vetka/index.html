@@ -11,15 +11,12 @@
 
 <link rel="stylesheet" href="css/style.css" />
 
-<!-- Тема и язык ставятся до первой отрисовки: иначе на секунду видно
-     не ту тему и русский текст поверх того, что человек уже выбрал. -->
 <script src="inline-1.js"></script>
 </head>
 <body>
 
 <a class="skip-link" href="#term-input" data-i18n="a11y.skip">Перейти к терминалу</a>
 
-<!-- ═════════════════════════════ СПРАЙТ ═════════════════════════════ -->
 <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
   <defs>
     <symbol id="i-list" viewBox="0 0 24 24"><path d="M4 6.5h16M4 12h16M4 17.5h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
@@ -36,7 +33,6 @@
   </defs>
 </svg>
 
-<!-- ══════════════════════════════ ШАПКА ══════════════════════════════ -->
 <header class="topbar">
   <div class="brand">
     <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true">
@@ -72,7 +68,7 @@
 </header>
 
 <main class="app">
-  <!-- ═══════════════════════════════ УРОК ═══════════════════════════════ -->
+
   <aside class="lesson">
     <div class="lesson__head">
       <span class="lesson__no" id="lesson-no">Урок 1</span>
@@ -123,7 +119,6 @@
     </nav>
   </aside>
 
-  <!-- ══════════════════════════════ СХЕМА ══════════════════════════════ -->
   <section class="stage" id="stage">
     <div class="zone" data-zone="work">
       <div class="zone__head">
@@ -160,7 +155,6 @@
     <div class="flyer" id="flyer" aria-hidden="true"></div>
   </section>
 
-  <!-- ════════════════════════════ ТЕРМИНАЛ ════════════════════════════ -->
   <section class="term" id="term">
     <div class="term__bar">
       <span class="term__dots" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -181,7 +175,6 @@
   </section>
 </main>
 
-<!-- ═════════════════════════════ УРОКИ ═════════════════════════════ -->
 <div class="modal" id="lessons" hidden>
   <div class="modal__panel" role="dialog" aria-modal="true" data-i18n-aria-label="ui.lessons" aria-label="Уроки">
     <button class="modal__close" id="lessons-close" type="button" data-i18n-aria-label="a11y.close" aria-label="Закрыть">
@@ -193,7 +186,6 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════ ШПАРГАЛКА ═══════════════════════════ -->
 <div class="modal" id="cheat" hidden>
   <div class="modal__panel" role="dialog" aria-modal="true" data-i18n-aria-label="ui.cheat" aria-label="Шпаргалка">
     <button class="modal__close" id="cheat-close" type="button" data-i18n-aria-label="a11y.close" aria-label="Закрыть">

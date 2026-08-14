@@ -1,19 +1,3 @@
-/*
-  Маленький git и маленький bash.
-
-  Команды не притворяются: они действительно меняют состояние — файл
-  получает содержимое, индекс запоминает снимок, коммит хранит слепок всех
-  файлов. Поэтому `git status`, `git diff` и переключение веток отвечают не
-  заранее заготовленным текстом, а тем, что реально произошло, и человек
-  может отойти от урока и попробовать своё.
-
-  Файл живёт тремя версиями сразу — ровно как в настоящем git:
-    work   — то, что на диске;
-    staged — то, что отложено в индекс (null, если не отложено);
-    head   — то, что уже в последнем коммите (null, если файла там нет).
-  Всё состояние рабочего дерева выводится из сравнения этих трёх строк:
-  «изменено», «подготовлено», «не отслеживается» — это не флаги, а разница.
-*/
 window.Vetka = window.Vetka || {};
 
 (function (ns) {
@@ -24,27 +8,23 @@ window.Vetka = window.Vetka || {};
   const ROOT = '/d/projects';
   const REMOTE_HOST = 'https://github.com/';
 
-  /* ────────────────────────────── состояние ────────────────────────────── */
-
   function create() {
     return {
       path: ROOT,
-      dir: null, // имя папки проекта, когда она создана
+      dir: null,
       inProject: false,
       inited: false,
-      files: [], // {name, work, staged, head}
-      commits: [], // {id, msg, parent, branch, snapshot}
-      branches: {}, // ветка → id коммита
+      files: [],
+      commits: [],
+      branches: {},
       head: 'main',
-      remote: null, // {name, url}
+      remote: null,
       remoteBranches: {},
-      upstream: {}, // ветка → true
+      upstream: {},
       config: { name: null, email: null },
       ignore: [],
     };
   }
-
-  /* ────────────────────────────── помощники ────────────────────────────── */
 
   function id() {
     let out = '';
@@ -71,7 +51,6 @@ window.Vetka = window.Vetka || {};
     });
   }
 
-  /** Файлы по состоянию — на этом стоят и status, и подсветка на схеме. */
   function classify(state) {
     const out = { staged: [], modified: [], untracked: [], clean: [] };
 
@@ -101,7 +80,6 @@ window.Vetka = window.Vetka || {};
     });
   }
 
-  /** Цепочка коммитов ветки от вершины к корню. */
   function history(state, tip) {
     const out = [];
     let cursor = tip;
@@ -123,7 +101,6 @@ window.Vetka = window.Vetka || {};
     return snap;
   }
 
-  /** Раскладывает слепок коммита обратно в рабочую папку — для веток. */
   function checkoutSnapshot(state, snap) {
     state.files = Object.keys(snap).map(function (name) {
       return { name: name, work: snap[name], staged: null, head: snap[name] };
@@ -153,9 +130,6 @@ window.Vetka = window.Vetka || {};
     };
   }
 
-  /* ──────────────────────────── разбор строки ──────────────────────────── */
-
-  /** Разбивает строку на слова, уважая кавычки: сообщение коммита — одно слово. */
   function tokenize(input) {
     const out = [];
     let current = '';
@@ -184,8 +158,6 @@ window.Vetka = window.Vetka || {};
     if (current) out.push(current);
     return out;
   }
-
-  /* ────────────────────────────── команды bash ────────────────────────── */
 
   const bash = {
     pwd: function (state) {
@@ -298,8 +270,6 @@ window.Vetka = window.Vetka || {};
       return { lines: [], events: [{ k: 'clear' }] };
     },
   };
-
-  /* ────────────────────────────── команды git ────────────────────────── */
 
   function needRepo(state) {
     if (state.inited && state.inProject) return null;
@@ -438,7 +408,7 @@ window.Vetka = window.Vetka || {};
         const chosen = all ? !ignored(state, f.name) : paths.indexOf(f.name) !== -1;
         if (!chosen) return;
         const disk = f.staged !== null ? f.staged : f.head;
-        if (f.work === disk && f.head !== null) return; // нечего добавлять
+        if (f.work === disk && f.head !== null) return;
         f.staged = f.work;
         staged.push(f.name);
       });
@@ -509,7 +479,6 @@ window.Vetka = window.Vetka || {};
         };
       }
 
-      // -a добавляет в индекс уже отслеживаемые изменённые файлы
       if (/(^|\s)-[a-z]*a/.test(raw)) {
         state.files.forEach(function (f) {
           if (f.head !== null && f.work !== (f.staged !== null ? f.staged : f.head)) f.staged = f.work;
@@ -612,7 +581,7 @@ window.Vetka = window.Vetka || {};
         const to = staged ? f.staged : f.work;
         if (from === null && to === null) return;
         if (from === to) return;
-        if (!staged && f.head === null && f.staged === null) return; // неотслеживаемый
+        if (!staged && f.head === null && f.staged === null) return;
 
         lines.push(line('diff --git a/' + f.name + ' b/' + f.name, 'warn'));
         lines.push(line('--- a/' + f.name, 'dim'));
@@ -694,7 +663,7 @@ window.Vetka = window.Vetka || {};
       });
 
       if (chain.indexOf(here) !== -1) {
-        // Ветка ушла вперёд от нашей — перемотка вперёд, нового коммита нет
+
         state.branches[state.head] = target;
         checkoutSnapshot(state, commitById(state, target).snapshot);
         return {
@@ -917,7 +886,7 @@ window.Vetka = window.Vetka || {};
       })[0];
 
       if (!target || target.indexOf('HEAD~') !== 0) {
-        // git reset без аргументов снимает всё из индекса
+
         const names = [];
         state.files.forEach(function (f) {
           if (f.staged === null) return;
@@ -938,7 +907,7 @@ window.Vetka = window.Vetka || {};
       if (hard) {
         checkoutSnapshot(state, previous.snapshot);
       } else {
-        // --soft: коммит распался, но его содержимое осталось в индексе
+
         state.files.forEach(function (f) {
           const wasIn = here.snapshot[f.name];
           f.head = previous.snapshot[f.name] === undefined ? null : previous.snapshot[f.name];
@@ -997,7 +966,6 @@ window.Vetka = window.Vetka || {};
     };
   }
 
-  /** Метки веток у коммита — для `git log` и для схемы. */
   function labelsFor(state, cid) {
     const marks = [];
     Object.keys(state.branches).forEach(function (name) {
@@ -1008,8 +976,6 @@ window.Vetka = window.Vetka || {};
     });
     return marks.length ? '(' + marks.join(', ') + ')' : '';
   }
-
-  /* ────────────────────────── выполнение строки ────────────────────────── */
 
   function run(state, input) {
     const raw = String(input).trim();
@@ -1050,11 +1016,6 @@ window.Vetka = window.Vetka || {};
     return { lines: result.lines || [], events: result.events || [] };
   }
 
-  /**
-   * Чужой коммит на GitHub: в уроке про совместную работу нужно, чтобы
-   * удалённая ветка ушла вперёд без участия человека — иначе `git pull`
-   * нечего было бы показывать.
-   */
   function remoteCommit(state, message, name, content) {
     const parent = state.remoteBranches[state.head] || branchTip(state);
     const base = parent ? Object.assign({}, commitById(state, parent).snapshot) : {};

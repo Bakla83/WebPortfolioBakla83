@@ -4,11 +4,6 @@ import Icon from '../components/Icon.astro';
 import { ENABLED_LOCALES, DEFAULT_LOCALE, LOCALE_META, localePath } from '../i18n/config';
 import { t } from '../i18n/ui';
 
-/**
- * Cloudflare Pages отдаёт этот файл на любой ненайденный адрес, включая
- * /fr/... и /en/... — язык страницы заранее неизвестен. Поэтому текст
- * показывается сразу на всех включённых языках, а не только на одном.
- */
 const strings = t(DEFAULT_LOCALE);
 ---
 

@@ -10,8 +10,6 @@ interface Props {
 const { video, lang } = Astro.props;
 const title = pick(video.title, lang);
 
-// Плеер грузится только по клику: до этого страница не обращается
-// ни к YouTube, ни к Vimeo — ни скриптов, ни куки, ни лишнего веса.
 const src =
   video.provider === 'youtube'
     ? `https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0`

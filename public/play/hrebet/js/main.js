@@ -1,20 +1,9 @@
-/*  ХРЕБЕТ — интерактивность
-    Без зависимостей: тема, локализация, шапка при скролле, мобильное меню,
-    реакции на попадание в вьюпорт, счётчики статистики, бегущая строка,
-    фильтр маршрутов, слайдер отзывов, аккордеон FAQ, форма заявки, курсор,
-    параллакс гор.
-*/
 (() => {
   'use strict';
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const root = document.documentElement;
 
-  /* ══════════════════════════ СЛОВАРЬ ПЕРЕВОДОВ ══════════════════════════
-     Ключ data-i18n="a.b" ищется как I18N[lang].a.b. Для текста с HTML-
-     сущностями (нераздельные пробелы и т.п.) используется data-i18n-html —
-     он подставляется через innerHTML, а не textContent.
-  */
   const I18N = {
     ru: {
       brand: { name: 'ХРЕБЕТ' },
@@ -265,15 +254,10 @@
     },
   };
 
-  /** Достаёт значение по ключу вида "a.b.c" из словаря языка. */
   function t(lang, key) {
     return key.split('.').reduce((acc, part) => (acc && acc[part] !== undefined ? acc[part] : undefined), I18N[lang]);
   }
 
-  /* ══════════════════════════ ТЕМА ══════════════════════════
-     Тема уже выставлена инлайн-скриптом в <head> до отрисовки — здесь только
-     переключение и сохранение, чтобы не было вспышки не той темы.
-  */
   function getTheme() { return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; }
   function setTheme(theme) {
     root.setAttribute('data-theme', theme);
@@ -284,7 +268,6 @@
   document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
   document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
 
-  /* ══════════════════════════ ЯЗЫК ══════════════════════════ */
   function getLang() { return root.getAttribute('lang') === 'en' ? 'en' : 'ru'; }
 
   function applyLang(lang) {
@@ -320,16 +303,11 @@
 
     buildMarquee(lang);
 
-    // Открытая FAQ-панель хранит max-height как пиксельное число, снятое со
-    // старого текста — после перевода строка стала другой длины/высоты,
-    // пересчитываем, иначе ответ обрежется или останется лишний хвост.
     document.querySelectorAll('.faq-question[aria-expanded="true"]').forEach((btn) => {
       const panel = document.getElementById(btn.getAttribute('aria-controls'));
       if (panel) panel.style.maxHeight = `${panel.scrollHeight}px`;
     });
 
-    // Уже посчитанные счётчики переформатируем под локаль (пробел/запятая
-    // между разрядами), не запуская анимацию заново.
     document.querySelectorAll('.stat-number[data-count]').forEach((el) => {
       if (el.dataset.counted === '1') {
         el.textContent = parseInt(el.dataset.count, 10).toLocaleString(lang === 'ru' ? 'ru-RU' : 'en-US');
@@ -346,16 +324,8 @@
   document.getElementById('lang-toggle').addEventListener('click', toggleLang);
   document.getElementById('lang-toggle-mobile').addEventListener('click', toggleLang);
 
-  // Применяем сразу: HTML уже содержит русский текст по умолчанию, но нужно
-  // выставить подписи переключателя и на случай сохранённого EN — перевести.
   applyLang(getLang());
 
-  /* ══════════════════════════ БЕГУЩАЯ СТРОКА ══════════════════════════
-     Список вершин дублируется программно (а не в разметке), чтобы обе
-     половины ленты были побайтово идентичны — единственный надёжный способ
-     получить бесшовный цикл на translateX(-50%), и единственный, который
-     переживает смену языка (у RU/EN названий разная длина).
-  */
   function buildMarquee(lang) {
     const el = document.getElementById('marquee-track');
     if (!el) return;
@@ -378,13 +348,11 @@
     el.appendChild(group.cloneNode(true));
   }
 
-  /* ── Шапка при скролле ─────────────────────────────────────────── */
   const header = document.getElementById('site-header');
   const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 40);
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  /* ── Мобильное меню ─────────────────────────────────────────────── */
   const navToggle = document.getElementById('nav-toggle');
   const mobileNav = document.getElementById('mobile-nav');
   const mobileNavClose = document.getElementById('mobile-nav-close');
@@ -409,7 +377,6 @@
     if (e.key === 'Escape' && mobileNav.classList.contains('is-open')) closeMobileNav();
   });
 
-  /* ── Появление элементов при скролле ───────────────────────────── */
   const revealTargets = document.querySelectorAll('.reveal');
   if (prefersReducedMotion || !('IntersectionObserver' in window)) {
     revealTargets.forEach((el) => el.classList.add('is-visible'));
@@ -428,7 +395,6 @@
     revealTargets.forEach((el) => revealObserver.observe(el));
   }
 
-  /* ── Счётчики статистики ───────────────────────────────────────── */
   const counters = document.querySelectorAll('.stat-number[data-count]');
   const animateCounter = (el) => {
     const target = parseInt(el.dataset.count, 10);
@@ -474,7 +440,6 @@
     counters.forEach(animateCounter);
   }
 
-  /* ── Фильтр маршрутов ───────────────────────────────────────────── */
   const filterBtns = document.querySelectorAll('.filter-btn');
   const routeCards = document.querySelectorAll('.route-card');
   const routeEmpty = document.getElementById('route-empty');
@@ -496,13 +461,10 @@
     });
   });
 
-  /* ── Клик по маршруту → форма с предзаполненным полем ─────────── */
   const routeSelect = document.getElementById('f-route');
   document.querySelectorAll('.route-cta').forEach((btn) => {
     btn.addEventListener('click', () => {
-      // Текст <option> сам переведён через data-i18n и его .value совпадает
-      // с textContent (атрибут value у опций не задан), поэтому сравниваем
-      // с названием маршрута НА ТЕКУЩЕМ языке, а не всегда с русским.
+
       const routeName = getLang() === 'en' ? btn.dataset.routeEn : btn.dataset.route;
       if (routeSelect) {
         [...routeSelect.options].forEach((opt) => {
@@ -515,7 +477,6 @@
     });
   });
 
-  /* ── Слайдер отзывов ────────────────────────────────────────────── */
   const track = document.getElementById('reviews-track');
   const dotsWrap = document.getElementById('reviews-dots');
   const prevBtn = document.getElementById('reviews-prev');
@@ -530,13 +491,10 @@
     const maxIndex = () => Math.max(0, slides.length - perView);
 
     const computePerView = () => {
-      const cardWidth = slides[0].getBoundingClientRect().width + 24; // + gap
+      const cardWidth = slides[0].getBoundingClientRect().width + 24;
       perView = Math.max(1, Math.round(track.parentElement.getBoundingClientRect().width / cardWidth));
     };
 
-    // Число точек = число реально достижимых позиций, а не число карточек:
-    // на широком экране видно сразу несколько карточек, и точек должно быть
-    // меньше, иначе последняя никогда не подсвечивается.
     const buildDots = () => {
       dotsWrap.innerHTML = '';
       dots = [];
@@ -571,7 +529,6 @@
       }, 150);
     });
 
-    // Свайп на тач-устройствах
     let touchStartX = 0;
     track.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
     track.addEventListener('touchend', (e) => {
@@ -584,13 +541,11 @@
     update();
   }
 
-  /* ── FAQ-аккордеон ──────────────────────────────────────────────── */
   document.querySelectorAll('.faq-question').forEach((btn) => {
     const panel = document.getElementById(btn.getAttribute('aria-controls'));
     btn.addEventListener('click', () => {
       const isOpen = btn.getAttribute('aria-expanded') === 'true';
 
-      // Закрываем остальные — один открытый вопрос за раз
       document.querySelectorAll('.faq-question').forEach((other) => {
         if (other === btn) return;
         other.setAttribute('aria-expanded', 'false');
@@ -602,7 +557,6 @@
     });
   });
 
-  /* ── Форма заявки ───────────────────────────────────────────────── */
   const form = document.getElementById('contact-form');
   const submitBtn = document.getElementById('form-submit');
   const successBox = document.getElementById('form-success');
@@ -616,8 +570,6 @@
       submitBtn.disabled = true;
       label.textContent = t(getLang(), 'form.submitting');
 
-      // Заглушка отправки: реального бэкенда у статичного сайта нет —
-      // сюда нужно подключить свой обработчик (fetch на API/форм-сервис).
       setTimeout(() => {
         successBox.hidden = false;
         requestAnimationFrame(() => successBox.classList.add('is-visible'));
@@ -628,7 +580,6 @@
     }, false);
   }
 
-  /* ── Кнопка «наверх» ────────────────────────────────────────────── */
   const backToTop = document.getElementById('back-to-top');
   window.addEventListener('scroll', () => {
     backToTop.style.opacity = window.scrollY > 700 ? '1' : '0';
@@ -639,11 +590,9 @@
   backToTop.style.transition = 'opacity .3s ease';
   backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' }));
 
-  /* ── Год в подвале ──────────────────────────────────────────────── */
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  /* ── Параллакс гор в hero ───────────────────────────────────────── */
   const mountains = document.getElementById('hero-mountains');
   if (mountains && !prefersReducedMotion && matchMedia('(pointer: fine)').matches) {
     const layers = mountains.querySelectorAll('.mtn');
@@ -657,7 +606,6 @@
     }, { passive: true });
   }
 
-  /* ── Кастомный курсор ───────────────────────────────────────────── */
   if (!prefersReducedMotion && matchMedia('(pointer: fine)').matches && matchMedia('(hover: hover)').matches) {
     document.documentElement.classList.add('has-custom-cursor');
     const dot = document.querySelector('.cursor-dot');

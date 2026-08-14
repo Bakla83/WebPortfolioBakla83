@@ -11,12 +11,6 @@ const { lang } = Astro.props;
 const strings = t(lang);
 ---
 
-<!--
-  Какая иконка видна, решает CSS по атрибуту data-theme на <html>.
-  На сервере тема неизвестна (она зависит от устройства), поэтому
-  переключать иконку разметкой нельзя — только стилями.
-  aria-label по той же причине выставляет клиентский скрипт.
--->
 <button
   type="button"
   class="theme-toggle"
@@ -50,7 +44,6 @@ const strings = t(lang);
     color: var(--gold);
   }
 
-  /* Обе иконки лежат в одной ячейке грида — кнопка не дёргается при смене */
   .theme-toggle__icon {
     grid-area: 1 / 1;
     display: grid;
@@ -58,7 +51,6 @@ const strings = t(lang);
     transition: opacity 0.18s var(--ease), transform 0.28s var(--ease);
   }
 
-  /* В тёмной теме предлагаем светлую: солнце */
   .theme-toggle__icon--moon {
     opacity: 0;
     transform: rotate(-45deg) scale(0.7);

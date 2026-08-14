@@ -1,12 +1,3 @@
-/*
-  Студия: состояние, сетка, воспроизведение, живая игра и сохранение.
-
-  Расписание нот строится не таймерами, а по часам звуковой карты. setTimeout
-  в браузере плавает на десятки миллисекунд — на слух это разъезжающийся
-  ритм. Поэтому таймер только раз в 25 мс заглядывает вперёд и заранее
-  назначает ноты на точное время `ctx.currentTime + …`, а играет их уже
-  сам звуковой движок.
-*/
 (function () {
   'use strict';
 
@@ -19,10 +10,8 @@
 
   const t = (key) => i18n.t(i18n.get(), key);
 
-  /* ──────────────────────────────── состояние ──────────────────────────────── */
-
   const STEPS = 16;
-  /** Клавиши компьютера под ряды сетки — по одной на ноту. */
+
   const KEY_HINTS = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';'];
 
   const TRACK_DEFS = [
@@ -56,18 +45,9 @@
   const activeTrack = () => state.tracks[state.active];
   const isDrums = (track) => track.id === 'drums';
 
-  /* ────────────────────────────── звук ────────────────────────────── */
-
   let ctx = null;
   let master = null;
 
-  /**
-   * Предохранитель на выходе. Пять дорожек в унисон дают сумму заметно
-   * больше единицы; компрессор поджимает пики, но у него есть время
-   * срабатывания, и самые резкие атаки успевают проскочить. Поэтому за ним
-   * стоит ещё и постоянный запас по громкости — без него бочка упиралась
-   * в потолок и в файле появлялся треск.
-   */
   function buildGuard(context, destination) {
     const guard = context.createDynamicsCompressor();
     guard.threshold.value = -10;
@@ -79,14 +59,9 @@
     headroom.gain.value = 0.7;
 
     guard.connect(headroom).connect(destination);
-    return guard; // наружу отдаём вход цепочки
+    return guard;
   }
 
-  /**
-   * Контекст создаётся при первом действии человека: браузеры запрещают
-   * звук до жеста, и созданный заранее контекст остался бы в состоянии
-   * suspended — тишина без единой ошибки в консоли.
-   */
   function ensureAudio() {
     if (!ctx) {
       const Ctor = window.AudioContext || window.webkitAudioContext;
@@ -100,9 +75,8 @@
     return ctx;
   }
 
-  const stepDuration = () => 60 / state.bpm / 4; // шестнадцатые доли
+  const stepDuration = () => 60 / state.bpm / 4;
 
-  /** Длительность ноты: у баса короче, у колокольчиков есть время повисеть. */
   function noteLength(trackId) {
     const step = stepDuration();
     if (trackId === 'bass') return step * 1.8;
@@ -110,8 +84,6 @@
     if (trackId === 'guitar') return step * 4;
     return step * 3.2;
   }
-
-  /* ──────────────────────────── воспроизведение ──────────────────────────── */
 
   const LOOKAHEAD = 0.12;
   const TICK_MS = 25;
@@ -189,15 +161,12 @@
     if (mark) mark.classList.add('is-now');
   }
 
-  /** Шаг, к которому притягивается сыгранная вживую нота. */
   function quantizedStep() {
     if (!state.playing) return 0;
     const elapsed = ctx.currentTime - loopStart;
     const raw = Math.round(elapsed / stepDuration());
     return ((raw % STEPS) + STEPS) % STEPS;
   }
-
-  /* ────────────────────────────── отрисовка ────────────────────────────── */
 
   function rowName(track, row) {
     return isDrums(track) ? t('drums.' + audio.DRUM_KINDS[row]) : audio.rowLabel(row);
@@ -253,8 +222,7 @@
     $('.seq__hint').textContent = isDrums(track) ? t('seq.hintDrums') : t('seq.hint');
 
     let html = '';
-    // Ряды печатаются сверху вниз, а высота растёт снизу вверх — как на
-    // нотном стане и на любой звуковой программе
+
     for (let row = track.rows - 1; row >= 0; row--) {
       html += '<div class="seq__row">';
       html += '<span class="seq__label">' + rowName(track, row) + '</span>';
@@ -287,8 +255,6 @@
       });
     });
 
-    // Пустая ячейка в начале — под колонку с названиями нот, иначе линейка
-    // разъедется с сеткой на одну клетку
     $('#ruler').innerHTML =
       '<span></span>' +
       Array.from({ length: STEPS }, function (_, step) {
@@ -324,7 +290,6 @@
     });
   }
 
-  /** Короткий отзвук при включении клетки — чтобы слышать, что набираешь. */
   function preview(track, row) {
     ensureAudio();
     audio.play(ctx, master, track.id, row, ctx.currentTime + 0.01, noteLength(track.id), 0.85);
@@ -352,8 +317,6 @@
       renderTabs();
     }
   }
-
-  /* ───────────────────────────── органы управления ───────────────────────────── */
 
   function syncTransport() {
     const btn = $('#play');
@@ -420,7 +383,6 @@
       status(t('transport.cleared'));
     });
 
-    // Клавиатура компьютера: играем, пока фокус не в поле ввода
     const pressed = new Set();
 
     document.addEventListener('keydown', function (e) {
@@ -437,7 +399,7 @@
 
       const row = KEY_HINTS.indexOf(e.key.toUpperCase());
       if (row === -1 || row >= activeTrack().rows) return;
-      if (pressed.has(row)) return; // не повторяем ноту, пока клавиша зажата
+      if (pressed.has(row)) return;
 
       e.preventDefault();
       pressed.add(row);
@@ -449,8 +411,6 @@
       if (row !== -1) pressed.delete(row);
     });
   }
-
-  /* ─────────────────────────── сохранение на устройство ─────────────────────────── */
 
   function stamp() {
     const d = new Date();
@@ -469,7 +429,7 @@
     document.body.appendChild(link);
     link.click();
     link.remove();
-    // Ссылку нельзя отзывать сразу: часть браузеров ещё не начала скачивать
+
     setTimeout(() => URL.revokeObjectURL(url), 4000);
   }
 
@@ -479,10 +439,6 @@
     );
   }
 
-  /**
-   * Сведение в файл. Всё считается офлайн — быстрее реального времени и
-   * не зависит от того, что происходит на странице во время экспорта.
-   */
   async function exportWav() {
     if (!hasNotes()) {
       status(t('export.empty'));
@@ -493,7 +449,7 @@
 
     const sampleRate = 44100;
     const step = stepDuration();
-    // Хвост нужен, чтобы последние ноты успели отзвучать, а не обрубились
+
     const tail = 2;
     const seconds = step * STEPS * state.loops + tail;
 
@@ -516,8 +472,6 @@
         });
       }
     }
-
-    // Метроном в файл не пишем: он служебный, а не часть вещи
 
     const rendered = await off.startRendering();
     const name = 'oktava-' + stamp() + '.wav';
@@ -562,8 +516,6 @@
           const track = state.tracks.filter((x) => x.id === saved.id)[0];
           if (!track || !Array.isArray(saved.pattern)) return;
 
-          // Читаем по одной клетке, а не присваиваем массив целиком:
-          // чужой или испорченный файл не должен сломать размеры сетки
           const fresh = emptyPattern(track.rows);
           for (let row = 0; row < track.rows; row++) {
             for (let s = 0; s < STEPS; s++) {
@@ -602,8 +554,6 @@
     });
   }
 
-  /* ────────────────────────────── подсказка ────────────────────────────── */
-
   function initHelp() {
     const sheet = $('#help');
     const open = $('#help-open');
@@ -625,8 +575,6 @@
     });
   }
 
-  /* ─────────────────────────────── запуск ─────────────────────────────── */
-
   function rebuildLocalised() {
     renderTabs();
     renderGrid();
@@ -640,7 +588,7 @@
   });
 
   i18n.onChange(rebuildLocalised);
-  i18n.apply(i18n.get()); // переводит разметку и через onChange строит остальное
+  i18n.apply(i18n.get());
 
   initControls();
   initExport();

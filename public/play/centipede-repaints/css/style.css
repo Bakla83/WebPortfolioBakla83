@@ -1,22 +1,3 @@
-/* =========================================================================
-   Centipede Repaints — авторский перекрас конных миниатюр
-
-   Палитра живёт в токенах и целиком переопределяется тремя темами
-   (data-palette на <html>). Токены --p-1…--p-4 читает фон на canvas,
-   поэтому один клик по палитре перекрашивает и вёрстку, и взвесь в воздухе.
-
-   Тема по умолчанию тёмная и намеренно: страница — это витрина, а в витрине
-   свет падает на предмет, а не на стены. На светлом фоне вороная и
-   изабелловая масти одновременно смотреться не могут: одна из них всегда
-   проваливается.
-
-   Порядок: токены → база → фон → шапка → кнопки → герой → секции →
-   работы → замысел → автор → студия → этапы → масти → вопросы →
-   контакты → подвал → появление → адаптив → спокойный режим.
-   ========================================================================= */
-
-/* --------------------------------------------------------------- токены */
-
 :root {
   --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -34,7 +15,6 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Гнедая — тёплая мастерская при лампе накаливания */
 :root,
 :root[data-palette='bay'] {
   --bg: #17130f;
@@ -61,7 +41,6 @@
   --p-4: #6f4a2a;
 }
 
-/* Пепел — холодный свет, серые и стальные масти */
 :root[data-palette='ash'] {
   --bg: #13151a;
   --bg-2: #191d24;
@@ -87,7 +66,6 @@
   --p-4: #46586a;
 }
 
-/* Лён — дневной свет, светлая витрина */
 :root[data-palette='linen'] {
   --bg: #f5f0e7;
   --bg-2: #ede6da;
@@ -112,8 +90,6 @@
   --p-3: #d8b485;
   --p-4: #6d4a26;
 }
-
-/* ------------------------------------------------------------------ база */
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -191,11 +167,7 @@ button, input, select, textarea {
 }
 .skip-link:focus-visible { transform: none; }
 
-/* Тень под копытами живёт в CSS, а не в SVG: на светлой теме она должна
-   быть мягкой и тёплой, на тёмной — почти чёрной. */
 .horse__shadow { fill: var(--horse-shadow); }
-
-/* ------------------------------------------------------------------- фон */
 
 .bg {
   position: fixed;
@@ -215,8 +187,6 @@ button, input, select, textarea {
     linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 48%, var(--bg) 100%);
 }
 
-/* Луч из окна мастерской: узкая наклонная полоса света, в которой и висит
-   вся пыль с canvas. Без неё взвесь выглядит шумом, а не воздухом. */
 .bg__beam {
   position: absolute;
   top: -30%;
@@ -267,8 +237,6 @@ button, input, select, textarea {
   50%      { transform: translate3d(3vw, 4vh, 0) scale(1.1); }
 }
 
-/* Зерно поверх всего: убирает пластиковую гладкость градиентов и делает
-   фон похожим на бумагу, а не на заливку. */
 .bg__grain {
   position: absolute;
   inset: 0;
@@ -285,8 +253,6 @@ button, input, select, textarea {
   height: 100%;
   pointer-events: none;
 }
-
-/* ----------------------------------------------------------------- шапка */
 
 .site-header {
   position: sticky;
@@ -318,8 +284,6 @@ button, input, select, textarea {
   flex-shrink: 0;
 }
 
-/* Знак — многоножка одним росчерком: сегменты по дуге и две ножки.
-   Буквальная сколопендра в логотипе мастерской пугала бы, силуэт — нет. */
 .brand__mark {
   width: 30px; height: 30px;
   border-radius: 9px;
@@ -509,8 +473,6 @@ button, input, select, textarea {
 .burger[aria-expanded='true'] span:nth-child(2) { opacity: 0; }
 .burger[aria-expanded='true'] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-/* --------------------------------------------------------------- кнопки */
-
 .btn {
   display: inline-flex;
   align-items: center;
@@ -555,8 +517,6 @@ button, input, select, textarea {
 
 .btn:active { transform: translateY(0); }
 
-/* ---------------------------------------------------------------- герой */
-
 .hero {
   position: relative;
   min-height: clamp(600px, 92svh, 940px);
@@ -566,8 +526,6 @@ button, input, select, textarea {
   overflow: hidden;
 }
 
-/* Лошади за текстом — не иллюстрация, а фактура: они намеренно почти
-   растворены, читается только линия спины и шеи. */
 .hero__garden {
   position: absolute;
   inset: 0;
@@ -630,8 +588,6 @@ button, input, select, textarea {
   padding-bottom: 0.06em;
 }
 
-/* Буквы первой строки въезжают волной. Задержка считается от --k,
-   который проставляет скрипт при разборе строки. */
 .kin {
   display: inline-block;
   opacity: 0;
@@ -710,8 +666,6 @@ button, input, select, textarea {
   50%      { transform: scaleY(1);   transform-origin: top; opacity: 1; }
 }
 
-/* -------------------------------------------------------------- секции */
-
 .section {
   position: relative;
   padding-block: clamp(4.5rem, 11vh, 9rem);
@@ -740,17 +694,12 @@ button, input, select, textarea {
   max-width: 56ch;
 }
 
-/* -------------------------------------------------------------- работы */
-
 .works {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(266px, 1fr));
   gap: clamp(1rem, 2.2vw, 1.8rem);
 }
 
-/* Карточка — витрина: тёмная ниша, направленный свет сверху и мягкая
-   тень под копытами. Модель в ней должна выглядеть стоящей, а не
-   наклеенной на прямоугольник. */
 .work {
   position: relative;
   border: 1px solid var(--line);
@@ -789,9 +738,6 @@ button, input, select, textarea {
     color-mix(in srgb, var(--bg-3) 60%, transparent), transparent);
 }
 
-/* Пустая рамка вместо фотографии. Она намеренно спокойная: это не
-   заглушка-ошибка, а место, которое ждёт снимок. Как только рядом
-   появится img/work-N.jpg, карточка подменит её фотографией. */
 .work__empty {
   width: 100%;
   height: 100%;
@@ -827,23 +773,13 @@ button, input, select, textarea {
   padding-inline: 1rem;
 }
 
-/* Если владелец положил в img/ настоящие фотографии, карточка показывает
-   их — рисунок остаётся запасным вариантом. */
-/* Фотография вынута из потока намеренно. Снимки приходят с какими угодно
-   пропорциями, и вертикальный кадр, оставленный в потоке, распирает
-   карточку выше её 4:3 — сетка рассыпается на разновысокие столбцы.
-   Absolute + object-fit: cover заставляет любой кадр лечь в одну рамку. */
 .work__figure--photo { padding: 0; }
 .work__photo {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  /* contain, а не cover. Кадры приходят какие угодно — вертикальные,
-     квадратные, с запасом воздуха, — и обрезка по центру срезает то голову,
-     то круп. Для портфолио это худшая из ошибок: модель единственная в своём
-     роде, и показывать её надо целиком. Поменяйте на cover, если снимки
-     заранее кадрированы под 4:3. */
+
   object-fit: contain;
   padding: 0.7rem;
   transition: transform 0.6s var(--ease-out);
@@ -888,11 +824,6 @@ button, input, select, textarea {
   color: var(--accent);
 }
 
-/* ------------------------------------------------------------- замысел */
-
-/* Эскиз крупнее двух фотографий: раздел про то, что замысел появляется
-   первым, и вес на странице должен это повторять. На узком экране колонки
-   схлопываются, и порядок чтения делает то же самое сам собой. */
 .sketch {
   display: grid;
   grid-template-columns: 1.3fr 1fr 1fr;
@@ -923,7 +854,6 @@ button, input, select, textarea {
   display: block;
 }
 
-/* У эскиза кадр вертикальнее — это лист бумаги, а не снимок модели. */
 .sketch__item--plan img { aspect-ratio: 5 / 6; }
 
 .sketch__item figcaption {
@@ -935,8 +865,6 @@ button, input, select, textarea {
 }
 
 .sketch__item--plan figcaption { color: var(--accent); }
-
-/* --------------------------------------------------------------- автор */
 
 .author {
   display: grid;
@@ -967,8 +895,6 @@ button, input, select, textarea {
   max-width: 46ch;
 }
 
-/* -------------------------------------------------------------- студия */
-
 .studio {
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.85fr);
@@ -987,7 +913,6 @@ button, input, select, textarea {
   overflow: hidden;
 }
 
-/* Пол витрины: тонкая линия горизонта, на которой стоит модель. */
 .studio__stage::after {
   content: '';
   position: absolute;
@@ -1004,15 +929,11 @@ button, input, select, textarea {
 }
 .studio__horse .horse { width: 100%; }
 
-/* Смена масти — это перекрас, а не подмена модели: новая лошадь проявляется,
-   а не встаёт рывком. Класс держится один кадр, дальше работает переход. */
 .studio__horse.is-swapping {
   opacity: 0;
   transform: scale(0.985);
 }
 
-/* Табличка под моделью — как в музее: название масти и одна строка о том,
-   чем она трудна в работе. */
 .studio__plate {
   position: relative;
   z-index: 1;
@@ -1037,17 +958,12 @@ button, input, select, textarea {
   min-height: 2.8em;
 }
 
-/* Карточка модели под табличкой — как паспорт у настоящей работы.
-   Колонки фиксированной ширины, чтобы значения стояли в столбик и строка
-   не прыгала при смене масти с короткого названия на длинное. */
 .studio__spec {
   margin: 0.9rem 0 0;
   padding-top: 0.9rem;
   border-top: 1px solid var(--line);
   display: grid;
-  /* Ровно две колонки: четыре строки ложатся квадратом 2×2. При auto-fit
-     третья колонка забирала три строки, а «Постановка» оставалась одна на
-     втором ряду — карточка выглядела обрезанной. */
+
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem 1.4rem;
 }
@@ -1092,8 +1008,6 @@ button, input, select, textarea {
   gap: 0.44rem;
 }
 
-/* Образец масти показывает два цвета сразу — корпус и гриву. Гнедая и
-   рыжая отличаются именно гривой, и на одноцветном кружке их не различить. */
 .swatch {
   position: relative;
   aspect-ratio: 1;
@@ -1160,9 +1074,6 @@ button, input, select, textarea {
   line-height: 1.5;
 }
 
-/* Подтверждение копирования. role="status" озвучивает его скринридеру, а
-   видимая строка нужна всем остальным: буфер обмена ничем себя не выдаёт,
-   и без ответа кнопка выглядит сломанной. */
 .studio__copied {
   font-size: 0.82rem;
   color: var(--accent);
@@ -1179,8 +1090,6 @@ button, input, select, textarea {
   flex-shrink: 0;
 }
 .studio__copied[hidden] { display: none; }
-
-/* --------------------------------------------------------------- этапы */
 
 .process {
   list-style: none;
@@ -1218,8 +1127,6 @@ button, input, select, textarea {
   color: var(--ink-soft);
   line-height: 1.6;
 }
-
-/* --------------------------------------------------------------- масти */
 
 .coats {
   display: grid;
@@ -1265,8 +1172,6 @@ button, input, select, textarea {
   color: var(--ink-dim);
 }
 
-/* ------------------------------------------------------------- вопросы */
-
 .faq { border-top: 1px solid var(--line); }
 
 .faq__item { border-bottom: 1px solid var(--line); }
@@ -1289,8 +1194,6 @@ button, input, select, textarea {
 }
 .faq__q:hover { color: var(--accent); }
 
-/* Плюс, который становится минусом. Два псевдоэлемента вместо иконки:
-   так он всегда одного цвета с текстом и не требует отдельного файла. */
 .faq__mark {
   position: relative;
   width: 16px; height: 16px;
@@ -1320,8 +1223,6 @@ button, input, select, textarea {
   from { opacity: 0; transform: translateY(-6px); }
   to   { opacity: 1; transform: none; }
 }
-
-/* ------------------------------------------------------------ контакты */
 
 .contacts {
   display: grid;
@@ -1374,8 +1275,6 @@ button, input, select, textarea {
 }
 .contact:hover .contact__arrow { transform: translateX(4px); color: var(--accent); }
 
-/* --------------------------------------------------------------- подвал */
-
 .site-footer {
   border-top: 1px solid var(--line);
   padding-block: clamp(2.2rem, 5vw, 3.4rem);
@@ -1412,10 +1311,6 @@ button, input, select, textarea {
   border-top: 1px solid var(--line);
 }
 
-/* ----------------------------------------------------------- появление */
-
-/* Блоки въезжают снизу по мере прокрутки. Задержка внутри группы идёт от
-   --i, который проставляет скрипт при сборке карточек. */
 .reveal {
   opacity: 0;
   transform: translateY(22px);
@@ -1423,8 +1318,6 @@ button, input, select, textarea {
   transition-delay: calc(var(--i, 0) * 55ms);
 }
 .reveal.is-in { opacity: 1; transform: none; }
-
-/* ---------------------------------------------------------------- адаптив */
 
 @media (max-width: 1000px) {
   .studio { grid-template-columns: 1fr; }
@@ -1459,9 +1352,6 @@ button, input, select, textarea {
   .header-cta { display: none; }
 }
 
-/* Превью уходит на всю ширину раньше остальных: рядом с фотографиями
-   в одну строку оно сжимается до размера, на котором уже не разобрать, что
-   это рисунок, а не ещё один снимок. */
 @media (max-width: 1150px) {
   .sketch { grid-template-columns: repeat(2, 1fr); }
   .sketch__item--plan { grid-column: 1 / -1; }
@@ -1486,11 +1376,6 @@ button, input, select, textarea {
   .studio__spec { grid-template-columns: 1fr; }
 }
 
-/* --------------------------------------------------- спокойный режим */
-
-/* Одна кнопка выключает всё движение сразу. Важно, что она гасит и
-   анимации появления: иначе блоки, до которых человек не долистал,
-   остались бы навсегда прозрачными. */
 :root[data-calm] *,
 :root[data-calm] *::before,
 :root[data-calm] *::after {

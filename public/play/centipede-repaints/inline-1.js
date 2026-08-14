@@ -1,4 +1,3 @@
-
   (function () {
     try {
       var lang = localStorage.getItem('centipede-lang');
@@ -8,8 +7,6 @@
       var pal = localStorage.getItem('centipede-palette') || 'bay';
       document.documentElement.setAttribute('data-palette', pal);
 
-      // Человек мог сам приглушить анимацию — это решение важнее
-      // системной настройки, поэтому проверяется первым.
       var calm = localStorage.getItem('centipede-calm');
       if (calm === null) calm = matchMedia('(prefers-reduced-motion: reduce)').matches ? '1' : '0';
       if (calm === '1') document.documentElement.setAttribute('data-calm', '');

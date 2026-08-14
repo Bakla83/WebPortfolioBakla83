@@ -1,25 +1,8 @@
-/*
-  brandgalleryhome.ru — дизайн-макет, общая логика.
-
-  Макет статический, без сервера: подборка живёт в localStorage, товары
-  берутся из data.js. Этого достаточно, чтобы пройти путь целиком —
-  главная, каталог с фильтрами, карточка, фабрика, заявка — и увидеть
-  оформление в работе, а не на картинке.
-
-  Фотографий пока нет, поэтому на их месте рисуется контур предмета
-  по типу товара. Когда придут снимки, заглушка меняется на <img>
-  внутри того же блока — вёрстку это не трогает.
-
-  Фильтры пишутся в адрес страницы: заказчице нужна возможность собрать
-  подборку фильтрами и отправить клиенту ссылку (раздел 4 в docs/tz.md).
-*/
 (function () {
   'use strict';
 
   var D = window.DEMO;
   var KEY = 'bgh-picked';
-
-  /* ------------------------------------------------------------ утилиты */
 
   function $(s, r) { return (r || document).querySelector(s); }
   function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
@@ -59,11 +42,6 @@
     return D.products.filter(function (p) { return p.id === id; })[0];
   }
 
-  /* ------------------------------------------------- контуры для заглушек */
-
-  /* Рисунки намеренно простые и в одну линию: это подложка под будущую
-     фотографию, а не иллюстрация. Она должна намекать на предмет
-     и не спорить с набором. */
   var ART = {
     divany:
       '<path d="M22 52V34a6 6 0 0 1 6-6h64a6 6 0 0 1 6 6v18"/>' +
@@ -118,7 +96,7 @@
       '<circle cx="60" cy="52" r="15"/>' +
       '<circle cx="60" cy="52" r="8"/>' +
       '<path d="M42 23h11M76 23h5"/>',
-    /* Интерьер: для плиток разделов, шоурума и первого экрана */
+
     interior:
       '<path d="M6 74h108"/>' +
       '<path d="M16 74V38a13 13 0 0 1 26 0v36"/>' +
@@ -127,16 +105,13 @@
       '<path d="M58 64h46"/>' +
       '<path d="M86 18v11"/>' +
       '<path d="M77 40l9-11 9 11z"/>',
-    /* Рамка-пейзаж: статьи и всё, у чего нет своего предмета */
+
     frame:
       '<path d="M22 22h76v46H22z"/>' +
       '<path d="M22 58l19-17 14 12 13-15 30 24"/>' +
       '<circle cx="76" cy="34" r="5"/>',
   };
 
-  /* Какой предмет рисовать для помещения. Без этой таблицы все двенадцать
-     разделов на главной получили бы один и тот же контур интерьера
-     и ряд читался бы как обои. */
   var ROOM_ART = {
     gostinaya: 'divany', spalnya: 'krovati', stolovaya: 'stoly',
     kuhni: 'kuhni', garderobnye: 'shkafy', kabinet: 'kresla',
@@ -148,24 +123,16 @@
     return '<svg viewBox="0 0 120 90" aria-hidden="true">' + (ART[key] || ART.frame) + '</svg>';
   }
 
-  /* Заглушка: тёплая подложка + контур. Оттенок закреплён за товаром,
-     чтобы список не мерцал разными фонами при перерисовке. */
   function ph(key, seed, cls) {
     var t = (Math.abs(seed || 0) % 5) + 1;
     return '<div class="ph ph--' + t + (cls ? ' ' + cls : '') + '">' + art(key) + '</div>';
   }
-
-  /* ------------------------------------------------------ шапка и подвал */
 
   var ICONS = {
     search: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/></svg>',
     bag: '<svg viewBox="0 0 24 24"><path d="M5 7h14l-1.2 13H6.2z"/><path d="M9 7V5.5a3 3 0 0 1 6 0V7"/></svg>',
   };
 
-  /* «В наличии» в меню намеренно нет: это не раздел, а состояние товара,
-     и переключается оно в самом каталоге, в блоке над списком. Пункт
-     в шапке дублировал его и уводил в тот же каталог с уже нажатой
-     кнопкой — два разных места для одного действия. */
   var NAV = [
     ['catalog.html', 'Каталог'],
     ['factory.html', 'Фабрики'],
@@ -175,9 +142,6 @@
     ['contacts.html', 'Контакты'],
   ];
 
-  /* Контакты салона. Держим в одном месте: они уходят в шапку, подвал,
-     блок шоурума и микроразметку, и расходиться между ними не должны —
-     единообразие названия, адреса и телефона влияет на локальную выдачу. */
   var PHONE = '+7 918 657-50-27';
   var TEL = '+79186575027';
   var EMAIL = 'studia_interior_krd@mail.ru';
@@ -220,8 +184,7 @@
         '</div>' +
       '</div>' +
       '<nav class="nav" id="nav">' + NAV.map(function (n) {
-        /* Страница статьи подсвечивает пункт «Статьи»: без этого раздел
-           внутри себя же выглядит как чужой. */
+
         var on = n[0] === here || (here === 'article.html' && n[0] === 'articles.html');
         return '<a href="' + n[0] + '"' + (on ? ' class="is-on"' : '') + '>' + n[1] + '</a>';
       }).join('') + '</nav>' +
@@ -239,20 +202,13 @@
       return '<li><a href="catalog.html?room=' + k + '">' + D.ROOMS[k] + '</a></li>';
     }).join('');
 
-    /* Второй колонки каталога в подвале больше нет: её место заняли ссылки
-       на сам салон. Разделы по типу мебели и так есть на главной, а вот
-       «О салоне», «Дизайнерам» и «Контакты» до сих пор не были доступны
-       ниоткуда, кроме шапки. */
-
     var foot = '<footer class="foot"><div class="wrap">' +
       '<div class="foot__cols">' +
         '<div class="foot__logo">' + logo() +
           '<p class="small">Салон итальянской мебели премиум-класса. Прямые поставки ' +
           'с фабрик Италии, шоурум в Краснодаре.</p></div>' +
         '<div><h4>По помещению</h4><ul>' + rooms + '</ul></div>' +
-        /* Раздел про сам салон в подвале нужен не только человеку:
-           внутренние ссылки на «О салоне», «Дизайнерам» и «Контакты»
-           с каждой страницы — это то, чем они держатся в выдаче. */
+
         '<div><h4>Салон</h4><ul>' +
           '<li><a href="about.html">О салоне</a></li>' +
           '<li><a href="designers.html">Дизайнерам</a></li>' +
@@ -286,10 +242,7 @@
         '<a href="about.html">о салоне</a>' +
         '<a href="articles.html">статьи</a>' +
         '<a href="contacts.html">контакты</a>' +
-        /* Ссылки на другие варианты здесь больше нет: она была относительной
-           и ломалась в варианте D, который живёт в подпапке. Переход между
-           вариантами теперь в общей полосе внизу (js/switch.js) — она
-           одинаково работает на всех страницах. */
+
       '</div>' +
       '</div></footer>';
 
@@ -317,16 +270,12 @@
     });
   }
 
-  /* Тонкая линия под шапкой появляется только когда страница прокручена:
-     на первом экране лишняя линия рвёт композицию. */
   function initSticky() {
     var head = $('#head');
     var onScroll = function () { head.classList.toggle('is-stuck', window.scrollY > 8); };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   }
-
-  /* --------------------------------------------------------------- поиск */
 
   function initSearch() {
     var open = $('#qopen'), panel = $('#qpanel'), input = $('#q'), hits = $('#qhits');
@@ -354,8 +303,6 @@
       var q = input.value.trim().toLowerCase();
       if (q.length < 2) { hits.innerHTML = ''; return; }
 
-      // Ищем по названию, фабрике, артикулу и материалу — так же,
-      // как должен работать поиск на рабочем сайте.
       var found = D.products.filter(function (p) {
         return (p.name + ' ' + p.factory + ' ' + p.sku + ' ' + p.material)
           .toLowerCase().indexOf(q) !== -1;
@@ -377,8 +324,6 @@
       }).join('');
     });
   }
-
-  /* ------------------------------------------------- карточка товара в списке */
 
   function cardHTML(p) {
     var inPick = picked().indexOf(p.id) !== -1;
@@ -412,8 +357,6 @@
     });
   }
 
-  /* ---------------------------------------------------------- появление */
-
   function initReveal() {
     var items = $$('.reveal');
     if (!items.length || !('IntersectionObserver' in window)) {
@@ -428,8 +371,6 @@
     items.forEach(function (el) { io.observe(el); });
   }
 
-  /* ---------------------------------------------------------------- главная */
-
   function initHome() {
     var hot = $('#hot');
     if (!hot) return;
@@ -440,9 +381,6 @@
     hot.innerHTML = inStock.map(cardHTML).join('');
     bindAdd(hot);
 
-    /* Категории-лидеры по брифу: диваны, гардеробные, столы и стулья.
-       Первая плитка крупная — лидер должен быть заметнее остальных,
-       а не одним из восьми одинаковых квадратов. */
     var LEAD = [
       { title: 'Диваны', art: 'divany', by: 'type', val: 'divany', big: true },
       { title: 'Гардеробные', art: 'shkafy', by: 'room', val: 'garderobnye' },
@@ -473,11 +411,6 @@
         '</a>';
     }).join('');
 
-    /* Одиннадцать фабрик плюс ссылка на общий список: ровно двенадцать
-       ячеек, сетка не обрывается ни на одном разрешении.
-
-       Проверка на существование блока нужна варианту D: он строится на этом
-       же скрипте, но сетку логотипов там заменила лента фабрик. */
     var brands = $('#brands');
     if (brands) {
       brands.innerHTML = Object.keys(D.FACTORIES).slice(0, 11).map(function (n) {
@@ -489,12 +422,7 @@
 
     $('#showroomart').innerHTML = ph('interior', 3);
 
-    /* Статьи на главной рисует js/pages.js: заголовки и адреса статей
-       лежат там, и держать их копию здесь значило бы однажды показать
-       на главной одно название, а в ленте статей другое. */
   }
-
-  /* ---------------------------------------------------------------- каталог */
 
   function initCatalog() {
     var grid = $('#grid');
@@ -530,8 +458,7 @@
       if (skip !== 'material' && state.material.length && state.material.indexOf(p.material) === -1) return false;
       if (skip !== 'color' && state.color.length && state.color.indexOf(p.color) === -1) return false;
       if (skip !== 'style' && state.style.length && state.style.indexOf(p.style) === -1) return false;
-      // Товары без цены из ценового диапазона не выкидываем: цена там
-      // не значит «дороже максимума», и прятать их было бы враньём.
+
       if (p.price && (p.price < state.min || p.price > state.max)) return false;
       return true;
     }
@@ -545,8 +472,6 @@
       return counts;
     }
 
-    /* Больше восьми пунктов сворачиваем. Отмеченные показываем всегда:
-       иначе человек не увидит, по чему у него сейчас отфильтровано. */
     var FLIMIT = 8;
 
     function checks(field, title) {
@@ -569,9 +494,6 @@
       return '<div class="fgroup"><b>' + title + '</b>' + body + more + '</div>';
     }
 
-    /* Разделы каталога — помещение и тип мебели. Это навигация, а не фильтр:
-       товар лежит ровно в одном помещении и относится ровно к одному типу,
-       поэтому выбор одиночный. */
     function radios(field, title, dict) {
       var counts = facet(field);
       var keys = Object.keys(dict).filter(function (k) { return counts[k]; });
@@ -608,9 +530,7 @@
       if (state.max !== HI) u.set('max', state.max);
       if (state.sort !== 'default') u.set('sort', state.sort);
       var s = u.toString();
-      // Часть браузеров запрещает менять адрес у страницы, открытой с диска.
-      // Каталог из-за этого падать не должен: адрес здесь удобство,
-      // а не условие работы.
+
       try {
         history.replaceState(null, '', s ? '?' + s : location.pathname);
       } catch (e) {}
@@ -657,9 +577,6 @@
       url();
     }
 
-    /* Заголовок и крошки идут за выбранным разделом: человек должен видеть,
-       где он находится, а поисковик — получать осмысленный H1 на каждую
-       комбинацию раздела и фильтра. */
     function paintTitle() {
       var parts = [];
       if (state.room) parts.push(D.ROOMS[state.room]);
@@ -718,8 +635,6 @@
       pr.addEventListener('input', function () { pmax.value = this.value; });
       pr.addEventListener('change', function () { state.max = Number(this.value); render(); });
 
-      // Раздел при сбросе сохраняем: это навигация, а не фильтр. Человек,
-      // сбрасывая фильтры в «Кухнях», ожидает остаться в кухнях.
       $('#freset').addEventListener('click', function () {
         state.factory = []; state.material = []; state.color = []; state.style = [];
         state.min = LO; state.max = HI; state.stock = 'all';
@@ -758,8 +673,6 @@
     render();
   }
 
-  /* ---------------------------------------------------------- карточка товара */
-
   function initProduct() {
     var box = $('#product');
     if (!box) return;
@@ -797,8 +710,6 @@
         '<div class="prod__stock ' + (p.stock === 'order' ? 'order' : 'in') + '">' +
           D.STOCK[p.stock] + '</div>' +
 
-        /* Срок поставки и отделка — первое, что спрашивают по брифу,
-           поэтому они стоят рядом с ценой, а не в таблице внизу. */
         '<div class="answers">' +
           '<div><b>Срок поставки</b><span>' +
             (p.lead || 'Готов к отгрузке со склада') + '</span></div>' +
@@ -835,8 +746,6 @@
 
     bindAdd(box);
 
-    // Миниатюры переключают подложку: показывают, как будет вести себя
-    // галерея, когда появятся настоящие снимки.
     var main = $('#galmain');
     $$('.gal__row .ph').forEach(function (t) {
       t.addEventListener('click', function () {
@@ -847,8 +756,6 @@
       });
     });
 
-    /* «Есть похожее в наличии» — ловит тех, кто не готов ждать поставку.
-       Показываем только когда сам товар под заказ. */
     var same = D.products.filter(function (x) {
       return x.id !== p.id && x.type === p.type && x.stock !== 'order';
     }).slice(0, 4);
@@ -867,8 +774,6 @@
   function row(k, v) {
     return '<tr><td>' + esc(k) + '</td><td>' + esc(v) + '</td></tr>';
   }
-
-  /* ------------------------------------------------------------- фабрики */
 
   function initFactory() {
     var box = $('#factory');
@@ -908,8 +813,6 @@
     $('#fcrumbs').innerHTML = '<a href="index.html">Главная</a><span>·</span>' +
       '<a href="factory.html">Фабрики</a><span>·</span>' + esc(name);
 
-    /* Не список товаров, а мини-лендинг: кто это, чем известны,
-       в каком стиле работают. Это и есть страница под марочный запрос. */
     box.innerHTML =
       '<div class="fab__head">' +
         '<div class="fab__mark">' + ph('frame', 2) + '</div>' +
@@ -943,8 +846,6 @@
 
     bindAdd(box);
   }
-
-  /* --------------------------------------------------------- подборка и заявка */
 
   function initRequest() {
     var box = $('#picked');
@@ -1015,8 +916,6 @@
     });
   }
 
-  /* ---------------------------------------------------------------- старт */
-
   chrome();
   initHome();
   initCatalog();
@@ -1025,10 +924,6 @@
   initRequest();
   initReveal();
 
-  /* Небольшой экспорт для варианта D: он собран на этом же скрипте и
-     дорисовывает поверх ленту фабрик. Без общих заглушек и склонений
-     ему пришлось бы завести свои копии, и два варианта разъехались бы
-     при первой правке. */
   window.SITE = {
     esc: esc, money: money, plural: plural, art: art, ph: ph,
     byId: byId, bindAdd: bindAdd,

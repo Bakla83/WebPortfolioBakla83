@@ -1,10 +1,3 @@
-/* =========================================================================
-   Страница выбора варианта. Служебная: на рабочем сайте её не будет.
-
-   Оформлена нейтрально и намеренно скучно — она не должна спорить
-   с вариантами и склонять к одному из них цветом или набором.
-   ========================================================================= */
-
 @font-face {
   font-family: 'Cormorant Garamond';
   src: url('../../fonts/cormorant-cyrillic.woff2') format('woff2');
@@ -75,7 +68,6 @@ h1, h2, h3 { margin: 0; line-height: 1.15; }
 }
 .jump a:hover { border-color: var(--ink-3); color: var(--ink); }
 
-/* Якорь не должен упирать заголовок в самый верх окна */
 .v, .sect { scroll-margin-top: 16px; }
 
 .v { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); margin: 26px 0; overflow: hidden; }
@@ -91,17 +83,11 @@ h1, h2, h3 { margin: 0; line-height: 1.15; }
 .v--c .v__key { background: #1e4a3c; }
 .v--d .v__key { background: #1a1917; }
 
-/* Рекомендованный вариант обведён: в разборе он идёт первым, и рамка
-   объясняет почему, не крича об этом цветом. */
 .v--d { border-color: var(--ink); }
 .v__head h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 32px; }
 .v__sub { display: block; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); margin-top: 6px; }
 .v__head p { margin: 12px 0 0; color: var(--ink-2); max-width: 92ch; }
 
-/* Две равные колонки во всю ширину карточки: плюсы и минусы должны
-   читаться как пара, а не как основной текст и приписка сбоку.
-   Вторая колонка чуть подкрашена — так видно, где заканчивается одна
-   и начинается другая, даже когда они разной высоты. */
 .v__body { display: grid; grid-template-columns: 1fr 1fr; gap: 0; align-items: stretch; }
 .v__col { padding: 26px 32px 32px; min-width: 0; }
 .v__col + .v__col { border-left: 1px solid var(--line); background: #fbfaf7; }
@@ -113,12 +99,6 @@ h1, h2, h3 { margin: 0; line-height: 1.15; }
 .v__col h3::before { content: ''; flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; background: var(--plus); }
 .v__col + .v__col h3::before { background: var(--minus); }
 
-/* Пункт списка — обычный блок с отступом слева и знаком в этом отступе.
-
-   Сеткой здесь пользоваться нельзя: в пункте вида «<b>Заголовок.</b> текст»
-   жирное начало и остальной текст становятся двумя разными ячейками,
-   и продолжение уезжает во вторую строку, в узкую колонку под знаком.
-   Именно это и выглядело как текст, прижатый к одному краю. */
 ul.pm { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
 ul.pm li {
   position: relative; padding-left: 28px;
@@ -145,12 +125,6 @@ ul.pm b { font-weight: 600; }
 .links a:hover { border-color: var(--ink-3); }
 .links a.is-main { background: var(--ink); border-color: var(--ink); color: #fff; }
 
-/* ------------------------------------------------ карточки вариантов */
-
-/* Блок «открыть и походить». Стоит выше разбора: сначала нужно
-   посмотреть своими глазами, а читать чужие доводы — потом. */
-/* Ровно две колонки, а не auto-fit: при трёх в ряд четвёртая карточка
-   оставалась одна во второй строке, и это читалось как «лишняя». */
 .vgrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -199,16 +173,10 @@ ul.pm b { font-weight: 600; }
 
 .vcard p { margin: 0; font-size: 15px; color: var(--ink-2); }
 
-/* Кнопки прижаты к низу через auto, а не растягиванием абзаца: у карточки D
-   абзацев несколько, и flex: 1 растянул бы каждый из них. */
 .vcard .links { margin-top: auto; }
 
-/* Рекомендованный вариант выделен рамкой, а не цветом: подсказка
-   должна быть заметной, но не должна выглядеть как реклама. */
 .vcard--d { border-color: var(--ink); border-width: 2px; }
 
-/* Список отличий. Нужен именно у D: он намеренно повторяет вариант A,
-   и без прямого перечисления разницу на первых экранах не заметить. */
 .diff { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
 
 .diff li {
@@ -236,8 +204,6 @@ ul.pm b { font-weight: 600; }
   background: var(--paper-2);
 }
 
-/* ------------------------------------------------------ просьба и таблица */
-
 .ask {
   padding: 20px 24px;
   margin-bottom: 18px;
@@ -252,8 +218,7 @@ ul.pm b { font-weight: 600; }
 .ask__how { color: var(--ink-2); font-size: 15px; }
 
 .tablewrap { overflow-x: auto; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); }
-/* Фиксированная раскладка: четыре колонки вариантов одинаковой ширины,
-   иначе одна из них раздувается по самой длинной строке. */
+
 table { border-collapse: collapse; width: 100%; min-width: 940px; font-size: 15px; table-layout: fixed; }
 th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
 thead th { font-size: 13px; letter-spacing: .04em; color: var(--ink); font-weight: 600; }
@@ -267,8 +232,6 @@ th:first-child { width: 22%; }
 thead th:not(:first-child) { width: 19.5%; }
 tr:last-child th, tr:last-child td { border-bottom: 0; }
 
-/* Галочка в ячейке. Весь текст — часть подписи, поэтому попасть можно
-   не только в сам квадратик: на телефоне это принципиально. */
 .tick {
   display: flex;
   gap: 10px;
@@ -289,12 +252,8 @@ tr:last-child th, tr:last-child td { border-bottom: 0; }
   cursor: pointer;
 }
 
-/* Отмеченное должно быть видно на скриншоте с одного взгляда,
-   поэтому подпись не просто «галочка стоит», а темнеет и утолщается. */
 .tick input:checked + span { color: var(--ink); font-weight: 600; }
 .tick span { color: var(--ink-2); }
-
-/* --------------------------------------------------------- итоговый выбор */
 
 .final {
   margin-top: 20px;
@@ -362,11 +321,6 @@ tr:last-child th, tr:last-child td { border-bottom: 0; }
   .v__col, .v__foot { padding: 20px; }
 }
 
-/* =========================================================== телефон
-   Страницу открывают с телефона — так её и будут смотреть в первую
-   очередь. Здесь исправлено три вещи, каждая из которых на узком
-   экране портит чтение сильнее, чем кажется на макете.
-   ================================================================= */
 @media (max-width: 700px) {
   .wrap { padding: 0 14px; }
   .top { padding: 32px 0 26px; }
@@ -377,22 +331,12 @@ tr:last-child th, tr:last-child td { border-bottom: 0; }
   .sect > h2 { margin-bottom: 14px; }
   .card { padding: 18px 16px; border-radius: 12px; }
 
-  /*
-    Рассказ о варианте уходит под кружок с буквой, а не остаётся
-    в колонке рядом с ним: на 390 px рядом с кружком остаётся меньше
-    трёхсот пикселей, и абзац рассыпается на строки по три слова.
-
-    display: contents убирает промежуточный <div> из сетки, и заголовок
-    с абзацем становятся её собственными ячейками. Разметку при этом
-    трогать не нужно, а на широком экране всё остаётся как было.
-  */
   .v__head {
     grid-template-columns: 44px 1fr;
     gap: 0 14px;
     padding: 18px 16px 16px;
   }
-  /* :not(.v__key) обязателен: кружок с буквой — тоже прямой <div>,
-     и display: contents стёр бы его вместе с фоном и размером. */
+
   .v__head > div:not(.v__key) { display: contents; }
   .v__head h2 { grid-column: 2; font-size: 26px; align-self: center; }
   .v__head p { grid-column: 1 / -1; margin-top: 14px; }
@@ -401,8 +345,6 @@ tr:last-child th, tr:last-child td { border-bottom: 0; }
   .v__col, .v__foot { padding: 18px 16px; }
   ul.pm li { padding-left: 24px; font-size: 15px; }
 
-  /* Пальцу нужна цель повыше, а главная кнопка — во всю ширину:
-     именно с неё начинается просмотр варианта. */
   .links a { height: 44px; }
   .links a.is-main { flex: 1 0 100%; justify-content: center; }
 
@@ -414,15 +356,6 @@ tr:last-child th, tr:last-child td { border-bottom: 0; }
   .lead { font-size: 16px; }
   .steps { padding-left: 20px; }
 
-  /*
-    Таблица сравнения разворачивается в карточки.
-
-    В строку с пятью колонками на телефоне не помещается ничего:
-    при min-width 940 px она превращалась в полосу, которую надо тянуть
-    вбок пальцем, — а сравнение вбок не читается вообще. Теперь каждая
-    строка это карточка «признак → четыре варианта», и подпись варианта
-    берётся из data-v у ячейки.
-  */
   .tablewrap { overflow: visible; border: 0; background: none; border-radius: 0; }
   table { display: block; min-width: 0; width: 100%; }
   thead { display: none; }
@@ -451,7 +384,6 @@ tr:last-child th, tr:last-child td { border-bottom: 0; }
 }
 
 @media (max-width: 460px) {
-  /* Вдвоём в строку названия вариантов уже не помещаются и переносятся
-     по слогам — на итоговом вопросе это выглядит неряшливо. */
+
   .final__set label { flex: 1 0 100%; }
 }

@@ -1,6 +1,5 @@
-
 const I18N = {"ui":{"ru":{"page_title":"Что приготовить — рецепты из того, что есть дома","brand_title":"Что приготовить","brand_sub":"Отметьте, что есть в холодильнике, — покажу, что из этого получится и чего не хватает.","stat_recipes":"Рецептов","stat_products":"Продуктов","btn_new_recipe":"+ Свой рецепт","btn_data":"Мои данные","theme_to_dark":"Тёмная тема","theme_to_light":"Светлая тема","lang_switch":"English","pantry_title":"Что есть на кухне","search_ph":"Начните вводить: поми…","search_aria":"Поиск продукта","suggest_aria":"Подсказки","no_product":"Нет нужного продукта?","add_own":"добавить свой","basket_title":"В корзине","clear":"очистить","basket_empty":"Пока пусто. Наберите продукт выше или выберите из списка ниже.","remove_from_basket":"Убрать %1","delete_product":"Удалить продукт из списка","in_basket":"уже в корзине","add_custom":"Добавить «%1» в свои продукты","own_short":"своё","filter_dish":"Блюдо","filter_time":"Время","filter_all":"Всё","filter_mine":"Мои","time_any":"Любое","time_20":"до 20 мин","time_40":"до 40 мин","time_60":"до часа","only_ready":"Только то, что можно готовить сейчас","need_title":"Нужно докупить","have_title":"Есть у вас","nice_title":"Хорошо бы, но можно и без","instead_of":"вместо: %1","basic_item":"базовое","i_have_it":"У меня это есть","minutes":"%1 мин","cov_all":"Все %1 %2 на месте","cov_part":"Есть <b>%1</b> из <b>%2</b> %3","cov_optional":" · %1 %2 можно пропустить","steps_summary":"Как готовить","edit":"изменить","delete":"удалить","delete_confirm":"точно удалить?","group_ready":"Можно готовить прямо сейчас","group_one":"Не хватает одного продукта","group_almost":"Почти получится","group_almost_hint":"Не хватает двух-трёх позиций — часть из них наверняка есть под рукой.","group_more":"Ещё варианты","group_more_hint":"Здесь список покупок будет подлиннее.","group_mine":"Ваши рецепты","summary":"Подходит <b>%1</b> %2 из %3","summary_ready":", из них <b>%1</b> можно готовить прямо сейчас","empty_title":"Начнём с холодильника","empty_text":"Добавьте хотя бы пару продуктов — я подберу рецепты и покажу, чего не хватает. Соль, перец, масло и сахар уже считаются вашими.","nothing_title":"Под эти условия ничего не нашлось","nothing_text":"Попробуйте снять фильтр по времени или типу блюда — либо добавьте ещё пару продуктов из списка слева.","dlg_new_recipe":"Новый рецепт","dlg_edit_recipe":"Изменить рецепт","f_name":"Название","ph_name":"Бабушкины блины","f_minutes":"Минут","f_servings":"Порций","f_type":"Тип блюда","ph_type":"Основное","f_products":"Продукты","col_product":"Продукт","col_qty":"Сколько","col_sub":"Чем заменить","ph_product":"продукт","ph_qty":"сколько","ph_sub":"чем заменить","without_it":"без него","remove_row":"Убрать строку","add_row":"+ ещё продукт","rows_hint":"Отметьте «без него», если блюдо получится и без этого продукта. Незнакомые названия сами добавятся в ваш список продуктов. Замен можно указать несколько через запятую.","f_steps":"Шаги приготовления — по одному в строке","ph_steps":"Смешать муку с молоком.\nЖарить на разогретой сковороде.","f_note":"Подсказка (необязательно)","ph_note":"Тесто должно постоять 15 минут","btn_delete_recipe":"Удалить рецепт","cancel":"Отмена","save":"Сохранить","add":"Добавить","close":"Закрыть","default_type":"Основное","to_taste":"по вкусу","err_name":"Дайте рецепту название.","err_products":"Добавьте хотя бы один продукт.","err_steps":"Опишите хотя бы один шаг приготовления.","err_all_optional":"Хотя бы один продукт должен быть обязательным.","err_duplicate":"Рецепт «%1» уже есть. Придумайте другое название.","err_ing_empty":"Введите название продукта.","err_ing_exists":"«%1» уже есть в списке — просто найдите его через поиск.","ing_in_use":"«%1» используется в ваших рецептах: %2. Сначала уберите продукт оттуда.","dlg_own_product":"Свой продукт","ph_own_product":"ряженка","f_section":"В какой раздел положить","your_products":"Ваши продукты","own_section":"Свои продукты","dlg_data":"Мои данные","f_backup":"Резервная копия","backup_hint":"Скопируйте этот текст в надёжное место — так рецепты не потеряются, если браузер очистит данные сайта. Чтобы восстановить, вставьте сюда сохранённый текст и нажмите «Загрузить».","backup_summary":"Своих рецептов: %1. Своих продуктов: %2. В корзине: %3.","btn_copy":"Скопировать","btn_download":"Скачать файлом","btn_load":"Загрузить","copied":"Скопировано.","copy_manual":"Скопируйте текст вручную: Ctrl+C.","download_failed":"Скачать не вышло — скопируйте текст кнопкой рядом.","import_bad":"Это не похоже на сохранённые данные — проверьте, что текст скопирован целиком.","import_empty":"В этом тексте нет ни рецептов, ни продуктов.","import_ok":"Готово: рецептов добавлено — %1, продуктов — %2.","footer":"Ничего никуда не отправляется: продукты и ваши рецепты хранятся только в вашем браузере.","p_recipes":["рецепт","рецепта","рецептов"],"p_products":["продукт","продукта","продуктов"],"p_products_of":["продукта","продуктов","продуктов"],"p_servings":["порция","порции","порций"],"p_optional":["необязательный","необязательных","необязательных"]},"en":{"page_title":"What to Cook — recipes from what you already have","brand_title":"What to Cook","brand_sub":"Tick what is in your fridge and I will show what it adds up to and what is missing.","stat_recipes":"Recipes","stat_products":"Products","btn_new_recipe":"+ New recipe","btn_data":"My data","theme_to_dark":"Dark theme","theme_to_light":"Light theme","lang_switch":"Русский","pantry_title":"What's in the kitchen","search_ph":"Start typing: toma…","search_aria":"Product search","suggest_aria":"Suggestions","no_product":"Product missing?","add_own":"add your own","basket_title":"In basket","clear":"clear","basket_empty":"Nothing yet. Type a product above or pick one from the list below.","remove_from_basket":"Remove %1","delete_product":"Delete product from the list","in_basket":"already in basket","add_custom":"Add “%1” to my products","own_short":"mine","filter_dish":"Dish","filter_time":"Time","filter_all":"All","filter_mine":"Mine","time_any":"Any","time_20":"under 20 min","time_40":"under 40 min","time_60":"under an hour","only_ready":"Only what I can cook right now","need_title":"Need to buy","have_title":"You have","nice_title":"Nice to have, but optional","instead_of":"instead of %1","basic_item":"staple","i_have_it":"I have it","minutes":"%1 min","cov_all":"All %1 %2 on hand","cov_part":"You have <b>%1</b> of <b>%2</b> %3","cov_optional":" · %1 %2 can be skipped","steps_summary":"How to cook","edit":"edit","delete":"delete","delete_confirm":"delete for sure?","group_ready":"Ready to cook now","group_one":"One product short","group_almost":"Almost there","group_almost_hint":"Two or three items missing — you probably have some of them.","group_more":"Other options","group_more_hint":"These need a longer shopping list.","group_mine":"Your recipes","summary":"<b>%1</b> %2 of %3 match","summary_ready":", <b>%1</b> of them ready to cook now","empty_title":"Start with the fridge","empty_text":"Add a couple of products and I will find recipes and show what is missing. Salt, pepper, oil and sugar already count as yours.","nothing_title":"Nothing matches these filters","nothing_text":"Try clearing the time or dish-type filter, or add a few more products from the list on the left.","dlg_new_recipe":"New recipe","dlg_edit_recipe":"Edit recipe","f_name":"Name","ph_name":"Grandma's pancakes","f_minutes":"Minutes","f_servings":"Servings","f_type":"Dish type","ph_type":"Main course","f_products":"Products","col_product":"Product","col_qty":"How much","col_sub":"Replace with","ph_product":"product","ph_qty":"how much","ph_sub":"replace with","without_it":"optional","remove_row":"Remove line","add_row":"+ one more product","rows_hint":"Tick “optional” if the dish works without that product. Unknown names are added to your product list automatically. Several replacements go comma-separated.","f_steps":"Cooking steps — one per line","ph_steps":"Mix the flour with the milk.\nFry on a hot pan.","f_note":"Tip (optional)","ph_note":"The batter should rest for 15 minutes","btn_delete_recipe":"Delete recipe","cancel":"Cancel","save":"Save","add":"Add","close":"Close","default_type":"Main course","to_taste":"to taste","err_name":"Give the recipe a name.","err_products":"Add at least one product.","err_steps":"Describe at least one cooking step.","err_all_optional":"At least one product must be required.","err_duplicate":"A recipe named “%1” already exists. Pick another name.","err_ing_empty":"Enter a product name.","err_ing_exists":"“%1” is already on the list — just find it in search.","ing_in_use":"“%1” is used in your recipes: %2. Remove it there first.","dlg_own_product":"Your product","ph_own_product":"buttermilk","f_section":"Which section to put it in","your_products":"Your products","own_section":"My products","dlg_data":"My data","f_backup":"Backup","backup_hint":"Copy this text somewhere safe — your recipes will survive even if the browser clears the site data. To restore, paste a saved copy here and press “Load”.","backup_summary":"Your recipes: %1. Your products: %2. In basket: %3.","btn_copy":"Copy","btn_download":"Download file","btn_load":"Load","copied":"Copied.","copy_manual":"Copy the text by hand: Ctrl+C.","download_failed":"Download did not work — use the copy button instead.","import_bad":"This does not look like saved data — check that the whole text was copied.","import_empty":"There are neither recipes nor products in this text.","import_ok":"Done: %1 recipes and %2 products added.","footer":"Nothing is sent anywhere: your products and recipes are stored in this browser only.","p_recipes":["recipe","recipes"],"p_products":["product","products"],"p_products_of":["product","products"],"p_servings":["serving","servings"],"p_optional":["optional item","optional items"]}},"en":{"sec":{"Овощи и зелень":"Vegetables & herbs","Грибы":"Mushrooms","Фрукты и ягоды":"Fruit & berries","Мясо и птица":"Meat & poultry","Рыба и морепродукты":"Fish & seafood","Молочное и яйца":"Dairy & eggs","Крупы, макароны, мука":"Grains, pasta, flour","Бобовые и орехи":"Legumes & nuts","Консервы и заготовки":"Canned & preserved","Масла, соусы, специи":"Oils, sauces, spices","Хлеб и тесто":"Bread & dough","Разное":"Other"},"typ":{"Завтрак":"Breakfast","Выпечка":"Baking","Суп":"Soup","Основное":"Main course","Гарнир":"Side dish","Салат":"Salad","Закуска":"Snack","Десерт":"Dessert"},"ing":{"картофель":"potatoes","лук репчатый":"onion","зелёный лук":"spring onion","чеснок":"garlic","морковь":"carrot","помидоры":"tomatoes","огурцы":"cucumbers","болгарский перец":"bell pepper","белокочанная капуста":"white cabbage","цветная капуста":"cauliflower","брокколи":"broccoli","кабачок":"zucchini","баклажаны":"aubergines","свёкла":"beetroot","тыква":"pumpkin","редис":"radish","сельдерей":"celery","укроп":"dill","петрушка":"parsley","кинза":"cilantro","базилик":"basil","шпинат":"spinach","листовой салат":"lettuce","руккола":"rocket","авокадо":"avocado","зелёный горошек":"green peas","стручковая фасоль":"green beans","имбирь":"ginger","перец чили":"chilli pepper","шампиньоны":"button mushrooms","вешенки":"oyster mushrooms","сушёные белые грибы":"dried porcini","яблоки":"apples","бананы":"bananas","лимон":"lemon","апельсин":"orange","груша":"pear","клубника":"strawberries","вишня":"sour cherries","изюм":"raisins","курага":"dried apricots","чернослив":"prunes","куриное филе":"chicken breast","куриные бёдра":"chicken thighs","говядина":"beef","свинина":"pork","фарш говяжий":"ground beef","фарш свиной":"ground pork","индейка":"turkey","бекон":"bacon","сосиски":"sausages","колбаса":"bologna sausage","ветчина":"ham","лосось":"salmon","треска":"cod","минтай":"pollock","скумбрия":"mackerel","консервированный тунец":"canned tuna","сельдь":"herring","креветки":"prawns","кальмары":"squid","крабовые палочки":"crab sticks","яйца":"eggs","молоко":"milk","сливочное масло":"butter","сметана":"sour cream","творог":"cottage cheese","сливки":"cream","кефир":"kefir","натуральный йогурт":"plain yoghurt","твёрдый сыр":"hard cheese","моцарелла":"mozzarella","плавленый сыр":"processed cheese","фета":"feta","рис":"rice","гречка":"buckwheat","овсяные хлопья":"rolled oats","перловка":"pearl barley","булгур":"bulgur","кускус":"couscous","макароны":"pasta","спагетти":"spaghetti","лапша":"noodles","пшеничная мука":"wheat flour","манка":"semolina","панировочные сухари":"breadcrumbs","крахмал":"starch","консервированная фасоль":"canned beans","нут":"chickpeas","чечевица":"lentils","сухой горох":"dried peas","грецкие орехи":"walnuts","арахис":"peanuts","кешью":"cashews","семечки":"sunflower seeds","кунжут":"sesame seeds","томатная паста":"tomato paste","помидоры в собственном соку":"canned tomatoes","консервированная кукуруза":"canned sweetcorn","консервированный горошек":"canned peas","оливки":"olives","маринованные огурцы":"pickled cucumbers","квашеная капуста":"sauerkraut","сгущёнка":"condensed milk","варенье":"jam","растительное масло":"vegetable oil","оливковое масло":"olive oil","соль":"salt","чёрный перец":"black pepper","паприка":"paprika","куркума":"turmeric","карри":"curry powder","орегано":"oregano","тимьян":"thyme","лавровый лист":"bay leaf","соевый соус":"soy sauce","горчица":"mustard","майонез":"mayonnaise","кетчуп":"ketchup","уксус":"vinegar","мёд":"honey","сахар":"sugar","разрыхлитель":"baking powder","сода":"baking soda","сухие дрожжи":"dry yeast","кокосовое молоко":"coconut milk","бульонный кубик":"stock cube","корица":"cinnamon","ванильный сахар":"vanilla sugar","хлеб":"bread","батон":"white loaf","лаваш":"lavash flatbread","тортилья":"tortilla","слоёное тесто":"puff pastry","шоколад":"chocolate","какао":"cocoa","желатин":"gelatine"},"syn":{"картофель":["potato","spuds"],"лук репчатый":["onions","yellow onion"],"зелёный лук":["green onion","scallion"],"помидоры":["tomato"],"огурцы":["cucumber"],"болгарский перец":["sweet pepper","capsicum"],"белокочанная капуста":["cabbage"],"кабачок":["courgette"],"баклажаны":["eggplant","aubergine"],"свёкла":["beets","beet"],"листовой салат":["salad leaves","iceberg"],"руккола":["arugula"],"шампиньоны":["mushrooms","champignons"],"вешенки":["mushrooms"],"сушёные белые грибы":["mushrooms","ceps"],"вишня":["cherries"],"куриное филе":["chicken","chicken fillet"],"куриные бёдра":["chicken","drumsticks"],"фарш говяжий":["mince","minced beef"],"фарш свиной":["mince","minced pork"],"лосось":["red fish","trout"],"треска":["white fish"],"минтай":["white fish"],"креветки":["shrimp"],"яйца":["egg"],"творог":["curd","quark"],"натуральный йогурт":["yogurt","yoghurt"],"твёрдый сыр":["cheese","cheddar","gouda"],"моцарелла":["cheese"],"фета":["cheese","brynza"],"овсяные хлопья":["oats","oatmeal"],"макароны":["penne","fusilli"],"спагетти":["pasta"],"лапша":["vermicelli"],"пшеничная мука":["flour"],"консервированная фасоль":["beans"],"грецкие орехи":["nuts"],"арахис":["nuts"],"кешью":["nuts"],"помидоры в собственном соку":["passata","tinned tomatoes"],"консервированная кукуруза":["corn","sweetcorn"],"консервированный горошек":["peas"],"оливки":["black olives"],"маринованные огурцы":["gherkins","pickles"],"сгущёнка":["sweetened condensed milk"],"растительное масло":["oil","sunflower oil"],"оливковое масло":["oil"],"чёрный перец":["pepper"],"карри":["curry"],"сухие дрожжи":["yeast"],"бульонный кубик":["stock","bouillon"],"батон":["loaf","baguette"],"лаваш":["flatbread","wrap"]},"qty":{"4 шт":"4 pcs","2 шт":"2 pcs","пучок":"a bunch","30 г":"30 g","1 ст. л.":"1 tbsp","по вкусу":"to taste","60 мл":"60 ml","50 г":"50 g","15 г":"15 g","щепотка":"a pinch","60 г":"60 g","200 мл":"200 ml","1 шт":"1 pcs","1 ч. л.":"1 tsp","кусочек":"a small piece","400 г":"400 g","3 ст. л.":"3 tbsp","2 ст. л.":"2 tbsp","для жарки":"for frying","горсть":"a handful","для подачи":"to serve","200 г":"200 g","500 мл":"500 ml","250 мл":"250 ml","0,5 ч. л.":"1/2 tsp","2 ломтя":"2 slices","долька":"a wedge","2 зубчика":"2 cloves","6 шт":"6 pcs","50 мл":"50 ml","100 г":"100 g","20 г":"20 g","180 г":"180 g","1 пакетик":"1 sachet","300 г":"300 g","3 шт":"3 pcs","500 г":"500 g","250 г":"250 g","100 мл":"100 ml","700 г":"700 g","150 мл":"150 ml","3 зубчика":"3 cloves","80 мл":"80 ml","для гренок":"for croutons","800 мл":"800 ml","5 шт":"5 pcs","120 г":"120 g","1 зубчик":"1 clove","40 г":"40 g","350 г":"350 g","150 г":"150 g","600 г":"600 g","1 головка":"1 head","300 г варёного":"300 g cooked","для панировки":"for coating","800 г":"800 g","4 ст. л.":"4 tbsp","80 г":"80 g","1 кг":"1 kg","2 ч. л.":"2 tsp","на гарнир":"as a side","300 мл":"300 ml","0,5 шт":"1/2","1 банка":"1 can","1 пучок":"1 bunch","3 ломтя":"3 slices","4 ломтя":"4 slices","4 зубчика":"4 cloves","160 г":"160 g","для формы":"for the tin","2 стейка":"2 steaks","2 филе":"2 fillets","1 кочан":"1 head","большой пучок":"a large bunch","7 г":"7 g","6 ломтей":"6 slices","120 мл":"120 ml","380 г":"380 g","400 мл":"400 ml"},"rec":{"Яичница с помидорами":{"n":"Fried eggs with tomatoes","st":["Slice the tomatoes into wedges and fry in oil for 3–4 minutes until they release their juice.","Crack the eggs straight on top, season with salt and cover with a lid.","Cook for 3 minutes — the whites should set while the yolks stay soft.","Scatter with spring onion and grated cheese."]},"Омлет с сыром":{"n":"Cheese omelette","st":["Beat the eggs with the milk and salt using a fork — until smooth, not frothy.","Pour onto a hot pan with butter and turn the heat down.","When the edges set, scatter over the grated cheese and cover for 2 minutes.","Fold in half and serve straight away."]},"Овсянка с бананом":{"n":"Porridge with banana","st":["Cover the oats with milk, add a pinch of salt and bring to the boil.","Simmer gently for 5 minutes, stirring.","Take off the heat, add butter and let it rest for a couple of minutes.","Top with sliced banana and drizzle with honey."]},"Сырники":{"n":"Cottage cheese pancakes","st":["Mash the cottage cheese with a fork and mix with the egg, sugar, salt and flour.","Shape into small pucks and dust with flour.","Fry over medium heat for 3–4 minutes a side, covered.","Serve with sour cream."],"note":"If the cheese is wet, add another spoon of flour — otherwise the pancakes spread in the pan."},"Блины":{"n":"Thin pancakes","st":["Whisk the eggs with the sugar and salt, pour in half the milk.","Add the flour, whisk smooth, then add the rest of the milk and the oil.","Let the batter rest for 15 minutes.","Fry on a well-heated pan for 40–60 seconds a side."]},"Оладьи на кефире":{"n":"Kefir fritters","st":["Warm the kefir slightly and mix with the egg, sugar and salt.","Add the flour with the baking soda — the batter should drop slowly off the spoon.","Do not stir the batter again. Spoon it onto hot oil.","Fry covered for 2 minutes a side."]},"Тост с авокадо и яйцом":{"n":"Avocado and egg toast","st":["Toast the bread in a dry pan or a toaster.","Mash the avocado with salt and lemon juice.","Fry the eggs, or soft-boil them for 6 minutes.","Spread the avocado on the toast, top with the egg and grind over pepper."]},"Шакшука":{"n":"Shakshuka","st":["Chop the onion and pepper and fry in oil for 5 minutes until soft.","Add the garlic and paprika, then the chopped tomatoes a minute later.","Simmer for 10 minutes until the sauce thickens. Season with salt.","Make wells with a spoon, crack in the eggs and cover for 5–6 minutes.","Scatter with herbs and crumbled feta."]},"Фриттата с овощами":{"n":"Vegetable frittata","st":["Dice the vegetables and fry until soft, 7–8 minutes.","Beat the eggs with the milk, salt and half the cheese.","Pour over the vegetables and cook on low heat, covered, for 10 minutes.","Scatter over the rest of the cheese and let it stand for 2 minutes."]},"Рисовая каша на молоке":{"n":"Rice pudding porridge","st":["Rinse the rice, cover with a cup of water and cook for 10 minutes until absorbed.","Pour in hot milk, add the sugar and salt.","Cook on low heat for 12–15 minutes, stirring.","Take off the heat, add butter and cover for 5 minutes."]},"Панкейки":{"n":"Pancakes","st":["Mix the dry ingredients: flour, sugar, baking powder, salt.","Separately mix the milk, egg and melted butter.","Combine and stir only until lumpy — smooth batter is not wanted here.","Cook on a dry pan: flip when bubbles appear on top."]},"Борщ":{"n":"Borscht","st":["Cover the meat with 3 l of water and simmer for 60 minutes, skimming. Lift out, slice, return.","Grate the beetroot and braise it separately with tomato paste and vinegar for 15 minutes — that keeps the borscht red.","Fry the onion and carrot until soft.","Add the potatoes to the broth, the cabbage 10 minutes later, then the fried vegetables and beetroot after another 10.","Season, add the bay leaf and garlic, switch off and let it stand for 20 minutes."],"note":"Without meat it becomes a lean borscht and cooks in half the time."},"Щи из квашеной капусты":{"n":"Sauerkraut shchi","st":["Cook a meat broth, 40 minutes.","Squeeze the sauerkraut dry and braise it separately for 20 minutes with a spoon of oil.","Fry the onion and carrot, stir in the tomato paste.","Add the potatoes to the broth, then the cabbage and fried vegetables 10 minutes later.","Cook for another 10 minutes and season right at the end."]},"Куриный суп с лапшой":{"n":"Chicken noodle soup","st":["Cover the chicken with 2 l of cold water, bring to the boil, skim and simmer for 25 minutes.","Add the diced potatoes and carrot, cook for 10 minutes.","Add the noodles and cook for 5 minutes more.","Season, drop in the bay leaf and herbs, switch off."]},"Гороховый суп":{"n":"Split pea soup","st":["Soak the peas for a couple of hours, or cover with boiling water for 30 minutes.","Cook in 2.5 l of water for 40 minutes until falling apart.","Add the potatoes and cook for 15 minutes.","Fry the onion, carrot and bacon and add them to the pot.","Season and let it stand for 10 minutes."]},"Грибной суп":{"n":"Mushroom soup","st":["Slice the mushrooms and fry them in butter until browned — that is where the flavour comes from.","Fry the onion and carrot separately until soft.","Add the potatoes to 1.5 l of boiling water and cook for 10 minutes.","Add the mushrooms and fried vegetables, cook for 7 minutes more.","Pour in the cream, season and warm through without boiling."]},"Суп-пюре из тыквы":{"n":"Pumpkin soup","st":["Dice the pumpkin, onion and carrot and fry in oil for 5 minutes.","Cover with water level with the vegetables and cook for 20 minutes until soft.","Blend until completely smooth.","Stir in the cream, season and warm through for a minute."]},"Томатный суп с базиликом":{"n":"Tomato and basil soup","st":["Sweat the onion and garlic in oil for 5 minutes without letting them colour.","Add the tomatoes, a cup of water, the sugar and salt.","Cook for 15 minutes, then blend.","Stir in the cream and serve with croutons and basil."]},"Чечевичный суп":{"n":"Lentil soup","st":["Fry the onion, carrot and garlic in oil for 5 minutes, then add the spices.","Add the rinsed lentils and 1.5 l of water.","Cook for 25 minutes (red lentils need 15), adding the potatoes and tomatoes.","Season at the end, or the lentils stay firm."]},"Окрошка на кефире":{"n":"Cold kefir soup","st":["Boil the potatoes and eggs in advance and cool them completely.","Cut everything into small cubes and chop the herbs.","Season and press with a spoon together with the mustard — that draws out the juices.","Pour over cold kefir, thinning with water if you like."]},"Сырный суп с курицей":{"n":"Cheesy chicken soup","st":["Dice the chicken and simmer in 1.5 l of water for 15 minutes.","Add the potatoes and cook for 10 minutes.","Fry the onion with the carrot and add them to the pot.","Add the processed cheese in pieces, stirring until fully melted.","Season and scatter with dill."]},"Паста карбонара":{"n":"Pasta carbonara","st":["Put the pasta on to cook in well-salted water.","Cut the bacon and render it in a dry pan until crisp.","Beat the yolks (or whole eggs) with the grated cheese and plenty of pepper.","Add the drained pasta to the bacon, take off the heat, pour in the egg mix and stir fast.","Loosen with a couple of spoons of pasta water until creamy."],"note":"The pan should be warm, not hot — otherwise the egg scrambles instead of turning into sauce."},"Паста с томатным соусом":{"n":"Pasta with tomato sauce","st":["Sweat the garlic and onion in oil for 3 minutes.","Add the tomatoes, crush them, season and add a pinch of sugar.","Reduce the sauce for 12–15 minutes over medium heat.","Toss with the cooked pasta in the pan and serve with cheese and basil."]},"Макароны по-флотски":{"n":"Pasta with minced beef","st":["Cook the pasta until al dente.","Fry the onion, add the mince and cook for 10 minutes, breaking up the lumps.","Season, add the tomato paste and a couple of spoons of water.","Mix with the pasta and heat through together for 2 minutes."]},"Паста с курицей в сливочном соусе":{"n":"Creamy chicken pasta","st":["Cut the chicken into strips and fry until golden, 6–7 minutes.","Add the mushrooms and garlic and cook for 5 minutes more.","Pour in the cream, season and reduce for 5 minutes until thickened.","Add the cooked pasta and grated cheese and toss together."]},"Плов с курицей":{"n":"Chicken pilaf","st":["Heat the oil in a heavy pot and brown the meat.","Add the sliced onion, then the carrot in matchsticks, and fry for 10 minutes.","Pour in boiling water level with the meat, season and simmer for 20 minutes.","Spread the rinsed rice on top in an even layer and add boiling water 1.5 cm above the rice. Do not stir.","Boil off the water over high heat, push in the head of garlic, cover and steam for 20 minutes."]},"Жареный рис с яйцом":{"n":"Egg fried rice","st":["Cold rice from yesterday works best — it does not clump.","Stir-fry the vegetables over high heat for 3 minutes.","Push them aside, pour in the eggs and stir quickly into large flakes.","Add the rice and soy sauce and toss for 3 minutes over high heat."]},"Куриные котлеты":{"n":"Chicken patties","st":["Mince the chicken and onion, or chop them finely by hand.","Mix in the egg, salt, pepper and garlic. Slap the mixture against the bowl — the patties hold together better.","Shape the patties and coat them in breadcrumbs.","Fry for 4 minutes a side, then 5 minutes covered over low heat."]},"Домашние котлеты":{"n":"Home-style meat patties","st":["Soak the bread in the milk and squeeze it out.","Mix the mince, bread, grated onion, egg, salt and pepper. Knead well.","Shape the patties with wet hands and coat them.","Sear over high heat, then finish covered for 10 minutes."]},"Курица с картошкой в духовке":{"n":"Roast chicken with potatoes","st":["Cut the potatoes into large wedges and the onion into rings.","Toss the chicken with the mayonnaise, garlic, paprika and salt.","Spread everything in one layer in a tin; season and oil the potatoes too.","Roast at 200 °C for 45–50 minutes until golden."]},"Курица в соево-медовом соусе":{"n":"Honey soy chicken","st":["Cut the chicken into pieces and marinate in the soy sauce with honey and garlic for 15 minutes.","Sear over high heat for 5 minutes until browned.","Pour in the marinade and reduce it to a thick glaze, 5–7 minutes.","Scatter with sesame. Extra salt is rarely needed — the soy sauce has plenty."]},"Куриный шницель":{"n":"Chicken schnitzel","st":["Slice the breast lengthways, beat it out to 1 cm and season.","Coat in turn: flour, beaten egg, breadcrumbs.","Fry in hot oil for 3 minutes a side.","Rest on kitchen paper to drain the excess oil."]},"Тушёная капуста с мясом":{"n":"Braised cabbage with pork","st":["Cut the meat into pieces and brown it.","Add the onion and carrot and fry for 5 minutes.","Add the shredded cabbage and half a cup of water, then cover.","Braise for 25 minutes, then stir in the tomato paste, salt and bay leaf.","Cook for 10 minutes more uncovered so the extra liquid boils away."]},"Гуляш":{"n":"Goulash","st":["Cut the beef into 3 cm cubes and brown it in batches over high heat.","Add the onion and carrot and cook for 7 minutes.","Stir in the paprika and flour, then the tomato paste.","Cover with boiling water level with the meat and braise, covered, for 40 minutes.","Season 10 minutes before the end."]},"Тефтели в томатном соусе":{"n":"Meatballs in tomato sauce","st":["Cook the rice until half done and cool it.","Mix the mince with the rice, grated onion, egg and salt. Roll into balls.","Brown the meatballs and transfer them to a pot.","Fry the carrot with the tomato paste and sour cream, then thin with a cup of water.","Pour the sauce over the meatballs and simmer, covered, for 25 minutes."]},"Ленивые голубцы":{"n":"Lazy cabbage rolls","st":["Cook the rice until half done and shred the cabbage finely.","Mix the mince, rice, cabbage, grated onion and salt. Shape into patties.","Brown on both sides and transfer to a dish or pot.","Sauce: tomato paste, sour cream and a cup of water. Pour over and simmer for 30 minutes."]},"Драники":{"n":"Potato pancakes","st":["Grate the potatoes and onion finely and squeeze out the excess liquid.","Add the egg, flour and salt and mix quickly.","Fry thin pancakes in hot oil for 3 minutes a side.","Serve immediately with sour cream."],"note":"The onion keeps the potato from darkening — grate it together with the potatoes right away."},"Кабачковые оладьи":{"n":"Zucchini fritters","st":["Grate the zucchini, salt it, leave for 10 minutes and squeeze it out well.","Mix with the eggs, flour, garlic and herbs.","Fry spoonfuls over medium heat for 3 minutes a side."]},"Овощное рагу":{"n":"Vegetable stew","st":["Cut all the vegetables into roughly equal cubes.","Fry the onion with the carrot, add the potatoes, then the rest after 5 minutes.","Add half a cup of water, cover and stew for 25 minutes.","Finish with the garlic, salt and herbs."]},"Карри из нута":{"n":"Chickpea curry","st":["Fry the onion until golden, add the garlic, ginger and spices and warm through for a minute.","Add the tomatoes and simmer for 10 minutes.","Add the cooked chickpeas and coconut milk and cook for another 10 minutes.","Season and serve with rice."]},"Макароны с сыром":{"n":"Macaroni cheese","st":["Cook the pasta until al dente.","Melt the butter, stir in the flour and cook for a minute.","Pour in the milk in a thin stream, whisking, until it thickens to double cream.","Off the heat, add the grated cheese and stir until smooth.","Fold through the pasta and grind over pepper."]},"Запечённая рыба с лимоном":{"n":"Baked fish with lemon","st":["Pat the fish dry, season it and sprinkle with oil and juice of half a lemon.","Lay it in a dish and top with lemon slices and garlic.","Bake at 200 °C for 20–25 minutes.","Scatter with herbs before serving."]},"Рыба в кляре":{"n":"Battered fish","st":["Cut the fillet into pieces, then salt and pepper it.","Batter: beat the eggs, add the flour and 2 spoons of water to the thickness of sour cream.","Dip the fish in the batter and fry in hot oil for 3 minutes a side."]},"Шаурма домашняя":{"n":"Homemade chicken wrap","st":["Cut the chicken into strips, season and fry until golden.","Shred the vegetables and mix the sauce with the garlic.","Spread the sauce on the flatbread and layer on the cabbage, vegetables and chicken.","Roll it up and toast in a dry pan for 2 minutes a side."]},"Картофельное пюре":{"n":"Mashed potatoes","st":["Boil the potatoes in salted water for 20 minutes until soft.","Drain and let the steam escape for a couple of minutes.","Mash with the butter, then pour in the hot milk.","Beat until fluffy — but not with a blender, or it turns to glue."]},"Жареная картошка с луком":{"n":"Fried potatoes with onion","st":["Cut the potatoes into batons and pat them dry — wet potatoes will not crisp.","Spread them in one layer in hot oil and leave them alone for 5 minutes.","Stir, then fry for 10 minutes more, turning occasionally.","Add the onion, cook for 5 minutes and season right at the end."]},"Картофель дольками в духовке":{"n":"Roast potato wedges","st":["Cut the potatoes into wedges, skin on — the skin gives the crunch.","Toss in a bowl with the oil, salt, paprika and crushed garlic.","Arrange skin down on a tray in a single layer.","Roast at 200 °C for 35 minutes."]},"Гречка с грибами и луком":{"n":"Buckwheat with mushrooms","st":["Cover the buckwheat with two cups of water, salt it and cook covered for 15 minutes.","Fry the mushrooms over high heat until the liquid evaporates and they brown.","Add the onion and fry for 5 minutes more.","Mix into the buckwheat, add butter and rest covered for 5 minutes."]},"Оливье":{"n":"Olivier salad","st":["Boil the potatoes and carrot in their skins and hard-boil the eggs. Cool completely.","Dice everything to the same small size.","Add the drained peas and season.","Dress with mayonnaise right before serving."]},"Винегрет":{"n":"Beetroot vinaigrette salad","st":["Boil the vegetables in their skins until tender, then cool and peel them.","Dice them. Toss the beetroot separately with a spoon of oil so the salad does not turn pink.","Combine everything and add the sauerkraut and onion.","Dress with oil and season."]},"Греческий салат":{"n":"Greek salad","st":["Cut the vegetables into large pieces — that matters for the texture.","Put them in a bowl, season, add the olives and thinly sliced onion.","Drizzle with oil and toss.","Top with the feta in a slab or large cubes and sprinkle with oregano."]},"Салат с тунцом":{"n":"Tuna salad","st":["Drain the tuna and flake it with a fork.","Hard-boil the eggs and dice them along with the cucumber.","Mix everything with the sweetcorn and dressing, then season.","Serve on lettuce leaves."]},"Цезарь":{"n":"Caesar salad","st":["Cube the bread and dry it in the oven for 10 minutes at 180 °C with oil and garlic.","Season the chicken, fry until golden and slice it.","Sauce: mayonnaise, boiled yolk, mustard, grated cheese and garlic.","Tear the leaves, toss with the sauce and top with chicken, croutons and shaved cheese."]},"Капустный салат с морковью":{"n":"Cabbage and carrot slaw","st":["Shred the cabbage finely and grate the carrot.","Salt and scrunch with your hands for a minute — the cabbage softens and turns juicy.","Add the sugar, vinegar and oil, then toss.","Let it stand for 10 minutes before serving."]},"Помидоры с огурцами и сметаной":{"n":"Tomato and cucumber salad","st":["Cut the vegetables into large wedges.","Season and add the onion and herbs.","Dress with sour cream just before serving, or the salad goes watery."]},"Салат из свёклы с чесноком":{"n":"Beetroot and garlic salad","st":["Boil or roast the beetroot in advance, cool it and grate it coarsely.","Add the crushed garlic, salt and chopped walnuts.","Dress with mayonnaise and leave for 15 minutes."]},"Салат с крабовыми палочками":{"n":"Crab stick salad","st":["Hard-boil and cool the eggs; cook and rinse the rice.","Dice the crab sticks and eggs.","Mix with the drained sweetcorn and season.","Dress with mayonnaise."]},"Салат с кальмарами":{"n":"Squid salad","st":["Drop the squid into boiling water for exactly 2 minutes and lift it out — any longer and it turns rubbery.","Peel off the membrane and cut into strips.","Mix with the chopped eggs, cucumber and sweetcorn.","Season and dress with mayonnaise."]},"Гренки с чесноком":{"n":"Garlic croutons","st":["Cut the bread into batons.","Fry in oil until golden on all sides.","Rub the hot croutons with garlic and season."]},"Хумус":{"n":"Hummus","st":["Cook the chickpeas until completely soft (with tinned ones, just drain and keep the liquid).","Grind the sesame seeds into a paste with a spoon of oil.","Blend the chickpeas, sesame paste, garlic, lemon juice and salt.","Thin with the chickpea liquid until creamy.","Drizzle with oil and dust with paprika."]},"Баклажаны с помидорами и сыром":{"n":"Aubergines with tomato and cheese","st":["Slice the aubergines into rounds, salt them, leave for 10 minutes and pat dry.","Fry on both sides until soft.","Spread with the garlic sauce, top with a tomato slice and grated cheese.","Cover or bake for 7 minutes until the cheese melts."]},"Креветки с чесноком":{"n":"Garlic prawns","st":["Peel the prawns and pat them dry.","Melt the butter and warm the garlic and chilli in it for a minute without letting them burn.","Add the prawns and fry for 2–3 minutes until pink.","Squeeze over lemon, season and scatter with parsley."]},"Пицца на лаваше":{"n":"Flatbread pizza","st":["Lay the flatbread on a tray and spread with ketchup.","Arrange the sliced tomatoes and sausage, then cover with cheese.","Bake at 200 °C for 8–10 minutes until the cheese melts.","Sprinkle with oregano and slice straight away."]},"Шарлотка с яблоками":{"n":"Apple sponge cake","st":["Beat the eggs with the sugar for 5–7 minutes to a pale fluffy foam — that is the only leavening here.","Fold in the flour with a spatula, top to bottom, trying not to knock out the air.","Slice the apples into a greased tin and pour the batter over.","Bake at 180 °C for 35–40 minutes and test with a skewer."]},"Творожная запеканка":{"n":"Baked cottage cheese pudding","st":["Push the cottage cheese through a sieve or blend it — the texture depends on this.","Mix with the eggs, sugar, semolina and salt, then rest for 15 minutes.","Fold in the raisins, spread into a greased dish and brush the top with sour cream.","Bake at 180 °C for 35 minutes. Cool it in the dish or it sinks."]},"Овсяное печенье":{"n":"Oat cookies","st":["Mash the bananas to a purée.","Mix with the oats, honey, raisins and nuts. Leave for 10 minutes.","Spoon onto a tray and flatten.","Bake at 180 °C for 18–20 minutes until the edges colour."]},"Печёные яблоки":{"n":"Baked apples","st":["Core the apples without cutting all the way through.","Fill with honey, nuts and raisins and top with a knob of butter.","Put them in a dish with a couple of spoons of water.","Bake at 180 °C for 25 minutes until soft."]},"Банановый смузи":{"n":"Banana smoothie","st":["Slice the bananas (freezing them beforehand makes it thicker and colder).","Put everything in a blender and blitz for 30 seconds.","Pour into glasses and drink straight away."]},"Стейк лосося на сковороде":{"n":"Pan-seared salmon","st":["Pat the fish dry and season it 10 minutes before cooking.","Heat the pan, lay the steak skin down and do not move it for 4 minutes.","Flip, add the garlic and thyme and cook for 3 minutes more.","Off the heat, squeeze over lemon and rest for a couple of minutes."],"note":"The inside should stay slightly moist — overcooked salmon turns dry and stringy."},"Скумбрия в фольге":{"n":"Mackerel baked in foil","st":["Gut the fish, remove the head, rinse and pat dry.","Rub with salt and pepper inside and out and sprinkle with oil.","Stuff with lemon and onion slices and top with the carrot in matchsticks.","Wrap tightly in foil and bake at 200 °C for 30 minutes."]},"Селёдка под шубой":{"n":"Herring under a fur coat","st":["Boil the vegetables in their skins and hard-boil the eggs, then cool everything completely.","Dice the herring finely and chop the onion as small as you can.","Layer it up: herring with onion, potato, carrot, egg, beetroot. Spread mayonnaise over each layer.","Chill for at least 3 hours so the layers soak."]},"Индейка с овощами на сковороде":{"n":"Pan-fried turkey with vegetables","st":["Cut the turkey into strips and fry over high heat for 6 minutes.","Add the onion and pepper and fry for 5 minutes more — the vegetables should stay crisp.","Add the zucchini and garlic and cook for 4 minutes.","Pour in the soy sauce, warm through for a minute and take off the heat."]},"Курица с кешью":{"n":"Cashew chicken","st":["Toast the nuts in a dry pan until fragrant and set them aside.","Dice the chicken and fry over high heat until golden.","Add the pepper and garlic and fry for 3 minutes.","Pour in the soy sauce with the honey and starch slaked in a spoon of water — the sauce thickens in a minute.","Return the nuts, toss and serve immediately."]},"Сосиски в тесте":{"n":"Sausage rolls","st":["Roll out the pastry and cut it into 2 cm strips.","Brush a sausage with mustard and wind a strip of pastry around it.","Put on a tray, brush with beaten egg and sprinkle with sesame.","Bake at 200 °C for 20 minutes until golden."]},"Брокколи с чесноком на сковороде":{"n":"Garlic broccoli","st":["Break the broccoli into florets and blanch for 3 minutes.","Drain and refresh under cold water at once — that keeps the colour bright.","Stir-fry with the garlic over high heat for 3–4 minutes.","Add the soy sauce and scatter with sesame."]},"Цветная капуста в кляре":{"n":"Battered cauliflower","st":["Break the cauliflower into florets and boil in salted water for 5 minutes.","Batter: beat the eggs with the flour and salt to the thickness of sour cream.","Dip the florets in the batter (and in breadcrumbs if you want them crunchy).","Fry over medium heat until golden on all sides."]},"Стручковая фасоль с яйцом":{"n":"Green beans with egg","st":["Drop the beans (frozen is fine) into boiling water for 5 minutes, then drain.","Fry in butter with the garlic for 3 minutes.","Pour in the beaten eggs and stir until they set into flakes.","Season and serve straight away."]},"Перловый рассольник":{"n":"Pearl barley and pickle soup","st":["Soak the barley for an hour, then cook it separately for 30 minutes — otherwise the soup goes cloudy.","Cook a meat broth and add the potatoes.","Grate the pickles and braise them with the onion and carrot for 10 minutes.","Combine everything in the pot and cook for 10 minutes.","Season at the very end: the pickle brine is already salty."]},"Кускус с овощами":{"n":"Couscous with vegetables","st":["Cover the couscous with an equal volume of boiling water (a stock cube helps) and leave covered for 5 minutes.","Dice the vegetables and fry for 5 minutes until soft.","Fluff the couscous with a fork and mix with the vegetables and oil.","Finish with lemon and scatter with herbs."]},"Табуле с булгуром":{"n":"Bulgur tabbouleh","st":["Cover the bulgur with boiling water for 15 minutes, then squeeze out the excess.","Chop the parsley and spring onion very finely — there should be a lot of green.","Dice the tomatoes small.","Mix everything and dress with lemon juice, oil and salt."]},"Фасолевый салат":{"n":"Bean salad","st":["Drain the beans and rinse them.","Slice the onion into half rings and cover with boiling water for 5 minutes to take the bite out.","Mix the beans, onion, tomatoes, garlic and chopped nuts.","Dress with oil, season and add the herbs."]},"Тёплый салат со шпинатом и яйцом":{"n":"Warm spinach and egg salad","st":["Soft-boil the eggs: 6 minutes from the boil, then straight into cold water.","Wilt the spinach in a pan with a spoon of oil — 40 seconds, no longer.","Pile onto a plate and add the tomatoes and seeds.","Top with the halved eggs, drizzle with oil and lemon and season."]},"Соус цацики":{"n":"Tzatziki","st":["Coarsely grate the cucumber and squeeze the juice out well.","Mix with the yoghurt, crushed garlic and chopped dill.","Season, drizzle with oil and chill for 20 minutes."],"note":"Good both as a sauce for meat and as a spread on bread."},"Салат капрезе":{"n":"Caprese salad","st":["Slice the tomatoes and mozzarella into rounds of the same thickness.","Arrange them overlapping and alternating on a flat plate.","Season, tuck in the basil leaves and drizzle with oil."],"note":"The tomatoes should be at room temperature — cold ones have no aroma."},"Кесадилья с сыром":{"n":"Cheese quesadilla","st":["Chop the chicken and vegetables small, fry for 7 minutes and season.","Cover half the tortilla with cheese, the filling and more cheese, then fold it over.","Toast in a dry pan for 2–3 minutes a side under a light weight.","Let it stand for a minute and cut into triangles."]},"Пицца на дрожжевом тесте":{"n":"Pizza on yeast dough","st":["Dissolve the yeast and sugar in 180 ml of warm water and leave for 10 minutes until foamy.","Work in the flour, salt and oil and knead a smooth dough. Cover and let it rise for an hour.","Stretch the dough into a round by hand, not with a rolling pin, and spread with tomato paste.","Arrange the topping and cover with cheese.","Bake at the oven's highest setting for 10–12 minutes on the bottom shelf."]},"Слойки с яблоками":{"n":"Apple puff pastries","st":["Dice the apples and cook them with the sugar and cinnamon for 5 minutes, then cool.","Cut the pastry into squares and put the filling in the middle of each.","Fold into triangles, press the edges with a fork and brush with egg.","Bake at 200 °C for 20 minutes until golden."],"note":"The filling must cool down — hot filling makes the pastry split and leak."},"Французские тосты":{"n":"French toast","st":["Beat the eggs with the milk, sugar and cinnamon.","Dip the bread slices on both sides, but do not soak them.","Fry in butter for 2 minutes a side until golden.","Serve with jam or honey."]},"Домашнее мороженое":{"n":"No-churn ice cream","st":["Whip the cold cream to stiff peaks — 4–5 minutes with a mixer.","Gently fold in the condensed milk with a spatula (and the cocoa for a chocolate version).","Transfer to a container and fold through the chopped chocolate.","Freeze for 5–6 hours. No stirring needed."]},"Горячий шоколад":{"n":"Hot chocolate","st":["Mix the cocoa, sugar and starch while dry so there are no lumps.","Add a couple of spoons of cold milk and work it into a paste.","Heat the rest of the milk, stir in the paste and cook until it thickens.","Off the heat, add the broken chocolate and stir until melted."]},"Фруктовый салат":{"n":"Fruit salad","st":["Cut the fruit into cubes of roughly the same size.","Sprinkle the apple and pear with orange juice so they do not brown.","Dress with the yoghurt and honey and scatter with nuts."]},"Компот из сухофруктов":{"n":"Dried fruit compote","st":["Rinse the dried fruit in warm water.","Cover with 2 l of water, bring to the boil and simmer gently for 20 minutes.","Add the sugar and a slice of lemon, then take off the heat.","Leave covered for at least 2 hours — the flavour needs the time."]},"Ягодный компот":{"n":"Berry compote","st":["Pick over the berries and rinse them.","Add the sugar to 2 l of water and bring to the boil.","Drop in the berries and cook for 5 minutes — longer and the taste turns stewed.","Cool with the lid on."]}}}};
-/* Каталог продуктов: [название, [синонимы для поиска]] */
+
 const CATALOG = [
   ['Овощи и зелень', [
     ['картофель', ['картошка']],
@@ -165,16 +164,11 @@ const CATALOG = [
   ]],
 ];
 
-/* Продукты, которые обычно есть у всех — добавлены в корзину сразу и не считаются нехваткой */
 const BASE = ['соль', 'чёрный перец', 'растительное масло', 'сахар'];
 
-/* Быстрый старт: что предлагаем нажать на пустом экране */
 const POPULAR = ['яйца', 'картофель', 'лук репчатый', 'морковь', 'помидоры', 'куриное филе',
   'макароны', 'рис', 'твёрдый сыр', 'молоко', 'сметана', 'хлеб', 'чеснок', 'огурцы', 'творог'];
 
-/* Рецепты.
-   g: [продукт, количество, {o:1 — можно обойтись, s:[замены]}]
-   c: тип блюда, t: минуты, s: порции, note: подсказка */
 const RECIPES = [
   { n:'Яичница с помидорами', c:'Завтрак', t:10, s:2,
     g:[['яйца','4 шт'],['помидоры','2 шт'],['зелёный лук','пучок',{o:1}],['твёрдый сыр','30 г',{o:1}],['растительное масло','1 ст. л.'],['соль','по вкусу']],
@@ -255,7 +249,6 @@ const RECIPES = [
         'Соединить, размешать до крупных комков — гладкое тесто здесь не нужно.',
         'Печь на сухой сковороде: перевернуть, когда сверху появятся пузырьки.'] },
 
-  /* ---------- супы ---------- */
   { n:'Борщ', c:'Суп', t:90, s:6,
     g:[['свёкла','1 шт'],['белокочанная капуста','300 г'],['картофель','3 шт'],['морковь','1 шт'],['лук репчатый','1 шт'],['томатная паста','2 ст. л.'],['говядина','500 г',{o:1,s:['свинина','куриные бёдра']}],['чеснок','2 зубчика',{o:1}],['уксус','1 ч. л.',{o:1}],['лавровый лист','2 шт',{o:1}],['сметана','для подачи',{o:1}],['растительное масло','2 ст. л.'],['соль','по вкусу']],
     st:['Мясо залить 3 л воды и варить 60 минут, снимая пену. Вынуть, нарезать, вернуть.',
@@ -332,7 +325,6 @@ const RECIPES = [
         'Плавленый сыр добавлять по частям, размешивая до полного растворения.',
         'Посолить, посыпать укропом.'] },
 
-  /* ---------- основное ---------- */
   { n:'Паста карбонара', c:'Основное', t:25, s:2,
     g:[['спагетти','200 г',{s:['макароны']}],['бекон','120 г',{s:['ветчина']}],['яйца','2 шт'],['твёрдый сыр','60 г'],['чеснок','1 зубчик',{o:1}],['чёрный перец','по вкусу'],['соль','по вкусу']],
     st:['Поставить пасту вариться в подсоленной воде.',
@@ -500,7 +492,6 @@ const RECIPES = [
         'На лаваш нанести соус, выложить капусту, овощи и курицу.',
         'Свернуть конвертом и подрумянить на сухой сковороде 2 минуты с каждой стороны.'] },
 
-  /* ---------- гарниры ---------- */
   { n:'Картофельное пюре', c:'Гарнир', t:30, s:4,
     g:[['картофель','1 кг'],['молоко','150 мл'],['сливочное масло','50 г'],['соль','по вкусу']],
     st:['Картофель отварить в подсоленной воде 20 минут до мягкости.',
@@ -529,7 +520,6 @@ const RECIPES = [
         'Добавить лук, жарить ещё 5 минут.',
         'Смешать с гречкой, добавить масло, дать постоять под крышкой 5 минут.'] },
 
-  /* ---------- салаты ---------- */
   { n:'Оливье', c:'Салат', t:40, s:6,
     g:[['картофель','4 шт'],['морковь','1 шт'],['яйца','4 шт'],['маринованные огурцы','3 шт'],['консервированный горошек','200 г'],['колбаса','300 г',{s:['ветчина','куриное филе']}],['майонез','150 г'],['соль','по вкусу']],
     st:['Картофель и морковь отварить в кожуре, яйца — вкрутую. Полностью остудить.',
@@ -598,7 +588,6 @@ const RECIPES = [
         'Смешать с нарезанными яйцами, огурцом и кукурузой.',
         'Посолить и заправить майонезом.'] },
 
-  /* ---------- закуски ---------- */
   { n:'Гренки с чесноком', c:'Закуска', t:15, s:2,
     g:[['хлеб','4 ломтя',{s:['батон']}],['чеснок','3 зубчика'],['растительное масло','2 ст. л.'],['соль','по вкусу']],
     st:['Хлеб нарезать брусочками.',
@@ -634,7 +623,6 @@ const RECIPES = [
         'Запекать при 200 °C 8–10 минут до расплавления сыра.',
         'Посыпать орегано и сразу нарезать.'] },
 
-  /* ---------- выпечка и десерты ---------- */
   { n:'Шарлотка с яблоками', c:'Выпечка', t:50, s:6,
     g:[['яблоки','4 шт'],['яйца','4 шт'],['пшеничная мука','160 г'],['сахар','160 г'],['разрыхлитель','1 ч. л.',{o:1}],['корица','щепотка',{o:1}],['сливочное масло','для формы',{o:1}],['соль','щепотка']],
     st:['Яйца взбить с сахаром 5–7 минут до светлой пышной массы — это единственный разрыхлитель теста.',
@@ -669,7 +657,6 @@ const RECIPES = [
         'Сложить всё в блендер и пробить 30 секунд.',
         'Разлить по стаканам и сразу пить.'] },
 
-  /* ---------- рыба и птица ---------- */
   { n:'Стейк лосося на сковороде', c:'Основное', t:20, s:2,
     g:[['лосось','2 стейка'],['лимон','0,5 шт'],['оливковое масло','1 ст. л.',{s:['растительное масло']}],['тимьян','щепотка',{o:1}],['чеснок','1 зубчик',{o:1}],['чёрный перец','по вкусу'],['соль','по вкусу']],
     st:['Рыбу обсушить полотенцем, посолить и поперчить за 10 минут до жарки.',
@@ -714,7 +701,6 @@ const RECIPES = [
         'Выложить на противень, смазать взбитым яйцом, посыпать кунжутом.',
         'Печь при 200 °C 20 минут до золотистой корочки.'] },
 
-  /* ---------- овощи и гарниры ---------- */
   { n:'Брокколи с чесноком на сковороде', c:'Гарнир', t:15, s:3,
     g:[['брокколи','500 г',{s:['цветная капуста']}],['чеснок','3 зубчика'],['оливковое масло','2 ст. л.',{s:['растительное масло']}],['соевый соус','1 ст. л.',{o:1}],['кунжут','щепотка',{o:1}],['соль','по вкусу']],
     st:['Брокколи разобрать на соцветия и бланшировать в кипятке 3 минуты.',
@@ -793,7 +779,6 @@ const RECIPES = [
         'Обжарить на сухой сковороде по 2–3 минуты с каждой стороны под небольшим гнётом.',
         'Дать минуту остыть и разрезать на треугольники.'] },
 
-  /* ---------- выпечка, десерты, напитки ---------- */
   { n:'Пицца на дрожжевом тесте', c:'Выпечка', t:90, s:4,
     g:[['пшеничная мука','300 г'],['сухие дрожжи','7 г'],['томатная паста','3 ст. л.',{s:['кетчуп']}],['моцарелла','200 г',{s:['твёрдый сыр']}],['оливковое масло','2 ст. л.',{s:['растительное масло']}],['помидоры','2 шт',{o:1}],['колбаса','100 г',{o:1,s:['ветчина','шампиньоны']}],['орегано','щепотка',{o:1}],['сахар','1 ч. л.'],['соль','1 ч. л.']],
     st:['Дрожжи с сахаром развести в 180 мл тёплой воды, оставить на 10 минут до пены.',
@@ -862,8 +847,7 @@ const RECIPES = [
     theme: 'chto-prigotovit/v1/theme',
     lang: 'chto-prigotovit/v1/lang',
   };
-  /* Ключи данных всегда русские: по ним связаны рецепты, свои продукты и корзина.
-     Переключение языка меняет только подписи, сохранённое не трогает. */
+
   const OWN_CAT = 'Свои продукты';
   const BASESET = new Set(BASE);
   const ALL = '*all*';
@@ -879,7 +863,6 @@ const RECIPES = [
   }
   function store(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
 
-  /* ---------- язык ---------- */
   const saved = load(K.lang, null);
   const systemLang = typeof navigator !== 'undefined' && navigator.language
     ? (navigator.language.toLowerCase().startsWith('ru') ? 'ru' : 'en')
@@ -887,14 +870,12 @@ const RECIPES = [
   let lang = saved === 'ru' || saved === 'en' ? saved : systemLang;
   let UI = I18N.ui[lang];
 
-  /** Строка интерфейса. %1, %2 … заменяются на аргументы как есть — экранирует вызывающий. */
   function t(key) {
     let s = UI[key] != null ? UI[key] : key;
     for (let i = 1; i < arguments.length; i++) s = s.split('%' + i).join(arguments[i]);
     return s;
   }
 
-  /** Форма числительного: в русском три варианта, в английском два. */
   function plural(n, key) {
     const forms = UI[key];
     if (lang !== 'ru') return forms[n === 1 ? 0 : 1];
@@ -903,8 +884,6 @@ const RECIPES = [
   }
   const withN = (n, key) => n + ' ' + plural(n, key);
 
-  /* Подписи данных: в русском это сам ключ, в английском — перевод из словаря.
-     Свои продукты и рецепты не переводятся, показываются как введены. */
   const ingName = key => (lang === 'ru' ? key : (I18N.en.ing[key] || key));
   const sectionName = s => (lang === 'ru' ? s
     : (I18N.en.sec[s] || (s === OWN_CAT ? t('own_section') : s)));
@@ -916,7 +895,6 @@ const RECIPES = [
   const recNote = r => { const x = trOf(r); return x && x.note ? x.note : (x ? null : r.note); };
   const synOf = it => (lang === 'ru' ? it.syn : (I18N.en.syn[it.name] || []));
 
-  /** Введённое человеком название продукта — обратно в ключ каталога, на любом языке. */
   function canonIng(text) {
     const n = norm(text);
     let hit = null;
@@ -926,16 +904,14 @@ const RECIPES = [
     return hit;
   }
 
-  /** То же для типа блюда: «Soup» и «Суп» — один и тот же тип. */
   function canonType(text) {
     const n = norm(text);
     const hit = Object.keys(I18N.en.typ).find(ru => norm(ru) === n || norm(I18N.en.typ[ru]) === n);
     return hit || text;
   }
 
-  /* ---------- состояние ---------- */
-  let customIng = load(K.ing, []);                 // [{name, cat}]
-  let customRecipes = load(K.rec, []);             // [{id, own, n, c, t, s, g, st, note}]
+  let customIng = load(K.ing, []);
+  let customRecipes = load(K.rec, []);
   let selected = new Set(load(K.basket, null) || BASE);
 
   let filterType = ALL, filterTime = 0, onlyReady = false;
@@ -943,15 +919,13 @@ const RECIPES = [
 
   const saveBasket = () => store(K.basket, [...selected]);
 
-  /* ---------- индекс продуктов ---------- */
-  const ING = new Map();                           // ключ -> {name, cat, syn, own}
+  const ING = new Map();
   function buildIndex() {
     ING.clear();
     CATALOG.forEach(([cat, items]) => items.forEach(([name, syn]) => ING.set(name, { name, cat, syn: syn || [] })));
     customIng.forEach(({ name, cat }) => ING.set(name, { name, cat: cat || OWN_CAT, syn: [], own: true }));
   }
 
-  /* Каталог для левой колонки: встроенные разделы + свои продукты в их разделах. */
   function catalogView() {
     const map = new Map(CATALOG.map(([c, items]) => [c, items.map(([n]) => n)]));
     customIng.forEach(({ name, cat }) => {
@@ -966,13 +940,11 @@ const RECIPES = [
   const types = () => [...new Set(allRecipes().map(r => r.c))];
   const findRecipe = id => customRecipes.find(r => r.id === id);
 
-  /* ---------- элементы ---------- */
   const $ = id => document.getElementById(id);
   const qInput = $('q'), sugBox = $('suggest'), basket = $('basket'), basketEmpty = $('basketEmpty'),
         basketCount = $('basketCount'), catsBox = $('cats'), out = $('out'),
         typeTabs = $('typeTabs'), timeTabs = $('timeTabs'), onlyReadyBox = $('onlyReady');
 
-  /* ---------- общая перерисовка ---------- */
   function renderAll() {
     buildIndex();
     if (filterType !== ALL && filterType !== MINE && !types().includes(filterType)) filterType = ALL;
@@ -989,7 +961,6 @@ const RECIPES = [
     renderResults();
   }
 
-  /* ---------- корзина ---------- */
   function add(name) {
     if (!name) return;
     selected.add(name); saveBasket(); renderBasket(); renderCats(); renderResults();
@@ -1022,7 +993,6 @@ const RECIPES = [
     selected = new Set(BASE); saveBasket(); renderBasket(); renderCats(); renderResults();
   });
 
-  /* ---------- категории ---------- */
   function renderCats() {
     catsBox.innerHTML = catalogView().map(([cat, items]) => {
       const on = items.filter(n => selected.has(n)).length;
@@ -1051,7 +1021,6 @@ const RECIPES = [
     selected.has(n) ? remove(n) : add(n);
   });
 
-  /* ---------- автодополнение ---------- */
   function search(raw) {
     const q = norm(raw);
     if (!q) return [];
@@ -1066,11 +1035,11 @@ const RECIPES = [
       else {
         const hit = synOf(it).find(s => norm(s).includes(q));
         if (hit) { rank = 3; via = hit; }
-        else if (lang !== 'ru' && norm(it.name).includes(q)) rank = 4;  // поиск по русскому названию
+        else if (lang !== 'ru' && norm(it.name).includes(q)) rank = 4;
       }
       if (rank >= 0) res.push({ it, shown, rank, via });
     });
-    // при равном ранге вперёд идёт более короткое название: «помидоры» раньше «томатной пасты»
+
     res.sort((a, b) =>
       a.rank - b.rank || a.shown.length - b.shown.length || a.shown.localeCompare(b.shown, lang));
     return res.slice(0, 8);
@@ -1136,7 +1105,6 @@ const RECIPES = [
     if (li) { e.preventDefault(); pick(+li.dataset.i); }
   });
 
-  /* ---------- свои продукты ---------- */
   function addIngredient(name, cat) {
     name = String(name).trim();
     if (!name) return null;
@@ -1166,7 +1134,6 @@ const RECIPES = [
     renderMine();
   }
 
-  /* ---------- подбор рецептов ---------- */
   function analyse(r) {
     const have = [], need = [], nice = [];
     r.g.forEach(([id, q, o]) => {
@@ -1197,7 +1164,6 @@ const RECIPES = [
   const timeOk = m => !filterTime || m.r.t <= filterTime;
   const readyOk = m => !onlyReady || m.miss === 0;
 
-  /* ---------- отрисовка результатов ---------- */
   function tagList(items, kind) {
     return items.map(i => {
       const name = esc(ingName(i.id));
@@ -1269,7 +1235,7 @@ const RECIPES = [
 
     const real = [...selected].filter(n => !BASESET.has(n));
     if (!real.length) {
-      // Корзина пуста, но свои рецепты человек добавил сам — они должны быть видны сразу.
+
       out.innerHTML = `<div class="blank">
         <h2>${esc(t('empty_title'))}</h2>
         <p>${esc(t('empty_text'))}</p>
@@ -1284,7 +1250,6 @@ const RECIPES = [
     const one = vis.filter(m => m.miss === 1);
     const almost = vis.filter(m => m.miss >= 2 && m.miss <= 3);
 
-    // Хвост списка обрезаем, но свои рецепты из него не выкидываем никогда.
     const far = vis.filter(m => m.miss > 3);
     const keep = new Set(far.filter(m => m.r.own).map(m => m.r.id || m.r.n));
     if (ready.length + one.length + almost.length < 4) {
@@ -1334,7 +1299,6 @@ const RECIPES = [
     if (b) add(b.dataset.tog);
   });
 
-  /* ---------- фильтры ---------- */
   const TIMES = [[0, 'time_any'], [20, 'time_20'], [40, 'time_40'], [60, 'time_60']];
 
   function renderTabs() {
@@ -1363,7 +1327,6 @@ const RECIPES = [
   });
   onlyReadyBox.addEventListener('change', () => { onlyReady = onlyReadyBox.checked; renderResults(); });
 
-  /* ---------- диалог: свой рецепт ---------- */
   const dlgRecipe = $('dlgRecipe'), rRows = $('rRows'), rMsg = $('rMsg');
 
   function rowHTML(v) {
@@ -1436,8 +1399,6 @@ const RECIPES = [
     const dup = allRecipes().find(r => norm(recName(r)) === norm(name) && r.id !== editingId);
     if (dup) return fail(t('err_duplicate', recName(dup)));
 
-    /* Знакомые названия — хоть по-русски, хоть по-английски — приводим к ключу каталога,
-       незнакомые становятся вашими продуктами. */
     const resolve = n => canonIng(n) || addIngredient(n, OWN_CAT) || n;
     const g = rows.map(r => {
       const opts = {};
@@ -1472,7 +1433,6 @@ const RECIPES = [
     function fail(m) { rMsg.textContent = m; }
   });
 
-  /* ---------- диалог: свой продукт ---------- */
   const dlgIng = $('dlgIng'), iMsg = $('iMsg');
 
   function renderMine() {
@@ -1519,13 +1479,11 @@ const RECIPES = [
     renderMine();
   });
 
-  /* Сообщения о продуктах показываем в их же диалоге — открываем его, если он закрыт. */
   function alertBox(text) {
     if (!dlgIng.open) openIngDialog();
     iMsg.textContent = text;
   }
 
-  /* ---------- диалог: мои данные ---------- */
   const dlgData = $('dlgData'), dText = $('dText'), dMsg = $('dMsg');
 
   const dataSummary = () => t('backup_summary', customRecipes.length, customIng.length, selected.size);
@@ -1599,7 +1557,6 @@ const RECIPES = [
     $('dSummary').textContent = dataSummary();
   });
 
-  /* ---------- язык интерфейса ---------- */
   function applyStaticText() {
     document.title = t('page_title');
     if (document.documentElement) document.documentElement.lang = lang;
@@ -1617,7 +1574,6 @@ const RECIPES = [
     renderAll();
   });
 
-  /* ---------- тема ---------- */
   const themeBtn = $('themeBtn');
   const prefersDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches;
   let theme = null;
@@ -1636,8 +1592,6 @@ const RECIPES = [
     applyTheme(theme);
   });
 
-  /* ---------- старт ---------- */
   applyStaticText();
   renderAll();
 })();
-

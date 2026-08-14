@@ -1,4 +1,3 @@
-
   (function () {
     try {
       var lang = localStorage.getItem('vetka-lang');

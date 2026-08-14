@@ -12,20 +12,6 @@ export function getStaticPaths() {
 const lang = Astro.params.lang as EnabledLocale;
 const strings = t(lang);
 
-/**
- * Работа, которая ещё делается, — не портфолио.
- *
- * Она не лежит в src/data/projects.ts и не попадает ни в раздел, ни в
- * «Избранное», ни в карту сайта (исключение прописано в astro.config.mjs),
- * а страница закрыта от индексации. Попасть сюда можно только через пункт
- * «В процессе создания» в выпадающем меню «Работы» — так заказчица видит
- * ровно то, что ей показывают, а не соседние незаконченные вещи.
- *
- * Когда сайт получит свой домен, отсюда уезжает всё: демо снимается из
- * tools/sync-demos.mjs, а готовая работа заводится обычным проектом.
- */
-
-/** Страница выбора вариантов, а не главная макета: с неё начинается показ. */
 const DEMO_SRC = '/play/brandgalleryhome/variants/index.html';
 
 const site = Astro.site ?? new URL('https://webportfoliobakla83.pages.dev');
@@ -186,8 +172,6 @@ const demo: ProjectDemo = {
     background: var(--gold);
   }
 
-  /* Ссылка — главное, зачем сюда заходят, поэтому она выше макетов
-     и не требует прокрутки. */
   .share {
     display: flex;
     flex-wrap: wrap;
@@ -215,7 +199,6 @@ const demo: ProjectDemo = {
     margin: 0 0 0.8rem;
   }
 
-  /* Длинный адрес не должен растягивать карточку на телефоне */
   .share__url {
     display: block;
     padding: 0.5rem 0.7rem;

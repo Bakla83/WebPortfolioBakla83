@@ -1,27 +1,3 @@
-/* =========================================================================
-   brandgalleryhome.ru — дизайн-макет
-
-   Направление: светлая галерея. Тёплый белый фон, много воздуха, тонкая
-   антиква в заголовках, разрядка в подписях. Карточки без рамок и теней —
-   композицию держит фотография, а не обводка. Так выглядят сайты самих
-   фабрик, и мебель на таком фоне читается как экспонат, а не как товар
-   из прайса.
-
-   Шрифты лежат локально в design/fonts. Ни одного обращения наружу
-   со страницы нет — см. «Главный принцип» в CLAUDE.md.
-
-   Порядок: шрифты → переменные → база → типографика → кнопки → шапка →
-   подвал → заглушки фотографий → карточки → главная → каталог →
-   карточка товара → фабрики → заявка → адаптив.
-   ========================================================================= */
-
-/* ------------------------------------------------------------- шрифты */
-
-/* Оба шрифта переменные: один файл на всю линейку начертаний.
-   Разбиты по алфавитам, чтобы браузер качал только нужное.
-   Знак рубля живёт в latin-ext — без этого файла цены поедут
-   на системный шрифт. */
-
 @font-face {
   font-family: 'Cormorant Garamond';
   src: url('../fonts/cormorant-cyrillic.woff2') format('woff2');
@@ -68,11 +44,8 @@
     U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
-/* --------------------------------------------------------- переменные */
-
 :root {
-  /* Фон тёплый, не чисто белый: на нём светлая мебель не сливается
-     с листом, а бронза не выглядит грязной. */
+
   --paper:    #faf8f5;
   --paper-2:  #f3efe8;
   --paper-3:  #ece7de;
@@ -91,13 +64,9 @@
   --wrap: 1360px;
   --gut: 40px;
 
-  /* Одна кривая на весь сайт: движение должно быть спокойным,
-     дёрганые переходы дешевят интерфейс. */
   --ease: cubic-bezier(.22, .61, .36, 1);
   --dur: .45s;
 }
-
-/* -------------------------------------------------------------- база */
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -122,10 +91,6 @@ input, textarea, select { font: inherit; color: inherit; }
 
 ::selection { background: var(--paper-3); }
 
-/* Атрибут hidden должен побеждать раскладку. Иначе форма, скрытая после
-   отправки (form.hidden = true), остаётся на экране: у неё display: grid,
-   а правило браузера для [hidden] слабее по весу — и рядом с ответом
-   «спасибо, получили» продолжает висеть пустая форма. */
 [hidden] { display: none !important; }
 
 :focus-visible { outline: 1px solid var(--bronze); outline-offset: 3px; }
@@ -139,8 +104,6 @@ input, textarea, select { font: inherit; color: inherit; }
 
 .rule { height: 1px; background: var(--line); border: 0; margin: 0; }
 
-/* Появление секций при прокрутке. Сдвиг маленький и медленный —
-   это должно читаться как выдержка, а не как анимация. */
 .reveal { opacity: 0; transform: translateY(18px); }
 .reveal.is-in {
   opacity: 1; transform: none;
@@ -151,8 +114,6 @@ input, textarea, select { font: inherit; color: inherit; }
   .reveal, .reveal.is-in { opacity: 1; transform: none; transition: none; }
   * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
-
-/* -------------------------------------------------------- типографика */
 
 h1, h2, h3, h4 {
   margin: 0;
@@ -167,8 +128,6 @@ h1, h2, h3, h4 {
 .t-h2    { font-size: clamp(1.8rem, 3.2vw, 2.6rem); }
 .t-h3    { font-size: clamp(1.3rem, 2vw, 1.6rem); }
 
-/* Надзаголовок в разрядку. Главный приём набора на всём сайте:
-   он задаёт спокойный ритм и отделяет служебное от смыслового. */
 .eyebrow {
   font-size: .6875rem;
   font-weight: 500;
@@ -197,8 +156,6 @@ h1, h2, h3, h4 {
 }
 .section__head .eyebrow { display: block; margin-bottom: 14px; }
 
-/* ------------------------------------------------------------ кнопки */
-
 .btn {
   display: inline-flex;
   align-items: center;
@@ -225,14 +182,10 @@ h1, h2, h3, h4 {
 .btn[disabled] { opacity: .4; pointer-events: none; }
 
 .btn-row { display: flex; flex-wrap: wrap; gap: 14px; }
-/* В узкой колонке карточки две кнопки разной ширины смотрятся неряшливо —
-   ставим их друг под другом на всю ширину. */
+
 .btn-row--stack { flex-direction: column; align-items: stretch; }
 .btn-row--stack .btn { justify-content: center; }
 
-/* Ссылка-подчёркивание: линия растёт от левого края.
-   Заменяет стрелки — глифа со стрелкой в наборе нет, а рисовать
-   его картинкой ради «→» не стоит. */
 .linkline {
   display: inline-block;
   font-size: .75rem;
@@ -251,8 +204,6 @@ h1, h2, h3, h4 {
 }
 .linkline:hover::after { background: var(--bronze); transform: scaleX(1.12); }
 
-/* ------------------------------------------------------------- шапка */
-
 .topbar {
   border-bottom: 1px solid var(--line);
   font-size: .75rem;
@@ -267,9 +218,6 @@ h1, h2, h3, h4 {
 .topbar__right { margin-left: auto; display: flex; align-items: center; gap: 24px; }
 .topbar a:hover { color: var(--bronze); }
 
-/* Адрес почты длинный. В узкой строке он вытесняет телефон и запись
-   в шоурум, поэтому ниже 1100 пикселей остаётся только в подвале
-   и в блоке шоурума. */
 @media (max-width: 1100px) {
   .topbar__mail { display: none; }
 }
@@ -288,15 +236,12 @@ h1, h2, h3, h4 {
   align-items: center;
   gap: 24px;
   padding: 26px 0 20px;
-  /* Над выехавшим мобильным меню: логотип и бургер должны остаться
-     видимыми и нажимаемыми, когда меню открыто. */
+
   position: relative; z-index: 2;
 }
 .head__left { display: flex; align-items: center; gap: 18px; }
 .head__right { display: flex; align-items: center; justify-content: flex-end; gap: 22px; }
 
-/* Логотип набран шрифтом. На рабочем сайте здесь встанет её файл —
-   пропорции блока рассчитаны под горизонтальный знак. */
 .logo { text-align: center; display: block; }
 .logo__name {
   display: block;
@@ -327,10 +272,7 @@ h1, h2, h3, h4 {
   transition: color var(--dur) var(--ease);
 }
 .iconbtn:hover { color: var(--ink); }
-/* flex: none и снятый max-width обязательны: базовое `svg { max-width:100% }`
-   считается от ширины флекс-контейнера, а она сама меряется по содержимому.
-   Когда подпись рядом с иконкой скрыта (мобильная шапка), круг замыкается
-   и значок схлопывается в ноль. */
+
 .iconbtn svg {
   flex: none; width: 17px; height: 17px; max-width: none;
   stroke: currentColor; fill: none; stroke-width: 1.2;
@@ -375,11 +317,6 @@ h1, h2, h3, h4 {
 .burger.is-on span:nth-child(2) { opacity: 0; }
 .burger.is-on span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
-/* -------------------------------------------------------------- поиск */
-
-/* Панель поиска выезжает из-под шапки. Постоянное поле в такой вёрстке
-   выглядит как строка в интернет-магазине; иконка сохраняет спокойствие
-   шапки и при этом поиск доступен с каждой страницы. */
 .searchpanel {
   position: absolute; left: 0; right: 0; top: 100%;
   background: var(--paper);
@@ -415,8 +352,6 @@ h1, h2, h3, h4 {
 .qhits__meta { display: block; font-size: .8125rem; color: var(--ink-3); }
 .qhits__price { margin-left: auto; font-size: .875rem; white-space: nowrap; }
 
-/* ------------------------------------------------------------- подвал */
-
 .foot {
   background: var(--paper-2);
   margin-top: 40px;
@@ -446,7 +381,6 @@ h1, h2, h3, h4 {
 }
 .foot__legal p { margin: 0; max-width: 78ch; }
 
-/* Служебная строка для приёмки макета. На рабочем сайте её нет. */
 .mockbar {
   padding: 14px 0 0; margin-top: 22px;
   border-top: 1px solid var(--line-2);
@@ -456,12 +390,6 @@ h1, h2, h3, h4 {
 }
 .mockbar a:hover { color: var(--bronze); }
 
-/* -------------------------------------------------- заглушки фотографий */
-
-/* Своих снимков пока нет, а серый прямоугольник убивает впечатление
-   от макета. Поэтому заглушка — тёплая подложка и контурный рисунок
-   предмета по типу товара. Когда придут фотографии, подложка меняется
-   на <img> без правки вёрстки. */
 .ph {
   position: relative;
   overflow: hidden;
@@ -488,8 +416,6 @@ h1, h2, h3, h4 {
   color: var(--ink-3); opacity: .65;
 }
 
-/* ------------------------------------------------------ карточка товара */
-
 .grid { display: grid; gap: 44px 30px; }
 .grid--2 { grid-template-columns: repeat(2, 1fr); }
 .grid--3 { grid-template-columns: repeat(3, 1fr); }
@@ -505,7 +431,6 @@ h1, h2, h3, h4 {
 .card__media .ph { position: absolute; inset: 0; }
 .card:hover .ph svg { transform: scale(1.045); opacity: .38; }
 
-/* Наличие видно, не открывая товар: по брифу это первое, что спрашивают. */
 .badge {
   position: absolute; left: 14px; top: 14px; z-index: 2;
   padding: 6px 12px;
@@ -539,8 +464,6 @@ h1, h2, h3, h4 {
 }
 .card__price em { font-style: normal; color: var(--ink-3); }
 
-/* Кнопка подборки проявляется на наведении: на десктопе она не мешает
-   смотреть каталог, на тач-устройствах показана всегда. */
 .card__add {
   margin-top: 16px;
   padding: 12px 0;
@@ -560,8 +483,6 @@ h1, h2, h3, h4 {
   .card__add { opacity: 1; }
 }
 
-/* ------------------------------------------------------------- главная */
-
 .hero {
   position: relative;
   min-height: min(78vh, 720px);
@@ -577,10 +498,7 @@ h1, h2, h3, h4 {
   opacity: .16;
   pointer-events: none;
 }
-/* var(--gut) по бокам обязателен: сокращённая запись padding перебивает
-   поля, заданные в .wrap, и на телефоне заголовок героя упирался
-   в самый край экрана. На широком экране этого не видно — там ширину
-   держит max-width. */
+
 .hero__in { position: relative; padding: 96px var(--gut); }
 .hero .eyebrow { display: block; margin-bottom: 26px; }
 .hero h1 { max-width: 15ch; }
@@ -591,8 +509,6 @@ h1, h2, h3, h4 {
   color: var(--ink-3);
 }
 
-/* Полоса доводов под первым экраном: снимает главные возражения
-   до того, как человек уйдёт в каталог. */
 .claims {
   display: grid; grid-template-columns: repeat(4, 1fr);
   border-bottom: 1px solid var(--line);
@@ -610,8 +526,6 @@ h1, h2, h3, h4 {
 }
 .claims span { font-size: .875rem; color: var(--ink-2); }
 
-/* Плитки разделов. Первая крупная: лидеры продаж должны быть заметно
-   больше остальных, а не одинаковыми квадратами в общем ряду. */
 .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
 .tile { position: relative; display: block; overflow: hidden; }
 .tile .ph { position: absolute; inset: 0; }
@@ -633,11 +547,6 @@ h1, h2, h3, h4 {
 .tile .ph svg { transition: transform 1.2s var(--ease); }
 .tile:hover .ph svg { transform: scale(1.06); }
 
-/* Ряд фабрик: за ними приходят по имени, поэтому это имена в наборе,
-   а не мелкие логотипы в ряд. */
-/* Двенадцать ячеек: одиннадцать фабрик и ссылка на общий список.
-   Число делится на 6, 4 и 2 — сетка остаётся полной на всех
-   разрешениях, без обрубленного ряда. */
 .brands {
   display: grid; grid-template-columns: repeat(6, 1fr);
   border-top: 1px solid var(--line);
@@ -659,13 +568,10 @@ h1, h2, h3, h4 {
 }
 .brands span { display: block; margin-top: 8px; font-size: .625rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3); }
 
-/* Блок шоурума. Половина заявок — это визит, а не форма, поэтому
-   ему отведён полноценный экран, а не строчка в контактах. */
 .showroom { display: grid; grid-template-columns: 1.15fr 1fr; }
 .showroom__art { position: relative; min-height: 520px; }
 .showroom__art .ph { position: absolute; inset: 0; }
-/* В крупном блоке контур должен масштабироваться вместе с ним,
-   иначе рисунок теряется посередине пустого поля. */
+
 .showroom__art .ph svg { width: 54%; max-width: 460px; }
 .showroom__txt {
   background: var(--ink); color: var(--paper);
@@ -683,20 +589,14 @@ h1, h2, h3, h4 {
   color: rgba(250,248,245,.5); padding-top: 4px;
 }
 
-/* Статьи — верх воронки: «как выбрать», «сколько ждать поставку». */
 .post { display: block; }
 .post__box { position: relative; aspect-ratio: 3 / 2; margin-bottom: 18px; }
 .post__box .ph { position: absolute; inset: 0; }
 .post h3 { font-size: 1.375rem; margin-bottom: 10px; }
 .post:hover h3 { color: var(--bronze-2); }
 
-/* Статья, которой ещё нет. Показываем приглушённо и без ссылки:
-   ряд из трёх ячеек не обрывается на двух, но и обещания страницы,
-   которой не существует, здесь нет. */
 .post.is-soon { opacity: .5; }
 .post.is-soon .ph svg { opacity: .2; }
-
-/* ------------------------------------------------------------- каталог */
 
 .crumbs {
   font-size: .75rem; color: var(--ink-3);
@@ -713,8 +613,6 @@ h1, h2, h3, h4 {
   margin-bottom: 40px;
 }
 
-/* Переключатель наличия. По словам заказчицы — самый нажимаемый
-   элемент каталога, поэтому он стоит над списком, а не внутри фильтров. */
 .stock {
   display: inline-flex;
   border: 1px solid var(--line-2);
@@ -751,8 +649,6 @@ h1, h2, h3, h4 {
 }
 .toolbar select:focus { outline: 0; border-bottom-color: var(--bronze); }
 
-/* ------------------------------------------------------------- фильтры */
-
 .filters { position: sticky; top: 140px; }
 .fgroup { padding: 22px 0; border-bottom: 1px solid var(--line); }
 .fgroup:first-child { padding-top: 0; }
@@ -770,8 +666,6 @@ h1, h2, h3, h4 {
 .fgroup label:hover { color: var(--ink); }
 .fgroup .n { margin-left: auto; font-size: .6875rem; color: var(--ink-3); }
 
-/* Свои чекбоксы и радио: системные элементы управления — единственное
-   место, где стандартный интерфейс браузера ломает набор страницы. */
 .fgroup input[type=checkbox], .fgroup input[type=radio] {
   appearance: none; margin: 0;
   width: 13px; height: 13px; flex: 0 0 13px;
@@ -795,8 +689,6 @@ h1, h2, h3, h4 {
 }
 .fgroup label:has(input:checked) { color: var(--ink); }
 
-/* Разделы каталога отделены от фильтров: раздел отвечает «где я»,
-   фильтр — «что показать внутри». Это разные по смыслу вещи. */
 .fgroup--nav > b { color: var(--ink); }
 .fgroup--nav label:has(input:checked) { color: var(--bronze-2); }
 
@@ -830,8 +722,6 @@ h1, h2, h3, h4 {
 }
 .freset:hover { color: var(--bronze); }
 
-/* Длинные списки свёрнуты. У материалов это критично: их больше двадцати,
-   и развёрнутый список делает колонку фильтров вдвое длиннее каталога. */
 .fgroup label.is-extra { display: none; }
 .fgroup.is-open label.is-extra { display: flex; }
 .fmore {
@@ -849,8 +739,6 @@ h1, h2, h3, h4 {
 .empty { padding: 80px 0; text-align: center; }
 .empty h3 { margin-bottom: 14px; }
 
-/* -------------------------------------------------------- карточка товара */
-
 .prod { display: grid; grid-template-columns: 1.25fr 1fr; gap: 72px; align-items: start; }
 
 .gal__main { position: relative; aspect-ratio: 4 / 5; }
@@ -863,9 +751,7 @@ h1, h2, h3, h4 {
 .prod__brand { display: inline-block; margin-bottom: 16px; }
 .prod__brand:hover { color: var(--bronze-2); }
 .prod h1 { margin-bottom: 18px; }
-/* Цифры принудительно в верхний регистр: у антиквы по умолчанию
-   минускульные цифры, и «940 000» в них читается как набор разновысоких
-   знаков. В тексте это красиво, в цене — мешает. */
+
 .prod__price {
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 2.4rem; font-weight: 300;
@@ -877,8 +763,6 @@ h1, h2, h3, h4 {
 .prod__stock.in { color: var(--green); }
 .prod__stock.order { color: var(--ink-2); }
 
-/* Срок поставки и отделка — первое, что спрашивают. Поэтому они здесь,
-   рядом с ценой, а не в таблице характеристик внизу страницы. */
 .answers {
   margin: 32px 0;
   border-top: 1px solid var(--line);
@@ -908,8 +792,6 @@ h1, h2, h3, h4 {
   font-size: .75rem; color: var(--ink-3); line-height: 1.6;
 }
 
-/* ------------------------------------------------------------- фабрики */
-
 .fab__head {
   display: grid; grid-template-columns: 1fr 1fr; gap: 72px;
   align-items: center; margin-bottom: 30px;
@@ -932,8 +814,6 @@ h1, h2, h3, h4 {
   font-variant-numeric: lining-nums;
 }
 .fab__stats span { font-size: .625rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3); }
-
-/* ------------------------------------------------------- подборка и заявка */
 
 .req { display: grid; grid-template-columns: 1.15fr 1fr; gap: 72px; align-items: start; }
 
@@ -969,8 +849,7 @@ h1, h2, h3, h4 {
 }
 
 .form { display: grid; gap: 24px; }
-/* Только прямой потомок: иначе подпись поля перекрасила бы и подписи
-   галочек, которые лежат внутри того же блока. */
+
 .field > label, .fieldlab {
   display: block; margin-bottom: 8px;
   font-size: .625rem; font-weight: 500;
@@ -1005,8 +884,6 @@ h1, h2, h3, h4 {
   transform: rotate(42deg);
 }
 
-/* Согласие на обработку данных: не предзаполнено, со ссылкой на политику.
-   Без него форма не отправляется — требование 152-ФЗ. */
 .agree { display: flex; gap: 12px; align-items: flex-start; font-size: .75rem; color: var(--ink-2); line-height: 1.55; cursor: pointer; }
 .agree input {
   appearance: none; margin: 2px 0 0; width: 13px; height: 13px; flex: 0 0 13px;
@@ -1023,8 +900,6 @@ h1, h2, h3, h4 {
 
 .sent { padding: 60px 0; }
 .sent h2 { margin-bottom: 16px; }
-
-/* ------------------------------------------------------------- адаптив */
 
 @media (max-width: 1180px) {
   :root { --gut: 28px; }
@@ -1052,8 +927,6 @@ h1, h2, h3, h4 {
   .fab__head { grid-template-columns: 1fr; gap: 32px; }
   .foot__cols { grid-template-columns: repeat(2, 1fr); gap: 40px; }
 
-  /* Фильтры на мобильном — панель на весь экран по кнопке.
-     В боковой колонке их держать негде. */
   .cat { grid-template-columns: 1fr; gap: 0; }
   .fopen {
     display: block; width: 100%; margin-bottom: 26px;
@@ -1073,8 +946,6 @@ h1, h2, h3, h4 {
   }
   .filters.is-open { transform: none; visibility: visible; }
 
-  /* Кнопка «показать результаты» появляется только вместе с панелью,
-     иначе она висела бы поверх каталога всё время. */
   .filters.is-open ~ .fclose {
     display: block;
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 91;
@@ -1091,8 +962,7 @@ h1, h2, h3, h4 {
   .topbar__geo { display: none; }
   .topbar .wrap { justify-content: space-between; }
   .iconbtn span:not(.iconbtn__n) { display: none; }
-  /* Только в шапке: там логотип зажат бургером и корзиной. В подвале
-     места достаточно, и уменьшать его незачем. */
+
   .head .logo__name { font-size: 1rem; letter-spacing: .16em; text-indent: .16em; }
   .head .logo__sub { font-size: .4375rem; letter-spacing: .16em; text-indent: .16em; }
 
@@ -1114,8 +984,6 @@ h1, h2, h3, h4 {
   }
   .nav a::after { display: none; }
 
-  /* Заголовок секции и ссылка рядом с ним на узком экране не помещаются
-     в строку: заголовок начинает переноситься по одному слову. */
   .section__head { flex-direction: column; align-items: flex-start; gap: 18px; margin-bottom: 30px; }
   .hero .btn-row { flex-direction: column; align-items: stretch; }
   .hero .btn { justify-content: center; }
@@ -1130,9 +998,7 @@ h1, h2, h3, h4 {
   .hero__note { display: none; }
   .showroom__txt { padding: 44px 28px; }
   .showroom__facts b { flex-basis: 96px; }
-  /* Подпись и значение в строку не помещаются: колонка подписи фиксированной
-     ширины плюс адрес шоурума не дают блоку сжаться, и вся страница уезжает
-     вбок. На узком экране подпись встаёт отдельной строкой над значением. */
+
   .showroom__facts div { flex-wrap: wrap; gap: 2px 18px; }
   .showroom__facts b { flex: 0 0 100%; padding-top: 0; }
   .gal__row { grid-template-columns: repeat(4, 1fr); gap: 8px; }
@@ -1147,19 +1013,11 @@ h1, h2, h3, h4 {
 @media (max-width: 460px) {
   :root { --gut: 20px; }
 
-  /* Подпись под знаком в шапке убираем: на узком экране она съедает
-     ширину, которой не хватает бургеру и корзине. В подвале остаётся. */
   .head .logo__sub { display: none; }
   .head .logo__name { font-size: .9375rem; letter-spacing: .13em; text-indent: .13em; }
 
-  /* Знак в подвале набран в одну строку (white-space: nowrap), и на полном
-     размере «Brand Gallery Home» шире узкого экрана — страница уезжала
-     вбок. Уменьшаем только здесь: выше 460px места хватает. */
   .foot .logo__name { font-size: 1.25rem; letter-spacing: .22em; text-indent: .22em; }
 
-  /* Каталог остаётся в две колонки и на узком экране. Одна колонка
-     во всю ширину растягивает главную на пятнадцать экранов прокрутки,
-     а карточка мебели читается и в половину ширины. */
   .grid { gap: 26px 14px; }
   .tiles { gap: 14px; }
   .card__name { font-size: 1.125rem; }
@@ -1176,25 +1034,10 @@ h1, h2, h3, h4 {
   .toolbar__sort { margin-left: 0; }
 }
 
-/* =========================================================================
-   Текстовые страницы: о салоне, дизайнерам, статьи, контакты
-
-   Оформление то же самое — тёплый лист, антиква, воздух, — но набор здесь
-   другой: на этих страницах главное не фотография, а текст. Поэтому
-   колонка узкая, интервал крупнее, а разделители — волосяные линии,
-   а не рамки.
-   ========================================================================= */
-
-/* ------------------------------------------------- заголовок страницы */
-
 .phead { padding: 18px 0 56px; border-bottom: 1px solid var(--line); margin-bottom: 64px; }
 .phead .eyebrow { display: block; margin-bottom: 18px; }
 .phead .lede { margin: 26px 0 0; font-size: 1.1875rem; }
 
-/* ------------------------------------------------------------- текст */
-
-/* Ширина колонки задана в знаках, а не в пикселях: на длинной строке
-   глаз теряет начало следующей, и текст перестают читать. */
 .prose { max-width: 68ch; }
 .prose p { margin: 0 0 22px; color: var(--ink-2); line-height: 1.75; }
 .prose p:last-child { margin-bottom: 0; }
@@ -1213,12 +1056,8 @@ h1, h2, h3, h4 {
 .prose a { border-bottom: 1px solid var(--line-2); }
 .prose a:hover { border-color: var(--bronze); color: var(--bronze-2); }
 
-/* Две колонки только для вводного рассказа о салоне: он длинный,
-   и в одну колонку выглядит стеной. */
 .cols2 { columns: 2; column-gap: 60px; max-width: none; }
 .cols2 p { break-inside: avoid; }
-
-/* -------------------------------------------------------------- цифры */
 
 .numbers {
   display: grid; grid-template-columns: repeat(4, 1fr);
@@ -1236,10 +1075,6 @@ h1, h2, h3, h4 {
 }
 .numbers span { font-size: .8125rem; color: var(--ink-2); }
 
-/* --------------------------------------------------------------- шаги */
-
-/* Нумерация набрана антиквой и крупно: это ритм страницы, а не служебные
-   цифры. Списком с точками тот же смысл читался бы как инструкция. */
 .steps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); }
 .steps div { background: var(--paper); padding: 38px 40px; }
 .steps b {
@@ -1251,17 +1086,10 @@ h1, h2, h3, h4 {
 .steps h3 { font-size: 1.375rem; margin-bottom: 10px; }
 .steps p { margin: 0; font-size: .9375rem; color: var(--ink-2); }
 
-/* --------------------------------------------------------- заглушки зала */
-
 .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
 .shots div { position: relative; aspect-ratio: 4 / 3; }
 .shots .ph { position: absolute; inset: 0; }
 
-/* ---------------------------------------------------------- тёмная полоса */
-
-/* Единственный тёмный блок на светлом сайте — приглашение в шоурум.
-   Страница «Дизайнерам» получает такой же: это второе обращение,
-   не к покупателю, и его нужно отделить от остальной страницы. */
 .darkband { background: var(--ink); color: var(--paper); padding: 84px 0; }
 .darkband h1, .darkband h2 { color: var(--paper); }
 .darkband .eyebrow { color: rgba(250,248,245,.55); display: block; margin-bottom: 22px; }
@@ -1276,24 +1104,18 @@ h1, h2, h3, h4 {
   color: rgba(250,248,245,.5); margin-bottom: 6px;
 }
 
-/* ----------------------------------------------------------- условия */
-
 .terms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); }
 .terms div { background: var(--paper); padding: 36px 34px; }
 .terms .eyebrow { display: block; margin-bottom: 16px; }
 .terms h3 { font-size: 1.375rem; margin-bottom: 12px; }
 .terms p { margin: 0; font-size: .9375rem; color: var(--ink-2); }
 
-/* Открытым текстом отмечаем то, чего в макете ещё нет: на показе должно
-   быть видно, что поле не заполнено, а не что условие скрыто. */
 .todo {
   display: inline-block; margin-top: 12px;
   font-size: .6875rem; letter-spacing: .16em; text-transform: uppercase;
   color: var(--bronze);
   border-bottom: 1px dotted var(--bronze);
 }
-
-/* ------------------------------------------------------------- статьи */
 
 .artlist { display: grid; grid-template-columns: repeat(2, 1fr); gap: 56px 40px; }
 .artcard { display: block; }
@@ -1305,8 +1127,6 @@ h1, h2, h3, h4 {
 .artcard p { color: var(--ink-2); margin: 0 0 14px; font-size: .9375rem; line-height: 1.7; }
 .artcard:hover .ph svg { transform: scale(1.045); }
 
-/* План статей: показывает, что раздел не разовый. Это не ссылки —
-   статей ещё нет, и ставить на них ссылку было бы враньём. */
 .plan { display: grid; gap: 0; border-top: 1px solid var(--line); }
 .plan div {
   padding: 20px 0; border-bottom: 1px solid var(--line);
@@ -1314,8 +1134,6 @@ h1, h2, h3, h4 {
 }
 .plan span { flex: 0 0 200px; font-size: .6875rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3); }
 .plan b { font-weight: 400; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.25rem; }
-
-/* ------------------------------------------------------ страница статьи */
 
 .art { max-width: 760px; margin: 0 auto; }
 .art__meta {
@@ -1338,8 +1156,6 @@ h1, h2, h3, h4 {
 }
 .artbody b { font-weight: 500; }
 
-/* Врезка вынесена в поля колонки: она должна читаться как реплика
-   в стороне от текста, а не как ещё один абзац. */
 .artbody .pull {
   margin: 40px 0; padding: 0 0 0 30px;
   border-left: 1px solid var(--bronze);
@@ -1359,12 +1175,8 @@ h1, h2, h3, h4 {
 .artnext h3 { font-size: 1.5rem; margin: 10px 0 0; }
 .artnext:hover h3 { color: var(--bronze-2); }
 
-/* ------------------------------------------------------------- контакты */
-
 .contacts { display: grid; grid-template-columns: 380px 1fr; gap: 64px; align-items: start; }
-/* Схема проезда шире телефона и прокручивается внутри своего блока.
-   Без этого колонка сетки растягивается под неё — по умолчанию ячейка
-   грида не сжимается уже своего содержимого, — и вбок едет вся страница. */
+
 .contacts > * { min-width: 0; }
 .cblock { border-top: 1px solid var(--line); }
 .cblock div { padding: 22px 0; border-bottom: 1px solid var(--line); }
@@ -1377,9 +1189,6 @@ h1, h2, h3, h4 {
 .cblock a:hover { color: var(--bronze-2); border-color: var(--bronze); }
 .cblock .tiny { font-size: .75rem; }
 
-/* Карта. В макете это схема: страница не делает ни одного внешнего
-   запроса. Место, поля и подпись — те же, что займёт карта Яндекса
-   на рабочем сайте. */
 .map { position: relative; background: var(--paper-2); }
 .map svg { width: 100%; height: auto; display: block; }
 .map .mp-block { fill: #ece7de; }
@@ -1410,8 +1219,6 @@ h1, h2, h3, h4 {
 
 .reqs { border-top: 1px solid var(--line); padding-top: 26px; font-size: .8125rem; color: var(--ink-2); }
 .reqs p { margin: 0 0 8px; }
-
-/* --------------------------------------------- адаптив текстовых страниц */
 
 @media (max-width: 1180px) {
   .contacts { grid-template-columns: 320px 1fr; gap: 40px; }
@@ -1447,19 +1254,10 @@ h1, h2, h3, h4 {
   .plan span { flex: 0 0 100%; }
   .terms div { padding: 28px 24px; }
 
-  /* Подпись на кнопке не переносится по замыслу — иначе капс в разрядку
-     разваливается. На узком экране две такие кнопки в строку не влезают,
-     поэтому они встают друг под другом, как в первом экране главной. */
   .artend .btn-row { flex-direction: column; align-items: stretch; }
-  /* Перенос разрешён только здесь: в узкую колонку 320 px кнопка
-     с длинной подписью не влезает даже во всю ширину, а сжаться ниже
-     своей строки она не может. */
+
   .artend .btn { justify-content: center; white-space: normal; text-align: center; padding: 16px 20px; }
 
-  /* Подписи на схеме набраны в единицах самой схемы: вместе с ней они
-     сжимаются и на телефоне становятся нечитаемыми. Поэтому на узком
-     экране схема показывается в своём размере и прокручивается вбок
-     внутри блока, а не тянет вбок всю страницу. */
   .map { overflow-x: auto; }
   .map svg { width: 640px; max-width: none; }
 }

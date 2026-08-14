@@ -1,5 +1,3 @@
-
-  // ============ i18n ============
   var translations = {
     ru: {
       'meta.title': 'ОПОРА — строительная компания',
@@ -178,7 +176,6 @@
     btn.addEventListener('click', function(){ applyLang(btn.getAttribute('data-lang')); });
   });
 
-  // ============ Theme toggle ============
   var themeToggle = document.getElementById('themeToggle');
   function currentTheme(){
     return document.documentElement.getAttribute('data-theme') ||
@@ -190,7 +187,6 @@
     try{ localStorage.setItem('opora-theme', next); }catch(e){}
   });
 
-  // ============ Mobile menu toggle ============
   var topbar = document.getElementById('topbar');
   var menuToggle = document.getElementById('menuToggle');
   menuToggle.addEventListener('click', function(){
@@ -204,7 +200,6 @@
     });
   });
 
-  // ============ Scroll reveal ============
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var sheets = document.querySelectorAll('.sheet:not(.hero)');
   if (reduced) {
@@ -218,7 +213,6 @@
     sheets.forEach(function(s){ s.classList.add('visible'); });
   }
 
-  // ============ Sheet rail active state ============
   var railLinks = document.querySelectorAll('.sheet-rail a');
   var sections = document.querySelectorAll('main > section[id]');
   if ('IntersectionObserver' in window && railLinks.length) {
@@ -234,7 +228,6 @@
     sections.forEach(function(s){ railIo.observe(s); });
   }
 
-  // ============ Contact form (no backend — local confirmation only) ============
   var form = document.getElementById('contactForm');
   var success = document.getElementById('formSuccess');
   form.addEventListener('submit', function(e){

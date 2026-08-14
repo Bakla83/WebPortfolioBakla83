@@ -1,16 +1,3 @@
-/*
-  Звук.
-
-  Пианино считается на месте из трёх частичных тонов с фильтром: чистая
-  синусоида звучит как сигнал проверки связи, а сэмплы настоящего рояля
-  весили бы десятки мегабайт и грузились бы дольше, чем человек ждёт
-  ответа на нажатие клавиши.
-
-  Расписание нот идёт по часам звуковой карты, а не по setTimeout: таймеры
-  браузера плавают на десятки миллисекунд, и на слух это разъезжающийся
-  ритм. Таймер здесь нужен только чтобы вовремя заглянуть вперёд и
-  поставить в очередь ближайшие ноты.
-*/
 window.Partitura = window.Partitura || {};
 
 (function (ns) {
@@ -47,13 +34,6 @@ window.Partitura = window.Partitura || {};
     return 440 * Math.pow(2, (midi - 69) / 12);
   }
 
-  /**
-   * Один звук пианино.
-   *
-   * Три частичных тона на треугольнике и синусах дают узнаваемый призвук
-   * молоточка, а фильтр, съезжающий вниз по ходу ноты, — то самое угасание
-   * яркости, по которому ухо и опознаёт струну.
-   */
   function voice(at, midi, seconds, velocity) {
     const freq = midiToFreq(midi);
     const amp = ctx.createGain();
@@ -89,7 +69,6 @@ window.Partitura = window.Partitura || {};
     tone.connect(amp).connect(master);
   }
 
-  /** Разовое нажатие: превью ноты при клике по клавише или по стану. */
   function note(midi, seconds) {
     if (!ensure()) return;
     voice(ctx.currentTime + 0.001, midi, seconds || 0.6, 1);
@@ -100,12 +79,6 @@ window.Partitura = window.Partitura || {};
     if (master) master.gain.setTargetAtTime(volume, ctx.currentTime, 0.02);
   }
 
-  /* ──────────────────────────── воспроизведение ──────────────────────────── */
-
-  /**
-   * Готовит из партитуры плоский список: когда, что и сколько звучит.
-   * Пауза в список не попадает — она просто занимает время.
-   */
   function build(score) {
     const sc = ns.score;
     const per = sc.tickSeconds(score);
@@ -137,8 +110,7 @@ window.Partitura = window.Partitura || {};
     while (cursor < queue.length && startAt + queue[cursor].at < now + SCHEDULE_AHEAD) {
       const item = queue[cursor];
       item.pitches.forEach(function (pitch) {
-        // Нота звучит чуть дольше своей длительности: живое пианино не
-        // обрывается ровно по доле, и без этого мелодия звучит рублено
+
         voice(startAt + item.at, pitch, item.seconds * 0.98, 1);
       });
       cursor++;

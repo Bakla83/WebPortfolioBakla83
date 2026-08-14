@@ -15,19 +15,12 @@
 
 <link rel="stylesheet" href="css/style.css" />
 
-<!-- Язык, палитра и режим движения применяются ДО отрисовки страницы:
-     иначе посетитель на долю секунды видит русскую версию в палитре по
-     умолчанию, и только потом JS переключает её на сохранённую. -->
 <script src="inline-1.js"></script>
 </head>
 <body>
 
 <a class="skip-link" href="#main" data-i18n="a11y.skip">Перейти к содержимому</a>
 
-<!-- ================================================================ ФОН -->
-<!-- Два слоя. CSS-слой даёт мягкий свет мастерской и не нагружает
-     процессор, canvas — вся взвесь, которая реагирует на курсор и
-     прокрутку. Оба помечены aria-hidden: для скринридера это декорация. -->
 <div class="bg" aria-hidden="true">
   <div class="bg__wash"></div>
   <div class="bg__beam"></div>
@@ -37,7 +30,6 @@
 </div>
 <canvas id="bg-canvas" class="bg-canvas" aria-hidden="true"></canvas>
 
-<!-- ============================================================= ШАПКА -->
 <header class="site-header" id="top">
   <div class="wrap site-header__inner">
     <a class="brand" href="#top">
@@ -85,10 +77,8 @@
 
 <main id="main">
 
-  <!-- ============================================================ ГЕРОЙ -->
   <section class="hero">
-    <!-- Лошади вокруг заголовка. data-depth задаёт, насколько сильно
-         силуэт смещается за курсором: чем больше, тем «ближе» к зрителю. -->
+
     <div class="hero__garden" id="hero-garden" aria-hidden="true">
       <div class="hero__horse" data-horse="black"    data-pose="stand" data-seed="3"  data-depth="14" style="--x:-4%;  --y:54%; --s:1.35; --o:.16; --d:0s"></div>
       <div class="hero__horse" data-horse="grey"     data-pose="low"   data-seed="17" data-depth="26" style="--x:72%;  --y:16%; --s:0.72; --o:.2;  --d:.5s"></div>
@@ -101,9 +91,7 @@
 
       <h1 class="hero__title">
         <span class="hero__line" data-kinetic data-i18n="hero.title1">Модель, у которой</span>
-        <!-- Вторая строка намеренно НЕ разбивается на буквы: у неё
-             градиентная заливка через background-clip, а transform на
-             дочерних элементах её ломает — буквы становятся прозрачными. -->
+
         <span class="hero__line hero__line--accent" data-i18n="hero.title2">есть характер</span>
       </h1>
 
@@ -133,7 +121,6 @@
     <span class="hero__scroll" aria-hidden="true"><span data-i18n="hero.scroll">Листайте</span></span>
   </section>
 
-  <!-- =========================================================== РАБОТЫ -->
   <section class="section" id="works">
     <div class="wrap">
       <header class="section__head reveal">
@@ -141,16 +128,10 @@
         <p class="section__lead" data-i18n="works.lead">Каждая модель существует в одном экземпляре: повторить масть можно, но никогда не буквально — слои ложатся заново.</p>
       </header>
 
-      <!-- Карточки собираются в js/main.js: имена, масти и статусы приходят
-           из словарей, фотографии подхватываются из img/work-N.jpg. -->
       <div class="works" id="works-grid"></div>
     </div>
   </section>
 
-  <!-- ============================================================= ЗИТА -->
-  <!-- Отдельный раздел, потому что это единственное место на странице, где
-       автор выступает не перекрасчиком чужой отливки, а скульптором: Зита
-       разработана ею самой, и два перекраса ниже сделаны на своей же модели. -->
   <section class="section section--zita" id="zita">
     <div class="wrap">
       <header class="section__head reveal">
@@ -158,8 +139,6 @@
         <p class="section__lead" data-i18n="zita.lead">Зита была разработана мной, а скульптура появилась на свет благодаря команде Horsestation. Сначала появилось нарисованное превью, затем скульптура, а дальше — перекрасы: одна и та же Зита в разных мастях.</p>
       </header>
 
-      <!-- Превью стоит первым и крупнее прочих: раздел про то, что сначала
-           появляется замысел, и порядок чтения должен это повторять. -->
       <div class="sketch reveal">
         <figure class="sketch__item sketch__item--plan">
           <img src="img/zitaimg.jpg" alt="Нарисованное превью модели Зита" data-i18n-alt="zita.alt1" loading="lazy" />
@@ -179,7 +158,6 @@
     </div>
   </section>
 
-  <!-- ============================================================ СТУДИЯ -->
   <section class="section section--studio" id="studio">
     <div class="wrap">
       <header class="section__head reveal">
@@ -193,7 +171,7 @@
           <div class="studio__plate">
             <span class="studio__caption" id="studio-caption">Гнедая</span>
             <p class="studio__note" id="studio-note"></p>
-            <!-- Карточка модели: то же, что уходит в заявку. -->
+
             <dl class="studio__spec" id="studio-spec" data-i18n-aria-label="studio.specTitle" aria-label="Карточка модели"></dl>
           </div>
         </div>
@@ -231,7 +209,6 @@
     </div>
   </section>
 
-  <!-- ============================================================= ЭТАПЫ -->
   <section class="section" id="process">
     <div class="wrap">
       <header class="section__head reveal">
@@ -243,7 +220,6 @@
     </div>
   </section>
 
-  <!-- ============================================================= МАСТИ -->
   <section class="section section--coats" id="coats">
     <div class="wrap">
       <header class="section__head reveal">
@@ -255,7 +231,6 @@
     </div>
   </section>
 
-  <!-- ============================================================ АВТОР -->
   <section class="section section--author" id="author">
     <div class="wrap">
       <div class="author reveal">
@@ -270,7 +245,6 @@
     </div>
   </section>
 
-  <!-- ========================================================== ВОПРОСЫ -->
   <section class="section" id="faq">
     <div class="wrap wrap--narrow">
       <header class="section__head reveal">
@@ -281,7 +255,6 @@
     </div>
   </section>
 
-  <!-- ========================================================= КОНТАКТЫ -->
   <section class="section section--contacts" id="contacts">
     <div class="wrap">
       <header class="section__head reveal">
@@ -328,7 +301,6 @@
 
 </main>
 
-<!-- ============================================================== ПОДВАЛ -->
 <footer class="site-footer">
   <div class="wrap site-footer__inner">
     <a class="brand brand--sm" href="#top">

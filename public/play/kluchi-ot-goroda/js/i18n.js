@@ -1,17 +1,3 @@
-/*
-  Локализация.
-
-  Ключ data-i18n="a.b" ищется как I18N[lang].a.b. Разметка в index.html
-  заполнена русским: если скрипт не выполнится, страница останется читаемой,
-  просто без переключателя языков.
-
-  Атрибуты переводятся отдельно — data-i18n-content (meta),
-  data-i18n-placeholder, data-i18n-aria-label: у одного элемента видимый
-  текст и подпись для скринридера часто разные.
-
-  Здесь только слова. Цены, расстояния и вместимость машин лежат в js/main.js:
-  их не переводят, их считают.
-*/
 window.Kluchi = window.Kluchi || {};
 
 (function (ns) {
@@ -58,7 +44,7 @@ window.Kluchi = window.Kluchi || {};
       hero: {
         tagline: 'Аэропорт · терминал прилёта',
         titleTop: 'В новом городе вас',
-        // Три обещания по числу услуг. Перещёлкиваются на табло.
+
         board: ['ВСТРЕТЯТ', 'ДОВЕЗУТ', 'ПРОВЕДУТ', 'ПОКАЖУТ', 'РАССКАЖУТ'],
         lead:
           'Водитель ждёт у выхода с табличкой, следит за вашим рейсом и не уедет, если самолёт задержали. Цена известна заранее и не меняется в пути.',
@@ -602,7 +588,6 @@ window.Kluchi = window.Kluchi || {};
     return SUPPORTED.indexOf(attr) !== -1 ? attr : 'ru';
   }
 
-  /** Переводит статическую разметку. Динамические блоки строит main.js. */
   function applyLang(lang) {
     document.documentElement.setAttribute('lang', lang);
 
@@ -626,7 +611,6 @@ window.Kluchi = window.Kluchi || {};
       if (typeof value === 'string') el.setAttribute('aria-label', value);
     });
 
-    // <title> живёт вне <body> и под общий обход не попадает
     const title = t(lang, 'meta.title');
     if (typeof title === 'string') document.title = title;
 
@@ -652,7 +636,7 @@ window.Kluchi = window.Kluchi || {};
     get: getLang,
     set: setLang,
     apply: applyLang,
-    /** Подписка на смену языка. Вызывается и при первом применении. */
+
     onChange: function (fn) {
       listeners.push(fn);
     },

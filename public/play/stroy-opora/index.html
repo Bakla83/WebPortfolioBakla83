@@ -6,7 +6,7 @@
 <title>ОПОРА — строительная компания</title>
 <meta name="description" id="metaDescription" content="ОПОРА — строим то, на что можно опереться. Частные дома, реконструкция, коммерческие объекты. Надёжность, зафиксированная в договоре, и уважение к клиенту на каждом этапе.">
 <style>
-  /* ============ Tokens ============ */
+
   :root{
     --paper: #EAE4D8;
     --paper-2: #DED6C6;
@@ -82,7 +82,6 @@
     --icon-sun-display: block; --icon-moon-display: none;
   }
 
-  /* ============ Reset ============ */
   *,*::before,*::after{ box-sizing: border-box; }
   html{ scroll-behavior: smooth; }
   @media (prefers-reduced-motion: reduce){
@@ -121,7 +120,6 @@
   .dim-line::before,.dim-line::after{ content:""; flex:1; height:1px; background: var(--line); }
   .dim-line span{ font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
 
-  /* ============ Topbar ============ */
   .topbar{
     position: sticky; top:0; z-index: 40;
     background: color-mix(in srgb, var(--paper) 92%, transparent);
@@ -187,7 +185,6 @@
     }
   }
 
-  /* ============ Sheet rail (desktop only) ============ */
   .sheet-rail{
     position: fixed; left: 1.1rem; top:50%; transform: translateY(-50%); z-index: 30;
     display:flex; flex-direction:column; gap: 1.1rem;
@@ -204,7 +201,6 @@
   .sheet-rail a:hover .label,.sheet-rail a.active .label{ opacity:1; transform:none; }
   @media (max-width: 1180px){ .sheet-rail{ display:none; } }
 
-  /* ============ Sheet sections ============ */
   .sheet{
     border-bottom: 1px solid var(--line);
     padding-block: var(--space-6) var(--space-5);
@@ -220,7 +216,6 @@
   .sheet-header h2{ font-size: clamp(1.7rem, 3.4vw, 2.5rem); margin-top:0.3rem; }
   .sheet-header .meta{ font-family: var(--font-mono); font-size:0.7rem; color: var(--ink-faint); letter-spacing:0.06em; text-align:right; }
 
-  /* ============ Hero ============ */
   .hero{ padding-top: var(--space-5); border-bottom: 1px solid var(--line); opacity:1; transform:none; }
   .hero-grid{ display:grid; grid-template-columns: 1.35fr 0.85fr; gap: var(--space-5); align-items:center; }
   @media (max-width: 900px){ .hero-grid{ grid-template-columns: 1fr; gap: var(--space-4); } }
@@ -244,7 +239,6 @@
   @keyframes spin{ to{ transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce){ .seal, .seal .ring{ animation: none; } }
 
-  /* ============ About / clauses ============ */
   .clauses{ display:grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
   @media (max-width: 800px){ .clauses{ grid-template-columns: 1fr; } }
   .clause{ padding: var(--space-3); background: var(--paper-3); border: 1px solid var(--line); border-radius: var(--radius); }
@@ -259,7 +253,6 @@
   .founder-note blockquote{ font-family: var(--font-body); font-style: italic; font-size:1.2rem; color: var(--ink); margin:0; flex:1; min-width:260px; }
   .founder-note cite{ display:block; margin-top:0.6rem; font-style:normal; font-family: var(--font-mono); font-size:0.75rem; color: var(--ink-faint); }
 
-  /* ============ Services table ============ */
   .service-table{ display:flex; flex-direction:column; }
   .service-row{
     display:grid; grid-template-columns: 3rem 1.4fr 2fr auto; gap: var(--space-3); align-items:center;
@@ -276,7 +269,6 @@
     .service-row p{ grid-area:desc; } .service-row .dur{ grid-area:dur; }
   }
 
-  /* ============ Process timeline ============ */
   .timeline{ display:grid; grid-template-columns: repeat(5,1fr); gap: var(--space-2); }
   @media (max-width: 900px){ .timeline{ grid-template-columns: 1fr; } }
   .tl-step{ position:relative; padding-top: var(--space-2); }
@@ -287,7 +279,6 @@
   .tl-step p{ font-size:0.88rem; color: var(--ink-soft); margin-top:0.4rem; }
   .tl-step .dur{ display:block; margin-top:0.6rem; font-family: var(--font-mono); font-size:0.7rem; color: var(--ink-faint); text-transform:uppercase; }
 
-  /* ============ Projects ============ */
   .projects{ display:grid; grid-template-columns: repeat(2,1fr); gap: var(--space-3); }
   @media (max-width: 760px){ .projects{ grid-template-columns: 1fr; } }
   .project-card{ border: 1px solid var(--line); background: var(--paper-3); border-radius: var(--radius); overflow:hidden; }
@@ -298,7 +289,6 @@
   .project-body .loc{ font-size:0.85rem; color: var(--ink-faint); margin-top:0.25rem; }
   .project-spec{ margin-top:0.8rem; font-family: var(--font-mono); font-size:0.72rem; color: var(--ink-soft); letter-spacing:0.03em; }
 
-  /* ============ Reviews ============ */
   .reviews{ display:grid; grid-template-columns: repeat(3,1fr); gap: var(--space-3); }
   @media (max-width: 900px){ .reviews{ grid-template-columns: 1fr; } }
   .review-card{ border: 1px solid var(--line); padding: var(--space-3); background: var(--paper-3); border-radius: var(--radius); display:flex; flex-direction:column; gap: var(--space-2); }
@@ -307,7 +297,6 @@
   .review-foot .who{ font-size:0.82rem; color: var(--ink-soft); }
   .review-foot .stamp{ font-family: var(--font-mono); font-size:0.65rem; color: var(--accent-ink); text-transform:uppercase; letter-spacing:0.06em; border:1px solid var(--accent); padding:2px 6px; border-radius: var(--radius); }
 
-  /* ============ Contact (blueprint) ============ */
   .sheet--blueprint{ background: var(--blueprint); color: var(--blueprint-text); border-bottom:none; }
   .sheet--blueprint .eyebrow{ color: var(--blueprint-line); }
   .sheet--blueprint .sheet-header .num{ color: var(--blueprint-line); }
@@ -344,7 +333,6 @@
   .form-success{ display:none; font-family: var(--font-mono); font-size:0.82rem; color: #B9E0B0; margin-top:0.6rem; }
   .form-success.show{ display:block; }
 
-  /* ============ Footer ============ */
   footer{ background: var(--blueprint); color: var(--blueprint-text-soft); }
   .foot-wrap{ display:flex; justify-content:space-between; align-items:center; padding-block: var(--space-3); flex-wrap:wrap; gap:1rem; border-top:1px solid var(--blueprint-line); font-family: var(--font-mono); font-size:0.72rem; letter-spacing:0.03em; }
 </style>
@@ -400,7 +388,6 @@
 
 <main>
 
-  <!-- HERO -->
   <section class="sheet hero" id="hero">
     <div class="wrap hero-grid">
       <div>
@@ -444,7 +431,6 @@
     </div>
   </section>
 
-  <!-- ABOUT -->
   <section class="sheet" id="about">
     <div class="wrap">
       <div class="sheet-header">
@@ -477,7 +463,6 @@
     </div>
   </section>
 
-  <!-- SERVICES -->
   <section class="sheet" id="services">
     <div class="wrap">
       <div class="sheet-header">
@@ -523,7 +508,6 @@
     </div>
   </section>
 
-  <!-- PROCESS -->
   <section class="sheet" id="process">
     <div class="wrap">
       <div class="sheet-header">
@@ -569,7 +553,6 @@
     </div>
   </section>
 
-  <!-- PROJECTS -->
   <section class="sheet" id="projects">
     <div class="wrap">
       <div class="sheet-header">
@@ -661,7 +644,6 @@
     </div>
   </section>
 
-  <!-- REVIEWS -->
   <section class="sheet" id="reviews">
     <div class="wrap">
       <div class="sheet-header">
@@ -698,7 +680,6 @@
     </div>
   </section>
 
-  <!-- CONTACT -->
   <section class="sheet sheet--blueprint" id="contact">
     <div class="wrap">
       <div class="sheet-header">

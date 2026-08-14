@@ -1,27 +1,17 @@
-/* ============================================================
-   Дизайн-система портфолио
-   Тёмная тема — база (она же фолбэк без JS), светлая — переопределение
-   через :root[data-theme="light"]. Атрибут ставит инлайн-скрипт в <head>
-   до первой отрисовки, поэтому вспышки не той темы нет.
-   ============================================================ */
-
 :root {
-  /* --- Поверхности --- */
+
   --bg: #08080b;
   --bg-elev: #101016;
   --bg-elev-2: #17171f;
   --bg-sunken: #050507;
 
-  /* --- Текст --- */
   --ink: #f2f0ea;
   --ink-dim: #a5a29a;
   --ink-faint: #6d6a63;
 
-  /* --- Линии --- */
   --line: rgba(255, 255, 255, 0.09);
   --line-strong: rgba(255, 255, 255, 0.16);
 
-  /* --- Акценты --- */
   --gold: #e9b949;
   --gold-bright: #f6cd66;
   --gold-soft: rgba(233, 185, 73, 0.13);
@@ -30,21 +20,18 @@
   --green: #3dd68c;
   --green-soft: rgba(61, 214, 140, 0.14);
 
-  /* Текст поверх золотой заливки */
   --on-gold: #17140a;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.6);
   --shadow-lg: 0 24px 60px -20px rgba(0, 0, 0, 0.75);
 
-  /* --- Типографика --- */
   --font-display: "Segoe UI Variable Display", "SF Pro Display", system-ui,
     -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-body: "Segoe UI Variable Text", "SF Pro Text", system-ui, -apple-system,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, Menlo, monospace;
 
-  /* --- Ритм --- */
   --space-1: 0.5rem;
   --space-2: 1rem;
   --space-3: 1.5rem;
@@ -75,7 +62,6 @@
   --line: rgba(20, 19, 26, 0.12);
   --line-strong: rgba(20, 19, 26, 0.22);
 
-  /* Золото на белом требует затемнения, иначе контраст ниже нормы AA */
   --gold: #8a5d0a;
   --gold-bright: #6f4a06;
   --gold-soft: rgba(138, 93, 10, 0.1);
@@ -92,10 +78,6 @@
 
   color-scheme: light;
 }
-
-/* ============================================================
-   База
-   ============================================================ */
 
 *,
 *::before,
@@ -120,7 +102,7 @@ body {
   text-rendering: optimizeLegibility;
   display: flex;
   flex-direction: column;
-  /* Ни одна секция не должна давать горизонтальную прокрутку на телефоне */
+
   overflow-x: hidden;
 }
 
@@ -192,7 +174,6 @@ ol {
   padding-left: 1.25rem;
 }
 
-/* Видимый фокус обязателен: по сайту должно быть можно ходить с клавиатуры */
 :focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 3px;
@@ -217,10 +198,6 @@ ol {
     scroll-behavior: auto !important;
   }
 }
-
-/* ============================================================
-   Служебное
-   ============================================================ */
 
 .wrap {
   width: 100%;
@@ -289,10 +266,6 @@ main {
   color: var(--ink-dim);
 }
 
-/* ============================================================
-   Кнопки
-   ============================================================ */
-
 .btn {
   display: inline-flex;
   align-items: center;
@@ -333,10 +306,6 @@ main {
   color: var(--gold);
 }
 
-/* ============================================================
-   Теги / чипы
-   ============================================================ */
-
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -375,10 +344,6 @@ main {
   background: var(--green-soft);
   color: var(--green);
 }
-
-/* ============================================================
-   Сетка карточек
-   ============================================================ */
 
 .card-grid {
   display: grid;

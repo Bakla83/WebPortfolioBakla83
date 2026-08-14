@@ -1,14 +1,7 @@
 import type { Project } from './types';
 
-/**
- * Локальное наполнение сайта.
- *
- * Это же содержимое дублируется схемой Sanity (см. studio/): когда CMS
- * подключена, данные берутся оттуда, а этот файл остаётся страховкой —
- * сайт соберётся, даже если CMS недоступна. См. src/lib/content.ts.
- */
 export const PROJECTS: Project[] = [
-  /* ---------------------------------------------------------------- ПК-игры */
+
   {
     slug: 'the-hidden-library',
     section: 'pc-games',
@@ -99,7 +92,6 @@ export const PROJECTS: Project[] = [
     ],
   },
 
-  /* -------------------------------------------------------------- Веб-игры */
   {
     slug: 'salt-run',
     section: 'web-games',
@@ -170,8 +162,7 @@ export const PROJECTS: Project[] = [
     ],
     demo: {
       src: '/play/salt-run/index.html',
-      // Игра портретная — в широкой рамке она смотрелась бы полоской
-      // по центру серого поля.
+
       ratio: '10 / 16',
       maxWidth: '420px',
       note: {
@@ -182,7 +173,6 @@ export const PROJECTS: Project[] = [
     links: [{ kind: 'live', url: '/play/salt-run/index.html' }],
   },
 
-  /* -------------------------------------------------------------- Лендинги */
   {
     slug: 'hrebet',
     section: 'landings',
@@ -574,7 +564,6 @@ export const PROJECTS: Project[] = [
     links: [{ kind: 'live', url: '/play/kluchi-ot-goroda/index.html' }],
   },
 
-  /* ------------------------------------------------------------ Веб-сайты */
   {
     slug: 'chto-prigotovit',
     section: 'websites',
@@ -791,8 +780,7 @@ export const PROJECTS: Project[] = [
     ],
     demo: {
       src: '/play/partitura/index.html',
-      // Работа высокая: панель, лист и клавиатура друг под другом.
-      // В привычной рамке 16/10 пианино оказалось бы за нижним краем.
+
       ratio: '4 / 3',
       note: {
         ru: 'Кликните по нотному стану или по клавише пианино — нота встанет в лист. «Играть» проигрывает набранное, подсвечивая ноту и клавишу.',
@@ -884,7 +872,6 @@ export const PROJECTS: Project[] = [
     links: [{ kind: 'live', url: '/play/vetka/index.html' }],
   },
 
-  /* -------------------------------------------------- Мобильные приложения */
   {
     slug: 'chto-prigotovit-android',
     section: 'mobile-apps',
@@ -920,9 +907,7 @@ export const PROJECTS: Project[] = [
         'A fully vector adaptive icon — no per-density PNGs at all',
       ],
     },
-    /* Обложка собрана из трёх снимков экрана (tools/screens.mjs): карточка
-       в списке работ режет картинку под 16/10, и одиночный вертикальный
-       снимок превратился бы в полосу из середины экрана. */
+
     cover: {
       src: '/media/chto-prigotovit-android/cover.jpg',
       width: 2160,
@@ -974,7 +959,7 @@ export const PROJECTS: Project[] = [
       },
     ],
   },
-  /* ----------------------------------------------------------- 3D-модели */
+
   {
     slug: 'beetle',
     section: 'models-3d',

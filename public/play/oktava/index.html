@@ -15,15 +15,12 @@
 
 <link rel="stylesheet" href="css/style.css" />
 
-<!-- Язык ставится до отрисовки, иначе видно вспышку русской версии
-     перед тем, как скрипт применит сохранённый выбор. -->
 <script src="inline-1.js"></script>
 </head>
 <body>
 
 <a class="skip-link" href="#studio" data-i18n="a11y.skip">Перейти к студии</a>
 
-<!-- ═════════════════════════════ СПРАЙТ ═════════════════════════════ -->
 <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
   <defs>
     <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></symbol>
@@ -39,7 +36,6 @@
   </defs>
 </svg>
 
-<!-- ══════════════════════════════ ШАПКА ══════════════════════════════ -->
 <header class="topbar">
   <div class="brand">
     <span class="brand__mark" aria-hidden="true">
@@ -66,7 +62,6 @@
 
 <main id="studio">
 
-  <!-- ════════════════════════════ ТРАНСПОРТ ════════════════════════════ -->
   <section class="transport" data-i18n-aria-label="a11y.transport" aria-label="Управление воспроизведением">
     <button class="play" id="play" type="button" aria-pressed="false">
       <svg class="icon icon--play" aria-hidden="true"><use href="#i-play"/></svg>
@@ -101,15 +96,12 @@
     </button>
   </section>
 
-  <!-- ════════════════════════════ ДОРОЖКИ ════════════════════════════ -->
   <section class="tracks">
     <h2 class="visually-hidden" data-i18n="tracks.title">Дорожки</h2>
-    <!-- Не role="tablist": это не вкладки с панелями, а переключатель того,
-         чью партию сейчас редактируем. Кнопки с aria-pressed честнее. -->
+
     <div class="tracks__tabs" id="track-tabs" role="group" data-i18n-aria-label="a11y.tracks" aria-label="Выбор дорожки"></div>
   </section>
 
-  <!-- ═══════════════════════════ СЕКВЕНСОР ═══════════════════════════ -->
   <section class="seq">
     <div class="seq__head">
       <h2 class="seq__title" id="seq-title">—</h2>
@@ -122,7 +114,6 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════ КЛАВИАТУРА ═══════════════════════════ -->
   <section class="live">
     <div class="live__head">
       <h2 class="live__title" data-i18n="keys.title">Живая игра</h2>
@@ -137,7 +128,6 @@
     <div class="keys" id="keys" role="group" data-i18n-aria-label="a11y.keys" aria-label="Клавиатура инструмента"></div>
   </section>
 
-  <!-- ═════════════════════════════ ЭКСПОРТ ═════════════════════════════ -->
   <section class="export">
     <div class="export__intro">
       <h2 class="export__title" data-i18n="export.title">Сохранить на устройство</h2>
@@ -176,7 +166,6 @@
   </section>
 </main>
 
-<!-- ══════════════════════════════ ПОДСКАЗКА ══════════════════════════════ -->
 <div class="sheet" id="help" hidden>
   <div class="sheet__panel" role="dialog" aria-modal="true" data-i18n-aria-label="help.title" aria-label="Как играть">
     <button class="sheet__close" id="help-close" type="button" data-i18n-aria-label="a11y.close" aria-label="Закрыть">

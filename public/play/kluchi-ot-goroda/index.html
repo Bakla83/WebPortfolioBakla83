@@ -15,16 +15,12 @@
 
 <link rel="stylesheet" href="css/style.css" />
 
-<!-- Тема и язык ставятся до отрисовки: иначе видно вспышку дневной
-     русской версии перед тем, как скрипт применит сохранённый выбор.
-     Ночная тема здесь не каприз — половина рейсов приходит затемно. -->
 <script src="inline-1.js"></script>
 </head>
 <body>
 
 <a class="skip-link" href="#main" data-i18n="a11y.skip">Перейти к содержанию</a>
 
-<!-- ═══════════════════════════ СПРАЙТ ═══════════════════════════ -->
 <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
   <defs>
     <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
@@ -43,7 +39,6 @@
   </defs>
 </svg>
 
-<!-- ════════════════════════════ ШАПКА ════════════════════════════ -->
 <header class="site-header" id="site-header">
   <div class="container header__inner">
     <a class="brand" href="#top">
@@ -86,7 +81,6 @@
 
 <main id="main">
 
-  <!-- ═══════════════════════════ ГЕРОЙ ═══════════════════════════ -->
   <section class="hero" id="top">
     <div class="hero__grid" aria-hidden="true"></div>
 
@@ -105,8 +99,7 @@
 
       <h1 class="hero__title">
         <span class="hero__title-static" data-i18n="hero.titleTop">В новом городе вас</span>
-        <!-- Табло: строка перещёлкивается между тремя обещаниями,
-             по одному на каждую услугу. -->
+
         <span class="board" id="board" data-i18n-aria-label="a11y.board" aria-label="Встретят, довезут, покажут город"></span>
       </h1>
 
@@ -136,7 +129,6 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════ УСЛУГИ ══════════════════════════ -->
   <section class="section services" id="services">
     <div class="container">
       <header class="section__head">
@@ -184,7 +176,6 @@
     </div>
   </section>
 
-  <!-- ════════════════════════ КАЛЬКУЛЯТОР ════════════════════════ -->
   <section class="section section--dark calc" id="calc">
     <div class="container">
       <header class="section__head">
@@ -213,7 +204,7 @@
 
           <div class="field">
             <label class="field__label" for="calc-dest" data-i18n="calc.dest">Куда едем</label>
-            <select class="input" id="calc-dest"><!-- варианты строит js/main.js --></select>
+            <select class="input" id="calc-dest"></select>
           </div>
 
           <div class="field-row">
@@ -246,8 +237,6 @@
           </fieldset>
         </form>
 
-        <!-- Итог намеренно оформлен как посадочный купон: это то, что
-             человек будет сверять с подтверждением. -->
         <aside class="ticket" aria-live="polite">
           <div class="ticket__head">
             <span class="ticket__from" id="ticket-from">AER</span>
@@ -255,7 +244,7 @@
             <span class="ticket__to" id="ticket-to">—</span>
           </div>
 
-          <dl class="ticket__rows" id="ticket-rows"><!-- строки строит js/main.js --></dl>
+          <dl class="ticket__rows" id="ticket-rows"></dl>
 
           <div class="ticket__total">
             <span data-i18n="calc.total">Итого</span>
@@ -271,7 +260,6 @@
     </div>
   </section>
 
-  <!-- ═════════════════════════ КАК ПРОХОДИТ ═════════════════════════ -->
   <section class="section how" id="how">
     <div class="container">
       <header class="section__head">
@@ -283,8 +271,7 @@
       </header>
 
       <div class="how__track">
-        <!-- Машинка едет по линии по мере прокрутки: положение берётся
-             из getPointAtLength, поэтому иконка идёт точно по кривой. -->
+
         <svg class="how__line" viewBox="0 0 1000 120" preserveAspectRatio="none" aria-hidden="true">
           <path id="how-path" d="M20 92 C180 92 200 24 340 24 C480 24 500 96 660 96 C800 96 830 30 980 30" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 9"/>
         </svg>
@@ -323,7 +310,6 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════ ЭКСКУРСИИ ═══════════════════════════ -->
   <section class="section section--paper tours" id="tours">
     <div class="container">
       <header class="section__head">
@@ -336,12 +322,11 @@
 
       <div class="chips" id="tour-filters" role="group" data-i18n-aria-label="a11y.filter" aria-label="Фильтр экскурсий"></div>
 
-      <div class="tours__grid" id="tours-grid"><!-- карточки строит js/main.js --></div>
+      <div class="tours__grid" id="tours-grid"></div>
       <p class="tours__empty" id="tours-empty" hidden data-i18n="tours.empty">В этом направлении пока ничего нет — напишите, соберём под вас.</p>
     </div>
   </section>
 
-  <!-- ═════════════════════════════ МАШИНЫ ════════════════════════════ -->
   <section class="section fleet" id="fleet">
     <div class="container">
       <header class="section__head">
@@ -352,22 +337,20 @@
         </p>
       </header>
 
-      <div class="fleet__grid" id="fleet-grid"><!-- карточки строит js/main.js --></div>
+      <div class="fleet__grid" id="fleet-grid"></div>
     </div>
   </section>
 
-  <!-- ═════════════════════════════ ОТЗЫВЫ ════════════════════════════ -->
   <section class="section section--dark voices">
     <div class="container">
       <header class="section__head">
         <p class="eyebrow" data-i18n="voices.eyebrow">Отзывы</p>
         <h2 class="section__title" data-i18n="voices.title">Что пишут после поездки</h2>
       </header>
-      <div class="voices__grid" id="voices-grid"><!-- карточки строит js/main.js --></div>
+      <div class="voices__grid" id="voices-grid"></div>
     </div>
   </section>
 
-  <!-- ════════════════════════════ ЗАЯВКА ═════════════════════════════ -->
   <section class="section contacts" id="contacts">
     <div class="container contacts__layout">
       <div class="contacts__intro">
@@ -432,7 +415,6 @@
   </section>
 </main>
 
-<!-- ════════════════════════════ ПОДВАЛ ═════════════════════════════ -->
 <footer class="site-footer">
   <div class="container footer__inner">
     <div class="footer__brand">

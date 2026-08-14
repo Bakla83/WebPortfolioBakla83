@@ -1,35 +1,16 @@
-/*
-  Звуковой движок.
-
-  Ни одного звукового файла в проекте нет — всё считается на месте через
-  Web Audio. Причина не в экономии: сэмплы пришлось бы грузить перед первым
-  звуком, а студия должна отвечать на нажатие мгновенно. Заодно вся вещь
-  весит десятки килобайт вместо десятков мегабайт.
-
-  Главное требование к каждому голосу: он должен одинаково работать и в
-  живом AudioContext, и в OfflineAudioContext, через который делается
-  экспорт в .wav. Поэтому голоса собираются только из узлов и посчитанных
-  буферов — ничего, что зависит от реального времени.
-
-  Строй: минорная пентатоника от до. Выбрана намеренно — в ней почти нет
-  сочетаний, звучащих фальшиво, и человек без музыкального образования
-  собирает что-то приятное с первого раза.
-*/
 window.Oktava = window.Oktava || {};
 
 (function (ns) {
   'use strict';
 
-  /** Полутона минорной пентатоники относительно тоники. */
   const PENTA = [0, 3, 5, 7, 10];
-  /** До третьей октавы — нижняя нота сетки. */
+
   const ROOT_MIDI = 48;
-  /** Две октавы пентатоники: пять ступеней на октаву. */
+
   const ROWS = 10;
 
   const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
-  /** Барабаны раскладываются по тем же рядам сетки, но звуками. */
   const DRUM_KINDS = ['kick', 'snare', 'hat', 'clap'];
 
   function rowToMidi(row) {
@@ -45,14 +26,6 @@ window.Oktava = window.Oktava || {};
     return NOTE_NAMES[midi % 12] + (Math.floor(midi / 12) - 1);
   }
 
-  /* ─────────────────────────── общие заготовки ─────────────────────────── */
-
-  /*
-    Кэши привязаны к контексту, а не глобальные: у живого и у офлайнового
-    разная частота дискретизации, и буфер из одного в другом звучал бы не
-    той высотой. WeakMap — чтобы офлайновый контекст после экспорта
-    собрался сборщиком мусора вместе со своими буферами.
-  */
   const noiseCache = new WeakMap();
   const pluckCache = new WeakMap();
 
@@ -69,12 +42,6 @@ window.Oktava = window.Oktava || {};
     return buf;
   }
 
-  /**
-   * Струна по Карплусу — Стронгу: короткий шумовой всплеск гоняется по
-   * задержке длиной в период ноты и на каждом обороте усредняется с
-   * соседним отсчётом. Усреднение съедает высокие частоты быстрее низких,
-   * и получается именно затухание щипка, а не просто убывающая громкость.
-   */
   function pluckBuffer(ctx, freq, seconds, damping) {
     let cache = pluckCache.get(ctx);
     if (!cache) {
@@ -102,15 +69,12 @@ window.Oktava = window.Oktava || {};
     return buf;
   }
 
-  /** Экспоненциальный спад: к нулю ramp не умеет, поэтому целимся в 0.0001. */
   function decay(param, ctx, t0, peak, seconds) {
     param.cancelScheduledValues(t0);
     param.setValueAtTime(0.0001, t0);
     param.exponentialRampToValueAtTime(peak, t0 + 0.006);
     param.exponentialRampToValueAtTime(0.0001, t0 + seconds);
   }
-
-  /* ────────────────────────────── инструменты ────────────────────────────── */
 
   function voicePiano(ctx, out, freq, t0, dur, vel) {
     const amp = ctx.createGain();
@@ -119,8 +83,6 @@ window.Oktava = window.Oktava || {};
     tone.frequency.setValueAtTime(4200, t0);
     tone.frequency.exponentialRampToValueAtTime(900, t0 + dur);
 
-    // Три частичных тона вместо одного: чистая синусоида на слух похожа
-    // на сигнал проверки связи, а не на инструмент
     const parts = [
       { type: 'triangle', mul: 1, gain: 1 },
       { type: 'sine', mul: 2, gain: 0.34 },
@@ -161,8 +123,7 @@ window.Oktava = window.Oktava || {};
   }
 
   function voiceBell(ctx, out, freq, t0, dur, vel) {
-    // Частотная модуляция с нецелым отношением — так получаются
-    // негармоничные призвуки, из-за которых звук читается как металл
+
     const carrier = ctx.createOscillator();
     const mod = ctx.createOscillator();
     const modGain = ctx.createGain();
@@ -225,7 +186,7 @@ window.Oktava = window.Oktava || {};
       const osc = ctx.createOscillator();
       const amp = ctx.createGain();
       osc.type = 'sine';
-      // Резкий спад высоты и есть удар: без него слышен просто низкий гудок
+
       osc.frequency.setValueAtTime(145, t0);
       osc.frequency.exponentialRampToValueAtTime(44, t0 + 0.09);
       decay(amp.gain, ctx, t0, 1.0 * vel, 0.34);
@@ -250,8 +211,7 @@ window.Oktava = window.Oktava || {};
     }
 
     if (kind === 'clap') {
-      // Хлопок — это три коротких всплеска подряд, а не один: так его
-      // и записывают, когда в студии хлопает несколько человек
+
       [0, 0.013, 0.027].forEach(function (offset, i) {
         const src = ctx.createBufferSource();
         const bp = ctx.createBiquadFilter();
@@ -268,7 +228,6 @@ window.Oktava = window.Oktava || {};
       return;
     }
 
-    // snare: шум даёт треск, короткий тон — резонанс пластика
     const src = ctx.createBufferSource();
     const bp = ctx.createBiquadFilter();
     const amp = ctx.createGain();
@@ -298,10 +257,6 @@ window.Oktava = window.Oktava || {};
     bass: voiceBass,
   };
 
-  /**
-   * Единая точка: играет ряд `row` выбранным инструментом в момент `t0`.
-   * Барабаны берут из ряда номер звука, остальные — высоту.
-   */
   function play(ctx, out, instrument, row, t0, dur, vel) {
     if (instrument === 'drums') {
       const kind = DRUM_KINDS[row];
@@ -313,7 +268,6 @@ window.Oktava = window.Oktava || {};
     voice(ctx, out, midiToFreq(rowToMidi(row)), t0, dur, vel === undefined ? 1 : vel);
   }
 
-  /** Щелчок метронома: на сильную долю выше и громче. */
   function click(ctx, out, t0, strong) {
     const osc = ctx.createOscillator();
     const amp = ctx.createGain();
@@ -325,16 +279,6 @@ window.Oktava = window.Oktava || {};
     osc.stop(t0 + 0.1);
   }
 
-  /* ──────────────────────────── запись в файл ──────────────────────────── */
-
-  /**
-   * Кодирует отрендеренный буфер в WAV.
-   *
-   * Формат выбран намеренно: .wav собирается двадцатью строками без единой
-   * зависимости, открывается вообще всем и не теряет качества. Для mp3 или
-   * ogg пришлось бы тащить кодировщик в сотни килобайт — ради файла,
-   * который человек всё равно слушает один раз.
-   */
   function encodeWav(buffer) {
     const channels = buffer.numberOfChannels;
     const frames = buffer.length;
@@ -358,13 +302,13 @@ window.Oktava = window.Oktava || {};
     u32(bytes - 8);
     str('WAVE');
     str('fmt ');
-    u32(16); // длина блока fmt
-    u16(1); // 1 = несжатый PCM
+    u32(16);
+    u16(1);
     u16(channels);
     u32(buffer.sampleRate);
-    u32(buffer.sampleRate * channels * 2); // байт в секунду
-    u16(channels * 2); // выравнивание кадра
-    u16(16); // бит на отсчёт
+    u32(buffer.sampleRate * channels * 2);
+    u16(channels * 2);
+    u16(16);
     str('data');
     u32(frames * channels * 2);
 
@@ -373,8 +317,7 @@ window.Oktava = window.Oktava || {};
 
     for (let i = 0; i < frames; i++) {
       for (let c = 0; c < channels; c++) {
-        // Ограничение обязательно: сумма дорожек легко выходит за ±1,
-        // и без него громкие места превращаются в треск
+
         let s = data[c][i];
         if (s > 1) s = 1;
         else if (s < -1) s = -1;

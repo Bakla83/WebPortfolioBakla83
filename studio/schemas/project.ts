@@ -1,9 +1,5 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
 
-/**
- * Разделы сайта. Список повторяет SectionSlug из src/data/types.ts —
- * если добавляете раздел, править нужно в обоих местах.
- */
 const SECTIONS = [
   { title: 'Лендинги', value: 'landings' },
   { title: 'Веб-сайты', value: 'websites' },
@@ -13,13 +9,12 @@ const SECTIONS = [
   { title: '3D-модели', value: 'models-3d' },
 ];
 
-/** Картинка с обязательным alt: без него страдает доступность и SEO. */
 const imageWithAlt = (name: string, title: string) =>
   defineField({
     name,
     title,
     type: 'image',
-    // hotspot позволяет задать, какая часть кадра важна при обрезке
+
     options: { hotspot: true },
     fields: [
       defineField({
@@ -132,12 +127,7 @@ export const project = defineType({
       group: 'media',
       of: [defineArrayMember({ ...imageWithAlt('galleryImage', 'Картинка'), name: 'galleryImage' })],
     }),
-    /*
-      Запускаемая копия работы. Сюда попадает не загруженный файл, а путь
-      внутри самого сайта: копии кладёт `npm run demos` в public/play/<slug>/,
-      Sanity их не хранит и хранить не должна — это чужой статический сайт,
-      а не единица контента.
-    */
+
     defineField({
       name: 'demo',
       title: 'Запускаемая копия',
@@ -290,9 +280,7 @@ export const project = defineType({
               name: 'url',
               title: 'Адрес',
               type: 'url',
-              // Только http(s) и внутренние пути. Кнопка «Открыть проект» у
-              // веб-работ ведёт на запускаемую копию (/play/...), поэтому
-              // относительный адрес тоже допустим. mailto и javascript: — нет.
+
               validation: (rule) =>
                 rule.required().uri({ scheme: ['http', 'https'], allowRelative: true }),
             }),

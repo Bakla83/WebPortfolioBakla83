@@ -1,17 +1,3 @@
-/*
-  Схема репозитория: рабочая папка → индекс → коммиты → GitHub.
-
-  Анимация сделана приёмом FLIP: перед перерисовкой запоминаются координаты
-  всех карточек, после перерисовки каждая новая карточка сначала сдвигается
-  туда, где стояла её предшественница с тем же ключом, и только потом
-  отпускается в своё место. За счёт этого ничего не двигается «вручную»:
-  разметка каждый раз строится заново от состояния, а поездку файла из папки
-  в индекс браузер вычисляет сам.
-
-  Ключ карточки — file:<имя> или commit:<номер>. Поэтому коммит, улетающий
-  на GitHub, стартует из своей же точки в локальной истории: на схеме видно,
-  что push копирует, а не создаёт заново.
-*/
 window.Vetka = window.Vetka || {};
 
 (function (ns) {
@@ -41,8 +27,6 @@ window.Vetka = window.Vetka || {};
   function t(key) {
     return ns.i18n.t(ns.i18n.get(), key);
   }
-
-  /* ─────────────────────────────── карточки ─────────────────────────────── */
 
   function fileCard(name, state, badge) {
     return (
@@ -79,13 +63,10 @@ window.Vetka = window.Vetka || {};
     return '<p class="zone__empty">' + text + '</p>';
   }
 
-  /* ─────────────────────────────── отрисовка ─────────────────────────────── */
-
   function draw(state) {
     const engine = ns.engine;
     const groups = engine.classify(state);
 
-    /* — рабочая папка — */
     if (!state.inProject) {
       els.work.innerHTML = empty(state.dir ? t('zone.emptyOutside') : t('zone.emptyDesk'));
     } else if (!state.files.length) {
@@ -114,7 +95,6 @@ window.Vetka = window.Vetka || {};
         .join('');
     }
 
-    /* — индекс — */
     if (!state.inited) {
       els.index.innerHTML = empty(t('zone.noRepo'));
     } else if (!groups.staged.length) {
@@ -127,7 +107,6 @@ window.Vetka = window.Vetka || {};
         .join('');
     }
 
-    /* — локальная история — */
     if (!state.inited) {
       els.local.innerHTML = empty(t('zone.noRepoYet'));
       els.localSub.textContent = t('zone.localSub');
@@ -151,7 +130,6 @@ window.Vetka = window.Vetka || {};
         : empty(t('zone.noCommits'));
     }
 
-    /* — GitHub — */
     if (!state.remote) {
       els.remote.innerHTML = empty(t('zone.noRemote'));
       els.remoteSub.textContent = t('zone.remoteSub');
@@ -173,8 +151,6 @@ window.Vetka = window.Vetka || {};
     }
   }
 
-  /* ─────────────────────────────── анимация ─────────────────────────────── */
-
   function capture() {
     prevRects = {};
     document.querySelectorAll('[data-key]').forEach(function (el) {
@@ -182,12 +158,6 @@ window.Vetka = window.Vetka || {};
     });
   }
 
-  /**
-   * Откуда прилетает карточка, у которой нет предшественницы.
-   *
-   * Коммит появляется из индекса — там лежало то, из чего он собран;
-   * копия на GitHub стартует из своего же коммита в локальной истории.
-   */
   function originFor(key, events) {
     if (key.indexOf('commit:') !== 0) return null;
     const id = key.slice(7);
@@ -242,7 +212,6 @@ window.Vetka = window.Vetka || {};
     });
   }
 
-  /** Подсветка зоны, которой коснулась команда: видно, где искать изменение. */
   function highlight(events) {
     const zones = {
       files: 'work',
@@ -267,7 +236,7 @@ window.Vetka = window.Vetka || {};
       const zone = els.stage.querySelector('[data-zone="' + name + '"]');
       if (!zone) return;
       zone.classList.remove('is-hot');
-      void zone.offsetWidth; // перезапуск анимации
+      void zone.offsetWidth;
       zone.classList.add('is-hot');
       setTimeout(function () {
         zone.classList.remove('is-hot');

@@ -1,31 +1,10 @@
-/*
-  Модель партитуры и вся теория, которая для неё нужна.
-
-  Ключевое решение: нота хранится не номером MIDI, а ступенью нотного стана
-  плюс знаком. Ми-бемоль и ре-диез — это один и тот же звук, но разные ноты:
-  они стоят на разных линейках и пишутся разными знаками. Хранить MIDI
-  означало бы каждый раз гадать, что имел в виду человек, и портить ему
-  запись при первой же смене тональности.
-
-  Ступень (d) — сквозной номер по белым клавишам: d = октава * 7 + буква,
-  где буква C=0 … B=6. До первой октавы (C4, «до» под скрипичным ключом)
-  это 28. Отсюда одинаково просто считается и высота на стане (шаг на
-  полпромежутка), и номер MIDI.
-
-  Длительности считаются в тридцать вторых. Именно в них, а не в
-  шестнадцатых: иначе восьмая с точкой давала бы дробь, а дроби в счётчике
-  тактов рано или поздно накопили бы ошибку и сдвинули тактовую черту.
-*/
 window.Partitura = window.Partitura || {};
 
 (function (ns) {
   'use strict';
 
-  /* ────────────────────────────── величины ────────────────────────────── */
-
   const WHOLE = 32;
 
-  /** Порядок важен: он же порядок кнопок на панели и цифр 1–5. */
   const DURATIONS = [
     { id: 'whole', ticks: WHOLE },
     { id: 'half', ticks: WHOLE / 2 },
@@ -37,14 +16,10 @@ window.Partitura = window.Partitura || {};
   const LETTERS = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
   const LETTER_SEMITONES = [0, 2, 4, 5, 7, 9, 11];
 
-  /** Порядок появления знаков при ключе — по буквам. */
-  const SHARP_ORDER = [3, 0, 4, 1, 5, 2, 6]; // фа до соль ре ля ми си
-  const FLAT_ORDER = [6, 2, 5, 1, 4, 0, 3]; // си ми ля ре соль до фа
+  const SHARP_ORDER = [3, 0, 4, 1, 5, 2, 6];
+  const FLAT_ORDER = [6, 2, 5, 1, 4, 0, 3];
 
-  /** Тональности, доступные в выпадающем списке: от пяти бемолей до пяти диезов. */
   const FIFTHS_RANGE = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
-
-  /* ────────────────────────────── теория ────────────────────────────── */
 
   function letterOf(d) {
     return ((d % 7) + 7) % 7;
@@ -54,22 +29,16 @@ window.Partitura = window.Partitura || {};
     return Math.floor(d / 7);
   }
 
-  /** Ступень + знак → номер MIDI. C4 = 60. */
   function midiOf(d, alter) {
     return (octaveOf(d) + 1) * 12 + LETTER_SEMITONES[letterOf(d)] + alter;
   }
 
-  /** Что делает с этой буквой знак при ключе: −1, 0 или +1. */
   function keyAlter(fifths, letter) {
     if (fifths > 0) return SHARP_ORDER.slice(0, fifths).indexOf(letter) !== -1 ? 1 : 0;
     if (fifths < 0) return FLAT_ORDER.slice(0, -fifths).indexOf(letter) !== -1 ? -1 : 0;
     return 0;
   }
 
-  /**
-   * Реальная альтерация ноты: свой знак, если он проставлен, иначе — знак
-   * при ключе. acc === null означает «как в тональности».
-   */
   function alterOf(note, fifths) {
     return note.acc === null || note.acc === undefined ? keyAlter(fifths, letterOf(note.d)) : note.acc;
   }
@@ -78,14 +47,6 @@ window.Partitura = window.Partitura || {};
     return midiOf(note.d, alterOf(note, fifths));
   }
 
-  /**
-   * Обратный переход: звук → как его записать.
-   *
-   * Диезная тональность просит диезы, бемольная — бемоли; в до мажоре
-   * по умолчанию диезы, но кнопка «♭» на панели это переопределяет.
-   * Если нота и так входит в тональность, знак не ставится (acc = null) —
-   * иначе на каждой второй ноте появлялся бы бекар.
-   */
   function spell(midi, fifths, prefer) {
     const useFlats = prefer === 'flat' || (prefer !== 'sharp' && fifths < 0);
     const pc = ((midi % 12) + 12) % 12;
@@ -107,14 +68,11 @@ window.Partitura = window.Partitura || {};
     return { d: d, acc: keyAlter(fifths, letterOf(d)) === alter ? null : alter };
   }
 
-  /** Подпись ноты: «C4», «F♯4» или «Соль4» — смотря какие обозначения выбраны. */
   function noteLabel(d, alter, names) {
     const base = names ? names[letterOf(d)] : LETTERS[letterOf(d)];
     const sign = alter > 0 ? '♯' : alter < 0 ? '♭' : '';
     return base + sign + octaveOf(d);
   }
-
-  /* ────────────────────────────── партитура ────────────────────────────── */
 
   function ticksOf(event) {
     return event.dot ? (event.base * 3) / 2 : event.base;
@@ -128,15 +86,6 @@ window.Partitura = window.Partitura || {};
     return !event.notes || event.notes.length === 0;
   }
 
-  /**
-   * Раскладка по тактам.
-   *
-   * Нота, которая не влезает в остаток такта, целиком переносится в
-   * следующий: настоящая нотация разрезала бы её лигой, но лига — это
-   * отдельная сущность в модели, в разметке и в звуке, а выигрыш только
-   * в редких случаях. Здесь такт просто заканчивается чуть раньше, и это
-   * видно глазом.
-   */
   function measures(score) {
     const limit = meterTicks(score.meter);
     const out = [];
@@ -168,7 +117,6 @@ window.Partitura = window.Partitura || {};
     }, 0);
   }
 
-  /** Длительность одного тика в секундах: тик — тридцать вторая. */
   function tickSeconds(score) {
     return 60 / score.tempo / (WHOLE / 4);
   }
@@ -183,14 +131,6 @@ window.Partitura = window.Partitura || {};
     };
   }
 
-  /**
-   * Мелодия, которая лежит в листе при первом открытии.
-   *
-   * Пустой лист — худшее первое впечатление: непонятно ни что тут можно,
-   * ни как это звучит. «Ода к радости» узнаётся с первых нот, укладывается
-   * в восемь тактов и содержит и точку, и восьмые — то есть сразу
-   * показывает, как выглядят разные длительности.
-   */
   function demo() {
     const score = empty();
     const C = 28, D = 29, E = 30, F = 31, G = 32;
@@ -214,8 +154,6 @@ window.Partitura = window.Partitura || {};
     return score;
   }
 
-  /* ─────────────────────────── сохранение ─────────────────────────── */
-
   function toJSON(score) {
     return {
       format: 'partitura',
@@ -236,7 +174,6 @@ window.Partitura = window.Partitura || {};
     };
   }
 
-  /** Разбор чужого файла: всё проверяется, любое непонятное поле — отказ. */
   function fromJSON(raw) {
     if (!raw || raw.format !== 'partitura' || !Array.isArray(raw.events)) return null;
 
@@ -276,15 +213,7 @@ window.Partitura = window.Partitura || {};
     return score;
   }
 
-  /* ──────────────────────────── экспорт в .mid ──────────────────────────── */
-
-  /*
-    Стандартный MIDI-файл нулевого типа, одна дорожка. Пишется руками
-    побайтно: формат простой, а любая готовая библиотека весила бы больше
-    всего остального проекта.
-  */
-
-  const PPQ = 96; // тиков MIDI на четверть
+  const PPQ = 96;
 
   function varLen(value) {
     const bytes = [value & 0x7f];
@@ -306,20 +235,17 @@ window.Partitura = window.Partitura || {};
 
   function toMidi(score) {
     const track = [];
-    const perTick = PPQ / (WHOLE / 4); // наш тик — тридцать вторая
+    const perTick = PPQ / (WHOLE / 4);
 
-    // Темп: микросекунд на четверть
     const micros = Math.round(60000000 / score.tempo);
     track.push(0x00, 0xff, 0x51, 0x03, (micros >> 16) & 0xff, (micros >> 8) & 0xff, micros & 0xff);
 
-    // Размер такта: знаменатель пишется степенью двойки
     const denomPower = Math.round(Math.log(score.meter.unit) / Math.LN2);
     track.push(0x00, 0xff, 0x58, 0x04, score.meter.beats, denomPower, 24, 8);
 
-    // Тональность: sf со знаком, mi = 0 — мажор
     track.push(0x00, 0xff, 0x59, 0x02, score.fifths & 0xff, 0x00);
 
-    let pending = 0; // накопленная пауза до следующего события
+    let pending = 0;
     score.events.forEach(function (event) {
       const length = Math.round(ticksOf(event) * perTick);
 
@@ -339,8 +265,6 @@ window.Partitura = window.Partitura || {};
         track.push(0x90, pitch & 0x7f, 0x64);
       });
 
-      // Нота отпускается чуть раньше конца, иначе соседние одинаковые
-      // ноты сливаются в одну длинную
       const sound = Math.max(1, length - 4);
       pitches.forEach(function (pitch, i) {
         varLen(i === 0 ? sound : 0).forEach(function (b) {
@@ -363,8 +287,6 @@ window.Partitura = window.Partitura || {};
 
     return new Uint8Array(out.concat(track));
   }
-
-  /* ────────────────────────────── экспорт ────────────────────────────── */
 
   ns.score = {
     WHOLE: WHOLE,

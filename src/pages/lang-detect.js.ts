@@ -3,18 +3,8 @@ import { ENABLED_LOCALES, DEFAULT_LOCALE } from '../i18n/config';
 
 export const prerender = true;
 
-/**
- * Отдаётся как /lang-detect.js.
- *
- * Генерируется, а не лежит в public/, чтобы список языков был ровно в одном
- * месте — src/i18n/config.ts. Иначе при добавлении французского его пришлось бы
- * не забыть дописать ещё и здесь.
- *
- * Файл — отдельный, а не инлайн в <head>, ради строгой CSP (script-src 'self').
- */
 export const GET: APIRoute = () => {
-  const body = `/* Сгенерировано из src/i18n/config.ts — не редактировать вручную. */
-(function () {
+  const body = `(function () {
   var supported = ${JSON.stringify(ENABLED_LOCALES)};
   var fallback = ${JSON.stringify(DEFAULT_LOCALE)};
 

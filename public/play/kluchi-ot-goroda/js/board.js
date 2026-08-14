@@ -1,28 +1,9 @@
-/*
-  Три подвижные детали, все на тему дороги:
-
-    · табло в заголовке — перещёлкивает три обещания, как в зале прилёта;
-    · самолёт — идёт по пунктирной дуге первого экрана сам по себе;
-    · машина — едет по маршруту в разделе «как проходит встреча», и её
-      положение привязано к прокрутке, а не ко времени.
-
-  Самолёт и машина ставятся по кривой через getPointAtLength: иконка идёт
-  ровно по линии, а не по приблизительной траектории, и поворачивается
-  по касательной. Оба SVG растянуты с preserveAspectRatio="none", поэтому
-  координаты вьюбокса приходится переводить в пиксели вручную — и угол
-  считать уже после растяжения, иначе иконка смотрит не туда.
-
-  Всё выключается при prefers-reduced-motion: табло показывает первое слово,
-  самолёт и машина замирают в начале маршрута.
-*/
 window.Kluchi = window.Kluchi || {};
 
 (function (ns) {
   'use strict';
 
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-
-  /* ───────────────────────────────── табло ───────────────────────────────── */
 
   const GLYPHS_RU = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ';
   const GLYPHS_EN = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -40,8 +21,6 @@ window.Kluchi = window.Kluchi || {};
       words = list && list.length ? list : [''];
       index = 0;
 
-      // Ячеек столько, сколько букв в самом длинном слове: иначе строка
-      // прыгала бы по ширине на каждом переключении
       const width = words.reduce((max, w) => Math.max(max, w.length), 0);
       host.innerHTML = '';
       cells = [];
@@ -74,8 +53,6 @@ window.Kluchi = window.Kluchi || {};
           return;
         }
 
-        // Каждая следующая ячейка щёлкает чуть дольше — так перелистывание
-        // идёт волной слева направо, как на механическом табло
         let left = 5 + i * 2;
         cell.classList.remove('flap--blank');
         clearInterval(cell._spin);
@@ -105,7 +82,6 @@ window.Kluchi = window.Kluchi || {};
       }, 3400);
     }
 
-    // Невидимая вкладка не должна крутить таймеры
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) clearTimeout(timer);
       else schedule();
@@ -117,22 +93,10 @@ window.Kluchi = window.Kluchi || {};
     });
   }
 
-  /* ──────────────────────── движение по кривой ──────────────────────── */
-
-  /**
-   * Ставит элемент в точку кривой на доле пути `t` (0…1).
-   * Требует, чтобы svg и mover лежали в одном позиционированном родителе.
-   */
   function placeOnPath(svg, path, mover, t, length) {
     const box = svg.getBoundingClientRect();
     if (!box.width || !box.height) return;
 
-    /*
-      Смещение считается через getBoundingClientRect, а не через offsetLeft:
-      у SVG-элементов offsetLeft просто нет — это свойство HTML-элементов,
-      и в браузере оно возвращает undefined. Сложение с ним давало NaN,
-      из-за чего иконка не двигалась вообще.
-    */
     const host = mover.offsetParent || svg.parentElement;
     const hostBox = host.getBoundingClientRect();
 
@@ -141,19 +105,15 @@ window.Kluchi = window.Kluchi || {};
     const ky = box.height / vb.height;
 
     const at = path.getPointAtLength(length * t);
-    // Соседняя точка нужна для наклона: направление берём по хорде
+
     const next = path.getPointAtLength(Math.min(length, length * t + 1));
 
-    // Угол считается уже в пикселях: вьюбокс растянут неравномерно
-    // (preserveAspectRatio="none"), и в его координатах наклон был бы не тот
     const angle = (Math.atan2((next.y - at.y) * ky, (next.x - at.x) * kx) * 180) / Math.PI;
 
     mover.style.left = box.left - hostBox.left + at.x * kx + 'px';
     mover.style.top = box.top - hostBox.top + at.y * ky + 'px';
     mover.style.setProperty('--angle', angle.toFixed(1) + 'deg');
   }
-
-  /* ─────────────────────────────── самолёт ─────────────────────────────── */
 
   function initPlane() {
     const svg = document.querySelector('.hero__arc');
@@ -167,12 +127,10 @@ window.Kluchi = window.Kluchi || {};
 
     function frame(now) {
       if (!start) start = now;
-      // Полный проход дуги — четырнадцать секунд, потом сначала
+
       const t = ((now - start) % 14000) / 14000;
       placeOnPath(svg, path, plane, t, length);
 
-      // У краёв самолёт растворяется — иначе он «телепортируется» с конца
-      // дуги в начало прямо на глазах
       const fade = Math.min(1, Math.min(t, 1 - t) * 9);
       plane.style.opacity = String(fade);
 
@@ -207,8 +165,6 @@ window.Kluchi = window.Kluchi || {};
     });
   }
 
-  /* ──────────────────────────────── машина ──────────────────────────────── */
-
   function initCar() {
     const svg = document.querySelector('.how__line');
     const path = document.getElementById('how-path');
@@ -227,13 +183,13 @@ window.Kluchi = window.Kluchi || {};
 
       const rect = track.getBoundingClientRect();
       const vh = window.innerHeight;
-      // 0 — раздел только показался снизу, 1 — почти ушёл вверх
+
       const raw = (vh - rect.top) / (rect.height + vh * 0.5);
       const t = Math.max(0, Math.min(1, raw));
 
       placeOnPath(svg, path, car, t, length);
       car.style.opacity = t > 0.01 ? '1' : '0';
-      // Линия дорисовывается позади машины — виден пройденный путь
+
       path.style.strokeDashoffset = String(dash * (1 - t));
     }
 

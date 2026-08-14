@@ -18,7 +18,6 @@ const strings = t(lang);
 
 const featured = await getFeaturedProjects();
 
-// Счётчики считаем заранее: внутри .map() дождаться промиса уже нельзя
 const projects = await getProjects();
 const countBySection = new Map(
   SECTIONS_BY_ORDER.map((section) => [
@@ -29,7 +28,7 @@ const countBySection = new Map(
 ---
 
 <Base lang={lang} path="" title={strings.meta.siteName}>
-  <!-- ============================== Обложка ============================== -->
+
   <section class="hero">
     <div class="wrap hero__inner">
       <p class="eyebrow">{strings.about.lead}</p>
@@ -49,7 +48,6 @@ const countBySection = new Map(
     </div>
   </section>
 
-  <!-- ============================== Разделы ============================== -->
   <section class="section" id="work">
     <div class="wrap">
       <p class="eyebrow">{strings.home.sectionsTitle}</p>
@@ -68,7 +66,6 @@ const countBySection = new Map(
     </div>
   </section>
 
-  <!-- ============================= Избранное ============================= -->
   {
     featured.length > 0 && (
       <section class="section section--sunken">
@@ -85,7 +82,6 @@ const countBySection = new Map(
     )
   }
 
-  <!-- ============================== Навыки =============================== -->
   <section class="section">
     <div class="wrap">
       <p class="eyebrow">{strings.home.skillsTitle}</p>
@@ -114,15 +110,13 @@ const countBySection = new Map(
 </Base>
 
 <style>
-  /* --- Обложка --- */
+
   .hero {
     position: relative;
     padding-block: clamp(3.5rem, 2rem + 8vw, 8rem);
     overflow: hidden;
   }
 
-  /* Мягкое золото-фиолетовое свечение за текстом. Декор, поэтому
-     не влияет на раскладку и не перехватывает клики. */
   .hero::before {
     content: '';
     position: absolute;
@@ -163,7 +157,7 @@ const countBySection = new Map(
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    /* Фолбэк, если background-clip не поддержан — текст всё равно виден */
+
     -webkit-text-fill-color: transparent;
   }
 
@@ -177,7 +171,6 @@ const countBySection = new Map(
     gap: var(--space-1);
   }
 
-  /* --- Секции --- */
   .section--sunken {
     background: var(--bg-sunken);
     border-block: 1px solid var(--line);
@@ -192,7 +185,6 @@ const countBySection = new Map(
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
   }
 
-  /* --- Навыки --- */
   .skills {
     display: grid;
     gap: var(--space-2);

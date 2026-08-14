@@ -1,4 +1,3 @@
-
   (function () {
     try {
       var theme = localStorage.getItem('hrebet-theme');

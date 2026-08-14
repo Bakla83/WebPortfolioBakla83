@@ -1,12 +1,3 @@
-/*
-  Связка: урок, терминал и схема.
-
-  Порядок на каждую введённую строку один и тот же: эхо команды → снимок
-  координат для анимации → выполнение в движке → вывод → перерисовка схемы →
-  проверка шага урока. Проверка идёт последней намеренно: команда сначала
-  честно выполняется, даже если она не та, которую ждёт урок. Тренажёр не
-  запрещает отойти в сторону — иначе он учил бы не git, а послушанию.
-*/
 (function (ns) {
   'use strict';
 
@@ -29,8 +20,6 @@
   };
 
   const el = {};
-
-  /* ────────────────────────────── помощники ────────────────────────────── */
 
   function byId(id) {
     return document.getElementById(id);
@@ -67,13 +56,10 @@
     if (list.indexOf(id) === -1) list.push(id);
   }
 
-  /* ──────────────────────────── загрузка урока ──────────────────────────── */
-
   function currentLesson() {
     return LESSONS[app.lesson];
   }
 
-  /** Шаги урока и вопросы проверки — один список: проверка идёт теми же шагами. */
   function buildSteps(lesson) {
     const steps = lesson.steps.map(function (step) {
       return {
@@ -108,7 +94,6 @@
     app.step = 0;
     app.finished = false;
 
-    // Подготовка стола: те же команды, только молча
     lesson.setup.forEach(function (command) {
       engine.run(app.state, command);
     });
@@ -127,8 +112,6 @@
     renderLesson();
     term.focus();
   }
-
-  /* ────────────────────────────── отрисовка ────────────────────────────── */
 
   function renderLesson() {
     const lesson = currentLesson();
@@ -227,8 +210,6 @@
       .join('');
   }
 
-  /* ───────────────────────────── ход урока ───────────────────────────── */
-
   function checkStep(input) {
     if (app.finished) return;
 
@@ -248,7 +229,6 @@
     else renderLesson();
   }
 
-  /** Событие, которое случается «само» — например, чужая правка на GitHub. */
   function runAfter(after) {
     if (after.kind !== 'remoteCommit') return;
     stage.capture();
@@ -274,8 +254,6 @@
     else term.note(t('lesson.free'), 'info');
   }
 
-  /* ──────────────────────────── ввод команды ──────────────────────────── */
-
   function onCommand(input) {
     term.echo(app.state, input);
     stage.capture();
@@ -296,8 +274,6 @@
 
     checkStep(input);
   }
-
-  /* ────────────────────────────── события ────────────────────────────── */
 
   function bind() {
     el.taskFill.addEventListener('click', function () {
@@ -379,8 +355,6 @@
     });
   }
 
-  /* ─────────────────────────────── запуск ─────────────────────────────── */
-
   function collect() {
     [
       'lesson-no', 'lesson-title', 'lesson-lead', 'lesson-progress', 'steps', 'task', 'task-text',
@@ -419,8 +393,6 @@
       stage.render(app.state, []);
     });
 
-    // Начинаем с первого непройденного урока — возвращаться на давно
-    // пройденное скучно, а терять место обидно
     let startAt = 0;
     for (let i = 0; i < LESSONS.length; i++) {
       if (app.progress.done.indexOf(LESSONS[i].id) === -1) {

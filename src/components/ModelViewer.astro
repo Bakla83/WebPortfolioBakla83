@@ -12,14 +12,6 @@ const { model, lang } = Astro.props;
 const strings = t(lang);
 ---
 
-<!--
-  Браузер не открывает .blend — на сайт кладётся экспорт в .glb или .gltf.
-  В Blender: File → Export → glTF 2.0 (.glb), «Format: glTF Binary».
-
-  Библиотека model-viewer весит около полутора мегабайт вместе с three.js,
-  поэтому подключается динамическим импортом и только на тех страницах,
-  где модель действительно есть. На остальных не грузится вовсе.
--->
 <figure class="model">
   <model-viewer
     src={model.src}
@@ -37,7 +29,7 @@ const strings = t(lang);
 </figure>
 
 <script>
-  // Импорт запускается один раз на страницу и только при наличии элемента
+
   if (document.querySelector('model-viewer')) {
     import('@google/model-viewer');
   }

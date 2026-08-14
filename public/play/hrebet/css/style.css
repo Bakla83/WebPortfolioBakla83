@@ -1,26 +1,3 @@
-/*  ХРЕБЕТ — стили
-    Структура файла:
-    1. Сброс и переменные
-    2. Типографика и утилиты
-    3. Шапка и мобильное меню
-    4. Hero
-    5. Бегущая строка
-    6. Статистика
-    7. Философия
-    8. Маршруты
-    9. Процесс
-    10. Почему мы
-    11. Галерея
-    12. Отзывы
-    13. FAQ
-    14. Контакты / форма
-    15. Подвал
-    16. Курсор, скролл-ап, анимации
-    17. Медиазапросы
-*/
-
-/* ══════════════════════════ 1. СБРОС И ПЕРЕМЕННЫЕ ══════════════════════════ */
-
 *, *::before, *::after { box-sizing: border-box; }
 * { margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -32,7 +9,7 @@ ul { list-style: none; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 :root {
-  /* Базовая тёмная тема — альпийская ночь */
+
   --bg: #0e1116;
   --bg-deep: #0a0c10;
   --paper: #f6f1e7;
@@ -66,16 +43,6 @@ ul { list-style: none; }
   --container: 1320px;
 }
 
-/*
-  Глобальная светлая тема — переключается кнопкой в шапке, применяется к
-  <html data-theme="light">. Меняет только «тёмные» секции (hero, статистика,
-  процесс, преимущества, отзывы, контакты, подвал): вместо почти чёрного фона
-  они становятся холодным почти-белым. «Светлые» секции (.section-light —
-  философия, маршруты, галерея, вопросы) сознательно НЕ меняются между темами:
-  они уже светлые и тёплые, и именно это лёгкое различие «холодный белый
-  vs тёплая бумага» и создаёт чередование в светлой теме — просто более
-  сдержанное, чем контраст «почти чёрный vs бумага» в тёмной.
-*/
 :root[data-theme="light"] {
   --bg: #f9f8f5;
   --bg-deep: #eef0f1;
@@ -93,8 +60,6 @@ ul { list-style: none; }
   --shadow-md: 0 20px 45px -25px rgba(20, 22, 27, .14);
 }
 
-/* Светлая тема секции — переопределяет только переменные, компоненты не меняются.
-   Одинакова в обеих глобальных темах (см. комментарий выше). */
 .section-light {
   --ink: #14161b;
   --ink-dim: rgba(20, 22, 27, .62);
@@ -117,8 +82,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Плавная смена темы. На секциях, а не на body/*, чтобы не гасить transition
-   у элементов с собственной анимацией (кнопки, reveal) конфликтующим правилом. */
 body, .site-header, section, footer, .route-card, .review-card, .cta-form,
 .filter-btn, .faq-answer, .gallery-tile {
   transition: background-color .4s var(--ease), color .4s var(--ease), border-color .4s var(--ease);
@@ -147,10 +110,7 @@ body, .site-header, section, footer, .route-card, .review-card, .cta-form,
 .icon { width: 20px; height: 20px; flex-shrink: 0; }
 .icon-sm { width: 15px; height: 15px; }
 
-/* Якоря уходят под фиксированную шапку без этого отступа */
 section[id], #top { scroll-margin-top: 92px; }
-
-/* ══════════════════════════ 2. ТИПОГРАФИКА / УТИЛИТЫ ══════════════════════════ */
 
 h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height: 1.08; letter-spacing: -.01em; }
 
@@ -171,9 +131,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
   height: 1px;
   background: var(--accent);
 }
-/* .kicker уже красится через var(--ink-dim), которая сама переключается и по
-   секции (.section-light), и по глобальной теме — отдельный хардкод здесь был
-   бы лишним и в светлой теме давал светлый текст на светлом фоне. */
 
 .section-title {
   font-size: clamp(1.9rem, 3.4vw, 3rem);
@@ -217,7 +174,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
 .text-link .icon { transition: transform .25s var(--ease); }
 .text-link:hover .icon { transform: translate(2px, -2px); }
 
-/* Кнопки */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -245,8 +201,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
 .btn-sm { padding: 11px 22px; font-size: .88rem; }
 .btn-block { width: 100%; }
 
-/* ══════════════════════════ 3. ШАПКА / МОБ. МЕНЮ ══════════════════════════ */
-
 .site-header {
   position: fixed;
   inset: 0 0 auto 0;
@@ -267,7 +221,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
 }
 .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 
-/* Кнопки-переключатели темы и языка — компактные, одного роста с бургером. */
 .pref-btn {
   display: inline-flex;
   align-items: center;
@@ -284,8 +237,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
 }
 .pref-btn:hover { color: var(--ink); border-color: var(--ink-faint); }
 .pref-btn--icon { padding-inline: 0; width: 42px; position: relative; }
-/* Иконка показывает ТЕКУЩУЮ тему (луна = сейчас тёмная, солнце = сейчас
-   светлая), а не то, во что переключит клик. */
+
 .pref-btn .icon-sun { display: none; }
 :root[data-theme="light"] .pref-btn .icon-sun { display: block; }
 :root[data-theme="light"] .pref-btn .icon-moon { display: none; }
@@ -350,8 +302,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
 .mobile-nav-bottom { margin-top: auto; padding-top: 32px; display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
 .mobile-nav-phone { color: var(--ink-dim); font-weight: 500; }
 
-/* ══════════════════════════ 4. HERO ══════════════════════════ */
-
 .hero {
   position: relative;
   min-height: 100svh;
@@ -370,9 +320,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
   z-index: 0;
   transition: background 1s var(--ease);
 }
-/* Дневное небо для светлой темы: та же композиция (тёплое пятно у солнца +
-   вертикальный градиент), но рассвет вместо ночи. Горы и шапка переключаются
-   тем же селектором, чтобы вся сцена менялась синхронно одним кликом. */
+
 :root[data-theme="light"] .hero-sky {
   background:
     radial-gradient(60% 55% at 74% 26%, rgba(232, 129, 58, .28), transparent 60%),
@@ -400,11 +348,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
 :root[data-theme="light"] .mtn-front { fill: #7c8b96; }
 .hero-sun { opacity: .9; }
 
-/* Солнце — по умолчанию (светлая тема тоже светлая по умолчанию в system
-   preference, но ЗДЕСЬ речь о data-theme), луна — в тёмной. Как и с иконкой
-   в шапке, показываем то, что СЕЙЧАС на небе, а не то, во что переключит клик.
-   Кроссфейд, а не display:none — тогда переключение темы читается как
-   восход/заход, а не щелчок. */
 .hero-sun-group { opacity: 0; transition: opacity 1s var(--ease); }
 .hero-moon-group { opacity: 1; transition: opacity 1s var(--ease); }
 :root[data-theme="light"] .hero-sun-group { opacity: 1; }
@@ -439,9 +382,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
   -webkit-backdrop-filter: blur(16px);
   transition: background 1s var(--ease), border-color .4s var(--ease);
 }
-/* .hero-chip-label красится через var(--ink-dim), которая в светлой теме
-   становится тёмной — стеклянная плашка должна посветлеть вместе с ней,
-   иначе получится тёмный текст на тёмном стекле. */
+
 :root[data-theme="light"] .hero-chip {
   background: rgba(255, 255, 255, .55);
 }
@@ -464,8 +405,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
 }
 @keyframes cueMove { to { top: 30px; } }
 
-/* ══════════════════════════ 5. БЕГУЩАЯ СТРОКА ══════════════════════════ */
-
 .marquee {
   background: var(--accent);
   color: var(--accent-ink);
@@ -476,13 +415,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
 }
 .marquee-track {
   display: flex;
-  /* Зазора между группами тут нарочно нет: он «зашит» внутрь каждой группы
-     через padding-right (см. .marquee-group). Если бы зазор задавался тут,
-     через flex gap между двумя детьми, translateX(-50%) сдвигал бы ленту не
-     ровно на ширину одной группы, а на (ширина группы − половина зазора) —
-     на бесшовной с виду прокрутке раз в цикл был бы едва заметный скачок
-     ровно на этот недостающий кусок. Группа как самодостаточный повторяемый
-     блок — единственная конструкция, где -50% математически точна. */
+
   white-space: nowrap;
   width: max-content;
   font-family: var(--font-display);
@@ -490,12 +423,10 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
   font-style: italic;
   animation: marqueeScroll 32s linear infinite;
 }
-/* Ровно две группы-копии (см. js: buildMarquee клонирует группу целиком). */
+
 .marquee-group { display: flex; align-items: center; gap: 18px; padding-right: 18px; }
 .marquee-track .dot { opacity: .55; font-style: normal; }
 @keyframes marqueeScroll { to { transform: translateX(-50%); } }
-
-/* ══════════════════════════ 6. СТАТИСТИКА ══════════════════════════ */
 
 .stats { background: var(--bg); padding-block: clamp(56px, 8vw, 96px); border-bottom: 1px solid var(--line-soft); }
 .stats-grid {
@@ -512,8 +443,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
 }
 .stat-suffix { font-family: var(--font-display); font-size: clamp(1.4rem, 2vw, 1.9rem); color: var(--accent-soft); margin-left: 2px; }
 .stat-label { margin-top: 8px; color: var(--ink-dim); font-size: .92rem; max-width: 22ch; }
-
-/* ══════════════════════════ 7. ФИЛОСОФИЯ ══════════════════════════ */
 
 .philosophy { position: relative; padding-block: clamp(80px, 11vw, 150px); overflow: hidden; }
 .philosophy-topo {
@@ -540,8 +469,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
 .philosophy-body { padding-top: 8px; }
 .philosophy-body p { color: var(--ink-dim); font-size: 1.04rem; margin-bottom: 20px; }
 .philosophy-body p:first-child { color: var(--ink); }
-
-/* ══════════════════════════ 8. МАРШРУТЫ ══════════════════════════ */
 
 .routes { background: var(--paper); padding-block: clamp(80px, 11vw, 140px); }
 
@@ -615,8 +542,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
 
 .route-empty { text-align: center; padding: 40px 0; color: var(--ink-dim); }
 
-/* ══════════════════════════ 9. ПРОЦЕСС ══════════════════════════ */
-
 .process { background: var(--bg); padding-block: clamp(80px, 11vw, 140px); }
 .process-list { display: grid; gap: 0; }
 .process-step {
@@ -632,16 +557,12 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
 .process-body h3 { font-size: clamp(1.3rem, 2vw, 1.7rem); margin-bottom: 10px; }
 .process-body p { color: var(--ink-dim); max-width: 58ch; }
 
-/* ══════════════════════════ 10. ПОЧЕМУ МЫ ══════════════════════════ */
-
 .features { background: var(--surface-2); padding-block: clamp(70px, 10vw, 130px); }
 .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border-radius: var(--r-lg); overflow: hidden; }
 .feature-card { background: var(--bg); padding: 34px 30px; }
 .feature-num { font-family: var(--font-display); font-size: .95rem; color: var(--accent-soft); }
 .feature-card h3 { font-size: 1.25rem; margin-block: 14px 10px; }
 .feature-card p { color: var(--ink-dim); font-size: .93rem; }
-
-/* ══════════════════════════ 11. ГАЛЕРЕЯ ══════════════════════════ */
 
 .gallery { background: var(--paper); padding-block: clamp(80px, 11vw, 140px); }
 .gallery-grid {
@@ -672,8 +593,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
   text-shadow: 0 2px 12px rgba(0, 0, 0, .35);
 }
 .gallery-tile--lg .gallery-label { font-size: 1.05rem; }
-
-/* ══════════════════════════ 12. ОТЗЫВЫ ══════════════════════════ */
 
 .reviews { background: var(--bg); padding-block: clamp(80px, 11vw, 140px); overflow: hidden; }
 .reviews-controls { display: flex; gap: 10px; }
@@ -712,8 +631,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
 .reviews-dots button { width: 8px; height: 8px; border-radius: 50%; background: var(--line); transition: all .3s var(--ease); }
 .reviews-dots button.is-active { background: var(--accent); width: 22px; border-radius: var(--r-pill); }
 
-/* ══════════════════════════ 13. FAQ ══════════════════════════ */
-
 .faq { background: var(--paper); padding-block: clamp(80px, 11vw, 140px); }
 .faq-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(40px, 6vw, 90px); align-items: start; }
 .faq-head { position: sticky; top: 120px; }
@@ -737,8 +654,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
   transition: max-height .4s var(--ease);
 }
 .faq-answer p { padding-bottom: 24px; color: var(--ink-dim); max-width: 62ch; }
-
-/* ══════════════════════════ 14. КОНТАКТЫ / ФОРМА ══════════════════════════ */
 
 .cta { background: var(--bg-deep); padding-block: clamp(90px, 12vw, 160px); position: relative; }
 .cta-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(40px, 6vw, 90px); }
@@ -796,8 +711,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
 .form-success .icon { width: 30px; height: 30px; padding: 8px; background: rgba(124, 152, 133, .18); color: #4f6f57; border-radius: 50%; flex-shrink: 0; }
 .form-success p { color: rgba(20, 22, 27, .6); margin-top: 4px; font-size: .92rem; }
 
-/* ══════════════════════════ 15. ПОДВАЛ ══════════════════════════ */
-
 .site-footer { background: var(--bg-deep); padding-top: clamp(60px, 8vw, 100px); }
 .footer-inner {
   display: grid;
@@ -831,8 +744,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; line-height
 }
 .back-to-top:hover { border-color: var(--accent); color: var(--accent-soft); transform: translateY(-3px); }
 
-/* ══════════════════════════ 16. КУРСОР / АНИМАЦИИ ══════════════════════════ */
-
 .cursor-dot, .cursor-ring {
   position: fixed; top: 0; left: 0;
   pointer-events: none;
@@ -861,8 +772,6 @@ html.has-custom-cursor, html.has-custom-cursor a, html.has-custom-cursor button 
   .marquee-track { animation: none; }
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
-
-/* ══════════════════════════ 17. МЕДИАЗАПРОСЫ ══════════════════════════ */
 
 @media (max-width: 1080px) {
   .routes-grid { grid-template-columns: repeat(2, 1fr); }
@@ -895,10 +804,7 @@ html.has-custom-cursor, html.has-custom-cursor a, html.has-custom-cursor button 
 @media (max-width: 520px) {
   .stats-grid { grid-template-columns: 1fr 1fr; }
   .footer-inner { grid-template-columns: 1fr; }
-  /* На узком экране кнопки переносятся в две строки, и карточка статистики,
-     закреплённая абсолютно у низа hero, накрывала собой вторую кнопку.
-     На мобильном она вместо этого встаёт в обычный поток документа — сразу
-     под кнопками, без наложения. */
+
   .hero-chip {
     position: static;
     margin-top: 28px;
