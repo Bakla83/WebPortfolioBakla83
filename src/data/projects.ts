@@ -873,10 +873,119 @@ export const PROJECTS: Project[] = [
   },
 
   {
-    slug: 'chto-prigotovit-android',
+    slug: 'traty',
     section: 'mobile-apps',
     featured: true,
     order: 1,
+    year: 2026,
+    tech: ['Kotlin', 'Android SDK', 'ViewBinding', 'Gradle', 'R8'],
+    title: { ru: 'Траты — Android', en: 'Spending — Android' },
+    role: { ru: 'Автор проекта', en: 'Sole author' },
+    teaser: {
+      ru: 'Учёт денег, который не спрашивает разрешений и не ходит в сеть, зато считает прогноз на следующий месяц по категориям.',
+      en: 'A money tracker that asks for no permissions and never goes online, yet forecasts the next month category by category.',
+    },
+    summary: {
+      ru: 'Приложение отвечает на один вопрос: сколько можно тратить в день, чтобы дожить до конца месяца, и что будет в следующем. Три вкладки — месяц, лента записей и прогноз. Прогноз строится по каждой категории отдельно: регулярные счета берутся из списка как есть, обычные траты считаются медианой за полгода, крупные разовые покупки выносятся из нормы и возвращаются как ежемесячный резерв. Заработок не угадывается вовсе — его вводит пользователь, потому что свою зарплату он знает точнее любой статистики. Все данные лежат в одном JSON-файле во внутренней памяти: интернет-разрешения в манифесте нет.',
+      en: 'The app answers one question: how much can be spent per day to reach the end of the month, and what the next one will look like. Three tabs — the month, the feed of records and the forecast. The forecast is built per category: regular bills are taken from a list as they are, everyday spending is the median of the last six months, and big one-off buys are pulled out of the norm and returned as a monthly reserve. Earnings are not guessed at all — you type them in, because you know your own paycheque better than any statistic. Everything lives in a single JSON file in internal storage: there is no internet permission in the manifest.',
+    },
+    highlights: {
+      ru: [
+        'Норма по категории — медиана за шесть месяцев, а не среднее: один месяц с гостями не переписывает норму на полгода',
+        'Тренд — медиана попарных наклонов, вдвое ослабленная и зажатая в ±30 % от базы, чтобы всплеск не разогнал прогноз',
+        'Сезонность включается только после года записей: месяц сравнивается с собой же год назад относительно медианы своего года, чтобы инфляция не сошла за сезон',
+        'Крупная разовая покупка не попадает в норму, а превращается в резерв: ноутбук раз в восемь месяцев — это одна восьмая каждый месяц',
+        'Заработок и запас разделены: траты сначала съедают заработок и трогают запас, только когда он кончился; остаток и перерасход переносятся в следующий месяц',
+        'Отдельный счёт для аренды: платёж остаётся в тратах месяца, но вычитается не из заработка, а из счёта, который гасят заказы',
+        'Мультивалютность без пересчёта задним числом: курс фиксируется в момент записи — деньги меняли тогда и по тому курсу',
+        'Все суммы — целые копейки в Long, ни одного double в деньгах; хранение — JSON во внутренней памяти, запись атомарная через временный файл и в фоновом потоке',
+        'В манифесте нет доступа в интернет: только уведомления и будильники для напоминаний о платежах, которые переживают перезагрузку телефона',
+        'Release-сборка 1,5 МБ: R8, вырезание ресурсов, Views и ViewBinding вместо Compose, только два языка в сборке',
+      ],
+      en: [
+        'A category norm is the median of six months, not the average: one month with guests should not rewrite the norm for half a year',
+        'The trend is the median of pairwise slopes, halved and clamped to ±30 % of the base, so a spike cannot run away with the forecast',
+        'Seasonality only switches on after a year of records: a month is compared with itself a year earlier against the median of its own year, so inflation does not pass for a season',
+        'A big one-off buy stays out of the norm and becomes a reserve instead: a laptop once every eight months is one eighth of it every month',
+        'Earnings and savings are kept apart: spending eats the earnings first and only touches the savings once they run out; both leftovers and overspending carry into the next month',
+        'A separate account for the rent: the payment stays in the month’s spending, but comes out of that account rather than the earnings, and orders pay it back',
+        'Multi-currency with no retroactive recalculation: the rate is frozen when the entry is made — the money was exchanged then, at that rate',
+        'Every sum is whole minor units in a Long, not a single double in the money; storage is JSON in internal memory, written atomically through a temporary file on a background thread',
+        'No internet access in the manifest: only notifications and alarms for payment reminders, which survive a reboot of the phone',
+        'A 1.5 MB release build: R8, resource shrinking, Views and ViewBinding instead of Compose, only two languages bundled',
+      ],
+    },
+
+    cover: {
+      src: '/media/traty/cover.jpg',
+      width: 2160,
+      height: 1350,
+      alt: {
+        ru: 'Три экрана приложения: лента записей, сводка месяца в тёмной теме и прогноз в светлой',
+        en: 'Three app screens: the feed of records, the month summary in the dark theme and the forecast in the light one',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/traty/month.webp',
+        width: 1080,
+        height: 2149,
+        alt: {
+          ru: 'Сводка месяца: заработано, потрачено, запас и остаток на день',
+          en: 'The month summary: earned, spent, savings and what is left per day',
+        },
+        caption: {
+          ru: 'Главная цифра — не «потрачено», а сколько остаётся в день до конца месяца. Ниже видно, что перешло с прошлого месяца и сколько запаса уже ушло',
+          en: 'The headline figure is not “spent” but how much is left per day until the end of the month. Below it you can see what carried over from last month and how much of the savings has gone',
+        },
+      },
+      {
+        src: '/media/traty/feed.webp',
+        width: 1080,
+        height: 2160,
+        alt: {
+          ru: 'Лента записей по дням с суммой за каждый день',
+          en: 'The feed of records grouped by day, with a total for each day',
+        },
+        caption: {
+          ru: 'Записи группируются по дням, у каждого дня своя сумма. Трата в чужой валюте показывает исходную сумму рядом с категорией — 550 ₽ превратились в 18,70 ₾ по курсу того дня',
+          en: 'Records are grouped by day, each day with its own total. An entry in another currency shows the original amount next to the category — 550 ₽ became 18.70 ₾ at that day’s rate',
+        },
+      },
+      {
+        src: '/media/traty/categories.webp',
+        width: 1080,
+        height: 2149,
+        alt: {
+          ru: 'Категории месяца с долями трат и отметками «сверх нормы» и «до нормы»',
+          en: 'The month’s categories with their share of spending and “over” / “under” pace marks',
+        },
+        caption: {
+          ru: 'Каждая категория сравнивается со своим темпом: приложение говорит не «продукты 138 ₾», а «на 123,70 ₾ сверх нормы к этому числу»',
+          en: 'Each category is compared against its own pace: the app says not “groceries 138 ₾” but “123.70 ₾ over pace by this date”',
+        },
+      },
+      {
+        src: '/media/traty/forecast.webp',
+        width: 1080,
+        height: 2154,
+        alt: {
+          ru: 'Прогноз на следующий месяц в светлой теме, с разбивкой на обычные траты и резерв',
+          en: 'The forecast for the next month in the light theme, split into everyday spending and reserve',
+        },
+        caption: {
+          ru: 'Прогноз честно разделяет обычные траты и запас на крупное и признаётся, когда данных мало: «по 2 месяцам, цифра приблизительная». Светлая тема идёт за системной настройкой, но её можно выбрать и вручную',
+          en: 'The forecast openly splits everyday spending from the reserve for big buys and admits when the data is thin: “by 2 months, treat as a guess”. The light theme follows the system setting, and can also be chosen by hand',
+        },
+      },
+    ],
+  },
+
+  {
+    slug: 'chto-prigotovit-android',
+    section: 'mobile-apps',
+    featured: true,
+    order: 2,
     year: 2026,
     tech: ['Kotlin', 'Android SDK', 'Gradle', 'R8'],
     title: { ru: 'Что приготовить — Android', en: 'What to Cook — Android' },

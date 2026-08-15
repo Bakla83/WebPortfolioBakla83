@@ -11,6 +11,7 @@
     "audit": "node tools/audit.mjs",
     "demos": "node tools/sync-demos.mjs",
     "screens": "node tools/screens.mjs",
+    "screens:traty": "node tools/screens-traty.mjs",
     "shots": "node tools/shots.mjs"
   },
   "dependencies": {
