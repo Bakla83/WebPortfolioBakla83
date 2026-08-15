@@ -882,8 +882,8 @@ export const PROJECTS: Project[] = [
     title: { ru: 'Траты — Android', en: 'Spending — Android' },
     role: { ru: 'Автор проекта', en: 'Sole author' },
     teaser: {
-      ru: 'Учёт денег, который не спрашивает разрешений и не ходит в сеть, зато считает прогноз на следующий месяц по категориям.',
-      en: 'A money tracker that asks for no permissions and never goes online, yet forecasts the next month category by category.',
+      ru: 'Удобный учёт денег по категориям и с прогнозом на следующий месяц по среднему значению.',
+      en: 'A convenient way to track money by category, with a forecast for the next month based on the average.',
     },
     summary: {
       ru: 'Приложение отвечает на один вопрос: сколько можно тратить в день, чтобы дожить до конца месяца, и что будет в следующем. Три вкладки — месяц, лента записей и прогноз. Прогноз строится по каждой категории отдельно: регулярные счета берутся из списка как есть, обычные траты считаются медианой за полгода, крупные разовые покупки выносятся из нормы и возвращаются как ежемесячный резерв. Заработок не угадывается вовсе — его вводит пользователь, потому что свою зарплату он знает точнее любой статистики. Все данные лежат в одном JSON-файле во внутренней памяти: интернет-разрешения в манифесте нет.',
@@ -897,7 +897,7 @@ export const PROJECTS: Project[] = [
         'Крупная разовая покупка не попадает в норму, а превращается в резерв: ноутбук раз в восемь месяцев — это одна восьмая каждый месяц',
         'Заработок и запас разделены: траты сначала съедают заработок и трогают запас, только когда он кончился; остаток и перерасход переносятся в следующий месяц',
         'Отдельный счёт для аренды: платёж остаётся в тратах месяца, но вычитается не из заработка, а из счёта, который гасят заказы',
-        'Мультивалютность без пересчёта задним числом: курс фиксируется в момент записи — деньги меняли тогда и по тому курсу',
+        'Мультивалютность без обращения к сети: курс вводится вручную, подставляется из прошлой записи и сохраняется вместе с тратой — задним числом ничего не пересчитывается',
         'Все суммы — целые копейки в Long, ни одного double в деньгах; хранение — JSON во внутренней памяти, запись атомарная через временный файл и в фоновом потоке',
         'В манифесте нет доступа в интернет: только уведомления и будильники для напоминаний о платежах, которые переживают перезагрузку телефона',
         'Release-сборка 1,5 МБ: R8, вырезание ресурсов, Views и ViewBinding вместо Compose, только два языка в сборке',
@@ -909,7 +909,7 @@ export const PROJECTS: Project[] = [
         'A big one-off buy stays out of the norm and becomes a reserve instead: a laptop once every eight months is one eighth of it every month',
         'Earnings and savings are kept apart: spending eats the earnings first and only touches the savings once they run out; both leftovers and overspending carry into the next month',
         'A separate account for the rent: the payment stays in the month’s spending, but comes out of that account rather than the earnings, and orders pay it back',
-        'Multi-currency with no retroactive recalculation: the rate is frozen when the entry is made — the money was exchanged then, at that rate',
+        'Multi-currency without touching the network: the rate is typed by hand, pre-filled from the previous entry and stored alongside the expense — nothing is ever recalculated after the fact',
         'Every sum is whole minor units in a Long, not a single double in the money; storage is JSON in internal memory, written atomically through a temporary file on a background thread',
         'No internet access in the manifest: only notifications and alarms for payment reminders, which survive a reboot of the phone',
         'A 1.5 MB release build: R8, resource shrinking, Views and ViewBinding instead of Compose, only two languages bundled',
@@ -935,8 +935,8 @@ export const PROJECTS: Project[] = [
           en: 'The month summary: earned, spent, savings and what is left per day',
         },
         caption: {
-          ru: 'Главная цифра — не «потрачено», а сколько остаётся в день до конца месяца. Ниже видно, что перешло с прошлого месяца и сколько запаса уже ушло',
-          en: 'The headline figure is not “spent” but how much is left per day until the end of the month. Below it you can see what carried over from last month and how much of the savings has gone',
+          ru: 'Отображается остаток. Он равномерно распределяется на оставшиеся дни в месяце',
+          en: 'The balance is shown, spread evenly across the days left in the month',
         },
       },
       {
@@ -948,8 +948,8 @@ export const PROJECTS: Project[] = [
           en: 'The feed of records grouped by day, with a total for each day',
         },
         caption: {
-          ru: 'Записи группируются по дням, у каждого дня своя сумма. Трата в чужой валюте показывает исходную сумму рядом с категорией — 550 ₽ превратились в 18,70 ₾ по курсу того дня',
-          en: 'Records are grouped by day, each day with its own total. An entry in another currency shows the original amount next to the category — 550 ₽ became 18.70 ₾ at that day’s rate',
+          ru: 'Записи группируются по дням, у каждого дня своя сумма. Трата в чужой валюте показывает исходную сумму рядом с категорией — 550 ₽ превратились в 18,70 ₾ по курсу, который вы вписали при записи',
+          en: 'Records are grouped by day, each day with its own total. An entry in another currency shows the original amount next to the category — 550 ₽ became 18.70 ₾ at the rate you typed in with the entry',
         },
       },
       {
@@ -961,8 +961,8 @@ export const PROJECTS: Project[] = [
           en: 'The month’s categories with their share of spending and “over” / “under” pace marks',
         },
         caption: {
-          ru: 'Каждая категория сравнивается со своим темпом: приложение говорит не «продукты 138 ₾», а «на 123,70 ₾ сверх нормы к этому числу»',
-          en: 'Each category is compared against its own pace: the app says not “groceries 138 ₾” but “123.70 ₾ over pace by this date”',
+          ru: 'Каждая категория сравнивается со своим средним значением и показывает превышение. Чем больше месяцев заполнено, тем точнее цифры',
+          en: 'Each category is compared with its own average and shows the overshoot. The more months you have filled in, the more accurate the figures',
         },
       },
       {
@@ -974,8 +974,8 @@ export const PROJECTS: Project[] = [
           en: 'The forecast for the next month in the light theme, split into everyday spending and reserve',
         },
         caption: {
-          ru: 'Прогноз честно разделяет обычные траты и запас на крупное и признаётся, когда данных мало: «по 2 месяцам, цифра приблизительная». Светлая тема идёт за системной настройкой, но её можно выбрать и вручную',
-          en: 'The forecast openly splits everyday spending from the reserve for big buys and admits when the data is thin: “by 2 months, treat as a guess”. The light theme follows the system setting, and can also be chosen by hand',
+          ru: 'Прогноз разделяет обычные траты и запас. Светлая тема идёт за системной настройкой, но её можно выбрать и вручную',
+          en: 'The forecast splits everyday spending from the reserve. The light theme follows the system setting, and can also be chosen by hand',
         },
       },
     ],
