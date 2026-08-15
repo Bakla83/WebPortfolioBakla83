@@ -4,7 +4,7 @@ const ru = {
   meta: {
     siteName: 'Владислав Баклан — портфолио',
     defaultDescription:
-      'Портфолио Владислава Баклана: игры на Unity, веб-сайты и лендинги, Android-приложения и 3D-графика в Blender.',
+      'Портфолио Владислава Баклана: сайты и лендинги, Android-приложения, игры на Unity и 3D-графика в Blender.',
   },
 
   nav: {
@@ -31,9 +31,9 @@ const ru = {
 
   home: {
     name: 'Владислав Баклан',
-    tagline: 'Игры, интерфейсы и всё, что между ними',
+    tagline: 'Сайты, приложения, игры и 3D-графика',
     intro:
-      'Делаю проекты целиком: от механики и 3D-модели до вёрстки, сборки и релиза. Unity и C# в играх, TypeScript и чистый JS в вебе, Kotlin в Android, Blender в графике.',
+      'Делаю проекты целиком — от идеи до сборки и релиза. Сайты и лендинги, приложения для Android, игры и модели в Blender.',
     ctaWork: 'Смотреть работы',
     ctaContact: 'Связаться',
     sectionsTitle: 'Разделы',
@@ -46,7 +46,7 @@ const ru = {
 
   about: {
     title: 'Обо мне',
-    lead: 'Разработчик полного цикла: игры, веб и мобильные приложения.',
+    lead: 'Разработчик полного цикла: сайты, приложения, игры и 3D-графика.',
     skillsTitle: 'Навыки',
     stackTitle: 'Инструменты',
     approachTitle: 'Как я работаю',
@@ -122,7 +122,7 @@ const en: UiStrings = {
   meta: {
     siteName: 'Vladislav Baklan — portfolio',
     defaultDescription:
-      'Portfolio of Vladislav Baklan: Unity games, websites and landing pages, Android apps and Blender 3D art.',
+      'Portfolio of Vladislav Baklan: websites and landing pages, Android apps, Unity games and Blender 3D art.',
   },
 
   nav: {
@@ -149,9 +149,9 @@ const en: UiStrings = {
 
   home: {
     name: 'Vladislav Baklan',
-    tagline: 'Games, interfaces, and everything in between',
+    tagline: 'Websites, apps, games and 3D art',
     intro:
-      'I build projects end to end — from mechanics and 3D models to markup, build and release. Unity and C# for games, TypeScript and vanilla JS on the web, Kotlin on Android, Blender for art.',
+      'I build projects end to end — from the idea to the build and release. Websites and landing pages, Android apps, games and models in Blender.',
     ctaWork: 'See my work',
     ctaContact: 'Get in touch',
     sectionsTitle: 'Sections',
@@ -164,7 +164,7 @@ const en: UiStrings = {
 
   about: {
     title: 'About me',
-    lead: 'Full-cycle developer: games, web and mobile.',
+    lead: 'Full-cycle developer: websites, apps, games and 3D art.',
     skillsTitle: 'Skills',
     stackTitle: 'Tools',
     approachTitle: 'How I work',
