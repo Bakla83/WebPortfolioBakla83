@@ -57,8 +57,8 @@ export const SECTIONS: Section[] = [
     accent: 'green',
     title: { ru: '3D-модели', en: '3D models' },
     description: {
-      ru: 'Моделирование, текстуры и рендер в Blender — ассеты для игр и визуализации.',
-      en: 'Modelling, texturing and rendering in Blender — game-ready assets and visualisations.',
+      ru: 'Моделирование, текстуры и рендер в Blender, простые ассеты и визуализации.',
+      en: 'Modelling, texturing and rendering in Blender: simple assets and visualisations.',
     },
   },
 ];

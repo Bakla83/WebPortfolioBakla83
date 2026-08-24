@@ -84,27 +84,6 @@ const stats = [
     </div>
   </section>
 
-  <section class="section">
-    <div class="wrap">
-      <p class="eyebrow">{strings.nav.work}</p>
-      <h2>{strings.home.sectionsLead}</h2>
-      <ul class="about-sections">
-        {
-          SECTIONS_BY_ORDER.map((section) => (
-            <li>
-              <a
-                class:list={['about-section-link', `about-section-link--${section.accent}`]}
-                href={localePath(lang, `work/${section.slug}`)}
-              >
-                <span>{pick(section.title, lang)}</span>
-                <Icon name="arrow-right" size={16} />
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
 </Base>
 
 <style>
@@ -214,45 +193,4 @@ const stats = [
     margin-bottom: var(--space-1);
   }
 
-  .about-sections {
-    display: grid;
-    gap: 0;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-    list-style: none;
-    margin: var(--space-2) 0 0;
-    padding: 0;
-  }
-
-  .about-section-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-2);
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--line);
-    color: var(--ink);
-    text-decoration: none;
-    font-family: var(--font-display);
-    font-weight: 600;
-  }
-
-  .about-section-link :global(svg) {
-    color: var(--ink-faint);
-    transition: transform 0.22s var(--ease), color 0.22s var(--ease);
-  }
-
-  .about-section-link--gold:hover {
-    color: var(--gold);
-  }
-  .about-section-link--purple:hover {
-    color: var(--purple);
-  }
-  .about-section-link--green:hover {
-    color: var(--green);
-  }
-
-  .about-section-link:hover :global(svg) {
-    transform: translateX(4px);
-    color: currentColor;
-  }
 </style>

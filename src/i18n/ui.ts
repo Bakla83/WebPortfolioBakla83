@@ -40,7 +40,7 @@ const ru = {
     sectionsLead: 'Работы разложены по направлениям — выберите, что ближе.',
     featuredTitle: 'Избранное',
     featuredLead: 'Проекты, которыми я доволен больше всего.',
-    skillsTitle: 'Чем работаю',
+    skillsTitle: 'Стек технологий',
     allInSection: 'Все работы раздела',
   },
 
@@ -158,7 +158,7 @@ const en: UiStrings = {
     sectionsLead: 'Work is grouped by type — pick whichever fits.',
     featuredTitle: 'Selected work',
     featuredLead: 'The projects I am happiest with.',
-    skillsTitle: 'What I work with',
+    skillsTitle: 'Tech stack',
     allInSection: 'All work in this section',
   },
 

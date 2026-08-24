@@ -118,13 +118,11 @@ export const SKILL_GROUPS: SkillGroup[] = [
 
 export const ABOUT_TEXT: Localized<string[]> = {
   ru: [
-    'Я разработчик полного цикла: беру проект от идеи и до момента, когда его можно открыть, запустить или установить. Мне одинаково интересны вёрстка интерфейса, игровая механика и то, как всё собирается в готовый продукт.',
-    'В вебе пишу на чистом JavaScript и TypeScript — без тяжёлых фреймворков там, где они не нужны, чтобы сайт быстро открывался и на слабом телефоне. Мобильные приложения делаю на Kotlin под Android, с упором на офлайн-работу и небольшой вес. В играх работаю на Unity и C#: механики, процедурная генерация уровней, поведение противников. Графику и модели готовлю в Blender.',
-    'Что для меня важно в работе: проект должен быть проверяемым. Там, где логика сложная — процедурная генерация уровней, подбор рецептов, локализация — я пишу автоматические проверки, чтобы поломка находилась до релиза, а не после.',
+    'Делаю проекты целиком — от идеи до момента, когда их можно открыть, запустить или установить. Мне одинаково интересны и вёрстка, и игровая механика, и то, как всё это в итоге собирается в готовую вещь.',
+    'Сайты пишу на чистом JavaScript и TypeScript, без тяжёлых фреймворков там, где они не нужны: так страница открывается быстро даже на слабом телефоне. Приложения для Android — на Kotlin: офлайн и без лишнего веса. Игры в Unity пишу на C#. Модели и текстуры к ним делаю сам в Blender.',
   ],
   en: [
-    'I am a full-cycle developer: I take a project from the idea to the point where you can open, launch or install it. Game mechanics, interface markup and the way it all comes together into a finished product interest me equally.',
-    'On the web I write plain JavaScript and TypeScript — no heavy frameworks where they are not needed, so the site opens quickly even on a weak phone. Mobile apps I build in Kotlin for Android, focused on offline use and a small footprint. For games I work in Unity and C#: mechanics, procedural level generation, enemy behaviour. Art and models I prepare in Blender.',
-    'What matters to me in the work: a project has to be verifiable. Wherever the logic gets complex — procedural level generation, recipe matching, localisation — I write automated checks, so breakage is found before release rather than after.',
+    'I build projects end to end — from the idea to the point where you can open, launch or install them. Interface work, game mechanics and the way it all finally comes together into a finished thing interest me equally.',
+    'Sites I write in plain JavaScript and TypeScript, with no heavy frameworks where they are not needed: that way a page opens fast even on a weak phone. Android apps in Kotlin: offline, no extra weight. Games I write in Unity, in C#. The models and textures for them I make myself in Blender.',
   ],
 };
