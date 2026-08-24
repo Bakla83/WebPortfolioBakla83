@@ -14,6 +14,17 @@ const SCREENS = [
 
 const EXTRA = [['3augustMainLow.jpg', 'categories']];
 
+/* Снято с эмулятора целиком, поэтому сверху и снизу срезаются системные
+   полосы: статус-бар и полоса жестов, по 63 точки при плотности 420. */
+const PRICES = [
+  ['5prices.png', 'prices'],
+  ['6priceCard.png', 'price-card'],
+  ['7priceShop.png', 'price-shop'],
+  ['8priceEdit.png', 'price-edit'],
+];
+
+const BAR = 63;
+
 const W = 2160;
 const H = 1350;
 const GAP = 52;
@@ -23,6 +34,21 @@ await mkdir(OUT, { recursive: true });
 
 for (const [file, name] of [...SCREENS, ...EXTRA]) {
   const out = await sharp(join(SRC, file))
+    .resize({ width: 1080, withoutEnlargement: true })
+    .webp({ quality: 82 })
+    .toFile(join(OUT, `${name}.webp`));
+
+  console.log(
+    `${name.padEnd(14)} ${out.width}x${out.height} ${Math.round(out.size / 1024)}KB`,
+  );
+}
+
+for (const [file, name] of PRICES) {
+  const src = sharp(join(SRC, file));
+  const { width, height } = await src.metadata();
+
+  const out = await src
+    .extract({ left: 0, top: BAR, width, height: height - BAR * 2 })
     .resize({ width: 1080, withoutEnlargement: true })
     .webp({ quality: 82 })
     .toFile(join(OUT, `${name}.webp`));

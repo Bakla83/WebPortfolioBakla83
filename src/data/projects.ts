@@ -882,12 +882,12 @@ export const PROJECTS: Project[] = [
     title: { ru: 'Траты — Android', en: 'Spending — Android' },
     role: { ru: 'Автор проекта', en: 'Sole author' },
     teaser: {
-      ru: 'Удобный учёт денег по категориям и с прогнозом на следующий месяц по среднему значению.',
-      en: 'A convenient way to track money by category, with a forecast for the next month based on the average.',
+      ru: 'Учёт денег по категориям с прогнозом на следующий месяц — и справочник цен, который показывает, где что дешевле.',
+      en: 'Money tracked by category with a forecast for the next month — and a price book that shows where things cost less.',
     },
     summary: {
-      ru: 'Приложение отвечает на один вопрос: сколько можно тратить в день, чтобы дожить до конца месяца, и что будет в следующем. Три вкладки — месяц, лента записей и прогноз. Прогноз строится по каждой категории отдельно: регулярные счета берутся из списка как есть, обычные траты считаются медианой за полгода, крупные разовые покупки выносятся из нормы и возвращаются как ежемесячный резерв. Заработок не угадывается вовсе — его вводит пользователь, потому что свою зарплату он знает точнее любой статистики. Все данные лежат в одном JSON-файле во внутренней памяти: интернет-разрешения в манифесте нет.',
-      en: 'The app answers one question: how much can be spent per day to reach the end of the month, and what the next one will look like. Three tabs — the month, the feed of records and the forecast. The forecast is built per category: regular bills are taken from a list as they are, everyday spending is the median of the last six months, and big one-off buys are pulled out of the norm and returned as a monthly reserve. Earnings are not guessed at all — you type them in, because you know your own paycheque better than any statistic. Everything lives in a single JSON file in internal storage: there is no internet permission in the manifest.',
+      ru: 'Приложение отвечает на один вопрос: сколько можно тратить в день, чтобы дожить до конца месяца, и что будет в следующем. Три вкладки — месяц, лента записей и прогноз. Прогноз строится по каждой категории отдельно: регулярные счета берутся из списка как есть, обычные траты считаются медианой за полгода, крупные разовые покупки выносятся из нормы и возвращаются как ежемесячный резерв. Заработок не угадывается вовсе — его вводит пользователь, потому что свою зарплату он знает точнее любой статистики. Все данные лежат в одном JSON-файле во внутренней памяти: интернет-разрешения в манифесте нет.\n\nОтдельный раздел — цены. Таблица «товар × магазин» отвечает на вопрос, где что брать: цены приводятся к одной единице, самая выгодная клетка подсвечивается, а магазин выбирается один раз и запоминается — в зале не нужно каждый раз указывать, где вы стоите. Товары раскладываются по двадцати двум разделам по названию, причём правило ищет по началу слова, а не по вхождению: «шоколад» содержит «кола», и по вхождению шоколад уехал бы в напитки. Вся таблица выгружается в CSV.',
+      en: 'The app answers one question: how much can be spent per day to reach the end of the month, and what the next one will look like. Three tabs — the month, the feed of records and the forecast. The forecast is built per category: regular bills are taken from a list as they are, everyday spending is the median of the last six months, and big one-off buys are pulled out of the norm and returned as a monthly reserve. Earnings are not guessed at all — you type them in, because you know your own paycheque better than any statistic. Everything lives in a single JSON file in internal storage: there is no internet permission in the manifest.\n\nA separate section holds the prices. A goods × shops table answers the question of what to buy where: every price is reduced to one unit, the best cell is highlighted, and the shop is picked once and remembered — no need to say where you are standing every time you are in the aisle. Goods are sorted into twenty-two sections by their names, and a rule matches the start of a word rather than any substring: “шоколад” (chocolate) contains “кола” (cola), and by substring the chocolate would have ended up in the drinks. The whole table exports to CSV.',
     },
     highlights: {
       ru: [
@@ -901,6 +901,11 @@ export const PROJECTS: Project[] = [
         'Все суммы — целые копейки в Long, ни одного double в деньгах; хранение — JSON во внутренней памяти, запись атомарная через временный файл и в фоновом потоке',
         'В манифесте нет доступа в интернет: только уведомления и будильники для напоминаний о платежах, которые переживают перезагрузку телефона',
         'Release-сборка 1,5 МБ: R8, вырезание ресурсов, Views и ViewBinding вместо Compose, только два языка в сборке',
+        'Цены сравниваются в пересчёте на единицу, а не по ценнику: 900 г за 11,70 дороже килограмма за 11,10, и в таблице это видно без калькулятора',
+        'Карточка товара разводит два смысла цены: «на полке» — то, что написано на ценнике, «в пересчёте» — за килограмм и за сто граммов',
+        'Вид одного магазина отвечает на вопрос «что брать здесь»: по каким позициям он дешевле всех, а по каким дешевле сосед и на сколько',
+        'Единица у каждого товара своя: яйца поштучно, жидкости в миллилитрах и литрах, вес в граммах и килограммах — пересчёт считается прямо во время ввода',
+        'Выгрузка в таблицу: девятнадцать колонок, строки отсортированы по цене за единицу, рядом — сколько магазинов знают товар и насколько эта цена хуже лучшей',
       ],
       en: [
         'A category norm is the median of six months, not the average: one month with guests should not rewrite the norm for half a year',
@@ -913,6 +918,11 @@ export const PROJECTS: Project[] = [
         'Every sum is whole minor units in a Long, not a single double in the money; storage is JSON in internal memory, written atomically through a temporary file on a background thread',
         'No internet access in the manifest: only notifications and alarms for payment reminders, which survive a reboot of the phone',
         'A 1.5 MB release build: R8, resource shrinking, Views and ViewBinding instead of Compose, only two languages bundled',
+        'Prices are compared per unit rather than by the label: 900 g for 11.70 is dearer than a kilo for 11.10, and the table shows that without a calculator',
+        'The item card separates two meanings of a price: “on the shelf” is what the label says, “per unit” is the price per kilo and per hundred grams',
+        'The single-shop view answers “what should I buy here”: which items it has cheapest, and where a neighbour is cheaper and by how much',
+        'Every item carries its own unit: eggs by the piece, liquids in millilitres and litres, weight in grams and kilos — the conversion is computed as you type',
+        'Export to a spreadsheet: nineteen columns, rows sorted by unit price, alongside how many shops know the item and how far this price is from the best one',
       ],
     },
 
@@ -976,6 +986,58 @@ export const PROJECTS: Project[] = [
         caption: {
           ru: 'Прогноз разделяет обычные траты и запас. Светлая тема идёт за системной настройкой, но её можно выбрать и вручную',
           en: 'The forecast splits everyday spending from the reserve. The light theme follows the system setting, and can also be chosen by hand',
+        },
+      },
+      {
+        src: '/media/traty/prices.webp',
+        width: 1080,
+        height: 2274,
+        alt: {
+          ru: 'Таблица цен: товары по строкам, магазины по столбцам, выгодные клетки подсвечены',
+          en: 'The price table: goods in rows, shops in columns, the best cells highlighted',
+        },
+        caption: {
+          ru: 'Все цены приведены к одной единице, поэтому колонки сравнимы между собой. Зелёная клетка — где дешевле всего, розовая — где дороже; под ценой стоит фасовка, из которой пересчёт и сделан',
+          en: 'Every price is reduced to the same unit, so the columns can be compared. A green cell is the cheapest, a pink one is dearer; under the price is the pack size the conversion came from',
+        },
+      },
+      {
+        src: '/media/traty/price-card.webp',
+        width: 1080,
+        height: 2274,
+        alt: {
+          ru: 'Карточка товара: цена на полке и цена в пересчёте по каждому магазину',
+          en: 'The item card: the shelf price and the unit price for each shop',
+        },
+        caption: {
+          ru: 'Два смысла цены разведены: слева то, что написано на ценнике, справа — за килограмм и за сто граммов. Видно и разницу между фасовками одного магазина: 500 г выходят дороже килограмма на 17%',
+          en: 'The two meanings of a price are kept apart: on the left what the label says, on the right the price per kilo and per hundred grams. The difference between pack sizes in one shop shows up too: 500 g works out 17% dearer than the kilo',
+        },
+      },
+      {
+        src: '/media/traty/price-shop.webp',
+        width: 1080,
+        height: 2274,
+        alt: {
+          ru: 'Вид одного магазина: цена здесь и подсказка, где дешевле',
+          en: 'The single-shop view: the price here and a hint of where it is cheaper',
+        },
+        caption: {
+          ru: 'Магазин выбирается один раз и запоминается. Список показывает, что выгодно брать именно здесь, и где дешевле по остальным позициям — с ценой соседа рядом',
+          en: 'The shop is chosen once and remembered. The list shows what is worth buying right here, and where the rest is cheaper — with the neighbour’s price beside it',
+        },
+      },
+      {
+        src: '/media/traty/price-edit.webp',
+        width: 1080,
+        height: 2274,
+        alt: {
+          ru: 'Правка цены: фасовка, единица измерения и пересчёт под полями ввода',
+          en: 'Editing a price: pack size, unit and the conversion under the input fields',
+        },
+        caption: {
+          ru: 'Единица выбирается под товар — граммы, килограммы, миллилитры, литры или штуки. Пересчёт считается прямо во время ввода, а цена без скидки хранится рядом, чтобы акция не выдавала себя за обычную цену',
+          en: 'The unit is chosen to fit the item — grams, kilos, millilitres, litres or pieces. The conversion is computed as you type, and the undiscounted price is kept alongside so a promotion cannot pass for the usual one',
         },
       },
     ],
