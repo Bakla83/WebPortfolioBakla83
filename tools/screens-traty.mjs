@@ -2,7 +2,7 @@ import sharp from 'sharp';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const SRC = join(import.meta.dirname, '..', '..', 'traty-android');
+const SRC = join(import.meta.dirname, '..', '..', 'AndroidApp', 'traty-android');
 const OUT = join(import.meta.dirname, '..', 'public', 'media', 'traty');
 
 const SCREENS = [
