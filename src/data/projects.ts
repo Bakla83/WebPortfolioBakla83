@@ -582,7 +582,7 @@ export const PROJECTS: Project[] = [
     },
     highlights: {
       ru: [
-        '93 рецепта и 137 продуктов в каталоге по 12 категориям',
+        '108 рецептов и 215 продуктов в каталоге по 14 разделам, у каждого продукта своё КБЖУ',
         'Замены: нет бекона, но есть ветчина — рецепт всё равно соберётся, замена отмечена в карточке',
         'Поиск с автодополнением и синонимами: «картошка» находит картофель, «tomatoes» и «помидоры» — одна и та же запись',
         'Свои рецепты и продукты добавляются прямо на сайте, редактировать файлы не нужно',
@@ -590,7 +590,7 @@ export const PROJECTS: Project[] = [
         'Сборка падает, если что-то не переведено или разошлось число шагов — база не может разъехаться незаметно',
       ],
       en: [
-        '93 recipes and 137 products in a catalogue across 12 categories',
+        '108 recipes and 215 products in a catalogue across 14 sections, each product with its own nutrition figures',
         'Substitutions: no bacon but you have ham — the recipe still comes together, with the swap flagged on the card',
         'Search with autocomplete and synonyms: both "tomatoes" and the Russian "помидоры" resolve to the same entry',
         'Your own recipes and products are added right on the site, with no file editing',
