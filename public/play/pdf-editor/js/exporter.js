@@ -4,7 +4,14 @@ import { face, loadFontkit } from './fonts.js';
 import { ASCENT, alignOffset, wrap } from './layout.js';
 import { isDirty, state } from './store.js';
 
-const BLEED = 0.4;
+/**
+ * Заливка перекрывает исходное место с запасом: у крайних букв чернила выходят
+ * за ширину набора, а у «у» и «g» хвост опускается ниже рамки абзаца — без
+ * запаса от старого текста оставались тонкие следы.
+ */
+function bleedFor(size) {
+  return Math.max(0.6, size * 0.12);
+}
 
 function toRgb(rgb, c) {
   return rgb((c[0] || 0) / 255, (c[1] || 0) / 255, (c[2] || 0) / 255);
@@ -37,11 +44,12 @@ export async function buildPdf() {
        мог бы уйти под заливку соседнего. */
     for (const block of edited) {
       if (block.created) continue;
+      const bleed = bleedFor(block.size);
       target.drawRectangle({
-        x: block.ox - BLEED,
-        y: block.otop - block.oh - BLEED,
-        width: block.ow + BLEED * 2,
-        height: block.oh + BLEED * 2,
+        x: block.ox - bleed,
+        y: block.otop - block.oh - bleed,
+        width: block.ow + bleed * 2,
+        height: block.oh + bleed * 2,
         color: toRgb(rgb, block.bg || [255, 255, 255]),
       });
     }

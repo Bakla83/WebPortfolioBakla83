@@ -14,6 +14,7 @@ const SPACE_GAP = 0.22;
 const PARAGRAPH_LEADING = 1.55;
 const SIZE_JUMP = 0.12;
 const OVERLAP = 0.25;
+const COLUMN_GAP = 2;
 
 let counter = 0;
 
@@ -53,41 +54,69 @@ function items(textContent) {
 
 function toLines(list) {
   const sorted = [...list].sort((a, b) => b.y - a.y || a.x - b.x);
-  const lines = [];
+  const rows = [];
 
   for (const item of sorted) {
-    const line = lines.find(
+    const row = rows.find(
       (l) => Math.abs(l.y - item.y) <= Math.max(l.size, item.size) * LINE_TOLERANCE,
     );
-    if (line) {
-      line.parts.push(item);
-      line.size = Math.max(line.size, item.size);
+    if (row) {
+      row.parts.push(item);
+      row.size = Math.max(row.size, item.size);
     } else {
-      lines.push({ y: item.y, size: item.size, parts: [item] });
+      rows.push({ y: item.y, size: item.size, parts: [item] });
     }
   }
 
-  for (const line of lines) {
-    line.parts.sort((a, b) => a.x - b.x);
+  const lines = [];
+  for (const row of rows) {
+    row.parts.sort((a, b) => a.x - b.x);
 
-    let text = '';
-    let prev = null;
-    for (const part of line.parts) {
-      if (prev) {
-        const gap = part.x - (prev.x + prev.w);
-        if (gap > part.size * SPACE_GAP && !/\s$/.test(text) && !/^\s/.test(part.str)) text += ' ';
+    /* Одна базовая линия — ещё не одна строка: колонки резюме и ячейки таблицы
+       стоят на общей высоте. Широкий разрыв делит строку на самостоятельные
+       куски, иначе левая колонка склеилась бы с правой в один абзац. */
+    let segment = [];
+    for (const part of row.parts) {
+      const prev = segment[segment.length - 1];
+      const gap = prev ? part.x - (prev.x + prev.w) : 0;
+      if (prev && gap > Math.max(part.size * COLUMN_GAP, 20)) {
+        lines.push(makeLine(row, segment));
+        segment = [];
       }
-      text += part.str;
-      prev = part;
+      segment.push(part);
     }
-
-    line.text = text.replace(/\s+$/, '');
-    line.x = line.parts[0].x;
-    line.right = Math.max(...line.parts.map((p) => p.x + p.w));
-    line.font = line.parts[0].font;
+    if (segment.length) lines.push(makeLine(row, segment));
   }
 
-  return lines.filter((l) => l.text.trim().length).sort((a, b) => b.y - a.y);
+  return lines.filter((l) => l.text.trim().length).sort((a, b) => b.y - a.y || a.x - b.x);
+}
+
+function makeLine(row, parts) {
+  let text = '';
+  let prev = null;
+  for (const part of parts) {
+    if (prev) {
+      const gap = part.x - (prev.x + prev.w);
+      if (gap > part.size * SPACE_GAP && !/\s$/.test(text) && !/^\s/.test(part.str)) text += ' ';
+    }
+    text += part.str;
+    prev = part;
+  }
+
+  /* Базовая линия своя у каждого куска: строки соседних колонок попадают в одну
+     полосу с разбросом в пару пунктов, и общая высота увела бы рамку абзаца
+     вверх — заливка перестала бы накрывать хвосты букв. */
+  const baselines = parts.map((p) => p.y).sort((a, b) => a - b);
+
+  return {
+    y: baselines[Math.floor(baselines.length / 2)],
+    size: Math.max(...parts.map((p) => p.size)),
+    parts,
+    text: text.replace(/\s+$/, ''),
+    x: parts[0].x,
+    right: Math.max(...parts.map((p) => p.x + p.w)),
+    font: parts[0].font,
+  };
 }
 
 function overlapRatio(a, b) {
@@ -131,21 +160,27 @@ export function buildBlocks(textContent) {
   const styles = textContent.styles || {};
   const lines = toLines(items(textContent));
   const blocks = [];
-  let current = null;
-  let leading = 0;
 
+  /* Абзац продолжается не обязательно следующей строкой списка: в двухколоночной
+     вёрстке между двумя строками одной колонки стоит строка соседней. Поэтому
+     строка ищет себе абзац среди всех открытых, а не смотрит только назад. */
   for (const line of lines) {
-    if (current && sameBlock(current.lines[current.lines.length - 1], line, leading)) {
-      const prev = current.lines[current.lines.length - 1];
-      leading = leading || prev.y - line.y;
-      current.lines.push(line);
+    let host = null;
+    for (let i = blocks.length - 1; i >= 0 && !host; i -= 1) {
+      const candidate = blocks[i];
+      const last = candidate.lines[candidate.lines.length - 1];
+      if (last.y - line.y > Math.max(last.size, line.size) * PARAGRAPH_LEADING) break;
+      if (sameBlock(last, line, candidate.leading)) host = candidate;
+    }
+
+    if (host) {
+      const last = host.lines[host.lines.length - 1];
+      host.leading = host.leading || last.y - line.y;
+      host.lines.push(line);
     } else {
-      if (current) blocks.push(current);
-      current = { lines: [line] };
-      leading = 0;
+      blocks.push({ lines: [line], leading: 0 });
     }
   }
-  if (current) blocks.push(current);
 
   return blocks.map((group) => {
     const ls = group.lines;
@@ -186,10 +221,6 @@ export function buildBlocks(textContent) {
 
 const INK_GAP = 60;
 
-function quantize(r, g, b) {
-  return ((r >> 4) << 8) | ((g >> 4) << 4) | (b >> 4);
-}
-
 function distance(a, b) {
   return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) + Math.abs(a[2] - b[2]);
 }
@@ -199,9 +230,10 @@ function distance(a, b) {
  * слое PDF цвета нет, а угадывать «чёрным по белому» — верный способ испортить
  * документ со светлой печатью на плашке.
  *
- * Пиксели раскладываются по грубым вёдрам, но наружу отдаётся среднее реальных
- * значений внутри ведра, а не его округлённый центр: заплатка поверх старого
- * текста должна попадать в тон подложки точно, иначе она видна.
+ * Считаются точные цвета пикселей, без огрубления и усреднения. Ровная заливка
+ * даёт тысячи одинаковых значений и уверенно побеждает; любое усреднение по
+ * диапазону тянуло бы тон в сторону сглаженных краёв букв — на тёмной плашке
+ * заплатка получалась заметно светлее фона.
  */
 export function sampleColors(ctx, rect) {
   const fallback = { fg: [0, 0, 0], bg: [255, 255, 255] };
@@ -222,46 +254,40 @@ export function sampleColors(ctx, rect) {
     return fallback;
   }
 
-  const buckets = new Map();
+  const counts = new Map();
   for (let i = 0; i < data.length; i += 4) {
-    const key = quantize(data[i], data[i + 1], data[i + 2]);
-    let bucket = buckets.get(key);
-    if (!bucket) {
-      bucket = { n: 0, r: 0, g: 0, b: 0 };
-      buckets.set(key, bucket);
-    }
-    bucket.n += 1;
-    bucket.r += data[i];
-    bucket.g += data[i + 1];
-    bucket.b += data[i + 2];
+    const key = (data[i] << 16) | (data[i + 1] << 8) | data[i + 2];
+    counts.set(key, (counts.get(key) || 0) + 1);
   }
 
-  const mean = (bucket) => [
-    Math.round(bucket.r / bucket.n),
-    Math.round(bucket.g / bucket.n),
-    Math.round(bucket.b / bucket.n),
-  ];
+  const rgb = (key) => [(key >> 16) & 255, (key >> 8) & 255, key & 255];
 
-  let widest = null;
-  for (const bucket of buckets.values()) if (!widest || bucket.n > widest.n) widest = bucket;
-  if (!widest) return fallback;
-  const bg = mean(widest);
+  let bgKey = -1;
+  let bgCount = 0;
+  for (const [key, n] of counts) {
+    if (n > bgCount) {
+      bgCount = n;
+      bgKey = key;
+    }
+  }
+  if (bgKey < 0) return fallback;
+  const bg = rgb(bgKey);
 
-  /* Чернила — самый далёкий от подложки цвет среди тех, что встречаются не
-     единично: у мелкого текста сглаженных краёв больше, чем сплошной заливки
-     буквы, и по частоте победил бы полутон. */
+  /* Чернила — самый далёкий от подложки цвет среди встречающихся не единично:
+     у сглаженного текста полутонов по краям больше, чем сплошной заливки
+     буквы, и по одной частоте победил бы полутон. */
   let common = 0;
-  for (const bucket of buckets.values()) {
-    if (distance(mean(bucket), bg) < INK_GAP) continue;
-    if (bucket.n > common) common = bucket.n;
+  for (const [key, n] of counts) {
+    if (distance(rgb(key), bg) < INK_GAP) continue;
+    if (n > common) common = n;
   }
 
   let ink = null;
   let farthest = INK_GAP;
-  for (const bucket of buckets.values()) {
-    const px = mean(bucket);
+  for (const [key, n] of counts) {
+    if (n < common * 0.1) continue;
+    const px = rgb(key);
     const d = distance(px, bg);
-    if (d < INK_GAP || bucket.n < common * 0.12) continue;
     if (d > farthest) {
       farthest = d;
       ink = px;
