@@ -271,7 +271,25 @@ export function sampleColors(ctx, rect) {
     }
   }
   if (bgKey < 0) return fallback;
-  const bg = rgb(bgKey);
+
+  /* Точный самый частый цвет годится для ровной заливки, но не для подложки,
+     пришедшей картинкой: там сжатие размазывает тон, и одно значение случайно.
+     Берём медиану по каналам среди пикселей рядом с ним — на ровной заливке
+     ответ тот же, на шумной картинке ближе к тому, что видит глаз. */
+  const near = { r: [], g: [], b: [] };
+  const seed = rgb(bgKey);
+  for (let i = 0; i < data.length; i += 4) {
+    const px = [data[i], data[i + 1], data[i + 2]];
+    if (distance(px, seed) > 20) continue;
+    near.r.push(px[0]);
+    near.g.push(px[1]);
+    near.b.push(px[2]);
+  }
+  const median = (list) => {
+    list.sort((a, b) => a - b);
+    return list[Math.floor(list.length / 2)];
+  };
+  const bg = near.r.length ? [median(near.r), median(near.g), median(near.b)] : seed;
 
   /* Чернила — самый далёкий от подложки цвет среди встречающихся не единично:
      у сглаженного текста полутонов по краям больше, чем сплошной заливки

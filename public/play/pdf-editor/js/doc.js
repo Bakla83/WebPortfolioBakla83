@@ -5,7 +5,9 @@ import { buildBlocks, sampleColors } from './blocks.js';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL('../vendor/pdf.worker.min.js', import.meta.url).href;
 
-const SAMPLE_SCALE = 1.5;
+/* Крупнее, чем нужно для показа: на мелком растре подложка из картинки
+   пересчитывается со сглаживанием и уводит цвет. */
+const SAMPLE_SCALE = 2.5;
 
 export async function openPdf(bytes) {
   /* pdf.js забирает буфер себе, поэтому исходник для экспорта храним отдельно. */
