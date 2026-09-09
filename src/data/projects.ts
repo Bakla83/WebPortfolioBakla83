@@ -635,6 +635,82 @@ export const PROJECTS: Project[] = [
     links: [{ kind: 'live', url: '/play/chto-prigotovit/index.html' }],
   },
   {
+    slug: 'pdf-editor',
+    section: 'websites',
+    order: 2,
+    year: 2026,
+    tech: ['JavaScript', 'pdf.js', 'pdf-lib', 'fontkit', 'IndexedDB'],
+    title: { ru: 'Правка PDF', en: 'PDF Text Editor' },
+    role: { ru: 'Автор проекта', en: 'Sole author' },
+    teaser: {
+      ru: 'Открываете PDF и правите текст прямо на странице: строки переносятся сами, соседние абзацы сдвигаются.',
+      en: 'Open a PDF and edit the text right on the page: lines re-wrap themselves and the paragraphs below move down.',
+    },
+    summary: {
+      ru: 'В PDF нет ни абзацев, ни даже строк — только россыпь кусочков текста с координатами. Приложение собирает из них абзацы: склеивает кусочки в строки по базовой линии, строки — в блоки по межстрочному расстоянию и общей колонке. После этого документ правится как в текстовом редакторе. Всё считает браузер: файл никуда не отправляется, а черновик хранится на самом компьютере и переживает перезагрузку страницы.',
+      en: 'A PDF has no paragraphs — not even lines, just a scatter of text fragments with coordinates. The app rebuilds paragraphs out of them: fragments are joined into lines by their baseline, lines into blocks by leading and shared column. After that the document edits like a text file. Everything runs in the browser: the file is never uploaded, and the draft is kept on the machine itself, surviving a page reload.',
+    },
+    highlights: {
+      ru: [
+        'Текст адаптируется: строки переносятся по ширине блока, а блоки ниже уезжают ровно на столько, на сколько вырос абзац',
+        'Режим «ужать под исходную высоту» — кегль уменьшается сам, когда раздвигать вёрстку нельзя',
+        'Перенос строк на экране и в готовом файле считается одними метриками, поэтому предпросмотр совпадает с результатом построчно',
+        'Цвет текста и подложки снимаются с отрисованной страницы, а не угадываются: светлая печать на плашке остаётся собой',
+        'Нетронутые абзацы уходят в файл как есть, без перерисовки и потери качества',
+        'Новые надписи ставятся в любом месте, в том числе поверх сканов без текстового слоя',
+        'Поиск по всему документу, отмена на 80 шагов, автосохранение черновика в IndexedDB',
+      ],
+      en: [
+        'Text adapts: lines re-wrap to the block width, and the blocks below shift by exactly how much the paragraph grew',
+        'A “shrink to the original height” mode drops the font size on its own where the layout must not move',
+        'Line breaking on screen and in the saved file uses the same metrics, so the preview matches the result line for line',
+        'Text and background colours are sampled from the rendered page rather than guessed, so light type on a filled panel survives',
+        'Untouched paragraphs go into the file as they were, with no redrawing and no loss of quality',
+        'New captions can be placed anywhere, including on top of scans with no text layer',
+        'Full-document search, 80 steps of undo, and a draft auto-saved to IndexedDB',
+      ],
+    },
+    status: {
+      ru: 'Работает в браузере, файл не покидает компьютер',
+      en: 'Runs in the browser; the file never leaves the computer',
+    },
+    cover: {
+      src: '/media/pdf-editor/cover.png',
+      width: 2160,
+      height: 1350,
+      alt: {
+        ru: 'Документ открыт в редакторе, абзац выделен, справа панель блока',
+        en: 'A document open in the editor with a paragraph selected and the block panel on the right',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/pdf-editor/desktop-2.png',
+        width: 2160,
+        height: 1350,
+        alt: { ru: 'Абзац после правки', en: 'A paragraph after editing' },
+        caption: {
+          ru: 'Абзац стал длиннее: строки перенеслись сами, заголовок и текст ниже уехали вниз',
+          en: 'The paragraph got longer: lines re-wrapped by themselves and the heading and text below moved down',
+        },
+      },
+      {
+        src: '/media/pdf-editor/mobile.png',
+        width: 1170,
+        height: 2532,
+        alt: { ru: 'Редактор на экране телефона', en: 'The editor on a phone screen' },
+      },
+    ],
+    demo: {
+      src: '/play/pdf-editor/index.html',
+      note: {
+        ru: 'Нажмите «Открыть пример» — и правьте текст договора прямо в рамке. Можно открыть и свой PDF: он никуда не отправляется.',
+        en: 'Press “Открыть пример” to edit the sample contract right inside the frame. Your own PDF works too — nothing is uploaded.',
+      },
+    },
+    links: [{ kind: 'live', url: '/play/pdf-editor/index.html' }],
+  },
+  {
     slug: 'oktava',
     section: 'websites',
     featured: true,

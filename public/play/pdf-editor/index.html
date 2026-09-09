@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Правка PDF — текст прямо в документе</title>
+    <meta
+      name="description"
+      content="Открывает PDF, находит в нём абзацы и даёт править текст прямо на странице. Строки переносятся сами, соседние блоки сдвигаются. Файл не покидает браузер."
+    />
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+
+  <body>
+    <div class="app" id="app" data-ready="no">
+      <header class="bar">
+        <div class="bar__group bar__group--name">
+          <button class="btn btn--primary" id="pick" type="button">Открыть PDF</button>
+          <input id="file" type="file" accept="application/pdf,.pdf" hidden />
+          <span class="doc" id="docName">файл не выбран</span>
+        </div>
+
+        <div class="bar__group">
+          <button class="btn btn--icon" id="prev" type="button" title="Предыдущая страница">‹</button>
+          <span class="pill" id="pageNow">—</span>
+          <button class="btn btn--icon" id="next" type="button" title="Следующая страница">›</button>
+        </div>
+
+        <div class="bar__group">
+          <button class="btn btn--icon" id="zoomOut" type="button" title="Мельче">−</button>
+          <span class="pill" id="zoomNow">100%</span>
+          <button class="btn btn--icon" id="zoomIn" type="button" title="Крупнее">+</button>
+          <button class="btn" id="zoomFit" type="button">По ширине</button>
+        </div>
+
+        <div class="bar__group">
+          <button class="btn btn--icon" id="undo" type="button" title="Отменить · Ctrl+Z">↶</button>
+          <button class="btn btn--icon" id="redo" type="button" title="Вернуть · Ctrl+Shift+Z">↷</button>
+          <button class="btn" id="addText" type="button" title="Добавить надпись">Текст</button>
+        </div>
+
+        <div class="bar__group bar__group--end">
+          <span class="edits" id="edits">правок нет</span>
+          <button class="btn" id="resetAll" type="button">Сбросить</button>
+          <button class="btn btn--primary" id="saveFile" type="button">Сохранить PDF</button>
+        </div>
+      </header>
+
+      <div class="body">
+        <aside class="side">
+          <label class="field">
+            <span class="field__label">Поиск по тексту</span>
+            <input id="search" type="search" placeholder="слово или фраза" autocomplete="off" />
+          </label>
+          <div class="results" id="results" hidden></div>
+
+          <label class="check">
+            <input id="pushDown" type="checkbox" checked />
+            <span>Сдвигать текст ниже при удлинении абзаца</span>
+          </label>
+
+          <details class="help">
+            <summary>Как это работает</summary>
+            <p>
+              Приложение разбирает текстовый слой PDF и собирает из него абзацы. Кликните
+              по абзацу — и правьте как в обычном редакторе: строки переносятся сами,
+              а блоки ниже сдвигаются, чтобы текст не наползал.
+            </p>
+            <p>
+              Нетронутые абзацы сохраняются в файл как есть, без потери качества.
+              Изменённые перерисовываются встроенным шрифтом PT Sans или PT Serif —
+              оригинальную гарнитуру документа переиспользовать нельзя.
+            </p>
+            <p>
+              Файл никуда не отправляется: всё считает браузер. Черновик хранится
+              на этом компьютере, чтобы правки пережили перезагрузку страницы.
+            </p>
+            <p class="help__warn">
+              Старый текст закрывается плашкой цвета подложки, но остаётся внутри файла.
+              Для скрытия секретных данных это не годится.
+            </p>
+          </details>
+
+          <p class="keys">
+            <b>Ctrl+Z</b> отменить · <b>Ctrl+S</b> сохранить · <b>Ctrl+F</b> поиск ·
+            <b>Esc</b> выйти из блока
+          </p>
+        </aside>
+
+        <section class="viewport" id="viewport">
+          <p class="notice" id="notice" hidden></p>
+
+          <div class="stage" id="stage">
+            <canvas id="canvas"></canvas>
+            <div class="layer" id="layer"></div>
+          </div>
+
+          <div class="empty" id="empty">
+            <h1>Правка PDF</h1>
+            <p>
+              Откройте документ — приложение найдёт в нём абзацы и даст править текст прямо
+              на странице. Ничего никуда не загружается.
+            </p>
+            <div class="empty__buttons">
+              <button class="btn btn--primary btn--big" id="pickEmpty" type="button">
+                Выбрать файл
+              </button>
+              <button class="btn btn--big" id="pickSample" type="button">Открыть пример</button>
+            </div>
+            <p class="empty__hint">или перетащите PDF в окно</p>
+          </div>
+        </section>
+
+        <aside class="inspector" id="inspector" hidden>
+          <h2>Блок</h2>
+
+          <label class="field">
+            <span class="field__label">Шрифт</span>
+            <select id="family"></select>
+          </label>
+
+          <div class="row">
+            <label class="field field--narrow">
+              <span class="field__label">Кегль</span>
+              <input id="size" type="number" min="4" max="200" step="0.5" />
+            </label>
+            <label class="field field--narrow">
+              <span class="field__label">Цвет</span>
+              <input id="color" type="color" />
+            </label>
+          </div>
+
+          <div class="row">
+            <button class="btn btn--toggle" id="bold" type="button" aria-pressed="false"><b>Ж</b></button>
+            <button class="btn btn--toggle" id="italic" type="button" aria-pressed="false"><i>К</i></button>
+            <button class="btn btn--toggle" data-align="left" type="button" aria-pressed="true">◧</button>
+            <button class="btn btn--toggle" data-align="center" type="button" aria-pressed="false">▣</button>
+            <button class="btn btn--toggle" data-align="right" type="button" aria-pressed="false">◨</button>
+          </div>
+
+          <label class="check">
+            <input id="autoFit" type="checkbox" />
+            <span>Ужимать текст под исходную высоту</span>
+          </label>
+
+          <div class="row row--end">
+            <button class="btn" id="revert" type="button">Вернуть исходный</button>
+            <button class="btn btn--danger" id="remove" type="button">Удалить</button>
+          </div>
+
+          <p class="hint">
+            Тяните за уголок слева сверху, чтобы сдвинуть блок, и за правый край —
+            чтобы поменять ширину и перенос строк.
+          </p>
+        </aside>
+      </div>
+
+      <footer class="foot">
+        <span id="status"></span>
+      </footer>
+    </div>
+
+    <div class="overlay" id="busy" hidden>
+      <div class="overlay__card"><span class="spinner"></span><span id="busyText"></span></div>
+    </div>
+
+    <div class="overlay" id="restore" hidden>
+      <div class="overlay__card overlay__card--wide">
+        <h2>Продолжить прошлую правку?</h2>
+        <p id="restoreText"></p>
+        <div class="row row--end">
+          <button class="btn" id="restoreNo" type="button">Начать заново</button>
+          <button class="btn btn--primary" id="restoreYes" type="button">Продолжить</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="drop" id="drop" hidden><span>Отпустите файл здесь</span></div>
+
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
