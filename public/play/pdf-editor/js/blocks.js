@@ -184,6 +184,8 @@ export function buildBlocks(textContent) {
 
 /* --- цвета ------------------------------------------------------------- */
 
+const INK_GAP = 60;
+
 function quantize(r, g, b) {
   return ((r >> 4) << 8) | ((g >> 4) << 4) | (b >> 4);
 }
@@ -193,16 +195,24 @@ function distance(a, b) {
 }
 
 /**
- * Цвет текста и подложки берём с уже нарисованной страницы: в текстовом слое
- * PDF цвета нет, а угадывать «чёрным по белому» — верный способ испортить
+ * Цвет текста и подложки снимаются с уже нарисованной страницы: в текстовом
+ * слое PDF цвета нет, а угадывать «чёрным по белому» — верный способ испортить
  * документ со светлой печатью на плашке.
+ *
+ * Пиксели раскладываются по грубым вёдрам, но наружу отдаётся среднее реальных
+ * значений внутри ведра, а не его округлённый центр: заплатка поверх старого
+ * текста должна попадать в тон подложки точно, иначе она видна.
  */
 export function sampleColors(ctx, rect) {
   const fallback = { fg: [0, 0, 0], bg: [255, 255, 255] };
-  const x = Math.max(0, Math.floor(rect.x));
-  const y = Math.max(0, Math.floor(rect.y));
-  const w = Math.min(Math.ceil(rect.w), ctx.canvas.width - x);
-  const h = Math.min(Math.ceil(rect.h), ctx.canvas.height - y);
+
+  /* Поля вокруг блока: у крупного заголовка буквы занимают больше половины
+     рамки, и без запаса самым частым цветом оказались бы чернила. */
+  const pad = Math.max(2, rect.h * 0.3);
+  const x = Math.max(0, Math.floor(rect.x - pad));
+  const y = Math.max(0, Math.floor(rect.y - pad));
+  const w = Math.min(Math.ceil(rect.w + pad * 2), ctx.canvas.width - x);
+  const h = Math.min(Math.ceil(rect.h + pad * 2), ctx.canvas.height - y);
   if (w < 2 || h < 2) return fallback;
 
   let data;
@@ -212,42 +222,51 @@ export function sampleColors(ctx, rect) {
     return fallback;
   }
 
-  const counts = new Map();
+  const buckets = new Map();
   for (let i = 0; i < data.length; i += 4) {
-    const q = quantize(data[i], data[i + 1], data[i + 2]);
-    counts.set(q, (counts.get(q) || 0) + 1);
-  }
-
-  let bgKey = 0;
-  let bgCount = -1;
-  for (const [q, n] of counts) {
-    if (n > bgCount) {
-      bgCount = n;
-      bgKey = q;
+    const key = quantize(data[i], data[i + 1], data[i + 2]);
+    let bucket = buckets.get(key);
+    if (!bucket) {
+      bucket = { n: 0, r: 0, g: 0, b: 0 };
+      buckets.set(key, bucket);
     }
+    bucket.n += 1;
+    bucket.r += data[i];
+    bucket.g += data[i + 1];
+    bucket.b += data[i + 2];
   }
-  const bg = [((bgKey >> 8) & 15) * 17, ((bgKey >> 4) & 15) * 17, (bgKey & 15) * 17];
 
-  let fg = null;
-  let best = 60;
-  const seen = new Map();
-  for (let i = 0; i < data.length; i += 4) {
-    const px = [data[i], data[i + 1], data[i + 2]];
+  const mean = (bucket) => [
+    Math.round(bucket.r / bucket.n),
+    Math.round(bucket.g / bucket.n),
+    Math.round(bucket.b / bucket.n),
+  ];
+
+  let widest = null;
+  for (const bucket of buckets.values()) if (!widest || bucket.n > widest.n) widest = bucket;
+  if (!widest) return fallback;
+  const bg = mean(widest);
+
+  /* Чернила — самый далёкий от подложки цвет среди тех, что встречаются не
+     единично: у мелкого текста сглаженных краёв больше, чем сплошной заливки
+     буквы, и по частоте победил бы полутон. */
+  let common = 0;
+  for (const bucket of buckets.values()) {
+    if (distance(mean(bucket), bg) < INK_GAP) continue;
+    if (bucket.n > common) common = bucket.n;
+  }
+
+  let ink = null;
+  let farthest = INK_GAP;
+  for (const bucket of buckets.values()) {
+    const px = mean(bucket);
     const d = distance(px, bg);
-    if (d < 60) continue;
-    const q = quantize(px[0], px[1], px[2]);
-    const entry = seen.get(q) || { n: 0, px, d };
-    entry.n += 1;
-    seen.set(q, entry);
-  }
-  let bestCount = 0;
-  for (const entry of seen.values()) {
-    if (entry.n > bestCount || (entry.n === bestCount && entry.d > best)) {
-      bestCount = entry.n;
-      best = entry.d;
-      fg = entry.px;
+    if (d < INK_GAP || bucket.n < common * 0.12) continue;
+    if (d > farthest) {
+      farthest = d;
+      ink = px;
     }
   }
 
-  return { fg: fg || fallback.fg, bg };
+  return { fg: ink || fallback.fg, bg };
 }
