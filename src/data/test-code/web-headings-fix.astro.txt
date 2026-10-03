@@ -1,0 +1,18 @@
+---
+// components/ProjectCard.astro
+interface Props {
+  project: Project;
+  lang: EnabledLocale;
+  showSection?: boolean;
+  headingLevel?: 2 | 3;
+}
+
+const { project, lang, showSection = false, headingLevel = 3 } = Astro.props;
+const Heading = `h${headingLevel}` as const;
+---
+
+<Heading class="card__title">{title}</Heading>
+
+<!-- pages/[lang]/work/[section]/index.astro: на странице раздела карточки
+     стоят сразу под h1, поэтому их заголовок второго уровня. -->
+<ProjectCard project={project} lang={lang} headingLevel={2} />

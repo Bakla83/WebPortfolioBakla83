@@ -48,6 +48,8 @@ const ru = {
   about: {
     title: 'Обо мне',
     lead: 'Разработчик полного цикла: сайты, приложения, игры и 3D-графика.',
+    description:
+      'Владислав Баклан — разработчик полного цикла: сайты на JavaScript и TypeScript, Android-приложения на Kotlin, игры на Unity и 3D-модели в Blender.',
     skillsTitle: 'Навыки',
     stackTitle: 'Инструменты',
     approachTitle: 'Как я работаю',
@@ -167,6 +169,8 @@ const en: UiStrings = {
   about: {
     title: 'About me',
     lead: 'Full-cycle developer: websites, apps, games and 3D art.',
+    description:
+      'Vladislav Baklan, a full-cycle developer: websites in JavaScript and TypeScript, Android apps in Kotlin, Unity games and 3D models in Blender.',
     skillsTitle: 'Skills',
     stackTitle: 'Tools',
     approachTitle: 'How I work',

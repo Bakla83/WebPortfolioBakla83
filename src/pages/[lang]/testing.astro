@@ -16,7 +16,7 @@ const strings = t(lang);
 const content = {
   ru: {
     eyebrow: 'QA',
-    lead: 'Тест-кейсы по двум проектам: игре на Unity и сайту на WordPress. У каждого кейса предусловия, шаги, ожидаемый результат и код теста. Если кейс нашёл дефект, рядом описано, что было до исправления, и код самого исправления.',
+    lead: 'Тест-кейсы по трём проектам: игре на Unity, сайту на WordPress и этому сайту-портфолио. У каждого кейса предусловия, шаги, ожидаемый результат и код теста. Если кейс нашёл дефект, рядом описано, что было до исправления, и код самого исправления.',
     totals: ['тест-кейсов', 'с автотестами', 'дефектов найдено и закрыто', 'кейсов пройдено'],
     filterProject: 'Проект',
     filterKind: 'Тип',
@@ -29,13 +29,14 @@ const content = {
     methods: 'Виды тестирования',
     run: 'Запуск',
     openProject: 'Страница проекта',
+    openHome: 'На главную',
     cases: 'Тест-кейсы',
     empty: 'Нет кейсов под этот фильтр.',
-    description: 'Тест-кейсы с кодом автотестов: NUnit для игры на Unity и PHP-тесты для сайта на WordPress.',
+    description: 'Тест-кейсы с кодом автотестов: NUnit для игры на Unity, PHP-тесты для сайта на WordPress и Playwright для этого сайта.',
   },
   en: {
     eyebrow: 'QA',
-    lead: 'Test cases from two projects: a Unity game and a WordPress site. Each case has preconditions, steps, an expected result and the test code. When a case found a defect, you also see what happened before the fix and the code of the fix itself.',
+    lead: 'Test cases from three projects: a Unity game, a WordPress site and this portfolio site. Each case has preconditions, steps, an expected result and the test code. When a case found a defect, you also see what happened before the fix and the code of the fix itself.',
     totals: ['test cases', 'automated', 'defects found and fixed', 'cases passed'],
     filterProject: 'Project',
     filterKind: 'Type',
@@ -48,16 +49,17 @@ const content = {
     methods: 'Testing types',
     run: 'How to run',
     openProject: 'Project page',
+    openHome: 'Home page',
     cases: 'Test cases',
     empty: 'No cases match this filter.',
-    description: 'Test cases with automated test code: NUnit for a Unity game and PHP tests for a WordPress site.',
+    description: 'Test cases with automated test code: NUnit for a Unity game, PHP tests for a WordPress site and Playwright for this site.',
   },
 }[lang];
 
 const totals = [
   TEST_CASES.length,
   TEST_CASES.filter((testCase) => testCase.kind === 'auto').length,
-  12,
+  TEST_PROJECTS.reduce((sum, project) => sum + project.defects, 0),
   TEST_CASES.length,
 ].map((value, index) => ({ value: String(value), label: content.totals[index] }));
 ---
@@ -129,7 +131,7 @@ const totals = [
                   ))}
                 </ul>
                 <a class="btn btn--ghost qa-project__link" href={localePath(lang, project.href)}>
-                  {content.openProject}
+                  {project.href ? content.openProject : content.openHome}
                   <Icon name="arrow-right" size={16} />
                 </a>
               </div>

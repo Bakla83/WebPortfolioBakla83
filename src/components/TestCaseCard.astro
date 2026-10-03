@@ -145,8 +145,20 @@ const anchor = testCase.id.toLowerCase();
     border-left: 3px solid var(--accent-color);
     border-radius: var(--radius);
     background: var(--bg-elev);
-    scroll-margin-top: 90px;
+    /* Шапка 68px и липкая панель фильтров под ней. */
+    scroll-margin-top: 150px;
     min-width: 0;
+  }
+
+  /* display: grid сильнее атрибута hidden, без этого фильтр не прятал карточки. */
+  .tc[hidden] {
+    display: none;
+  }
+
+  @media (max-width: 520px) {
+    .tc {
+      scroll-margin-top: 90px;
+    }
   }
 
   :global(:root[data-theme='light']) .tc {
@@ -173,6 +185,9 @@ const anchor = testCase.id.toLowerCase();
   }
 
   .tc__id {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
     font-family: var(--font-mono);
     font-size: 0.8rem;
     letter-spacing: 0.06em;

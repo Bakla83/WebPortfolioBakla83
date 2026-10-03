@@ -22,10 +22,26 @@ import bghBulkEditFix from './test-code/bgh-bulk-edit-fix.php?raw';
 import bghFormLayers from './test-code/bgh-form-layers.php?raw';
 import bghValidation from './test-code/bgh-validation.php?raw';
 
-export type TestProjectId = 'thl' | 'bgh';
+import webSitemap from './test-code/web-sitemap.mjs?raw';
+import webSitemapFix from './test-code/web-sitemap-fix.mjs?raw';
+import webMarkup from './test-code/web-markup.mjs?raw';
+import webHeadingsFix from './test-code/web-headings-fix.astro.txt?raw';
+import webDescriptionFix from './test-code/web-description-fix.astro.txt?raw';
+import webTargets from './test-code/web-targets.mjs?raw';
+import webTargetsFix from './test-code/web-targets-fix.css?raw';
+import webReflow from './test-code/web-reflow.mjs?raw';
+import webKeyboard from './test-code/web-keyboard.mjs?raw';
+import webFilters from './test-code/web-filters.mjs?raw';
+import webFiltersFix from './test-code/web-filters-fix.css?raw';
+import webAnchor from './test-code/web-anchor.mjs?raw';
+import webData from './test-code/web-data.mjs?raw';
+import webMenu from './test-code/web-menu.mjs?raw';
+import webSyncDemosFix from './test-code/web-sync-demos-fix.mjs?raw';
+
+export type TestProjectId = 'thl' | 'bgh' | 'web';
 export type TestKind = 'auto' | 'manual';
 export type TestPriority = 'high' | 'medium' | 'low';
-export type CodeLang = 'csharp' | 'php';
+export type CodeLang = 'csharp' | 'php' | 'javascript' | 'css' | 'astro';
 
 export interface TestCode {
   file: string;
@@ -62,6 +78,8 @@ export interface TestProject {
   href: string;
   stack: string[];
   summary: Localized<string>;
+
+  defects: number;
   environment: Localized<string>;
   stats: { value: string; label: Localized<string> }[];
   methods: Localized<string[]>;
@@ -75,6 +93,7 @@ export const TEST_PROJECTS: TestProject[] = [
     name: 'The Hidden Library',
     accent: 'gold',
     href: 'work/pc-games/the-hidden-library',
+    defects: 9,
     stack: ['Unity 6', 'C#', 'NUnit', 'Unity Test Framework', 'FMOD'],
     summary: {
       ru: '2D point-and-click игра на Unity: сюжет, диалоги, мини-игры, сохранения в трёх слотах и четыре языка. Проверял логику квестов, сохранения, инвентарь и целостность данных сцен.',
@@ -118,6 +137,7 @@ export const TEST_PROJECTS: TestProject[] = [
     name: 'BrandGallery Home',
     accent: 'purple',
     href: 'in-progress',
+    defects: 3,
     stack: ['PHP 8.2', 'WordPress', 'WooCommerce', 'Node.js'],
     summary: {
       ru: 'Сайт салона итальянской мебели на WordPress и WooCommerce: каталог, форма заявки, синхронизация цен с партнёром, админка для сотрудников. Проверял точки входа, защиту формы, права и логику цен.',
@@ -156,6 +176,50 @@ export const TEST_PROJECTS: TestProject[] = [
       'php tools/bulk-edit-test.php',
       'node wp-content/themes/bgh-theme/assets/js/phone.test.js',
     ],
+  },
+  {
+    id: 'web',
+    name: 'WebPortfolioBakla83',
+    accent: 'green',
+    href: '',
+    defects: 8,
+    stack: ['Astro', 'TypeScript', 'Playwright', 'Node.js', 'Cloudflare Pages'],
+    summary: {
+      ru: 'Этот сайт: статическое портфолио на Astro на двух языках, с тёмной и светлой темой и запускаемыми копиями работ. Проверял разметку всех страниц, карту сайта, узкие экраны, клавиатуру, данные проектов и этот раздел.',
+      en: 'This site: a static Astro portfolio in two languages, with dark and light themes and runnable copies of my work. I tested the markup of every page, the sitemap, narrow screens, the keyboard, project data and this section.',
+    },
+    environment: {
+      ru: 'Node 22, Playwright и Chromium. Собранный сайт отдаётся локально с теми же заголовками безопасности, что на Cloudflare Pages',
+      en: 'Node 22, Playwright and Chromium. The built site is served locally with the same security headers as on Cloudflare Pages',
+    },
+    stats: [
+      { value: '150', label: { ru: 'автоматических проверок', en: 'automated checks' } },
+      { value: '8', label: { ru: 'дефектов найдено', en: 'defects found' } },
+      { value: '0', label: { ru: 'провалов после правок', en: 'failures after fixes' } },
+    ],
+    methods: {
+      ru: [
+        'E2E в браузере: язык, тема, меню, обход всех ссылок',
+        'Разметка и SEO каждой страницы: h1, заголовки, canonical, hreflang',
+        'Перенос на 320, 360 и 390 пикселях (WCAG 1.4.10)',
+        'Размер целей касания (WCAG 2.5.8) и клавиатура',
+        'Целостность данных и словарей до сборки',
+        'Заголовки безопасности и CSP',
+      ],
+      en: [
+        'Browser E2E: language, theme, menu, crawl of every link',
+        'Markup and SEO of every page: h1, headings, canonical, hreflang',
+        'Reflow at 320, 360 and 390 pixels (WCAG 1.4.10)',
+        'Target size (WCAG 2.5.8) and keyboard',
+        'Data and dictionary integrity before the build',
+        'Security headers and CSP',
+      ],
+    },
+    run: ['npm run build', 'npm test', 'npm run audit', 'node tools/sync-demos.mjs --check'],
+    note: {
+      ru: '150 проверок — это 46 в новом tools/site-test.mjs и 104 в уже существовавшем tools/audit.mjs. Первый прогон нового набора дал 10 провалов. За девятью стояли 6 дефектов: три провала у корня сайта указали на одну причину, служебную страницу в карте сайта. Десятый был ошибкой самого теста: после клика блок кода переставал подходить под селектор, и проверялся соседний блок. Тест исправлен, поведение страницы осталось прежним.',
+      en: 'The 150 checks are 46 in the new tools/site-test.mjs and 104 in the existing tools/audit.mjs. The first run of the new suite gave 10 failures. Nine of them traced back to 6 defects: three failures on the site root shared one cause, a utility page listed in the sitemap. The tenth was a mistake in the test itself: after a click the code block stopped matching the selector, so the next block was checked instead. The test was fixed; the page behaviour stayed the same.',
+    },
   },
 ];
 
@@ -690,6 +754,357 @@ export const TEST_CASES: TestCase[] = [
       en: 'A Russian number is normalised to +7, the rest are rejected. Links are rejected, sizes with dots pass. Only a fresh stamp with a valid HMAC signature passes.',
     },
     code: [{ file: 'tools/request-test.php', lang: 'php', role: 'test', source: bghValidation }],
+  },
+
+  {
+    id: 'TC-WEB-01',
+    project: 'web',
+    kind: 'auto',
+    priority: 'medium',
+    bug: 'WEB-07',
+    title: {
+      ru: 'В карте сайта все страницы и только те, что открыты для поиска',
+      en: 'The sitemap lists every page and only indexable ones',
+    },
+    level: { ru: 'SEO, проверка сборки', en: 'SEO, build check' },
+    preconditions: {
+      ru: ['Сайт собран в dist', 'Корень / только выбирает язык и закрыт от поиска (noindex)'],
+      en: ['The site is built into dist', 'The root / only picks a language and is closed to search (noindex)'],
+    },
+    steps: {
+      ru: [
+        'Собрать список всех .html страниц в dist/ru и dist/en',
+        'Сравнить его с адресами в sitemap-0.xml',
+        'Проверить, что «В процессе создания» и корень в карту не попали',
+      ],
+      en: [
+        'List every .html page in dist/ru and dist/en',
+        'Compare the list with the addresses in sitemap-0.xml',
+        'Check that “Work in progress” and the root are not in the sitemap',
+      ],
+    },
+    expected: {
+      ru: 'Каждая открытая страница есть в карте. Страниц с noindex в карте нет.',
+      en: 'Every open page is in the sitemap. No noindex page is in it.',
+    },
+    before: {
+      ru: 'Корень / с noindex стоял в карте сайта. Поисковик получает противоречие: страницу просят проиндексировать и тут же запрещают, Search Console помечает это как ошибку. В первом прогоне это дало три провала сразу: язык, заголовок и canonical корня не совпадали с правилами обычных страниц.',
+      en: 'The noindex root / was listed in the sitemap. A search engine gets a contradiction: the page is submitted for indexing and forbidden at once, and Search Console flags it as an error. In the first run this caused three failures: the root’s language, title and canonical broke the rules for normal pages.',
+    },
+    fix: {
+      ru: 'Фильтр карты сайта в astro.config.mjs пропускает корень так же, как «В процессе создания».',
+      en: 'The sitemap filter in astro.config.mjs skips the root the same way it skips “Work in progress”.',
+    },
+    code: [
+      { file: 'tools/site-test.mjs', lang: 'javascript', role: 'test', source: webSitemap },
+      { file: 'astro.config.mjs', lang: 'javascript', role: 'fix', source: webSitemapFix },
+    ],
+  },
+  {
+    id: 'TC-WEB-02',
+    project: 'web',
+    kind: 'auto',
+    priority: 'medium',
+    bug: 'WEB-08, WEB-09',
+    title: {
+      ru: 'Разметка каждой страницы: язык, заголовки, описание, canonical, hreflang',
+      en: 'Markup of every page: language, headings, description, canonical, hreflang',
+    },
+    level: { ru: 'Доступность и SEO, все 66 страниц', en: 'Accessibility and SEO, all 66 pages' },
+    preconditions: {
+      ru: ['Сайт собран, страницы берутся из карты сайта и «В процессе создания»'],
+      en: ['The site is built; pages come from the sitemap plus “Work in progress”'],
+    },
+    steps: {
+      ru: [
+        'Открыть каждую страницу',
+        'Сверить lang документа с языком в адресе',
+        'Посчитать h1 и проверить, что уровни заголовков идут без пропусков',
+        'Измерить длину meta description',
+        'Сверить canonical с адресом страницы и hreflang с существующими страницами',
+      ],
+      en: [
+        'Open every page',
+        'Compare the document lang with the language in the URL',
+        'Count h1 elements and check heading levels never skip',
+        'Measure the meta description length',
+        'Compare canonical with the page URL and hreflang with existing pages',
+      ],
+    },
+    expected: {
+      ru: 'Ровно один h1, после h1 идёт h2, а не h3. Описание от 50 до 200 знаков. canonical ведёт на саму страницу, hreflang ru, en и x-default на существующие страницы.',
+      en: 'Exactly one h1, and an h2 follows it, not an h3. A description of 50 to 200 characters. canonical points to the page itself, hreflang ru, en and x-default to existing pages.',
+    },
+    before: {
+      ru: 'На 12 страницах разделов (6 разделов на двух языках) после h1 сразу шли h3 карточек: программа чтения с экрана показывает в оглавлении дыру. Описание «Обо мне» было 201 и 216 знаков, «В процессе создания» 324 и 360: поиск и превью ссылки в мессенджере обрезали его на полуслове.',
+      en: 'On 12 section pages (6 sections in two languages) the card h3 came right after h1, leaving a gap in a screen reader’s outline. The “About” description was 201 and 216 characters and “Work in progress” 324 and 360, so search results and messenger previews cut it mid-word.',
+    },
+    fix: {
+      ru: 'Уровень заголовка карточки задаётся снаружи: на странице раздела h2, на главной под h2 по-прежнему h3. Для «Обо мне» и «В процессе создания» написаны отдельные короткие описания вместо первого абзаца.',
+      en: 'The card heading level is now set by the page: h2 on a section page, still h3 on the home page under an h2. “About” and “Work in progress” got their own short descriptions instead of the first paragraph.',
+    },
+    code: [
+      { file: 'tools/site-test.mjs', lang: 'javascript', role: 'test', source: webMarkup },
+      { file: 'ProjectCard.astro, work/[section]/index.astro', lang: 'astro', role: 'fix', source: webHeadingsFix },
+      { file: 'i18n/ui.ts, about.astro', lang: 'astro', role: 'fix', source: webDescriptionFix },
+    ],
+  },
+  {
+    id: 'TC-WEB-03',
+    project: 'web',
+    kind: 'auto',
+    priority: 'medium',
+    bug: 'WEB-10',
+    title: {
+      ru: 'Кнопки и ссылки не меньше 24×24 на телефоне',
+      en: 'Buttons and links are at least 24×24 on a phone',
+    },
+    level: { ru: 'Доступность, WCAG 2.2 критерий 2.5.8', en: 'Accessibility, WCAG 2.2 criterion 2.5.8' },
+    preconditions: {
+      ru: ['Экран 390×844, сенсорный ввод'],
+      en: ['A 390×844 screen with touch input'],
+    },
+    steps: {
+      ru: ['Открыть главную, «Обо мне», «Контакты», «Тестирование», раздел и страницу проекта', 'Измерить каждую ссылку, кнопку, summary и поле', 'Ссылки внутри абзаца текста пропустить: это исключение из критерия'],
+      en: ['Open the home, About, Contact, Testing, a section and a project page', 'Measure every link, button, summary and field', 'Skip links inside running text: they are an exception to the criterion'],
+    },
+    expected: {
+      ru: 'Ни одной цели меньше 24 пикселей по ширине или высоте.',
+      en: 'No target is smaller than 24 pixels wide or tall.',
+    },
+    before: {
+      ru: 'Ссылка «Наверх» в подвале 69×23.8 на каждой странице. Ссылка на раздел над заголовком проекта 61×19.8. Номер тест-кейса в этом разделе 74×21.',
+      en: 'The footer “Back to top” link was 69×23.8 on every page. The section link above a project title was 61×19.8. The test case number in this section was 74×21.',
+    },
+    fix: {
+      ru: 'Ссылкам задана минимальная высота: 44 пикселя у «Наверх» и ссылки на раздел, 32 у номера кейса. Внешне они не изменились, выросла только область нажатия.',
+      en: 'The links got a minimum height: 44 pixels for “Back to top” and the section link, 32 for the case number. They look the same; only the tap area grew.',
+    },
+    code: [
+      { file: 'tools/site-test.mjs', lang: 'javascript', role: 'test', source: webTargets },
+      { file: 'Footer.astro, [slug].astro, TestCaseCard.astro', lang: 'css', role: 'fix', source: webTargetsFix },
+    ],
+  },
+  {
+    id: 'TC-WEB-04',
+    project: 'web',
+    kind: 'auto',
+    priority: 'high',
+    title: {
+      ru: 'На 320, 360 и 390 пикселях страницы не ездят вбок',
+      en: 'Pages do not scroll sideways at 320, 360 and 390 pixels',
+    },
+    level: { ru: 'Адаптивность, WCAG 1.4.10', en: 'Responsive layout, WCAG 1.4.10' },
+    preconditions: {
+      ru: ['Мобильный режим браузера с сенсорным вводом'],
+      en: ['Mobile browser mode with touch input'],
+    },
+    steps: {
+      ru: ['Для каждой ширины открыть все страницы сайта', 'Сравнить ширину документа с шириной экрана', 'Если документ шире, найти элемент, который вылезает за край'],
+      en: ['For each width, open every page of the site', 'Compare the document width with the screen width', 'If the document is wider, find the element that sticks out'],
+    },
+    expected: {
+      ru: 'Горизонтальной прокрутки нет ни на одной странице ни на одной ширине.',
+      en: 'No page scrolls sideways at any width.',
+    },
+    code: [{ file: 'tools/site-test.mjs', lang: 'javascript', role: 'test', source: webReflow }],
+  },
+  {
+    id: 'TC-WEB-05',
+    project: 'web',
+    kind: 'auto',
+    priority: 'medium',
+    title: {
+      ru: 'Сайтом можно пользоваться с клавиатуры',
+      en: 'The site works from the keyboard',
+    },
+    level: { ru: 'Доступность, E2E', en: 'Accessibility, E2E' },
+    preconditions: {
+      ru: ['Ноутбук, без мыши'],
+      en: ['A laptop, no mouse'],
+    },
+    steps: {
+      ru: ['Открыть «Обо мне» и нажать Tab', 'Нажать Enter на ссылке пропуска, затем ещё раз Tab', 'На главной дважды нажать Tab и посмотреть на рамку фокуса'],
+      en: ['Open About and press Tab', 'Press Enter on the skip link, then Tab again', 'On the home page press Tab twice and look at the focus ring'],
+    },
+    expected: {
+      ru: 'Первый Tab попадает на видимую ссылку «Перейти к содержимому», после неё фокус сразу внутри main. У элемента в фокусе видна рамка.',
+      en: 'The first Tab lands on a visible “Skip to content” link, and after it focus goes straight into main. The focused element shows a ring.',
+    },
+    code: [{ file: 'tools/site-test.mjs', lang: 'javascript', role: 'test', source: webKeyboard }],
+  },
+  {
+    id: 'TC-WEB-06',
+    project: 'web',
+    kind: 'auto',
+    priority: 'high',
+    bug: 'WEB-11',
+    title: {
+      ru: 'Фильтры этого раздела прячут лишние карточки',
+      en: 'The filters in this section hide the other cards',
+    },
+    level: { ru: 'Функциональный, E2E', en: 'Functional, E2E' },
+    preconditions: {
+      ru: ['Открыта страница «Тестирование»'],
+      en: ['The Testing page is open'],
+    },
+    steps: {
+      ru: [
+        'Выбрать проект The Hidden Library и тип «Ручные»',
+        'Сравнить число видимых карточек со счётчиком',
+        'Выбрать BrandGallery Home, у которого ручных кейсов нет',
+        'Сбросить оба фильтра',
+        'Открыть страницу с выключенным JavaScript',
+      ],
+      en: [
+        'Pick The Hidden Library and the Manual type',
+        'Compare the number of visible cards with the counter',
+        'Pick BrandGallery Home, which has no manual cases',
+        'Reset both filters',
+        'Open the page with JavaScript turned off',
+      ],
+    },
+    expected: {
+      ru: 'Видны только ручные кейсы игры, их столько же, сколько в счётчике. Для пустого сочетания счётчик 0 и подсказка. Сброс возвращает все карточки. Без JavaScript фильтров нет, а карточки видны все.',
+      en: 'Only the game’s manual cases are visible, as many as the counter says. An empty combination shows 0 and a hint. Reset brings every card back. Without JavaScript there are no filters and every card is visible.',
+    },
+    before: {
+      ru: 'Счётчик показывал 3, а на экране оставались все 10 карточек игры. Скрипт ставил карточкам атрибут hidden, но правило display: grid в стилях карточки сильнее этого атрибута.',
+      en: 'The counter said 3 while all 10 game cards stayed on screen. The script set the hidden attribute, but the card’s display: grid rule overrides that attribute.',
+    },
+    fix: {
+      ru: 'Отдельное правило .tc[hidden] { display: none }. Найдено до публикации раздела.',
+      en: 'A dedicated .tc[hidden] { display: none } rule. Caught before the section went live.',
+    },
+    code: [
+      { file: 'tools/site-test.mjs', lang: 'javascript', role: 'test', source: webFilters },
+      { file: 'TestCaseCard.astro', lang: 'css', role: 'fix', source: webFiltersFix },
+    ],
+  },
+  {
+    id: 'TC-WEB-07',
+    project: 'web',
+    kind: 'auto',
+    priority: 'low',
+    bug: 'WEB-12',
+    title: {
+      ru: 'Ссылка на тест-кейс не прячет его под панелью фильтров',
+      en: 'A link to a test case does not hide it under the filter bar',
+    },
+    level: { ru: 'Функциональный, E2E', en: 'Functional, E2E' },
+    preconditions: {
+      ru: ['Ноутбук 1366×900', 'Включено «уменьшение движения», чтобы прокрутка была мгновенной'],
+      en: ['A 1366×900 laptop', '“Reduce motion” on, so scrolling is instant'],
+    },
+    steps: {
+      ru: ['Открыть /ru/testing#tc-bgh-03', 'Найти нижний край всего липкого сверху: шапки и панели фильтров', 'Сравнить с верхом карточки'],
+      en: ['Open /ru/testing#tc-bgh-03', 'Find the bottom edge of everything sticky at the top: header and filter bar', 'Compare it with the top of the card'],
+    },
+    expected: {
+      ru: 'Верх карточки ниже панели фильтров и в верхней половине экрана.',
+      en: 'The top of the card sits below the filter bar, in the upper half of the screen.',
+    },
+    before: {
+      ru: 'Карточка останавливалась на 90 пикселях, а панель фильтров заканчивается на 129: номер и название кейса уходили под панель.',
+      en: 'The card stopped at 90 pixels while the filter bar ends at 129, so the case number and title slid under the bar.',
+    },
+    fix: {
+      ru: 'scroll-margin-top 150 пикселей под шапку и панель. На телефоне панель не липкая, там остаётся 90.',
+      en: 'A 150-pixel scroll-margin-top for the header and bar. On a phone the bar is not sticky, so it stays 90.',
+    },
+    code: [
+      { file: 'tools/site-test.mjs', lang: 'javascript', role: 'test', source: webAnchor },
+      { file: 'TestCaseCard.astro', lang: 'css', role: 'fix', source: webFiltersFix },
+    ],
+  },
+  {
+    id: 'TC-WEB-08',
+    project: 'web',
+    kind: 'auto',
+    priority: 'medium',
+    title: {
+      ru: 'Данные проектов и словари целы до сборки',
+      en: 'Project data and dictionaries are intact before the build',
+    },
+    level: { ru: 'Целостность данных', en: 'Data integrity' },
+    preconditions: {
+      ru: ['Node 22: TypeScript-файлы данных читаются напрямую'],
+      en: ['Node 22: TypeScript data files are read directly'],
+    },
+    steps: {
+      ru: [
+        'Проверить, что адреса проектов не повторяются и каждый проект лежит в существующем разделе',
+        'Проверить, что все 86 картинок, моделей и копий работ есть в public',
+        'Сравнить ключи русского и английского словарей',
+      ],
+      en: [
+        'Check project addresses are unique and every project sits in an existing section',
+        'Check all 86 images, models and work copies exist in public',
+        'Compare the keys of the Russian and English dictionaries',
+      ],
+    },
+    expected: {
+      ru: 'Повторов и потерянных разделов нет, все файлы на месте, у каждого русского ключа есть английский.',
+      en: 'No duplicates or lost sections, every file in place, every Russian key has an English one.',
+    },
+    code: [{ file: 'tools/site-test.mjs', lang: 'javascript', role: 'test', source: webData }],
+  },
+  {
+    id: 'TC-WEB-09',
+    project: 'web',
+    kind: 'auto',
+    priority: 'high',
+    title: {
+      ru: 'Мобильное меню открывается, закрывается и возвращает прокрутку',
+      en: 'The mobile menu opens, closes and gives scrolling back',
+    },
+    level: { ru: 'Функциональный, E2E, регресс', en: 'Functional, E2E, regression' },
+    preconditions: {
+      ru: ['Экран 390×844, сенсорный ввод'],
+      en: ['A 390×844 screen with touch input'],
+    },
+    steps: {
+      ru: ['Открыть главную', 'Нажать кнопку меню', 'Нажать Esc', 'Открыть меню снова и перейти по ссылке'],
+      en: ['Open the home page', 'Tap the menu button', 'Press Esc', 'Open the menu again and follow a link'],
+    },
+    expected: {
+      ru: 'Меню скрыто, по кнопке открывается, aria-expanded становится true, фон не прокручивается. Esc и переход по ссылке закрывают меню и возвращают прокрутку.',
+      en: 'The menu starts hidden and opens on tap, aria-expanded becomes true and the background stops scrolling. Esc and following a link close it and give scrolling back.',
+    },
+    code: [{ file: 'tools/audit.mjs', lang: 'javascript', role: 'test', source: webMenu }],
+  },
+  {
+    id: 'TC-WEB-10',
+    project: 'web',
+    kind: 'manual',
+    priority: 'medium',
+    bug: 'WEB-05, WEB-06',
+    title: {
+      ru: 'Синхронизация копий работ находит все источники и сообщает о пропуске',
+      en: 'Work copy sync finds every source and reports a miss',
+    },
+    level: { ru: 'Инструменты сборки, ручной', en: 'Build tooling, manual' },
+    preconditions: {
+      ru: ['Исходники работ лежат рядом с сайтом в D:\\MyPortfolioProjects'],
+      en: ['The work sources sit next to the site in D:\\MyPortfolioProjects'],
+    },
+    steps: {
+      ru: ['Запустить node tools/sync-demos.mjs --check', 'Посмотреть, все ли 11 источников найдены', 'Проверить код выхода: echo $?'],
+      en: ['Run node tools/sync-demos.mjs --check', 'See whether all 11 sources are found', 'Check the exit code: echo $?'],
+    },
+    expected: {
+      ru: 'Все 11 источников найдены, код выхода 0. Если источник пропал, код выхода 1 и понятное сообщение.',
+      en: 'All 11 sources are found and the exit code is 0. If a source goes missing, the exit code is 1 with a clear message.',
+    },
+    before: {
+      ru: 'Макеты BrandGallery Home переехали в другую папку, а путь в списке работ остался старым. Скрипт писал предупреждение, но выходил с кодом 0, поэтому копию, которую заказчица открывает по ссылке, месяц никто не обновлял.',
+      en: 'The BrandGallery Home mock-ups moved to another folder while the path in the work list stayed old. The script printed a warning but exited with 0, so the copy the client opens by link went un-updated for a month.',
+    },
+    fix: {
+      ru: 'Новый путь к макетам и код выхода 1 при любом пропущенном источнике или файле.',
+      en: 'The new path to the mock-ups and exit code 1 for any missing source or file.',
+    },
+    code: [{ file: 'tools/sync-demos.mjs', lang: 'javascript', role: 'fix', source: webSyncDemosFix }],
   },
 ];
 

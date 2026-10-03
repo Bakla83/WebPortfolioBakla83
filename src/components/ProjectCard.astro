@@ -10,9 +10,12 @@ interface Props {
   lang: EnabledLocale;
 
   showSection?: boolean;
+
+  headingLevel?: 2 | 3;
 }
 
-const { project, lang, showSection = false } = Astro.props;
+const { project, lang, showSection = false, headingLevel = 3 } = Astro.props;
+const Heading = `h${headingLevel}` as const;
 const strings = t(lang);
 const section = getSection(project.section);
 
@@ -75,7 +78,7 @@ const techShown = project.tech.slice(0, 3);
 
     <div class="card__body">
       {showSection && section && <span class="card__section">{pick(section.title, lang)}</span>}
-      <h3 class="card__title">{title}</h3>
+      <Heading class="card__title">{title}</Heading>
       <p class="card__teaser card__teaser--inline">{teaser}</p>
       <ul class="tags card__tags">
         {techShown.map((tech) => <li class="tag">{tech}</li>)}

@@ -1,0 +1,10 @@
+---
+// i18n/ui.ts: короткое описание вместо первого абзаца текста «Обо мне»
+about: {
+  description:
+    'Владислав Баклан — разработчик полного цикла: сайты на JavaScript и TypeScript, Android-приложения на Kotlin, игры на Unity и 3D-модели в Blender.',
+},
+---
+
+<!-- pages/[lang]/about.astro. Было: description={pick(ABOUT_TEXT, lang)[0]}, 201 и 216 знаков -->
+<Base lang={lang} path="about" title={strings.about.title} description={strings.about.description}>

@@ -1,0 +1,19 @@
+/* components/TestCaseCard.astro */
+.tc {
+  display: grid;
+  /* Шапка 68px и липкая панель фильтров под ней. Было 90px,
+     и карточка по ссылке-якорю пряталась под панелью. */
+  scroll-margin-top: 150px;
+}
+
+/* display: grid сильнее атрибута hidden, без этого фильтр не прятал карточки. */
+.tc[hidden] {
+  display: none;
+}
+
+/* На телефоне панель фильтров не липкая, хватает отступа под шапку. */
+@media (max-width: 520px) {
+  .tc {
+    scroll-margin-top: 90px;
+  }
+}

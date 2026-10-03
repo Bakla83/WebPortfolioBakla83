@@ -46,7 +46,7 @@ const description = pick(section.description, lang);
         projects.length > 0 ? (
           <ul class="card-grid">
             {projects.map((project) => (
-              <ProjectCard project={project} lang={lang} />
+              <ProjectCard project={project} lang={lang} headingLevel={2} />
             ))}
           </ul>
         ) : (

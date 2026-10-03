@@ -20,6 +20,8 @@ const shareUrl = new URL(DEMO_SRC, site).href;
 const content = {
   ru: {
     title: 'BrandGallery — салон итальянской мебели',
+    description:
+      'Сайт салона итальянской мебели на WordPress: каталог из 355 позиций, страницы 36 фабрик и четыре макета, из которых выбирали оформление.',
     lead: 'Сайт мебельного салона в Краснодаре. Вариант оформления выбран, сайт собран на WordPress: каталог из 355 позиций с фильтрами и поиском, страницы 36 фабрик, админка, в которой товар добавляет человек без программиста, статьи и обязательные по закону страницы. Сейчас идёт наполнение — сайт ждёт данные и фотографии от салона.',
     stage: 'Стадия: наполнение перед запуском',
     variantsTitle: 'Как выбирали оформление',
@@ -56,6 +58,8 @@ const content = {
   },
   en: {
     title: 'BrandGallery — Italian furniture showroom',
+    description:
+      'A WordPress site for an Italian furniture showroom: a catalogue of 355 items, pages for 36 factories and the four mock-ups the design was chosen from.',
     lead: 'A website for a furniture showroom in Krasnodar. The design has been chosen and the site is built on WordPress: a catalogue of 355 items with filters and search, pages for 36 factories, an admin panel where a non-programmer adds the goods, articles and the pages Russian law requires. It is being filled now — waiting on data and photographs from the showroom.',
     stage: 'Stage: filling in before launch',
     variantsTitle: 'How the design was chosen',
@@ -99,7 +103,7 @@ const demo: ProjectDemo = {
 };
 ---
 
-<Base lang={lang} path="in-progress" title={content.title} description={content.lead} noindex>
+<Base lang={lang} path="in-progress" title={content.title} description={content.description} noindex>
   <section class="section">
     <div class="wrap">
       <p class="eyebrow">{strings.nav.inProgress}</p>

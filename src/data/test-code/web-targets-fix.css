@@ -1,0 +1,21 @@
+/* components/Footer.astro: «Наверх» была 69×23.8 */
+.site-footer__top {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  gap: 0.4rem;
+}
+
+/* pages/[lang]/work/[section]/[slug].astro: ссылка на раздел была 61×19.8 */
+.proj-hero__back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+/* components/TestCaseCard.astro: номер кейса был 74×21 */
+.tc__id {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+}

@@ -1,85 +1,12 @@
-import { createServer } from 'node:http';
 import { readFile, readdir } from 'node:fs/promises';
-import { extname, join, normalize } from 'node:path';
+import { join } from 'node:path';
 import { chromium } from 'playwright';
+import { DIST, serveDist } from './serve-dist.mjs';
 
-const DIST = join(import.meta.dirname, '..', 'dist');
 const PORT = 4622;
 
-const MIME = {
-  '.html': 'text/html; charset=utf-8',
-  '.js': 'text/javascript; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.json': 'application/json; charset=utf-8',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.webp': 'image/webp',
-  '.svg': 'image/svg+xml',
-  '.xml': 'application/xml; charset=utf-8',
-  '.txt': 'text/plain; charset=utf-8',
-};
-
-const rawHeaders = await readFile(join(DIST, '_headers'), 'utf8');
-const headerRules = [];
-{
-  let current = null;
-  for (const line of rawHeaders.split(/\r?\n/)) {
-    if (!line.trim() || line.trim().startsWith('#')) continue;
-
-    if (/^\S/.test(line)) {
-      current = { pattern: line.trim(), headers: {} };
-      headerRules.push(current);
-      continue;
-    }
-    if (!current) continue;
-
-    const match = line.match(/^\s+([A-Za-z-]+):\s*(.+)$/);
-    if (match) current.headers[match[1]] = match[2];
-  }
-}
-
-function matches(pattern, path) {
-  const rx = new RegExp(
-    '^' + pattern.split('*').map((part) => part.replace(/[.+?^${}()|[\]\\]/g, '\\$&')).join('.*') + '$',
-  );
-  return rx.test(path);
-}
-
-function headersFor(path) {
-  const out = {};
-  for (const rule of headerRules) {
-    if (matches(rule.pattern, path)) Object.assign(out, rule.headers);
-  }
-  return out;
-}
-
-console.log('Правил в _headers:', headerRules.map((r) => r.pattern).join(', '));
-
-const server = createServer(async (req, res) => {
-  const path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-
-  const headers = headersFor(path);
-
-  for (const candidate of [path, `${path}.html`, join(path, 'index.html')]) {
-    const file = normalize(join(DIST, candidate));
-    if (!file.startsWith(DIST)) continue;
-    try {
-      const body = await readFile(file);
-      res.writeHead(200, {
-        ...headers,
-        'Content-Type': MIME[extname(file).toLowerCase()] ?? 'application/octet-stream',
-      });
-      return res.end(body);
-    } catch {
-
-    }
-  }
-  res.writeHead(404, { ...headers, 'Content-Type': 'text/html' }).end('404');
-});
-
-await new Promise((resolve) => server.listen(PORT, resolve));
-const base = `http://127.0.0.1:${PORT}`;
+const { base, server, rules } = await serveDist(PORT);
+console.log('Правил в _headers:', rules.map((r) => r.pattern).join(', '));
 const browser = await chromium.launch();
 
 const pass = [];
