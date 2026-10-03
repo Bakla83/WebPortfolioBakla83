@@ -1055,8 +1055,8 @@ export const TEST_CASES: TestCase[] = [
       en: 'The card stopped at 90 pixels while the filter bar ends at 129, so the case number and title slid under the bar.',
     },
     fix: {
-      ru: 'scroll-margin-top 150 пикселей под шапку и панель. На телефоне панель не липкая, там остаётся 90.',
-      en: 'A 150-pixel scroll-margin-top for the header and bar. On a phone the bar is not sticky, so it stays 90.',
+      ru: 'scroll-margin-top 162 пикселя под шапку и панель. На телефоне панель не липкая, там хватает 102.',
+      en: 'A 162-pixel scroll-margin-top for the header and bar. On a phone the bar is not sticky, so 102 is enough.',
     },
     code: [
       { file: 'tools/site-test.mjs', lang: 'javascript', role: 'test', source: webAnchor },

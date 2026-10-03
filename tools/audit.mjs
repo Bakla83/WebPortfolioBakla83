@@ -144,6 +144,18 @@ for (const [locale, expected] of [
   await page.goto(base + '/ru/work/landings', { waitUntil: 'networkidle' });
   await page.waitForTimeout(800);
 
+  /* Карточки проявляются при прокрутке: те, что ниже первого экрана,
+     без неё и не должны проявиться. Доводим до низа и возвращаемся. */
+  await page.evaluate(async () => {
+    document.documentElement.style.scrollBehavior = 'auto';
+    for (let y = 0; y < document.body.scrollHeight; y += window.innerHeight / 2) {
+      window.scrollTo(0, y);
+      await new Promise((r) => setTimeout(r, 120));
+    }
+    window.scrollTo(0, 0);
+  });
+  await page.waitForTimeout(600);
+
   const overlay = page.locator('.card').first().locator('.card__overlay');
   const before = await overlay.evaluate((el) => getComputedStyle(el).opacity);
   await page.locator('.card').first().hover();
