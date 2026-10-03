@@ -13,6 +13,7 @@
     "demos": "node tools/sync-demos.mjs",
     "screens": "node tools/screens.mjs",
     "screens:traty": "node tools/screens-traty.mjs",
+    "screens:privychki": "node tools/screens-privychki.mjs",
     "shots": "node tools/shots.mjs"
   },
   "dependencies": {

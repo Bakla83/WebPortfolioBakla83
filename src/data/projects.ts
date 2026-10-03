@@ -1209,6 +1209,141 @@ export const PROJECTS: Project[] = [
   },
 
   {
+    slug: 'privychki',
+    section: 'mobile-apps',
+    featured: false,
+    order: 3,
+    year: 2026,
+    tech: ['Kotlin', 'Android SDK', 'ViewBinding', 'AlarmManager', 'JUnit', 'R8'],
+    title: { ru: 'Привычки — Android', en: 'Habits — Android' },
+    role: { ru: 'Автор проекта', en: 'Sole author' },
+    teaser: {
+      ru: 'Трекер привычек с сериями, недельной нормой и напоминаниями, которые не приходят, если вы уже всё сделали.',
+      en: 'A habit tracker with streaks, weekly targets and reminders that stay quiet once you have already done the thing.',
+    },
+    summary: {
+      ru: 'Привычку можно отмечать галочкой или количеством: восемь стаканов воды, двадцать страниц. Расписание тоже разное: каждый день, только по будням или «три раза в неделю в любые дни». У недельной нормы серия считается неделями, поэтому пропущенный вторник ничего не ломает, если до воскресенья набралось три пробежки.\n\nБолезнь или поездку можно отметить уважительным пропуском. Он не рвёт серию и не портит процент выполнения. Карточка привычки показывает текущую и лучшую серию, процент за 30 дней, месячный календарь, тепловую карту за год и долю выполнения по дням недели, чтобы было видно, какой день проваливается чаще других.\n\nНапоминание приходит в выбранное время, только если привычка ещё не отмечена. Отметиться можно прямо из уведомления. Все данные лежат в файле на телефоне, доступа в интернет у приложения нет. Копию можно сохранить в файл и восстановить на другом телефоне.',
+      en: 'A habit is ticked off or counted: eight glasses of water, twenty pages. Schedules differ too: every day, weekdays only, or “three times a week on any days”. A weekly target keeps its streak in weeks, so a missed Tuesday breaks nothing as long as three runs are in by Sunday.\n\nIllness or a trip can be marked as an excused day. It does not break the streak and does not spoil the completion rate. The habit card shows the current and best streak, the rate over 30 days, a month calendar, a heat map of the year and the completion rate by weekday, so you can see which day slips most often.\n\nThe reminder arrives at the chosen time only if the habit is not ticked yet, and you can tick it right from the notification. All data lives in a file on the phone, and the app has no internet access. A copy can be saved to a file and restored on another phone.',
+    },
+    highlights: {
+      ru: [
+        'Три вида расписания: каждый день, выбранные дни недели и норма «N раз в неделю», у которой серия считается неделями',
+        'Отметка галочкой или количеством с единицей: «5 из 8 стаканов», перевыполнение тоже видно',
+        'Уважительный пропуск не рвёт серию и не идёт в процент, а в первую неделю норма считается только по дням после начала',
+        'Незаконченное сегодня не портит статистику: день ещё идёт, поэтому серия и процент его не учитывают, пока он не выполнен',
+        'Вся арифметика серий и процентов вынесена в чистый Kotlin без Android и покрыта 17 модульными тестами на JVM',
+        'Напоминание не приходит, если привычка уже отмечена; из уведомления можно отметиться кнопкой «Готово» или «+1»',
+        'Без разрешения на точные будильники напоминание ставится с окном в 10 минут, а не уезжает на полчаса; после перезагрузки и смены часового пояса будильники ставятся заново',
+        'Дни хранятся номером от 1970-01-01: их легко вычитать и сравнивать, а часовой пояс участвует только при переводе «сейчас» в день',
+        'Файл пишется атомарно через временный и в фоновом потоке; при восстановлении копии приложение сначала показывает, сколько в ней привычек, и не примет чужой или повреждённый файл',
+        'В манифесте нет доступа в интернет; release-сборка 1,5 МБ: R8, вырезание ресурсов, Views и ViewBinding вместо Compose',
+      ],
+      en: [
+        'Three kinds of schedule: every day, chosen weekdays, and an “N times a week” target whose streak counts in weeks',
+        'Ticked off or counted with a unit: “5 of 8 glasses”, and going over the target shows too',
+        'An excused day neither breaks the streak nor counts toward the rate, and in the first week the target only counts the days after the start',
+        'An unfinished today does not spoil the stats: the day is still going, so streak and rate ignore it until it is done',
+        'All the streak and rate arithmetic lives in plain Kotlin with no Android in it, covered by 17 unit tests on the JVM',
+        'No reminder if the habit is already ticked; the notification has a “Done” or “+1” button to tick it there',
+        'Without the exact-alarm permission the reminder gets a 10-minute window instead of drifting half an hour; alarms are set again after a reboot or a time zone change',
+        'Days are stored as a number counted from 1970-01-01: easy to subtract and compare, with the time zone only involved when turning “now” into a day',
+        'The file is written atomically through a temporary one on a background thread; on restore the app first shows how many habits the copy holds, and refuses a foreign or damaged file',
+        'No internet access in the manifest; a 1.5 MB release build: R8, resource shrinking, Views and ViewBinding instead of Compose',
+      ],
+    },
+
+    cover: {
+      src: '/media/privychki/cover.jpg',
+      width: 2160,
+      height: 1350,
+      alt: {
+        ru: 'Три экрана приложения: список привычек на сегодня, карточка зарядки с календарём и недельная серия бега в тёмной теме',
+        en: 'Three app screens: today’s habit list, the exercise card with its calendar and the weekly running streak in the dark theme',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/privychki/today.webp',
+        width: 1080,
+        height: 2274,
+        alt: {
+          ru: 'Список привычек на сегодня с прогрессом дня, сериями и последней неделей отметок',
+          en: 'Today’s habit list with the day’s progress, streaks and the last week of ticks',
+        },
+        caption: {
+          ru: 'Сверху — сколько сделано из того, что нужно сегодня. Английский по расписанию только в будни, поэтому в субботу он не считается. Вода отмечается количеством: кольцо заполнено на 5 из 8',
+          en: 'At the top is how much of today’s list is done. English is scheduled for weekdays only, so on Saturday it does not count. Water is counted: the ring is 5 of 8 full',
+        },
+      },
+      {
+        src: '/media/privychki/habit.webp',
+        width: 1080,
+        height: 2274,
+        alt: {
+          ru: 'Карточка привычки: серия 23 дня, лучшая серия, процент за 30 дней, заметка и месячный календарь',
+          en: 'A habit card: a 23-day streak, the best streak, the 30-day rate, a note and the month calendar',
+        },
+        caption: {
+          ru: 'Заметка «зачем» стоит на виду, её перечитываешь, когда хочется бросить. В календаре касание отмечает день, долгое нажатие открывает количество или уважительный пропуск',
+          en: 'The “why” note sits in plain view, to reread when you feel like giving up. In the calendar a tap ticks a day, and a long press opens the amount or an excused day',
+        },
+      },
+      {
+        src: '/media/privychki/stats.webp',
+        width: 1080,
+        height: 2274,
+        alt: {
+          ru: 'Тепловая карта за год и доля выполненных дней по дням недели',
+          en: 'A heat map of the year and the share of days done by weekday',
+        },
+        caption: {
+          ru: 'По дням недели видно слабое место: вторник выполняется в 58% случаев, остальные дни — от 75 до 92%',
+          en: 'The weekday breakdown shows the weak spot: Tuesday gets done 58% of the time, the other days 75 to 92%',
+        },
+      },
+      {
+        src: '/media/privychki/weekly-dark.webp',
+        width: 1080,
+        height: 2274,
+        alt: {
+          ru: 'Привычка «три раза в неделю» в тёмной теме: серия 12 недель и календарь сентября',
+          en: 'A “three times a week” habit in the dark theme: a 12-week streak and the September calendar',
+        },
+        caption: {
+          ru: 'У нормы «три раза в неделю» серия считается неделями, а процент — удачными неделями из восьми. Тёмная тема идёт за системной настройкой',
+          en: 'A “three times a week” target counts its streak in weeks and its rate as good weeks out of eight. The dark theme follows the system setting',
+        },
+      },
+      {
+        src: '/media/privychki/edit.webp',
+        width: 1080,
+        height: 2274,
+        alt: {
+          ru: 'Редактор привычки: название, цвет, способ отметки, цель на день, расписание и напоминание',
+          en: 'The habit editor: name, colour, how it is ticked, daily target, schedule and reminder',
+        },
+        caption: {
+          ru: 'Если телефон не разрешил точные будильники, экран прямо говорит, что напоминание может опоздать, и ведёт в настройки',
+          en: 'If the phone has not allowed exact alarms, the screen says plainly that the reminder may be late and links to the setting',
+        },
+      },
+      {
+        src: '/media/privychki/today-dark.webp',
+        width: 1080,
+        height: 2274,
+        alt: {
+          ru: 'Список привычек на сегодня в тёмной теме',
+          en: 'Today’s habit list in the dark theme',
+        },
+        caption: {
+          ru: 'Цвета привычек средней яркости: белая галочка читается на заливке, а сама заливка — и на светлом фоне, и на тёмном',
+          en: 'Habit colours are mid-bright: the white tick reads on the fill, and the fill reads on both light and dark backgrounds',
+        },
+      },
+    ],
+  },
+
+  {
     slug: 'beetle',
     section: 'models-3d',
     featured: true,
