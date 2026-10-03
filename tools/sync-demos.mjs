@@ -26,7 +26,7 @@ const DEMOS = [
 
   {
     slug: 'brandgalleryhome',
-    from: 'brandgalleryhome/design',
+    from: 'brandgalleryhomeDesign/design',
     include: [
       'index.html',
       'catalog.html',
@@ -210,9 +210,9 @@ for (const demo of DEMOS) {
 }
 
 if (missing) {
-  console.log(`\nПропущено работ: ${missing}. Ссылки на них со страниц проектов не сработают.`);
+  console.error(`\nПропущено работ: ${missing}. Их копии на сайте остались от прошлой синхронизации и больше не обновляются.`);
 }
 if (failed) {
   console.error(`\nНе найдено файлов: ${failed}`);
-  process.exit(1);
 }
+if (missing || failed) process.exit(1);

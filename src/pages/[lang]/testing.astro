@@ -1,0 +1,485 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import TestCaseCard from '../../components/TestCaseCard.astro';
+import { TEST_CASES, TEST_PROJECTS, casesFor } from '../../data/test-cases';
+import { ENABLED_LOCALES, localePath, pick, type EnabledLocale } from '../../i18n/config';
+import { t } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return ENABLED_LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as EnabledLocale;
+const strings = t(lang);
+
+const content = {
+  ru: {
+    eyebrow: 'QA',
+    lead: 'Тест-кейсы по двум проектам: игре на Unity и сайту на WordPress. У каждого кейса предусловия, шаги, ожидаемый результат и код теста. Если кейс нашёл дефект, рядом описано, что было до исправления, и код самого исправления.',
+    totals: ['тест-кейсов', 'с автотестами', 'дефектов найдено и закрыто', 'кейсов пройдено'],
+    filterProject: 'Проект',
+    filterKind: 'Тип',
+    all: 'Все',
+    auto: 'Автотесты',
+    manual: 'Ручные',
+    shown: 'Показано',
+    of: 'из',
+    environment: 'Окружение',
+    methods: 'Виды тестирования',
+    run: 'Запуск',
+    openProject: 'Страница проекта',
+    cases: 'Тест-кейсы',
+    empty: 'Нет кейсов под этот фильтр.',
+    description: 'Тест-кейсы с кодом автотестов: NUnit для игры на Unity и PHP-тесты для сайта на WordPress.',
+  },
+  en: {
+    eyebrow: 'QA',
+    lead: 'Test cases from two projects: a Unity game and a WordPress site. Each case has preconditions, steps, an expected result and the test code. When a case found a defect, you also see what happened before the fix and the code of the fix itself.',
+    totals: ['test cases', 'automated', 'defects found and fixed', 'cases passed'],
+    filterProject: 'Project',
+    filterKind: 'Type',
+    all: 'All',
+    auto: 'Automated',
+    manual: 'Manual',
+    shown: 'Showing',
+    of: 'of',
+    environment: 'Environment',
+    methods: 'Testing types',
+    run: 'How to run',
+    openProject: 'Project page',
+    cases: 'Test cases',
+    empty: 'No cases match this filter.',
+    description: 'Test cases with automated test code: NUnit for a Unity game and PHP tests for a WordPress site.',
+  },
+}[lang];
+
+const totals = [
+  TEST_CASES.length,
+  TEST_CASES.filter((testCase) => testCase.kind === 'auto').length,
+  12,
+  TEST_CASES.length,
+].map((value, index) => ({ value: String(value), label: content.totals[index] }));
+---
+
+<Base lang={lang} path="testing" title={strings.nav.testing} description={content.description}>
+  <section class="qa-hero">
+    <div class="wrap">
+      <p class="eyebrow">{content.eyebrow}</p>
+      <h1>{strings.nav.testing}</h1>
+      <p class="lead">{content.lead}</p>
+
+      <dl class="qa-totals">
+        {
+          totals.map((item) => (
+            <div class="qa-total">
+              <dt>{item.label}</dt>
+              <dd>{item.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <div class="qa-filters" data-qa-filters hidden>
+    <div class="wrap qa-filters__inner">
+      <div class="qa-filter" role="group" aria-label={content.filterProject}>
+        <span class="qa-filter__label">{content.filterProject}</span>
+        <button type="button" class="qa-chip" data-filter="project" data-value="all" aria-pressed="true">{content.all}</button>
+        {
+          TEST_PROJECTS.map((project) => (
+            <button type="button" class="qa-chip" data-filter="project" data-value={project.id} aria-pressed="false">
+              {project.name}
+            </button>
+          ))
+        }
+      </div>
+      <div class="qa-filter" role="group" aria-label={content.filterKind}>
+        <span class="qa-filter__label">{content.filterKind}</span>
+        <button type="button" class="qa-chip" data-filter="kind" data-value="all" aria-pressed="true">{content.all}</button>
+        <button type="button" class="qa-chip" data-filter="kind" data-value="auto" aria-pressed="false">{content.auto}</button>
+        <button type="button" class="qa-chip" data-filter="kind" data-value="manual" aria-pressed="false">{content.manual}</button>
+      </div>
+      <p class="qa-filters__count" aria-live="polite">
+        {content.shown} <span data-qa-shown>{TEST_CASES.length}</span> {content.of} {TEST_CASES.length}
+      </p>
+    </div>
+  </div>
+
+  {
+    TEST_PROJECTS.map((project) => {
+      const cases = casesFor(project.id);
+      return (
+        <section
+          class:list={['section', 'qa-project', `qa-project--${project.accent}`]}
+          id={project.id}
+          data-qa-project={project.id}
+          aria-labelledby={`${project.id}-title`}
+        >
+          <div class="wrap">
+            <div class="qa-project__head">
+              <div class="qa-project__intro">
+                <p class="eyebrow">{content.cases} · {cases.length}</p>
+                <h2 id={`${project.id}-title`}>{project.name}</h2>
+                <p class="qa-project__summary">{pick(project.summary, lang)}</p>
+                <ul class="tags">
+                  {project.stack.map((item) => (
+                    <li class="tag">{item}</li>
+                  ))}
+                </ul>
+                <a class="btn btn--ghost qa-project__link" href={localePath(lang, project.href)}>
+                  {content.openProject}
+                  <Icon name="arrow-right" size={16} />
+                </a>
+              </div>
+
+              <aside class="qa-project__side">
+                <dl class="qa-stats">
+                  {project.stats.map((stat) => (
+                    <div class="qa-stat">
+                      <dd>{stat.value}</dd>
+                      <dt>{pick(stat.label, lang)}</dt>
+                    </div>
+                  ))}
+                </dl>
+                <div class="qa-block">
+                  <h3>{content.methods}</h3>
+                  <ul>
+                    {pick(project.methods, lang).map((method) => (
+                      <li>{method}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div class="qa-block">
+                  <h3>{content.environment}</h3>
+                  <p>{pick(project.environment, lang)}</p>
+                  <h3>{content.run}</h3>
+                  <pre class="qa-run">{project.run.join('\n')}</pre>
+                </div>
+              </aside>
+            </div>
+
+            {project.note && <p class="qa-project__note">{pick(project.note, lang)}</p>}
+
+            <div class="qa-cases">
+              {cases.map((testCase) => (
+                <TestCaseCard testCase={testCase} accent={project.accent} lang={lang} />
+              ))}
+            </div>
+            <p class="qa-empty muted" data-qa-empty hidden>
+              {content.empty}
+            </p>
+          </div>
+        </section>
+      );
+    })
+  }
+</Base>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-qa-filters]');
+
+  if (bar) {
+    bar.hidden = false;
+
+    const state: Record<string, string> = { project: 'all', kind: 'all' };
+    const chips = bar.querySelectorAll<HTMLButtonElement>('[data-filter]');
+    const sections = document.querySelectorAll<HTMLElement>('[data-qa-project]');
+    const shown = bar.querySelector<HTMLElement>('[data-qa-shown]');
+
+    const apply = (): void => {
+      let visible = 0;
+
+      sections.forEach((section) => {
+        const projectMatch = state.project === 'all' || section.dataset.qaProject === state.project;
+        let sectionVisible = 0;
+
+        section.querySelectorAll<HTMLElement>('[data-test-case]').forEach((card) => {
+          const match = projectMatch && (state.kind === 'all' || card.dataset.kind === state.kind);
+          card.hidden = !match;
+          if (match) sectionVisible++;
+        });
+
+        section.hidden = !projectMatch;
+        const empty = section.querySelector<HTMLElement>('[data-qa-empty]');
+        if (empty) empty.hidden = !projectMatch || sectionVisible > 0;
+        visible += sectionVisible;
+      });
+
+      if (shown) shown.textContent = String(visible);
+    };
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const group = chip.dataset.filter ?? '';
+        state[group] = chip.dataset.value ?? 'all';
+
+        chips.forEach((other) => {
+          if (other.dataset.filter === group) {
+            other.setAttribute('aria-pressed', String(other === chip));
+          }
+        });
+
+        apply();
+      });
+    });
+  }
+</script>
+
+<style>
+  .qa-hero {
+    padding-block: clamp(2.5rem, 1.5rem + 5vw, 5rem) clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .qa-totals {
+    display: grid;
+    gap: var(--space-2);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+    margin: var(--space-4) 0 0;
+  }
+
+  .qa-total {
+    display: flex;
+    flex-direction: column-reverse;
+    padding: var(--space-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-elev);
+  }
+
+  .qa-total dd,
+  .qa-stat dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(120deg, var(--gold), var(--purple));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .qa-total dd {
+    font-size: clamp(1.9rem, 1.5rem + 1.6vw, 2.6rem);
+  }
+
+  .qa-total dt,
+  .qa-stat dt {
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+  }
+
+  .qa-filters {
+    position: sticky;
+    top: 68px;
+    z-index: 50;
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(12px);
+  }
+
+  .qa-filters__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem var(--space-3);
+    padding-block: 0.75rem;
+  }
+
+  .qa-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .qa-filter__label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-right: 0.2rem;
+  }
+
+  .qa-chip {
+    min-height: 36px;
+    padding: 0.3rem 0.85rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink-dim);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: border-color 0.18s var(--ease), color 0.18s var(--ease), background-color 0.18s var(--ease);
+  }
+
+  .qa-chip:hover {
+    border-color: var(--gold);
+    color: var(--ink);
+  }
+
+  .qa-chip[aria-pressed='true'] {
+    border-color: var(--gold);
+    background: var(--gold-soft);
+    color: var(--gold);
+  }
+
+  .qa-filters__count {
+    margin: 0 0 0 auto;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+  }
+
+  .qa-project + .qa-project {
+    border-top: 1px solid var(--line);
+  }
+
+  .qa-project--gold {
+    --accent-color: var(--gold);
+  }
+  .qa-project--purple {
+    --accent-color: var(--purple);
+  }
+  .qa-project--green {
+    --accent-color: var(--green);
+  }
+
+  .qa-project .eyebrow {
+    color: var(--accent-color);
+  }
+
+  .qa-project__head {
+    display: grid;
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  @media (min-width: 960px) {
+    .qa-project__head {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    }
+  }
+
+  .qa-project__summary {
+    color: var(--ink-dim);
+    font-size: 1.02rem;
+    max-width: 62ch;
+  }
+
+  .qa-project__link {
+    margin-top: var(--space-3);
+  }
+
+  .qa-project__side {
+    display: grid;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
+  .qa-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem;
+    margin: 0;
+  }
+
+  .qa-stat {
+    display: flex;
+    flex-direction: column;
+    padding: 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elev);
+  }
+
+  .qa-stat dd {
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
+  }
+
+  .qa-stat dt {
+    font-size: 0.78rem;
+  }
+
+  .qa-block {
+    padding: var(--space-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elev);
+    min-width: 0;
+  }
+
+  .qa-block h3 {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 0.5rem;
+  }
+
+  .qa-block h3:not(:first-child) {
+    margin-top: var(--space-2);
+  }
+
+  .qa-block ul {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--ink-dim);
+  }
+
+  .qa-block p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--ink-dim);
+  }
+
+  .qa-run {
+    margin: 0;
+    padding: 0.7rem 0.85rem;
+    border-radius: var(--radius-sm);
+    background: var(--bg-sunken);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.7;
+    color: var(--ink-dim);
+    overflow-x: auto;
+  }
+
+  .qa-project__note {
+    margin: var(--space-4) 0 0;
+    padding: 0.85rem 1rem;
+    border-left: 2px solid var(--accent-color);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: var(--bg-elev);
+    font-size: 0.9rem;
+    color: var(--ink-dim);
+    max-width: 90ch;
+  }
+
+  .qa-cases {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+  }
+
+  .qa-empty {
+    margin-top: var(--space-3);
+  }
+
+  @media (max-width: 520px) {
+    .qa-filters {
+      position: static;
+    }
+
+    .qa-filters__count {
+      margin-left: 0;
+    }
+  }
+</style>

@@ -67,6 +67,11 @@ const workActive = path.startsWith('work');
 
       <a
         class="nav-link"
+        href={localePath(lang, 'testing')}
+        aria-current={path === 'testing' ? 'page' : undefined}>{strings.nav.testing}</a
+      >
+      <a
+        class="nav-link"
         href={localePath(lang, 'about')}
         aria-current={path === 'about' ? 'page' : undefined}>{strings.nav.about}</a
       >
@@ -124,6 +129,16 @@ const workActive = path.startsWith('work');
 
       <span class="mobile-menu__group">{strings.nav.menu}</span>
       <ul class="mobile-menu__list">
+        <li>
+          <a
+            class="mobile-menu__link"
+            href={localePath(lang, 'testing')}
+            aria-current={path === 'testing' ? 'page' : undefined}
+          >
+            {strings.nav.testing}
+            <Icon name="arrow-right" size={16} />
+          </a>
+        </li>
         <li>
           <a class="mobile-menu__link" href={localePath(lang, 'about')}>
             {strings.nav.about}

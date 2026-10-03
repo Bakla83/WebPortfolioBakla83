@@ -1,0 +1,360 @@
+---
+import { Code } from 'astro:components';
+import { pick, type EnabledLocale } from '../i18n/config';
+import type { Accent } from '../data/types';
+import type { TestCase } from '../data/test-cases';
+
+interface Props {
+  testCase: TestCase;
+  accent: Accent;
+  lang: EnabledLocale;
+}
+
+const { testCase, accent, lang } = Astro.props;
+
+const labels = {
+  ru: {
+    auto: 'Автотест',
+    manual: 'Ручной',
+    priority: { high: 'Приоритет: высокий', medium: 'Приоритет: средний', low: 'Приоритет: низкий' },
+    passed: 'Пройден',
+    failedBefore: 'Падал до исправления',
+    preconditions: 'Предусловия',
+    steps: 'Шаги',
+    expected: 'Ожидаемый результат',
+    before: 'Фактический результат до исправления',
+    fix: 'Исправление',
+    test: 'Код теста',
+    fixCode: 'Код исправления',
+  },
+  en: {
+    auto: 'Automated',
+    manual: 'Manual',
+    priority: { high: 'Priority: high', medium: 'Priority: medium', low: 'Priority: low' },
+    passed: 'Passed',
+    failedBefore: 'Failed before the fix',
+    preconditions: 'Preconditions',
+    steps: 'Steps',
+    expected: 'Expected result',
+    before: 'Actual result before the fix',
+    fix: 'Fix',
+    test: 'Test code',
+    fixCode: 'Fix code',
+  },
+}[lang];
+
+const anchor = testCase.id.toLowerCase();
+---
+
+<article
+  class:list={['tc', `tc--${accent}`]}
+  id={anchor}
+  data-test-case
+  data-kind={testCase.kind}
+  aria-labelledby={`${anchor}-title`}
+>
+  <header class="tc__head">
+    <div class="tc__line">
+      <a class="tc__id" href={`#${anchor}`}>{testCase.id}</a>
+      <span class="tc__status">
+        <span class="tc__dot" aria-hidden="true"></span>
+        {labels.passed}
+      </span>
+    </div>
+    <h3 class="tc__title" id={`${anchor}-title`}>{pick(testCase.title, lang)}</h3>
+    <ul class="tags tc__tags">
+      <li class:list={['tag', testCase.kind === 'auto' ? 'tag--green' : 'tag--purple']}>
+        {testCase.kind === 'auto' ? labels.auto : labels.manual}
+      </li>
+      <li class="tag">{pick(testCase.level, lang)}</li>
+      <li class:list={['tag', testCase.priority === 'high' && 'tag--gold']}>{labels.priority[testCase.priority]}</li>
+      {testCase.bug && <li class="tag tag--bug">{testCase.bug}</li>}
+    </ul>
+  </header>
+
+  <dl class="tc__fields">
+    <div class="tc__field">
+      <dt>{labels.preconditions}</dt>
+      <dd>
+        <ul>
+          {pick(testCase.preconditions, lang).map((item) => <li>{item}</li>)}
+        </ul>
+      </dd>
+    </div>
+    <div class="tc__field">
+      <dt>{labels.steps}</dt>
+      <dd>
+        <ol>
+          {pick(testCase.steps, lang).map((step) => <li>{step}</li>)}
+        </ol>
+      </dd>
+    </div>
+    <div class="tc__field">
+      <dt>{labels.expected}</dt>
+      <dd>{pick(testCase.expected, lang)}</dd>
+    </div>
+    {
+      testCase.before && (
+        <div class="tc__field tc__field--before">
+          <dt>
+            {labels.before}
+            <span class="tc__failed">{labels.failedBefore}</span>
+          </dt>
+          <dd>{pick(testCase.before, lang)}</dd>
+        </div>
+      )
+    }
+    {
+      testCase.fix && (
+        <div class="tc__field">
+          <dt>{labels.fix}</dt>
+          <dd>{pick(testCase.fix, lang)}</dd>
+        </div>
+      )
+    }
+  </dl>
+
+  <div class="tc__code-list">
+    {
+      testCase.code.map((snippet, index) => (
+        <details class="tc__code" open={index === 0 && snippet.role === 'test'}>
+          <summary>
+            <span class="tc__code-role">{snippet.role === 'test' ? labels.test : labels.fixCode}</span>
+            <span class="tc__code-file">{snippet.file}</span>
+          </summary>
+          <Code
+            code={snippet.source.trimEnd()}
+            lang={snippet.lang}
+            themes={{ light: 'github-light', dark: 'github-dark' }}
+            defaultColor={false}
+          />
+        </details>
+      ))
+    }
+  </div>
+</article>
+
+<style>
+  .tc {
+    --tc-danger: #f0776c;
+    --tc-danger-soft: rgba(240, 119, 108, 0.12);
+    display: grid;
+    gap: var(--space-2);
+    padding: clamp(1rem, 0.7rem + 1.2vw, 1.6rem);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent-color);
+    border-radius: var(--radius);
+    background: var(--bg-elev);
+    scroll-margin-top: 90px;
+    min-width: 0;
+  }
+
+  :global(:root[data-theme='light']) .tc {
+    --tc-danger: #b3261e;
+    --tc-danger-soft: rgba(179, 38, 30, 0.08);
+  }
+
+  .tc--gold {
+    --accent-color: var(--gold);
+  }
+  .tc--purple {
+    --accent-color: var(--purple);
+  }
+  .tc--green {
+    --accent-color: var(--green);
+  }
+
+  .tc__line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-bottom: 0.4rem;
+  }
+
+  .tc__id {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    color: var(--accent-color);
+    text-decoration: none;
+  }
+
+  .tc__id:hover {
+    text-decoration: underline;
+  }
+
+  .tc__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--green);
+  }
+
+  .tc__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--green);
+  }
+
+  .tc__title {
+    font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.3rem);
+    margin-bottom: 0.75rem;
+  }
+
+  .tc__tags {
+    gap: 0.35rem;
+  }
+
+  .tc__tags .tag {
+    white-space: normal;
+  }
+
+  .tag--bug {
+    border-color: color-mix(in srgb, var(--tc-danger) 45%, transparent);
+    background: var(--tc-danger-soft);
+    color: var(--tc-danger);
+  }
+
+  .tc__fields {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+  }
+
+  @media (min-width: 760px) {
+    .tc__fields {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tc__field--before {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .tc__field dt {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 0.35rem;
+  }
+
+  .tc__field dd {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--ink-dim);
+  }
+
+  .tc__field ul,
+  .tc__field ol {
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+
+  .tc__field li + li {
+    margin-top: 0.2rem;
+  }
+
+  .tc__field--before {
+    padding: 0.8rem 1rem;
+    border-radius: var(--radius-sm);
+    background: var(--tc-danger-soft);
+  }
+
+  .tc__failed {
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--tc-danger) 45%, transparent);
+    color: var(--tc-danger);
+    letter-spacing: 0.04em;
+    text-transform: none;
+  }
+
+  .tc__code-list {
+    display: grid;
+    gap: 0.6rem;
+    min-width: 0;
+  }
+
+  .tc__code {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--bg-sunken);
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .tc__code summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.75rem;
+    padding: 0.7rem 1rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .tc__code summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .tc__code summary::before {
+    content: '+';
+    font-family: var(--font-mono);
+    color: var(--accent-color);
+    width: 0.8rem;
+  }
+
+  .tc__code[open] summary::before {
+    content: '−';
+  }
+
+  .tc__code[open] summary {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .tc__code-role {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+
+  .tc__code-file {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+    overflow-wrap: anywhere;
+  }
+
+  .tc__code :global(.astro-code) {
+    margin: 0;
+    padding: 1rem;
+    max-height: 32rem;
+    overflow: auto;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.6;
+    tab-size: 4;
+    background-color: transparent !important;
+  }
+
+  .tc__code :global(.astro-code),
+  .tc__code :global(.astro-code span) {
+    color: var(--shiki-dark);
+  }
+
+  :global(:root[data-theme='light']) .tc__code :global(.astro-code),
+  :global(:root[data-theme='light']) .tc__code :global(.astro-code span) {
+    color: var(--shiki-light);
+  }
+</style>
