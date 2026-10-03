@@ -37,6 +37,8 @@ import webAnchor from './test-code/web-anchor.mjs?raw';
 import webData from './test-code/web-data.mjs?raw';
 import webMenu from './test-code/web-menu.mjs?raw';
 import webSyncDemosFix from './test-code/web-sync-demos-fix.mjs?raw';
+import webHeaderOverlap from './test-code/web-header-overlap.mjs?raw';
+import webHeaderOverlapFix from './test-code/web-header-overlap-fix.css?raw';
 
 export type TestProjectId = 'thl' | 'bgh' | 'web';
 export type TestKind = 'auto' | 'manual';
@@ -182,7 +184,7 @@ export const TEST_PROJECTS: TestProject[] = [
     name: 'WebPortfolioBakla83',
     accent: 'green',
     href: '',
-    defects: 8,
+    defects: 9,
     stack: ['Astro', 'TypeScript', 'Playwright', 'Node.js', 'Cloudflare Pages'],
     summary: {
       ru: 'Этот сайт: статическое портфолио на Astro на двух языках, с тёмной и светлой темой и запускаемыми копиями работ. Проверял разметку всех страниц, карту сайта, узкие экраны, клавиатуру, данные проектов и этот раздел.',
@@ -193,8 +195,8 @@ export const TEST_PROJECTS: TestProject[] = [
       en: 'Node 22, Playwright and Chromium. The built site is served locally with the same security headers as on Cloudflare Pages',
     },
     stats: [
-      { value: '150', label: { ru: 'автоматических проверок', en: 'automated checks' } },
-      { value: '8', label: { ru: 'дефектов найдено', en: 'defects found' } },
+      { value: '154', label: { ru: 'автоматических проверок', en: 'automated checks' } },
+      { value: '9', label: { ru: 'дефектов найдено', en: 'defects found' } },
       { value: '0', label: { ru: 'провалов после правок', en: 'failures after fixes' } },
     ],
     methods: {
@@ -217,8 +219,8 @@ export const TEST_PROJECTS: TestProject[] = [
     },
     run: ['npm run build', 'npm test', 'npm run audit', 'node tools/sync-demos.mjs --check'],
     note: {
-      ru: '150 проверок — это 46 в новом tools/site-test.mjs и 104 в уже существовавшем tools/audit.mjs. Первый прогон нового набора дал 10 провалов. За девятью стояли 6 дефектов: три провала у корня сайта указали на одну причину, служебную страницу в карте сайта. Десятый был ошибкой самого теста: после клика блок кода переставал подходить под селектор, и проверялся соседний блок. Тест исправлен, поведение страницы осталось прежним.',
-      en: 'The 150 checks are 46 in the new tools/site-test.mjs and 104 in the existing tools/audit.mjs. The first run of the new suite gave 10 failures. Nine of them traced back to 6 defects: three failures on the site root shared one cause, a utility page listed in the sitemap. The tenth was a mistake in the test itself: after a click the code block stopped matching the selector, so the next block was checked instead. The test was fixed; the page behaviour stayed the same.',
+      ru: '154 проверки — это 50 в новом tools/site-test.mjs и 104 в уже существовавшем tools/audit.mjs. Первый прогон нового набора дал 10 провалов. За девятью стояли 6 дефектов: три провала у корня сайта указали на одну причину, служебную страницу в карте сайта. Десятый был ошибкой самого теста: после клика блок кода переставал подходить под селектор, и проверялся соседний блок. Тест исправлен, поведение страницы осталось прежним.',
+      en: 'The 154 checks are 50 in the new tools/site-test.mjs and 104 in the existing tools/audit.mjs. The first run of the new suite gave 10 failures. Nine of them traced back to 6 defects: three failures on the site root shared one cause, a utility page listed in the sitemap. The tenth was a mistake in the test itself: after a click the code block stopped matching the selector, so the next block was checked instead. The test was fixed; the page behaviour stayed the same.',
     },
   },
 ];
@@ -908,6 +910,50 @@ export const TEST_CASES: TestCase[] = [
       en: 'No page scrolls sideways at any width.',
     },
     code: [{ file: 'tools/site-test.mjs', lang: 'javascript', role: 'test', source: webReflow }],
+  },
+  {
+    id: 'TC-WEB-11',
+    project: 'web',
+    kind: 'auto',
+    priority: 'high',
+    bug: 'WEB-13',
+    title: {
+      ru: 'Имя в шапке не налезает на кнопки на телефоне',
+      en: 'The name in the header does not run over the buttons on a phone',
+    },
+    level: { ru: 'Адаптивность, визуальный', en: 'Responsive layout, visual' },
+    preconditions: {
+      ru: ['Мобильный режим, ширина 320, 360 и 390 пикселей'],
+      en: ['Mobile mode at 320, 360 and 390 pixels'],
+    },
+    steps: {
+      ru: [
+        'Открыть главную',
+        'Для каждого элемента шапки сравнить ширину текста с шириной его блока',
+        'Сравнить правый край бренда с левым краем кнопок языка, темы и меню',
+      ],
+      en: [
+        'Open the home page',
+        'For each header element compare the text width with the width of its box',
+        'Compare the right edge of the brand with the left edge of the language, theme and menu buttons',
+      ],
+    },
+    expected: {
+      ru: 'Текст помещается в свои блоки, бренд заканчивается до кнопок.',
+      en: 'Text fits its boxes and the brand ends before the buttons.',
+    },
+    before: {
+      ru: 'Имя «Владислав Баклан» стояло в одну строку и на 320 пикселях вылезало из блока на 75 пикселей, прямо поверх переключателя языка. На 360 на 37, на 390 на 8. Страница шире экрана при этом не становилась, поэтому TC-WEB-04 этого не видел. Заметил на скриншоте, когда менял значок в шапке, и сначала написал тест.',
+      en: 'The name “Vladislav Baklan” sat on one line and at 320 pixels overflowed its box by 75 pixels, right over the language switcher. By 37 at 360 and 8 at 390. The page did not get wider than the screen, so TC-WEB-04 missed it. I spotted it on a screenshot while replacing the header mark, and wrote the test first.',
+    },
+    fix: {
+      ru: 'До 560 пикселей имя переносится на две строки. До 360 значок 32 пикселя, промежутки меньше, шрифт имени чуть мельче. Кнопки остаются 40 пикселей.',
+      en: 'Below 560 pixels the name wraps onto two lines. Below 360 the mark is 32 pixels, gaps are tighter and the name font slightly smaller. Buttons stay 40 pixels.',
+    },
+    code: [
+      { file: 'tools/site-test.mjs', lang: 'javascript', role: 'test', source: webHeaderOverlap },
+      { file: 'Header.astro', lang: 'css', role: 'fix', source: webHeaderOverlapFix },
+    ],
   },
   {
     id: 'TC-WEB-05',

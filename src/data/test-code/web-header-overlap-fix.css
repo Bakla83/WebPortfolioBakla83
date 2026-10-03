@@ -1,0 +1,32 @@
+/* components/Header.astro */
+@media (max-width: 560px) {
+  /* В одну строку имя налезало на переключатель языка уже на 390px. */
+  .brand__name {
+    white-space: normal;
+  }
+}
+
+/* На 320px даже «Владислав» не помещался рядом с кнопками:
+   ужимаем значок и промежутки, кнопки остаются 40px. */
+@media (max-width: 360px) {
+  .site-header__inner {
+    gap: var(--space-1);
+  }
+
+  .brand {
+    gap: 0.5rem;
+  }
+
+  .brand__mark {
+    width: 32px;
+    height: 32px;
+  }
+
+  .brand__name {
+    font-size: 0.92rem;
+  }
+
+  .site-header__tools {
+    gap: 0.25rem;
+  }
+}

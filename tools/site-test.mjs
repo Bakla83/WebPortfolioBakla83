@@ -292,6 +292,49 @@ console.log('\nКарта сайта');
     `noindex: ${rootNoindex}, в карте: ${sitemap.includes('/')}`);
 }
 
+console.log('\nИконки сайта');
+
+{
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  const broken = [];
+
+  for (const path of ['/', '/ru', '/en/testing']) {
+    await page.goto(base + path, { waitUntil: 'domcontentloaded' });
+    const icons = await page.evaluate(() =>
+      [...document.querySelectorAll('link[rel~="icon"], link[rel="apple-touch-icon"]')].map((l) => ({
+        href: l.getAttribute('href'),
+        sizes: l.getAttribute('sizes') ?? '',
+      })),
+    );
+    if (!icons.length) broken.push(`${path}: иконок нет`);
+
+    for (const icon of icons) {
+      const response = await page.request.get(base + icon.href);
+      const type = response.headers()['content-type'] ?? '';
+      if (response.status() !== 200 || !type.startsWith('image/')) {
+        broken.push(`${path}: ${icon.href} → ${response.status()} ${type}`);
+        continue;
+      }
+
+      /* Заявленный размер должен совпадать с настоящим, иначе браузер возьмёт не тот файл. */
+      const declared = icon.sizes.match(/^(\d+)x\d+$/);
+      if (declared) {
+        const actual = await page.evaluate(async (src) => {
+          const img = new Image();
+          img.src = src;
+          await img.decode();
+          return img.naturalWidth;
+        }, icon.href);
+        if (actual !== Number(declared[1])) broken.push(`${icon.href}: заявлено ${declared[1]}, на деле ${actual}`);
+      }
+    }
+  }
+
+  check('все иконки из head отдаются картинками заявленного размера', !broken.length, list(broken));
+  await ctx.close();
+}
+
 console.log('\nУзкие экраны (WCAG 1.4.10)');
 
 for (const width of [320, 360, 390]) {
@@ -312,6 +355,23 @@ for (const width of [320, 360, 390]) {
   }
 
   check(`${width}px: страницы без горизонтальной прокрутки`, !wide.length, list(wide));
+
+  /* Текст может вылезти из своего блока поверх соседей, а страница
+     шире экрана при этом не станет. В шапке это видно сразу. */
+  await page.goto(base + '/ru', { waitUntil: 'domcontentloaded' });
+  const overlap = await page.evaluate(() => {
+    const found = [];
+    for (const el of document.querySelectorAll('.site-header *')) {
+      if (el.scrollWidth > el.clientWidth + 1 && getComputedStyle(el).overflowX === 'visible' && el.clientWidth > 0) {
+        found.push(`${el.className}: текст ${el.scrollWidth}px в блоке ${el.clientWidth}px`);
+      }
+    }
+    const brand = document.querySelector('.brand')?.getBoundingClientRect();
+    const tools = document.querySelector('.site-header__tools')?.getBoundingClientRect();
+    if (brand && tools && brand.right > tools.left) found.push(`бренд заходит на кнопки на ${Math.round(brand.right - tools.left)}px`);
+    return found;
+  });
+  check(`${width}px: в шапке ничего не налезает друг на друга`, !overlap.length, list(overlap));
   await ctx.close();
 }
 

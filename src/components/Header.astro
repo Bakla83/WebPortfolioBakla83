@@ -27,7 +27,7 @@ const workActive = path.startsWith('work');
 <header class="site-header">
   <div class="wrap site-header__inner">
     <a class="brand" href={localePath(lang)}>
-      <span class="brand__mark" aria-hidden="true">VB</span>
+      <img class="brand__mark" src="/media/brand-mark.png" width="38" height="38" alt="" aria-hidden="true" />
       <span class="brand__text">
         <span class="brand__name">{strings.home.name}</span>
         <span class="brand__role">{strings.home.tagline}</span>
@@ -184,18 +184,10 @@ const workActive = path.startsWith('work');
   }
 
   .brand__mark {
-    display: grid;
-    place-items: center;
     width: 38px;
     height: 38px;
     flex: none;
-    border-radius: 10px;
-    background: linear-gradient(135deg, var(--gold), var(--purple));
-    color: var(--on-gold);
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: 0.02em;
+    border-radius: 50%;
   }
 
   .brand__text {
@@ -224,6 +216,36 @@ const workActive = path.startsWith('work');
   @media (max-width: 560px) {
     .brand__role {
       display: none;
+    }
+
+    /* В одну строку имя налезало на переключатель языка уже на 390px. */
+    .brand__name {
+      white-space: normal;
+    }
+  }
+
+  /* На 320px даже «Владислав» не помещался рядом с кнопками:
+     ужимаем значок и промежутки, кнопки остаются 40px. */
+  @media (max-width: 360px) {
+    .site-header__inner {
+      gap: var(--space-1);
+    }
+
+    .brand {
+      gap: 0.5rem;
+    }
+
+    .brand__mark {
+      width: 32px;
+      height: 32px;
+    }
+
+    .brand__name {
+      font-size: 0.92rem;
+    }
+
+    .site-header__tools {
+      gap: 0.25rem;
     }
   }
 
