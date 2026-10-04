@@ -118,16 +118,12 @@ for (const [locale, expected] of [
   await page.click('[data-dropdown] > summary');
   ok('список разделов открывается', await page.isVisible('.dropdown__panel'));
 
-  const items = await page.locator('.dropdown__panel a:not(.dropdown__item--wip)').count();
-  ok('в списке шесть разделов', items === 6, `нашли ${items}`);
+  const items = await page.locator('.dropdown__panel a').count();
+  ok('в списке семь разделов', items === 7, `нашли ${items}`);
 
   const wip = page.locator('.dropdown__item--wip');
-  ok('пункт «в процессе создания» на месте', (await wip.count()) === 1);
-  ok(
-    'пункт ведёт на страницу работы в производстве',
-    (await wip.getAttribute('href')) === '/ru/in-progress',
-    (await wip.getAttribute('href')) ?? '(нет href)',
-  );
+  ok('пометка «Учёба» на месте', (await wip.count()) === 1);
+  ok('пометка «Учёба» не ссылка', (await wip.evaluate((el) => el.tagName)) !== 'A');
 
   await page.mouse.click(700, 500);
   ok('клик мимо закрывает список', !(await page.isVisible('.dropdown__panel')));
@@ -258,9 +254,6 @@ for (const [locale, expected] of [
 
 {
 
-  const wipHtml = await readFile(join(DIST, 'ru', 'in-progress.html'), 'utf8').catch(() => '');
-  const wipSlugs = new Set([...wipHtml.matchAll(/\/play\/([^/"'\s]+)\//g)].map((m) => m[1]));
-
   const demos = [];
   for (const dir of await readdir(join(DIST, 'play'), { withFileTypes: true }).catch(() => [])) {
     if (!dir.isDirectory()) continue;
@@ -282,15 +275,14 @@ for (const [locale, expected] of [
       slug: dir.name,
       src: `/play/${dir.name}/index.html`,
       section,
-      wip: wipSlugs.has(dir.name),
     });
   }
 
   ok('в сборке есть запускаемые работы', demos.length > 0, `нашли ${demos.length}`);
   ok(
     'у каждой копии есть своя страница проекта',
-    demos.every((d) => d.section || d.wip),
-    demos.filter((d) => !d.section && !d.wip).map((d) => d.slug).join(', ') || 'все на месте',
+    demos.every((d) => d.section),
+    demos.filter((d) => !d.section).map((d) => d.slug).join(', ') || 'все на месте',
   );
 
   for (const demo of demos) {

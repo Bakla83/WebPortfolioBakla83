@@ -54,14 +54,10 @@ const workActive = path.startsWith('work');
             ))
           }
 
-          <a
-            href={localePath(lang, 'in-progress')}
-            class="dropdown__item dropdown__item--wip"
-            aria-current={path === 'in-progress' ? 'page' : undefined}
-          >
+          <span class="dropdown__item dropdown__item--wip">
             <span class="dropdown__pulse" aria-hidden="true"></span>
             {strings.nav.inProgress}
-          </a>
+          </span>
         </div>
       </details>
 
@@ -365,10 +361,11 @@ const workActive = path.startsWith('work');
     color: var(--ink-faint);
   }
 
-  .dropdown__item--wip:hover,
-  .dropdown__item--wip[aria-current] {
-    border-left-color: transparent;
-    color: var(--ink);
+  /* Пометка, а не ссылка: на наведение не реагирует. */
+  .dropdown__item--wip:hover {
+    background: none;
+    color: var(--ink-faint);
+    cursor: default;
   }
 
   .dropdown__pulse {

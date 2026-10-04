@@ -3,6 +3,104 @@ import type { Project } from './types';
 export const PROJECTS: Project[] = [
 
   {
+    slug: 'brandgalleryhome',
+    section: 'commercial',
+    featured: true,
+    order: 1,
+    year: 2026,
+    tech: ['PHP 8.2', 'WordPress', 'WooCommerce', 'JavaScript', 'CSS', 'Apache', 'nginx'],
+    title: { ru: 'Brand Gallery Home — салон итальянской мебели', en: 'Brand Gallery Home — Italian furniture showroom' },
+    role: { ru: 'Единственный исполнитель', en: 'Sole developer' },
+    status: {
+      ru: 'Запущен, работает на brandgalleryhome.ru',
+      en: 'Live at brandgalleryhome.ru',
+    },
+    teaser: {
+      ru: 'Первый заказ под ключ: сайт мебельного салона в Краснодаре переехал с Tilda на собственную систему на WordPress — каталог, фабрики, заявки и админка для владелицы.',
+      en: 'My first turnkey order: a Krasnodar furniture showroom moved from Tilda to its own WordPress system — catalogue, factories, requests and an admin panel for the owner.',
+    },
+    summary: {
+      ru: 'Салон продаёт итальянскую мебель под заказ и со склада. Оплаты на сайте нет: человек собирает подборку, оставляет заявку, а дальше с ним говорит салон. Значит, задача сайта — довести до заявки: показать, что есть в наличии, что можно привезти и с какой фабрики. На Tilda это упиралось в ручную работу без конца, поэтому сайт пересобран на WordPress и WooCommerce, урезанном до каталога, со своей темой и своим плагином.\n\nРаботу начал с вопросов к владелице и технического задания, затем сделал четыре макета, которые различались не цветом, а устройством: куда человек попадает с главной и как ищет мебель. Каталог, фильтры и поиск у всех были общие, чтобы сравнение было честным. Выбран вариант «Салон-магазин» — вход через поиск и наличие, плотный каталог, липкий блок цены. Макеты оставлены в демо ниже: по ним можно ходить. Рабочий сайт — по ссылке вверху.',
+      en: 'The showroom sells Italian furniture to order and from stock. There is no payment on the site: a visitor builds a shortlist, sends a request, and the showroom takes it from there. So the site exists to get people to that request: show what is in stock, what can be brought in and from which factory. On Tilda that meant endless manual work, so the site was rebuilt on WordPress and WooCommerce trimmed down to a catalogue, with its own theme and plugin.\n\nI started with questions to the owner and a brief, then built four mock-ups that differed in structure rather than colour: where the home page sends you and how you look for furniture. Catalogue, filters and search were shared by all four so the comparison was fair. The “Showroom shop” option won — entry through search and stock, a dense catalogue, a sticky price block. The mock-ups are kept in the demo below and can be walked through. The working site is linked above.',
+    },
+    highlights: {
+      ru: [
+        'Каталог на 351 позицию: разделы, 36 фабрик со своими страницами, поиск, отбор по наличию и цене — всё считается в браузере по одному JSON-индексу',
+        'Корзина-заявка без оплаты: заявка приходит на почту и хранится в админке. Защита в восемь слоёв — nonce, поле-ловушка, метка времени, лимиты, SmartCaptcha, склейка повторов',
+        'Цены двух марок дважды в сутки обновляются с сайта партнёра; скачок больше трети откладывается до подтверждения руками',
+        'Панель для владелицы без программиста: тексты, контакты, цены, заявки, роли сотрудников и инструкция из десяти разделов',
+        'Все 21 старый адрес Tilda переадресованы на новые страницы — посетители из поиска не попадают на ошибку',
+        'Сайт для России по 152-ФЗ: шрифты и капча свои и российские, письма через российский SMTP, наружу сервер ходит только по списку разрешённых адресов',
+        'Политика, cookie и реквизиты, описания 36 фабрик, хостинг, почта и перенос домена',
+        '138 автоматических проверок на заглушках WordPress — разбор в разделе «Тестирование»',
+      ],
+      en: [
+        'A 351-item catalogue: sections, 36 factories with their own pages, search, filtering by stock and price — all computed in the browser from a single JSON index',
+        'A request cart without payment: requests arrive by email and are stored in the admin. Eight layers of protection — nonce, honeypot, timestamp, rate limits, SmartCaptcha, merging of repeats',
+        'Prices for two brands sync from a partner site twice a day; a jump of more than a third waits for manual confirmation',
+        'An admin for the owner with no programmer needed: texts, contacts, prices, requests, staff roles and a ten-chapter manual',
+        'All 21 old Tilda addresses redirect to the new pages — visitors from search never land on an error',
+        'Built for Russia under its data law: self-hosted fonts, Russian captcha, mail through a Russian SMTP, and the server reaches out only to an allow-list',
+        'Privacy policy, cookie notice and seller details, copy for 36 factory pages, hosting, mail and the domain transfer',
+        '138 automated checks on WordPress stubs — the write-up is in the Testing section',
+      ],
+    },
+    cover: {
+      src: '/media/brandgalleryhome/cover.jpg',
+      width: 2160,
+      height: 1350,
+      alt: {
+        ru: 'Главная страница Brand Gallery Home: поиск, быстрые входы в каталог и блок «В наличии сейчас»',
+        en: 'The Brand Gallery Home front page: search, quick ways into the catalogue and the “In stock now” row',
+      },
+    },
+    gallery: [
+      {
+        src: '/media/brandgalleryhome/desktop-2.jpg',
+        width: 2160,
+        height: 1350,
+        alt: { ru: 'Каталог с фильтрами', en: 'The catalogue with filters' },
+        caption: {
+          ru: 'Каталог: наличие, тип мебели и фабрика отбираются сразу, у каждого пункта счётчик позиций',
+          en: 'The catalogue: stock, furniture type and factory filter instantly, each option with its item count',
+        },
+      },
+      {
+        src: '/media/brandgalleryhome/desktop-3.jpg',
+        width: 2160,
+        height: 1350,
+        alt: { ru: 'Страница фабрик', en: 'The factories page' },
+        caption: {
+          ru: 'Фабрики: наверху марки, чьи позиции есть в наличии прямо сейчас',
+          en: 'Factories: brands with items in stock right now come first',
+        },
+      },
+      {
+        src: '/media/brandgalleryhome/mobile.jpg',
+        width: 1170,
+        height: 2532,
+        alt: { ru: 'Каталог на экране телефона', en: 'The catalogue on a phone screen' },
+      },
+    ],
+    demo: {
+      src: '/play/brandgalleryhome/variants/index.html',
+      ratio: '16 / 10',
+      note: {
+        ru: 'В рамке — четыре макета, из которых выбирали оформление. Фильтры, поиск и подборка в них работают. Рабочий сайт открывается по кнопке вверху.',
+        en: 'The frame holds the four mock-ups the design was chosen from. Filters, search and the shortlist all work. The working site opens from the button above.',
+      },
+    },
+    links: [
+      { kind: 'live', url: 'https://brandgalleryhome.ru', label: { ru: 'Сайт салона', en: 'Showroom site' } },
+      {
+        kind: 'other',
+        url: '/play/brandgalleryhome/variants/index.html',
+        label: { ru: 'Макеты оформления', en: 'Design mock-ups' },
+      },
+    ],
+  },
+
+  {
     slug: 'the-hidden-library',
     section: 'pc-games',
     featured: true,

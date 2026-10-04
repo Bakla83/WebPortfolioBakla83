@@ -135,7 +135,7 @@ const sitemapXml = await readFile(join(DIST, 'sitemap-0.xml'), 'utf8');
 const sitemap = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
 /* Корень только выбирает язык и закрыт от поиска (noindex), поэтому
    правила обычных страниц к нему не относятся. Его проверка — ниже. */
-const pages = [...sitemap.filter((p) => p !== '/'), '/ru/in-progress', '/en/in-progress'];
+const pages = sitemap.filter((p) => p !== '/');
 
 console.log(`\nРазметка страниц (${pages.length})`);
 
@@ -282,9 +282,8 @@ console.log('\nКарта сайта');
   await walk(join(DIST, 'en'), '/en');
   built.push('/ru', '/en');
 
-  const notListed = built.filter((p) => !p.endsWith('/in-progress') && !sitemap.includes(p));
+  const notListed = built.filter((p) => !sitemap.includes(p));
   check('в карте сайта все собранные страницы', !notListed.length, list(notListed));
-  check('страница «В процессе создания» не попала в карту сайта', !sitemap.some((p) => p.endsWith('/in-progress')));
 
   const rootHtml = await readFile(join(DIST, 'index.html'), 'utf8');
   const rootNoindex = /<meta name="robots" content="noindex/.test(rootHtml);

@@ -1,6 +1,7 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
 
 const SECTIONS = [
+  { title: 'Коммерческие сайты', value: 'commercial' },
   { title: 'Лендинги', value: 'landings' },
   { title: 'Веб-сайты', value: 'websites' },
   { title: 'Веб-игры', value: 'web-games' },

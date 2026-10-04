@@ -138,7 +138,7 @@ export const TEST_PROJECTS: TestProject[] = [
     id: 'bgh',
     name: 'BrandGallery Home',
     accent: 'purple',
-    href: 'in-progress',
+    href: 'work/commercial/brandgalleryhome',
     defects: 3,
     stack: ['PHP 8.2', 'WordPress', 'WooCommerce', 'Node.js'],
     summary: {

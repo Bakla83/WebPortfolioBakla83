@@ -2,6 +2,16 @@ import type { Section } from './types';
 
 export const SECTIONS: Section[] = [
   {
+    slug: 'commercial',
+    order: 0,
+    accent: 'green',
+    title: { ru: 'Коммерческие сайты', en: 'Commercial websites' },
+    description: {
+      ru: 'Сайты, сделанные по заказу и запущенные для живого бизнеса: от технического задания и выбора оформления до переезда на свой домен.',
+      en: 'Sites built to order and launched for a real business: from the brief and the choice of design to the move onto its own domain.',
+    },
+  },
+  {
     slug: 'landings',
     order: 1,
     accent: 'gold',

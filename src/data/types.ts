@@ -1,6 +1,7 @@
 import type { Localized } from '../i18n/config';
 
 export type SectionSlug =
+  | 'commercial'
   | 'landings'
   | 'websites'
   | 'web-games'
