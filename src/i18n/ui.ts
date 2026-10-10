@@ -32,9 +32,9 @@ const ru = {
 
   home: {
     name: 'Владислав Баклан',
-    tagline: 'Сайты, тестирование, игры, приложения и 3D-графика',
+    tagline: 'Сайты, тестирование, игры и приложения',
     intro:
-      'Делаю проекты целиком — от идеи до сборки и релиза. Сайты и лендинги, тестирование и автотесты, игры на Unity, приложения для Android и модели в Blender.',
+      'Делаю проекты целиком — от идеи до сборки и релиза. Сайты и лендинги, тестирование и автотесты, игры на Unity и приложения для Android.',
     ctaWork: 'Смотреть работы',
     ctaContact: 'Связаться',
     sectionsTitle: 'Разделы',
@@ -153,9 +153,9 @@ const en: UiStrings = {
 
   home: {
     name: 'Vladislav Baklan',
-    tagline: 'Websites, testing, games, apps and 3D art',
+    tagline: 'Websites, testing, games and apps',
     intro:
-      'I build projects end to end — from the idea to the build and release. Websites and landing pages, testing and automated tests, Unity games, Android apps and models in Blender.',
+      'I build projects end to end — from the idea to the build and release. Websites and landing pages, testing and automated tests, Unity games and Android apps.',
     ctaWork: 'See my work',
     ctaContact: 'Get in touch',
     sectionsTitle: 'Sections',
