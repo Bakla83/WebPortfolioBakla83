@@ -16,8 +16,8 @@ export const PROJECTS: Project[] = [
       en: 'Live at brandgalleryhome.ru',
     },
     teaser: {
-      ru: 'Первый заказ под ключ: сайт мебельного салона в Краснодаре переехал с Tilda на собственную систему на WordPress — каталог, фабрики, заявки и админка для владелицы.',
-      en: 'My first turnkey order: a Krasnodar furniture showroom moved from Tilda to its own WordPress system — catalogue, factories, requests and an admin panel for the owner.',
+      ru: 'Сайт мебельного салона в Краснодаре переехал с Tilda на собственную систему на WordPress — каталог, фабрики, заявки и админка для владелицы.',
+      en: 'A Krasnodar furniture showroom moved from Tilda to its own WordPress system — catalogue, factories, requests and an admin panel for the owner.',
     },
     summary: {
       ru: 'Салон продаёт итальянскую мебель под заказ и со склада. Оплаты на сайте нет: человек собирает подборку, оставляет заявку, а дальше с ним говорит салон. Значит, задача сайта — довести до заявки: показать, что есть в наличии, что можно привезти и с какой фабрики. На Tilda это упиралось в ручную работу без конца, поэтому сайт пересобран на WordPress и WooCommerce, урезанном до каталога, со своей темой и своим плагином.\n\nРаботу начал с вопросов к владелице и технического задания, затем сделал четыре макета, которые различались не цветом, а устройством: куда человек попадает с главной и как ищет мебель. Каталог, фильтры и поиск у всех были общие, чтобы сравнение было честным. Выбран вариант «Салон-магазин» — вход через поиск и наличие, плотный каталог, липкий блок цены. Макеты оставлены в демо ниже: по ним можно ходить. Рабочий сайт — по ссылке вверху.',
@@ -342,7 +342,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: 'centipede-repaints',
-    section: 'landings',
+    section: 'commercial',
     featured: true,
     order: 2,
     year: 2026,
@@ -438,7 +438,7 @@ export const PROJECTS: Project[] = [
     slug: 'pervotsvet',
     section: 'landings',
     featured: true,
-    order: 3,
+    order: 2,
     year: 2026,
     tech: ['HTML', 'CSS', 'JavaScript', 'Canvas', 'SVG'],
     title: { ru: 'Первоцвет — цветочная мастерская', en: 'Primrose — a flower workshop' },
@@ -516,7 +516,7 @@ export const PROJECTS: Project[] = [
   {
     slug: 'stroy-opora',
     section: 'landings',
-    order: 4,
+    order: 3,
     year: 2026,
     tech: ['HTML', 'CSS', 'JavaScript'],
     title: { ru: 'ОПОРА — строительная компания', en: 'OPORA — construction company' },
@@ -576,7 +576,7 @@ export const PROJECTS: Project[] = [
   {
     slug: 'kluchi-ot-goroda',
     section: 'landings',
-    order: 5,
+    order: 4,
     year: 2026,
     tech: ['HTML', 'CSS', 'JavaScript', 'SVG'],
     title: { ru: 'Ключи от города — трансферы и экскурсии', en: 'City Keys — transfers and tours' },

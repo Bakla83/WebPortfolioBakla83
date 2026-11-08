@@ -123,6 +123,6 @@ export const ABOUT_TEXT: Localized<string[]> = {
   ],
   en: [
     'I build projects end to end — from the idea to the point where you can open, launch or install them. Interface work, game mechanics and the way it all finally comes together into a finished thing interest me equally.',
-    'Sites I write in plain JavaScript and TypeScript, with no heavy frameworks where they are not needed: that way a page opens fast even on a weak phone. Android apps in Kotlin: offline, no extra weight. Games I write in Unity, in C#. The models and textures for them I make myself in Blender.',
+    'Sites I write in plain JavaScript and TypeScript, with no heavy frameworks where they are not needed: that way a page opens fast even on a weak phone. Android apps in Kotlin: offline, no extra weight. Games I write in Unity, in C#.',
   ],
 };
