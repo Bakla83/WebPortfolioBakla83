@@ -119,7 +119,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
 export const ABOUT_TEXT: Localized<string[]> = {
   ru: [
     'Делаю проекты целиком — от идеи до момента, когда их можно открыть, запустить или установить. Мне одинаково интересны и вёрстка, и игровая механика, и то, как всё это в итоге собирается в готовую вещь.',
-    'Сайты пишу на чистом JavaScript и TypeScript, без тяжёлых фреймворков там, где они не нужны: так страница открывается быстро даже на слабом телефоне. Приложения для Android — на Kotlin: офлайн и без лишнего веса. Игры в Unity пишу на C#. Модели и текстуры к ним делаю сам в Blender.',
+    'Сайты пишу на чистом JavaScript и TypeScript, без тяжёлых фреймворков там, где они не нужны: так страница открывается быстро даже на слабом телефоне. Приложения для Android — на Kotlin: офлайн и без лишнего веса. Игры в Unity пишу на C#.',
   ],
   en: [
     'I build projects end to end — from the idea to the point where you can open, launch or install them. Interface work, game mechanics and the way it all finally comes together into a finished thing interest me equally.',
