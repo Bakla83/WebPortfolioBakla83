@@ -1,0 +1,36 @@
+/* Option 4 — Warm: Libre Baskerville + Nunito Sans, cream, deep teal-navy, clay */
+:root {
+  --navy: #1d3340;
+  --navy-2: #2a4352;
+  --paper: #faf6ef;
+  --tint: #f1eadd;
+  --line: #e2d8c6;
+  --line-2: #d9cdb8;
+  --field: #cbbea6;
+  --ink: #1d3340;
+  --muted: #5f6a6e;
+  --on-dark: #c8d3d8;
+  --gold: #a4553b;
+  --gold-bright: #e0a283;
+  --gold-hover: #e9b69c;
+  --gold-soft: rgba(224, 162, 131, .25);
+  --header-bg: rgba(250, 246, 239, .95);
+  --shadow: rgba(29, 51, 64, .45);
+  --footer: #132430;
+  --footer-text: #a3b1b8;
+  --on-navy: #e9eef0;
+  --heading-weight: 400;
+  --heading-track: -0.015em;
+  --serif: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+  --sans: 'Nunito Sans', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+}
+
+/* Baskerville runs wide: tighten the display sizes, soften the shapes */
+.hero-title { font-size: clamp(38px, 5.6vw, 76px); line-height: 1.08; }
+.page-hero h1 { font-size: clamp(32px, 4.6vw, 60px); line-height: 1.15; }
+.section-head h2, .intro-grid h2, .approach-grid h2, .toolkit-grid h2 { font-size: clamp(30px, 3.6vw, 46px); line-height: 1.2; }
+.lead-serif, .prose p:first-of-type { font-size: clamp(18px, 1.7vw, 21px); line-height: 1.65; }
+.btn { border-radius: 999px; }
+.brand-mark { border-radius: 50%; font-size: 11px; letter-spacing: .02em; }
+.gallery figure, .panel-photo img, .nav-card, .info-card, .technique-grid article { border-radius: 6px; }
+.gallery figure, .nav-card { overflow: hidden; }

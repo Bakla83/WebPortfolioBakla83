@@ -1,0 +1,78 @@
+/* Option 5 — Stage: Fraunces + Source Sans 3, cinematic dark navy, ivory and muted crimson */
+:root {
+  color-scheme: dark;
+  --navy: #142433;
+  --navy-2: #1d3042;
+  --paper: #0a1520;
+  --tint: #101d2a;
+  --line: rgba(255, 255, 255, .12);
+  --line-2: rgba(255, 255, 255, .14);
+  --field: rgba(255, 255, 255, .24);
+  --ink: #e9e6df;
+  --muted: #a9b2bc;
+  --on-dark: #a9b2bc;
+  --gold: #d0605f;
+  --gold-bright: #e3d3ad;
+  --gold-hover: #efe3c6;
+  --gold-soft: rgba(208, 96, 95, .28);
+  --header-bg: rgba(10, 21, 32, .9);
+  --shadow: rgba(0, 0, 0, .75);
+  --footer: #060e16;
+  --footer-text: #8f99a4;
+  --on-navy: #e9e6df;
+  --heading-weight: 300;
+  --heading-track: -0.005em;
+  --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --sans: 'Source Sans 3', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+}
+
+body { font-size: 18px; line-height: 1.65; }
+.brand-mark { border-color: rgba(255, 255, 255, .45); font-weight: 400; }
+.brand-text { font-weight: 400; }
+
+/* Buttons: crimson primary, white outline secondary */
+.btn { font-weight: 600; letter-spacing: .04em; border-color: transparent; }
+.btn-primary, .btn-gold { background: #9e2a2b; border-color: #9e2a2b; color: #fff; }
+.btn-primary:hover, .btn-gold:hover { background: #b33536; border-color: #b33536; }
+.btn-ghost { border-color: rgba(255, 255, 255, .5); color: #fff; }
+.btn-ghost:hover { background: #fff; color: var(--paper); }
+
+/* Home hero: full-bleed congress photograph */
+.hero { position: relative; min-height: 88vh; min-height: 88svh; display: flex; align-items: flex-end; padding: 120px 0 clamp(56px, 7vw, 88px); overflow: hidden; }
+.hero-grid { grid-template-columns: minmax(0, 1fr); position: static; }
+.hero-copy { position: relative; z-index: 1; max-width: 680px; justify-self: end; text-align: right; }
+.hero-copy .lead { margin-left: auto; color: var(--ink); opacity: .9; }
+.hero-copy .actions { justify-content: flex-end; }
+.hero-title { font-weight: 300; }
+.hero-figure { position: absolute; inset: 0; margin: 0; }
+.hero-figure::before { display: none; }
+.hero-figure img { width: 100%; height: 100%; aspect-ratio: auto; object-position: 18% 30%; }
+.hero-figure::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10, 21, 32, .15) 0%, rgba(10, 21, 32, .55) 38%, rgba(10, 21, 32, .93) 72%), linear-gradient(0deg, rgba(10, 21, 32, .95) 0%, rgba(10, 21, 32, 0) 55%); }
+.hero-figure figcaption { top: auto; bottom: 18px; left: var(--gutter); right: auto; z-index: 1; color: rgba(255, 255, 255, .6); margin: 0; }
+
+/* Inner page heroes: photograph behind a dark wash */
+.page-hero { background: linear-gradient(90deg, rgba(10, 21, 32, .96) 35%, rgba(10, 21, 32, .7)), url('../img/conference-wide.jpg') 20% 40% / cover; border-bottom: 1px solid var(--line); }
+.page-hero::after { border-color: rgba(208, 96, 95, .3); }
+
+/* Panels and cards on dark */
+.card-type { background: var(--navy-2); }
+.nav-card { background: var(--tint); }
+.nav-card img, .media-photo img, .wide-photo img, .panel-photo img, .portrait-card img { filter: brightness(.9); }
+.section-dark { background: var(--tint); }
+.cta-band { background: linear-gradient(90deg, #142433, #1a1418); border-top: 1px solid var(--line); }
+.notice { background: var(--navy-2); }
+.tabset-vertical .tablist [role="tab"][aria-selected="true"] { background: var(--tint); }
+.section-tint .tool, .section-tint .tabset-vertical .tabpanel { background: var(--paper); }
+
+@media (max-width: 960px) {
+  .hero-copy { justify-self: start; text-align: left; }
+  .hero-copy .lead { margin-left: 0; }
+  .hero-copy .actions { justify-content: flex-start; }
+  .hero-figure { max-width: none; }
+  .hero-figure::after { background: linear-gradient(0deg, rgba(10, 21, 32, .97) 10%, rgba(10, 21, 32, .55) 60%, rgba(10, 21, 32, .25)); }
+}
+@media (max-width: 640px) {
+  .hero { min-height: 92svh; }
+  .hero-figure::before { display: none; }
+  .hero-figure figcaption { display: none; }
+}

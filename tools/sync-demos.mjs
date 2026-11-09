@@ -1,5 +1,5 @@
 import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
-import { dirname, extname, join, relative, resolve } from 'node:path';
+import { basename, dirname, extname, join, relative, resolve } from 'node:path';
 import sharp from 'sharp';
 
 const ROOT = resolve(import.meta.dirname, '..');
@@ -45,9 +45,21 @@ const DEMOS = [
       'variants',
     ],
   },
+
+  {
+    slug: 'dr-gunter',
+    from: 'WEB 4 DR GUNTER',
+    include: ['index.html', 'gunter-de-win', 'gunter-de-win-site'],
+    exclude: ['.gitignore', '.nojekyll', 'GIT-BASH.txt', 'README.md'],
+    // Личные фотографии клиента в портфолио не публикуются.
+    placeholderImages: true,
+  },
 ];
 
 const checkOnly = process.argv.includes('--check');
+
+// Имена работ в аргументах ограничивают синхронизацию только ими.
+const only = process.argv.slice(2).filter((a) => !a.startsWith('--'));
 
 async function exists(path) {
   try {
@@ -114,6 +126,36 @@ async function externaliseInlineScripts(htmlPath) {
   return extracted.length;
 }
 
+// Каждая растровая картинка заменяется серым прямоугольником того же размера:
+// вёрстка остаётся прежней, а самих фотографий в копии нет.
+async function replaceWithPlaceholders(dir) {
+  let count = 0;
+  for (const file of await walk(dir)) {
+    const ext = extname(file).toLowerCase();
+    if (!RASTER.has(ext)) continue;
+
+    const { width, height } = await sharp(file).metadata();
+    if (!width || !height) continue;
+
+    const frame = Math.max(2, Math.round(Math.min(width, height) / 150));
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+      <rect width="100%" height="100%" fill="#d9d6d0"/>
+      <rect x="${frame / 2}" y="${frame / 2}" width="${width - frame}" height="${height - frame}"
+        fill="none" stroke="#b9b5ad" stroke-width="${frame}"/>
+      <line x1="0" y1="0" x2="${width}" y2="${height}" stroke="#c7c3bb" stroke-width="${frame}"/>
+      <line x1="${width}" y1="0" x2="0" y2="${height}" stroke="#c7c3bb" stroke-width="${frame}"/>
+    </svg>`;
+
+    let pipe = sharp(Buffer.from(svg));
+    if (ext === '.png') pipe = pipe.png();
+    else if (ext === '.webp') pipe = pipe.webp();
+    else pipe = pipe.jpeg({ quality: 80 });
+    await writeFile(file, await pipe.toBuffer());
+    count++;
+  }
+  return count;
+}
+
 const IMAGE_MAX_WIDTH = 1800;
 const IMAGE_MAX_BYTES = 320 * 1024;
 const RASTER = new Set(['.jpg', '.jpeg', '.png', '.webp']);
@@ -161,6 +203,7 @@ let missing = 0;
 let failed = 0;
 
 for (const demo of DEMOS) {
+  if (only.length && !only.includes(demo.slug)) continue;
   const source = join(NEIGHBOURS, demo.from);
   const dest = join(TARGET, demo.slug);
 
@@ -186,7 +229,10 @@ for (const demo of DEMOS) {
       failed++;
       continue;
     }
-    await cp(from, join(dest, item), { recursive: true });
+    await cp(from, join(dest, item), {
+      recursive: true,
+      filter: (path) => !demo.exclude?.includes(basename(path)),
+    });
     copied++;
   }
 
@@ -199,12 +245,14 @@ for (const demo of DEMOS) {
     }
   }
 
+  const placeholders = demo.placeholderImages ? await replaceWithPlaceholders(dest) : 0;
   const { saved, touched } = await shrinkImages(dest);
 
   const kb = Math.round((await dirSize(dest)) / 1024);
   console.log(
     `  ✓ ${demo.slug.padEnd(18)} ${String(kb).padStart(5)} КБ` +
       (scripts ? `, скриптов вынесено: ${scripts}` : '') +
+      (placeholders ? `, фото заменено заглушками: ${placeholders}` : '') +
       (touched ? `, картинок ужато: ${touched} (−${Math.round(saved / 1024)} КБ)` : ''),
   );
 }

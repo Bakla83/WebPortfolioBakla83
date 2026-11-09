@@ -1,0 +1,35 @@
+/* Option 2 — Academic: Cormorant Garamond + Work Sans, ink navy, muted crimson */
+:root {
+  --navy: #14213d;
+  --navy-2: #22304d;
+  --paper: #fbfaf8;
+  --tint: #f1eeea;
+  --line: #e0dbd4;
+  --line-2: #d8d1c8;
+  --field: #cdc5ba;
+  --ink: #14213d;
+  --muted: #5b6272;
+  --on-dark: #c6ccd8;
+  --gold: #9e2a2b;
+  --gold-bright: #e3a9a2;
+  --gold-hover: #ecbcb6;
+  --gold-soft: rgba(227, 169, 162, .25);
+  --header-bg: rgba(251, 250, 248, .95);
+  --shadow: rgba(20, 33, 61, .5);
+  --footer: #0c1528;
+  --footer-text: #a3abba;
+  --on-navy: #e7eaf0;
+  --heading-weight: 600;
+  --heading-track: 0;
+  --serif: 'Cormorant Garamond', Garamond, Georgia, serif;
+  --sans: 'Work Sans', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+}
+
+/* Cormorant is small on the line: lift the display sizes slightly */
+.hero-title { font-size: clamp(50px, 7.4vw, 104px); line-height: .98; }
+.page-hero h1 { font-size: clamp(44px, 6vw, 80px); }
+.section-head h2, .intro-grid h2, .approach-grid h2, .toolkit-grid h2 { font-size: clamp(38px, 4.8vw, 60px); }
+.lead-serif, .prose p:first-of-type { font-size: clamp(22px, 2.2vw, 27px); font-weight: 500; }
+.brand-text, .footer-name { font-weight: 600; font-size: 21px; }
+.brand-mark { border-radius: 50%; font-weight: 700; }
+.btn { border-radius: 2px; }

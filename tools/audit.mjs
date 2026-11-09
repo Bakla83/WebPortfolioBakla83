@@ -118,12 +118,14 @@ for (const [locale, expected] of [
   await page.click('[data-dropdown] > summary');
   ok('список разделов открывается', await page.isVisible('.dropdown__panel'));
 
-  const items = await page.locator('.dropdown__panel a').count();
+  const items = await page.locator('.dropdown__panel a:not(.dropdown__item--wip)').count();
   ok('в списке семь разделов', items === 7, `нашли ${items}`);
 
   const wip = page.locator('.dropdown__item--wip');
-  ok('пометка «Учёба» на месте', (await wip.count()) === 1);
-  ok('пометка «Учёба» не ссылка', (await wip.evaluate((el) => el.tagName)) !== 'A');
+  ok('две пометки с точкой', (await wip.count()) === 2);
+  ok('пометка «Учёба» не ссылка', (await wip.nth(0).evaluate((el) => el.tagName)) !== 'A');
+  ok('«В процессе создания» ведёт на работу',
+    (await wip.nth(1).getAttribute('href')) === '/play/dr-gunter/index.html');
 
   await page.mouse.click(700, 500);
   ok('клик мимо закрывает список', !(await page.isVisible('.dropdown__panel')));
@@ -253,6 +255,8 @@ for (const [locale, expected] of [
 }
 
 {
+  // Работы «в процессе создания»: открываются из меню, своей страницы проекта пока нет.
+  const WIP_DEMOS = ['dr-gunter'];
 
   const demos = [];
   for (const dir of await readdir(join(DIST, 'play'), { withFileTypes: true }).catch(() => [])) {
@@ -281,8 +285,8 @@ for (const [locale, expected] of [
   ok('в сборке есть запускаемые работы', demos.length > 0, `нашли ${demos.length}`);
   ok(
     'у каждой копии есть своя страница проекта',
-    demos.every((d) => d.section),
-    demos.filter((d) => !d.section).map((d) => d.slug).join(', ') || 'все на месте',
+    demos.every((d) => d.section || WIP_DEMOS.includes(d.slug)),
+    demos.filter((d) => !d.section && !WIP_DEMOS.includes(d.slug)).map((d) => d.slug).join(', ') || 'все на месте',
   );
 
   for (const demo of demos) {

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Gunter De Win – Website design options</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root { --navy: #0d1b2a; --paper: #f8f7f3; --line: #ddd8cc; --muted: #5a6470; --gold: #a8862a; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--navy); font: 400 16px/1.6 'Inter', system-ui, sans-serif; }
+    a { color: inherit; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: clamp(40px, 7vw, 88px) clamp(20px, 4vw, 48px); }
+    .over { font-size: 12px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin: 0; }
+    h1 { font: 500 clamp(36px, 5vw, 60px)/1.1 'Playfair Display', Georgia, serif; margin: 16px 0 18px; }
+    .intro { max-width: 46em; color: var(--muted); margin: 0; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: clamp(40px, 5vw, 64px); }
+    .opt { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); text-decoration: none; transition: transform .3s, box-shadow .3s; }
+    .opt:hover { transform: translateY(-4px); box-shadow: 0 24px 50px -30px rgba(13, 27, 42, .45); }
+    .thumb { aspect-ratio: 4 / 3; overflow: hidden; position: relative; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .swatches { position: absolute; right: 14px; bottom: 14px; display: flex; gap: 6px; }
+    .swatches i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #fff; display: block; }
+    .body { padding: 26px 26px 30px; display: flex; flex-direction: column; flex: 1; }
+    .num { font: italic 400 15px 'Playfair Display', serif; color: var(--gold); }
+    h2 { font: 500 26px/1.2 'Playfair Display', serif; margin: 6px 0 10px; }
+    .body p { color: var(--muted); font-size: 15px; margin: 0 0 18px; }
+    .meta { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; margin-top: auto; }
+    .go { margin-top: 18px; font-weight: 600; }
+    .note { margin-top: 48px; font-size: 14px; color: var(--muted); max-width: 52em; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; max-width: 560px; } }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <p style="margin:0 0 28px;font-size:14px;font-weight:600"><a href="../index.html">← All proposals</a></p>
+    <p class="over">Prof. Dr. Gunter De Win · Website</p>
+    <h1>Three design <em>options</em></h1>
+    <p class="intro">Each option is a complete one-page website with the same content – Home, About &amp; Approach, Speaking, Research, Media and Contact – presented in a different visual direction. Open each one on desktop and on a phone, then choose a direction (or a combination).</p>
+
+    <div class="grid">
+      <a class="opt" href="option-1/">
+        <div class="thumb"><img src="assets/img/conference-lectern.jpg" alt="" style="object-position:30% 12%"><div class="swatches"><i style="background:#0d1b2a"></i><i style="background:#f8f7f3"></i><i style="background:#d4af37"></i></div></div>
+        <div class="body">
+          <span class="num">Option 01</span>
+          <h2>Editorial</h2>
+          <p>Light and classic, like a quality journal. Off-white, midnight navy and antique gold, elegant serif headings. Calm, authoritative and very readable.</p>
+          <div class="meta">Playfair Display + Inter · speaking portrait as hero</div>
+          <span class="go">View option 1 →</span>
+        </div>
+      </a>
+      <a class="opt" href="option-2/">
+        <div class="thumb"><img src="assets/img/conference-wide.jpg" alt="" style="object-position:20% 40%;filter:brightness(.7)"><div class="swatches"><i style="background:#0a1520"></i><i style="background:#f4f1ea"></i><i style="background:#9e2a2b"></i></div></div>
+        <div class="body">
+          <span class="num">Option 02</span>
+          <h2>Stage</h2>
+          <p>Dark and cinematic, built for conference organisers. A full-screen congress photograph, large typography and a muted crimson accent.</p>
+          <div class="meta">Fraunces + Source Sans 3 · full-bleed conference hero</div>
+          <span class="go">View option 2 →</span>
+        </div>
+      </a>
+      <a class="opt" href="option-3/">
+        <div class="thumb"><img src="assets/img/lecture-portrait.jpg" alt="" style="object-position:40% 25%"><div class="swatches"><i style="background:#1c2b3a"></i><i style="background:#faf6ef"></i><i style="background:#a4553b"></i><i style="background:#7f9381"></i></div></div>
+        <div class="body">
+          <span class="num">Option 03</span>
+          <h2>Lifelong</h2>
+          <p>Warm and approachable, centred on the “Lifelong · Integrative · Functional · Evidence-based” idea. Designed to match a future educational Instagram account.</p>
+          <div class="meta">Lora + DM Sans · rounded, human, education-friendly</div>
+          <span class="go">View option 3 →</span>
+        </div>
+      </a>
+    </div>
+
+    <p class="note">These are private design proposals. Wording, titles, affiliations, photographs and contact details are drafts based on the supplied CV and biography and must be approved by Prof. De Win before publication. No patient booking is offered on any option.</p>
+  </main>
+</body>
+</html>

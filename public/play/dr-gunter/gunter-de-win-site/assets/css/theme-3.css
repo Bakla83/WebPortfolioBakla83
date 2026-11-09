@@ -1,0 +1,36 @@
+/* Option 3 — Contemporary: Plus Jakarta Sans throughout, slate, cool grey, brass */
+:root {
+  --navy: #16222e;
+  --navy-2: #243342;
+  --paper: #f6f7f8;
+  --tint: #eceff2;
+  --line: #dde2e7;
+  --line-2: #d3d9df;
+  --field: #c6cdd5;
+  --ink: #16222e;
+  --muted: #586572;
+  --on-dark: #c2cbd4;
+  --gold: #8f6d2a;
+  --gold-bright: #d8b06a;
+  --gold-hover: #e3c288;
+  --gold-soft: rgba(216, 176, 106, .25);
+  --header-bg: rgba(246, 247, 248, .95);
+  --shadow: rgba(22, 34, 46, .45);
+  --footer: #0e171f;
+  --footer-text: #9aa6b2;
+  --on-navy: #e6eaee;
+  --heading-weight: 600;
+  --heading-track: -0.025em;
+  --serif: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+}
+
+/* A sans-only option: no italics, rounded details */
+em, i { font-style: normal; }
+.hero-title { font-size: clamp(42px, 6vw, 84px); line-height: 1.02; }
+.card-num, .focus-grid span, .topic-list li::before, .pub-year, .approach-list span { font-style: normal; font-weight: 600; }
+.btn, .tool, .nav-card, .info-card, .technique-grid article, .form input, .form select, .form textarea { border-radius: 10px; }
+.nav-card, .gallery figure, .hero-figure img { overflow: hidden; }
+.gallery figure, .panel-photo img { border-radius: 12px; }
+.brand-mark { border-radius: 10px; font-weight: 700; }
+.lead-serif, .prose p:first-of-type { font-weight: 500; letter-spacing: -0.01em; }

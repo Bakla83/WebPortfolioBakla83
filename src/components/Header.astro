@@ -56,8 +56,17 @@ const workActive = path.startsWith('work');
 
           <span class="dropdown__item dropdown__item--wip">
             <span class="dropdown__pulse" aria-hidden="true"></span>
-            {strings.nav.inProgress}
+            {strings.nav.studying}
           </span>
+          <a
+            class="dropdown__item dropdown__item--wip"
+            href="/play/dr-gunter/index.html"
+            target="_blank"
+            rel="noopener"
+          >
+            <span class="dropdown__pulse" aria-hidden="true"></span>
+            {strings.nav.inProgress}
+          </a>
         </div>
       </details>
 
@@ -361,8 +370,20 @@ const workActive = path.startsWith('work');
     color: var(--ink-faint);
   }
 
+  /* Вторая пометка идёт сразу под первой, без своей черты. */
+  .dropdown__item--wip + .dropdown__item--wip {
+    margin-top: 0;
+    padding-top: 0.55rem;
+    border-top: 0;
+  }
+
+  a.dropdown__item--wip:hover {
+    border-left-color: transparent;
+    color: var(--ink);
+  }
+
   /* Пометка, а не ссылка: на наведение не реагирует. */
-  .dropdown__item--wip:hover {
+  span.dropdown__item--wip:hover {
     background: none;
     color: var(--ink-faint);
     cursor: default;
